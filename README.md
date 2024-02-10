@@ -8,11 +8,11 @@ For more information about the SportPlus application, please consult the [wiki](
 
 ## Team Members
 
-| Name          | GitHub username |
-| ------------- | --------------- |
-| John-Paul Chouery | JPGC04    |
-| Sophia Carbone | ezlilcoconut       |
-| Lynn Haddad | haddadlynn             |
-| Nizar Kheir Eddine | justsom1-nizar             |
-| Dmytro Martyniuk | dmytromartyniuk  |
-| Sirine Tarhouni | SirineTarhouni             |
+| Name          | GitHub username | Team Roles |
+| ------------- | --------------- | --------------- |
+| John-Paul Chouery | JPGC04    | | 
+| Sophia Carbone | ezlilcoconut       | |
+| Lynn Haddad | haddadlynn             | |
+| Nizar Kheir Eddine | justsom1-nizar             | |
+| Dmytro Martyniuk | dmytromartyniuk  | |
+| Sirine Tarhouni | SirineTarhouni             | |
