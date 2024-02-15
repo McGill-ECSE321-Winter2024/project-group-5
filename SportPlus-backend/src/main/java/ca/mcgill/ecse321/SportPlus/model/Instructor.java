@@ -23,9 +23,6 @@ public class Instructor extends Account
     super(aEmail, aFirstName, aPassword, aLastName, aAccountId, aSportPlus);
   }
 
-  //------------------------
-  // INTERFACE
-  //------------------------
 
   public void delete()
   {

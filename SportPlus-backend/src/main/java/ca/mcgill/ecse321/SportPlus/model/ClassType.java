@@ -2,11 +2,6 @@ package ca.mcgill.ecse321.SportPlus.model;
 
 public class ClassType
 {
-
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
-
   //ClassType Attributes
   private String name;
   private String description;
@@ -17,9 +12,6 @@ public class ClassType
   private SportPlus sportPlus;
   private Owner approver;
 
-  //------------------------
-  // CONSTRUCTOR
-  //------------------------
 
   public ClassType(String aName, String aDescription, int aTypeId, boolean aApproved, SportPlus aSportPlus, Owner aApprover)
   {
