@@ -1,10 +1,15 @@
 package ca.mcgill.ecse321.SportPlus.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+
+@Entity
 public class Registration
 {
 
-
-  //Registration Attributes
+  @Id
+  @GeneratedValue
   private int regId;
 
   //Registration Associations

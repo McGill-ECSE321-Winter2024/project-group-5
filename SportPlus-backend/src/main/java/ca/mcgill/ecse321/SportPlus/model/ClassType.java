@@ -1,11 +1,15 @@
 package ca.mcgill.ecse321.SportPlus.model;
 
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+
 public class ClassType
 {
-  //ClassType Attributes
+  @Id
+  @GeneratedValue
+  private int typeId;
   private String name;
   private String description;
-  private int typeId;
   private boolean approved;
 
   //ClassType Associations
