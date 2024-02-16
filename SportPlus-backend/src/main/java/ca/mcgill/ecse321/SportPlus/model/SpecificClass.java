@@ -1,42 +1,49 @@
 package ca.mcgill.ecse321.SportPlus.model;
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.33.0.6934.a386b0a58 modeling language!*/
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
 
 import java.sql.Date;
 import java.sql.Time;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-
+// line 32 "model.ump"
+// line 75 "model.ump"
+// line 108 "model.ump"
 @Entity
 public class SpecificClass
 {
-  @Id
-  @GeneratedValue
-  private int sessionId;
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //SpecificClass Attributes
   private Date date;
   private Time startTime;
   private Time endTime;
 
+  @Id
+  private int classId;
 
   //SpecificClass Associations
-  private SportPlus sportPlus;
-  private Instructor supervisor;
+  private Instructor instructor;
   private ClassType classType;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public SpecificClass(Date aDate, Time aStartTime, Time aEndTime, int aSessionId, SportPlus aSportPlus, ClassType aClassType)
+  public SpecificClass(Date aDate, Time aStartTime, Time aEndTime, int aClassId, Instructor aInstructor, ClassType aClassType)
   {
     date = aDate;
     startTime = aStartTime;
     endTime = aEndTime;
-    sessionId = aSessionId;
-    boolean didAddSportPlus = setSportPlus(aSportPlus);
-    if (!didAddSportPlus)
+    classId = aClassId;
+    if (!setInstructor(aInstructor))
     {
-      throw new RuntimeException("Unable to create specificClass due to sportPlus. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+      throw new RuntimeException("Unable to create SpecificClass due to aInstructor. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
     if (!setClassType(aClassType))
     {
@@ -72,10 +79,10 @@ public class SpecificClass
     return wasSet;
   }
 
-  public boolean setSessionId(int aSessionId)
+  public boolean setClassId(int aClassId)
   {
     boolean wasSet = false;
-    sessionId = aSessionId;
+    classId = aClassId;
     wasSet = true;
     return wasSet;
   }
@@ -95,56 +102,29 @@ public class SpecificClass
     return endTime;
   }
 
-  public int getSessionId()
+  public int getClassId()
   {
-    return sessionId;
+    return classId;
   }
   /* Code from template association_GetOne */
-  public SportPlus getSportPlus()
+  public Instructor getInstructor()
   {
-    return sportPlus;
-  }
-  /* Code from template association_GetOne */
-  public Instructor getSupervisor()
-  {
-    return supervisor;
-  }
-
-  public boolean hasSupervisor()
-  {
-    boolean has = supervisor != null;
-    return has;
+    return instructor;
   }
   /* Code from template association_GetOne */
   public ClassType getClassType()
   {
     return classType;
   }
-  /* Code from template association_SetOneToMany */
-  public boolean setSportPlus(SportPlus aSportPlus)
+  /* Code from template association_SetUnidirectionalOne */
+  public boolean setInstructor(Instructor aNewInstructor)
   {
     boolean wasSet = false;
-    if (aSportPlus == null)
+    if (aNewInstructor != null)
     {
-      return wasSet;
+      instructor = aNewInstructor;
+      wasSet = true;
     }
-
-    SportPlus existingSportPlus = sportPlus;
-    sportPlus = aSportPlus;
-    if (existingSportPlus != null && !existingSportPlus.equals(aSportPlus))
-    {
-      existingSportPlus.removeSpecificClass(this);
-    }
-    sportPlus.addSpecificClass(this);
-    wasSet = true;
-    return wasSet;
-  }
-  /* Code from template association_SetUnidirectionalOptionalOne */
-  public boolean setSupervisor(Instructor aNewSupervisor)
-  {
-    boolean wasSet = false;
-    supervisor = aNewSupervisor;
-    wasSet = true;
     return wasSet;
   }
   /* Code from template association_SetUnidirectionalOne */
@@ -161,13 +141,7 @@ public class SpecificClass
 
   public void delete()
   {
-    SportPlus placeholderSportPlus = sportPlus;
-    this.sportPlus = null;
-    if(placeholderSportPlus != null)
-    {
-      placeholderSportPlus.removeSpecificClass(this);
-    }
-    supervisor = null;
+    instructor = null;
     classType = null;
   }
 
@@ -175,12 +149,11 @@ public class SpecificClass
   public String toString()
   {
     return super.toString() + "["+
-            "sessionId" + ":" + getSessionId()+ "]" + System.getProperties().getProperty("line.separator") +
+            "classId" + ":" + getClassId()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "date" + "=" + (getDate() != null ? !getDate().equals(this)  ? getDate().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "startTime" + "=" + (getStartTime() != null ? !getStartTime().equals(this)  ? getStartTime().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "endTime" + "=" + (getEndTime() != null ? !getEndTime().equals(this)  ? getEndTime().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "sportPlus = "+(getSportPlus()!=null?Integer.toHexString(System.identityHashCode(getSportPlus())):"null") + System.getProperties().getProperty("line.separator") +
-            "  " + "supervisor = "+(getSupervisor()!=null?Integer.toHexString(System.identityHashCode(getSupervisor())):"null") + System.getProperties().getProperty("line.separator") +
+            "  " + "instructor = "+(getInstructor()!=null?Integer.toHexString(System.identityHashCode(getInstructor())):"null") + System.getProperties().getProperty("line.separator") +
             "  " + "classType = "+(getClassType()!=null?Integer.toHexString(System.identityHashCode(getClassType())):"null");
   }
 }

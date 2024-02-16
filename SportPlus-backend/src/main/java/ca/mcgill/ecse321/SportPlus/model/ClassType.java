@@ -1,33 +1,43 @@
 package ca.mcgill.ecse321.SportPlus.model;
-
-import jakarta.persistence.GeneratedValue;
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.33.0.6934.a386b0a58 modeling language!*/
+import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 
+
+
+// line 26 "model.ump"
+// line 79 "model.ump"
+// line 112 "model.ump"
+@Entity
 public class ClassType
 {
-  @Id
-  @GeneratedValue
-  private int typeId;
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //ClassType Attributes
   private String name;
   private String description;
-  private boolean approved;
 
+  @Id
+  private int typeId;
+
+  @ManyToOne
   //ClassType Associations
-  private SportPlus sportPlus;
   private Owner approver;
 
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
 
-  public ClassType(String aName, String aDescription, int aTypeId, boolean aApproved, SportPlus aSportPlus, Owner aApprover)
+  public ClassType(String aName, String aDescription, int aTypeId, Owner aApprover)
   {
     name = aName;
     description = aDescription;
     typeId = aTypeId;
-    approved = aApproved;
-    boolean didAddSportPlus = setSportPlus(aSportPlus);
-    if (!didAddSportPlus)
-    {
-      throw new RuntimeException("Unable to create classType due to sportPlus. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
-    }
     if (!setApprover(aApprover))
     {
       throw new RuntimeException("Unable to create ClassType due to aApprover. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
@@ -62,14 +72,6 @@ public class ClassType
     return wasSet;
   }
 
-  public boolean setApproved(boolean aApproved)
-  {
-    boolean wasSet = false;
-    approved = aApproved;
-    wasSet = true;
-    return wasSet;
-  }
-
   public String getName()
   {
     return name;
@@ -84,39 +86,10 @@ public class ClassType
   {
     return typeId;
   }
-
-  public boolean getApproved()
-  {
-    return approved;
-  }
-  /* Code from template association_GetOne */
-  public SportPlus getSportPlus()
-  {
-    return sportPlus;
-  }
   /* Code from template association_GetOne */
   public Owner getApprover()
   {
     return approver;
-  }
-  /* Code from template association_SetOneToMany */
-  public boolean setSportPlus(SportPlus aSportPlus)
-  {
-    boolean wasSet = false;
-    if (aSportPlus == null)
-    {
-      return wasSet;
-    }
-
-    SportPlus existingSportPlus = sportPlus;
-    sportPlus = aSportPlus;
-    if (existingSportPlus != null && !existingSportPlus.equals(aSportPlus))
-    {
-      existingSportPlus.removeClassType(this);
-    }
-    sportPlus.addClassType(this);
-    wasSet = true;
-    return wasSet;
   }
   /* Code from template association_SetUnidirectionalOne */
   public boolean setApprover(Owner aNewApprover)
@@ -132,12 +105,6 @@ public class ClassType
 
   public void delete()
   {
-    SportPlus placeholderSportPlus = sportPlus;
-    this.sportPlus = null;
-    if(placeholderSportPlus != null)
-    {
-      placeholderSportPlus.removeClassType(this);
-    }
     approver = null;
   }
 
@@ -147,9 +114,7 @@ public class ClassType
     return super.toString() + "["+
             "name" + ":" + getName()+ "," +
             "description" + ":" + getDescription()+ "," +
-            "typeId" + ":" + getTypeId()+ "," +
-            "approved" + ":" + getApproved()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "sportPlus = "+(getSportPlus()!=null?Integer.toHexString(System.identityHashCode(getSportPlus())):"null") + System.getProperties().getProperty("line.separator") +
+            "typeId" + ":" + getTypeId()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "approver = "+(getApprover()!=null?Integer.toHexString(System.identityHashCode(getApprover())):"null");
   }
 }

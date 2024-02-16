@@ -1,43 +1,43 @@
-
 package ca.mcgill.ecse321.SportPlus.model;
 
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.33.0.6934.a386b0a58 modeling language!*/
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
 
-@Entity@Inheritance(strategy = InheritanceType.JOINED)
+
+// line 2 "model.ump"
+// line 59 "model.ump"
+// line 92 "model.ump"
+@Entity
 public abstract class Account
 {
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Account Attributes
   @Id
-  @GeneratedValue
-  private int accountId;
+  private int userId;
+
   private String email;
-  private String firstName;
+  private String firstname;
+  
   private String password;
   private String lastName;
-  
-
-  //Account Associations
-  private SportPlus sportPlus;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Account(String aEmail, String aFirstName, String aPassword, String aLastName, int aAccountId, SportPlus aSportPlus)
+  public Account(String aEmail, String aFirstname, int aUserId, String aPassword, String aLastName)
   {
     email = aEmail;
-    firstName = aFirstName;
+    firstname = aFirstname;
+    userId = aUserId;
     password = aPassword;
     lastName = aLastName;
-    accountId = aAccountId;
-    boolean didAddSportPlus = setSportPlus(aSportPlus);
-    if (!didAddSportPlus)
-    {
-      throw new RuntimeException("Unable to create account due to sportPlus. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
-    }
   }
 
   //------------------------
@@ -52,10 +52,18 @@ public abstract class Account
     return wasSet;
   }
 
-  public boolean setFirstName(String aFirstName)
+  public boolean setFirstname(String aFirstname)
   {
     boolean wasSet = false;
-    firstName = aFirstName;
+    firstname = aFirstname;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setUserId(int aUserId)
+  {
+    boolean wasSet = false;
+    userId = aUserId;
     wasSet = true;
     return wasSet;
   }
@@ -76,22 +84,19 @@ public abstract class Account
     return wasSet;
   }
 
-  public boolean setAccountId(int aAccountId)
-  {
-    boolean wasSet = false;
-    accountId = aAccountId;
-    wasSet = true;
-    return wasSet;
-  }
-
   public String getEmail()
   {
     return email;
   }
 
-  public String getFirstName()
+  public String getFirstname()
   {
-    return firstName;
+    return firstname;
+  }
+
+  public int getUserId()
+  {
+    return userId;
   }
 
   public String getPassword()
@@ -104,54 +109,17 @@ public abstract class Account
     return lastName;
   }
 
-  public int getAccountId()
-  {
-    return accountId;
-  }
-  /* Code from template association_GetOne */
-  public SportPlus getSportPlus()
-  {
-    return sportPlus;
-  }
-  /* Code from template association_SetOneToMany */
-  public boolean setSportPlus(SportPlus aSportPlus)
-  {
-    boolean wasSet = false;
-    if (aSportPlus == null)
-    {
-      return wasSet;
-    }
-
-    SportPlus existingSportPlus = sportPlus;
-    sportPlus = aSportPlus;
-    if (existingSportPlus != null && !existingSportPlus.equals(aSportPlus))
-    {
-      existingSportPlus.removeAccount(this);
-    }
-    sportPlus.addAccount(this);
-    wasSet = true;
-    return wasSet;
-  }
-
   public void delete()
-  {
-    SportPlus placeholderSportPlus = sportPlus;
-    this.sportPlus = null;
-    if(placeholderSportPlus != null)
-    {
-      placeholderSportPlus.removeAccount(this);
-    }
-  }
+  {}
 
 
   public String toString()
   {
     return super.toString() + "["+
             "email" + ":" + getEmail()+ "," +
-            "firstName" + ":" + getFirstName()+ "," +
+            "firstname" + ":" + getFirstname()+ "," +
+            "userId" + ":" + getUserId()+ "," +
             "password" + ":" + getPassword()+ "," +
-            "lastName" + ":" + getLastName()+ "," +
-            "accountId" + ":" + getAccountId()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "sportPlus = "+(getSportPlus()!=null?Integer.toHexString(System.identityHashCode(getSportPlus())):"null");
+            "lastName" + ":" + getLastName()+ "]";
   }
 }
