@@ -1,6 +1,6 @@
 HELP.md
-SportPlus-backend/.gradle/
-SportPlus-backend/build
+SportPlus-backend/.gradle/*
+SportPlus-backend/build/*
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
