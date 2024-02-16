@@ -1,14 +1,23 @@
 
 package ca.mcgill.ecse321.SportPlus.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
+
+@Entity@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Account
 {
-
+  @Id
+  @GeneratedValue
+  private int accountId;
   private String email;
   private String firstName;
   private String password;
   private String lastName;
-  private int accountId;
+  
 
   //Account Associations
   private SportPlus sportPlus;

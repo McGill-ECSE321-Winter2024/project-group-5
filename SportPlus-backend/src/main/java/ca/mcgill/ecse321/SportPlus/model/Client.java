@@ -1,5 +1,8 @@
 package ca.mcgill.ecse321.SportPlus.model;
 
+import jakarta.persistence.Entity;
+
+@Entity
 public class Client extends Account
 {
 

@@ -2,14 +2,12 @@ package ca.mcgill.ecse321.SportPlus.model;
 
 import java.sql.Date;
 
+import jakarta.persistence.Entity;
+
+@Entity
 public class PaymentMethod
 {
 
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
-
-  //PaymentMethod Attributes
   private String cardNumber;
   private Date expDate;
   private String cvc;

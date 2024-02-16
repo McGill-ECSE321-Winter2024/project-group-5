@@ -3,19 +3,20 @@ package ca.mcgill.ecse321.SportPlus.model;
 import java.sql.Date;
 import java.sql.Time;
 
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 
+@Entity
 public class SpecificClass
 {
-
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
-
-  //SpecificClass Attributes
+  @Id
+  @GeneratedValue
+  private int sessionId;
   private Date date;
   private Time startTime;
   private Time endTime;
-  private int sessionId;
+
 
   //SpecificClass Associations
   private SportPlus sportPlus;
