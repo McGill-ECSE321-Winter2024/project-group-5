@@ -24,24 +24,6 @@ public interface ClientRepository extends CrudRepository<Client, String> {
      * @return List<Clients>
      */
     List<Client> findAll();
-    /**
-     * Find clients by firstName
-     * @param firstName
-     * @return List<Client>
-     */
-    List<Client> findByFirstName(String firstName);
-    /**
-     * Find clients by lastName
-     * @param lastName
-     * @return List<Client>
-     */
-    List<Client> findByLastName(String lastName);
-    /**
-     * Find client by registration id
-     * @param regId
-     * @return
-     */
-    Client findByRegistrationId(Integer regId);
 
     /**
      * Find client by accountId
@@ -49,5 +31,4 @@ public interface ClientRepository extends CrudRepository<Client, String> {
      * @return
      */
     Client findByAccountId(Integer accountId);
-
 }
