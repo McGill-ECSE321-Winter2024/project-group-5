@@ -37,4 +37,5 @@ public interface ClassTypeRepository extends CrudRepository<ClassType, Integer> 
      * @param name
      */
     void deleteByName(String name);
+    
 }

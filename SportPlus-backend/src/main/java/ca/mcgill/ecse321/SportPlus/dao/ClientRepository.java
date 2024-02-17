@@ -31,4 +31,8 @@ public interface ClientRepository extends CrudRepository<Client, Integer> {
      * @return
      */
     Client findByAccountId(Integer accountId);
+    
+    
+    void deleteAll();
+
 }
