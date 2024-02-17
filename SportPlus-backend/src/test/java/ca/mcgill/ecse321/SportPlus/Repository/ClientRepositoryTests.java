@@ -28,7 +28,7 @@ public class ClientRepositoryTests {
     }
 
     @Test
-    public void testCreateAndReadClient() {
+    public void testFindClientByEmail() {
         String aEmail = "example.last@gmail.com";
         String aFirstName = "Example";
         String aPassword = "1234567890";
