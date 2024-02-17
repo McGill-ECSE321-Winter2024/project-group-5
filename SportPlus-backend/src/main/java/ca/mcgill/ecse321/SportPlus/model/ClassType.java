@@ -18,6 +18,7 @@ public class ClassType {
   private boolean approved;
 
   // ClassType Associations
+  @ManyToOne
   private SportPlus sportPlus;
 
   @ManyToOne

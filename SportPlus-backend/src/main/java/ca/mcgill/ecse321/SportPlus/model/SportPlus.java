@@ -1,21 +1,36 @@
 package ca.mcgill.ecse321.SportPlus.model;
 
 import java.util.*;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+
 import java.sql.Date;
 import java.sql.Time;
 
+
+@Entity
 public class SportPlus
 {
+
+  @Id
+  private int sportPlusId;
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
   //SportPlus Associations
+  @OneToMany
   private List<Account> accounts;
+  @OneToMany
   private List<Registration> registrations;
+  @OneToMany
   private List<SpecificClass> specificClasses;
+  @OneToMany
   private List<ClassType> classTypes;
+  @OneToMany
   private List<PaymentMethod> paymentMethods;
 
   //------------------------

@@ -18,6 +18,7 @@ public class PaymentMethod
   private String cardHolderName;
 
   //PaymentMethod Associations
+  @ManyToOne
   private SportPlus sportPlus;
   @ManyToOne
   private Client client;

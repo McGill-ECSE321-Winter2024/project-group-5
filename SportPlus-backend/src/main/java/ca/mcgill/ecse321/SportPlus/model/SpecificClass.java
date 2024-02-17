@@ -20,6 +20,7 @@ public class SpecificClass
 
 
   //SpecificClass Associations
+  @ManyToOne
   private SportPlus sportPlus;
   @ManyToOne
   private Instructor supervisor;

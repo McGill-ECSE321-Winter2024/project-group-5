@@ -14,6 +14,7 @@ public class Registration
   private int regId;
 
   //Registration Associations
+  @ManyToOne
   private SportPlus sportPlus;
   @ManyToOne
   private SpecificClass specificClass;
