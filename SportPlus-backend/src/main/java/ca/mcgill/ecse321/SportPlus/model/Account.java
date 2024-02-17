@@ -12,9 +12,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MappedSuperclass;
 
-// line 2 "model.ump"
-// line 59 "model.ump"
-// line 91 "model.ump"
+
 @Entity
 public abstract class Account
 {
