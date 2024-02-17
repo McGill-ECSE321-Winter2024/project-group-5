@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-This project is an app to manage diffrent classes and schedules within SportPlus sports center.
+This project is an app to manage different classes and schedules within SportPlus sports center.
 
 For more information about the SportPlus application, please consult the [wiki](../../wiki).
 
