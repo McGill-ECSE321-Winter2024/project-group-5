@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
 
-public interface ClientRepository extends CrudRepository<Client, String> {
+public interface ClientRepository extends CrudRepository<Client, Integer> {
     /**
      * Find a client by email
      * @param email
