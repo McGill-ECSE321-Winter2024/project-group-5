@@ -18,8 +18,6 @@ public class ClassType {
   private boolean approved;
 
   // ClassType Associations
-  @ManyToOne
-  @JoinColumn(name = "sportPlus_id")
   private SportPlus sportPlus;
 
   @ManyToOne

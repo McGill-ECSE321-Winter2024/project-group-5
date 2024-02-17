@@ -22,8 +22,6 @@ public abstract class Account {
   private String lastName;
 
   // Account Associations
-  @ManyToOne
-  @JoinColumn(name = "sportPlus_id", nullable = false)
   private SportPlus sportPlus;
 
   // ------------------------
