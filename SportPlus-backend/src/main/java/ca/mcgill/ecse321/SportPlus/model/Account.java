@@ -3,15 +3,19 @@ package ca.mcgill.ecse321.SportPlus.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
-@Entity@Inheritance(strategy = InheritanceType.JOINED)
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Account
 {
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int accountId;
   private String email;
   private String firstName;
@@ -20,11 +24,16 @@ public abstract class Account
   
 
   //Account Associations
+  @ManyToOne
+  @JoinColumn(name = "sportPlus_id", nullable = false)
   private SportPlus sportPlus;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
+  public Account() {
+    // Default constructor is needed by JPA
+  }
 
   public Account(String aEmail, String aFirstName, String aPassword, String aLastName, int aAccountId, SportPlus aSportPlus)
   {
