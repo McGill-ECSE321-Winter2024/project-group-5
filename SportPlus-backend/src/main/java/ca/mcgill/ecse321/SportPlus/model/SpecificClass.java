@@ -7,21 +7,33 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.33.0.6934.a386b0a58 modeling language!*/
 
+
+import java.sql.Date;
+import java.sql.Time;
+
+// line 31 "model.ump"
+// line 76 "model.ump"
+// line 107 "model.ump"
 @Entity
 public class SpecificClass
 {
-  @Id
-  @GeneratedValue
-  private int sessionId;
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //SpecificClass Attributes
   private Date date;
   private Time startTime;
   private Time endTime;
-
+  @Id
+  @GeneratedValue
+  private int sessionId;
 
   //SpecificClass Associations
-  @ManyToOne
-  private SportPlus sportPlus;
   @ManyToOne
   private Instructor supervisor;
   @ManyToOne
@@ -31,17 +43,12 @@ public class SpecificClass
   // CONSTRUCTOR
   //------------------------
 
-  public SpecificClass(Date aDate, Time aStartTime, Time aEndTime, int aSessionId, SportPlus aSportPlus, ClassType aClassType)
+  public SpecificClass(Date aDate, Time aStartTime, Time aEndTime, int aSessionId, ClassType aClassType)
   {
     date = aDate;
     startTime = aStartTime;
     endTime = aEndTime;
     sessionId = aSessionId;
-    boolean didAddSportPlus = setSportPlus(aSportPlus);
-    if (!didAddSportPlus)
-    {
-      throw new RuntimeException("Unable to create specificClass due to sportPlus. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
-    }
     if (!setClassType(aClassType))
     {
       throw new RuntimeException("Unable to create SpecificClass due to aClassType. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
@@ -104,11 +111,6 @@ public class SpecificClass
     return sessionId;
   }
   /* Code from template association_GetOne */
-  public SportPlus getSportPlus()
-  {
-    return sportPlus;
-  }
-  /* Code from template association_GetOne */
   public Instructor getSupervisor()
   {
     return supervisor;
@@ -123,25 +125,6 @@ public class SpecificClass
   public ClassType getClassType()
   {
     return classType;
-  }
-  /* Code from template association_SetOneToMany */
-  public boolean setSportPlus(SportPlus aSportPlus)
-  {
-    boolean wasSet = false;
-    if (aSportPlus == null)
-    {
-      return wasSet;
-    }
-
-    SportPlus existingSportPlus = sportPlus;
-    sportPlus = aSportPlus;
-    if (existingSportPlus != null && !existingSportPlus.equals(aSportPlus))
-    {
-      existingSportPlus.removeSpecificClass(this);
-    }
-    sportPlus.addSpecificClass(this);
-    wasSet = true;
-    return wasSet;
   }
   /* Code from template association_SetUnidirectionalOptionalOne */
   public boolean setSupervisor(Instructor aNewSupervisor)
@@ -165,12 +148,6 @@ public class SpecificClass
 
   public void delete()
   {
-    SportPlus placeholderSportPlus = sportPlus;
-    this.sportPlus = null;
-    if(placeholderSportPlus != null)
-    {
-      placeholderSportPlus.removeSpecificClass(this);
-    }
     supervisor = null;
     classType = null;
   }
@@ -183,7 +160,6 @@ public class SpecificClass
             "  " + "date" + "=" + (getDate() != null ? !getDate().equals(this)  ? getDate().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "startTime" + "=" + (getStartTime() != null ? !getStartTime().equals(this)  ? getStartTime().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "endTime" + "=" + (getEndTime() != null ? !getEndTime().equals(this)  ? getEndTime().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "sportPlus = "+(getSportPlus()!=null?Integer.toHexString(System.identityHashCode(getSportPlus())):"null") + System.getProperties().getProperty("line.separator") +
             "  " + "supervisor = "+(getSupervisor()!=null?Integer.toHexString(System.identityHashCode(getSupervisor())):"null") + System.getProperties().getProperty("line.separator") +
             "  " + "classType = "+(getClassType()!=null?Integer.toHexString(System.identityHashCode(getClassType())):"null");
   }

@@ -5,21 +5,32 @@ import java.sql.Date;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.33.0.6934.a386b0a58 modeling language!*/
 
+
+import java.sql.Date;
+
+// line 51 "model.ump"
+// line 120 "model.ump"
+// line 128 "model.ump"
 @Entity
 public class PaymentMethod
 {
-  @Id
-  private int paymentId;
 
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //PaymentMethod Attributes
   private String cardNumber;
   private Date expDate;
   private String cvc;
   private String cardHolderName;
+  @Id
+  private int cardId;
 
   //PaymentMethod Associations
-  @ManyToOne
-  private SportPlus sportPlus;
   @ManyToOne
   private Client client;
 
@@ -27,17 +38,13 @@ public class PaymentMethod
   // CONSTRUCTOR
   //------------------------
 
-  public PaymentMethod(String aCardNumber, Date aExpDate, String aCvc, String aCardHolderName, SportPlus aSportPlus, Client aClient)
+  public PaymentMethod(String aCardNumber, Date aExpDate, String aCvc, String aCardHolderName, int aCardId, Client aClient)
   {
     cardNumber = aCardNumber;
     expDate = aExpDate;
     cvc = aCvc;
     cardHolderName = aCardHolderName;
-    boolean didAddSportPlus = setSportPlus(aSportPlus);
-    if (!didAddSportPlus)
-    {
-      throw new RuntimeException("Unable to create paymentMethod due to sportPlus. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
-    }
+    cardId = aCardId;
     if (!setClient(aClient))
     {
       throw new RuntimeException("Unable to create PaymentMethod due to aClient. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
@@ -80,6 +87,14 @@ public class PaymentMethod
     return wasSet;
   }
 
+  public boolean setCardId(int aCardId)
+  {
+    boolean wasSet = false;
+    cardId = aCardId;
+    wasSet = true;
+    return wasSet;
+  }
+
   public String getCardNumber()
   {
     return cardNumber;
@@ -99,34 +114,15 @@ public class PaymentMethod
   {
     return cardHolderName;
   }
-  /* Code from template association_GetOne */
-  public SportPlus getSportPlus()
+
+  public int getCardId()
   {
-    return sportPlus;
+    return cardId;
   }
   /* Code from template association_GetOne */
   public Client getClient()
   {
     return client;
-  }
-  /* Code from template association_SetOneToMany */
-  public boolean setSportPlus(SportPlus aSportPlus)
-  {
-    boolean wasSet = false;
-    if (aSportPlus == null)
-    {
-      return wasSet;
-    }
-
-    SportPlus existingSportPlus = sportPlus;
-    sportPlus = aSportPlus;
-    if (existingSportPlus != null && !existingSportPlus.equals(aSportPlus))
-    {
-      existingSportPlus.removePaymentMethod(this);
-    }
-    sportPlus.addPaymentMethod(this);
-    wasSet = true;
-    return wasSet;
   }
   /* Code from template association_SetUnidirectionalOne */
   public boolean setClient(Client aNewClient)
@@ -142,12 +138,6 @@ public class PaymentMethod
 
   public void delete()
   {
-    SportPlus placeholderSportPlus = sportPlus;
-    this.sportPlus = null;
-    if(placeholderSportPlus != null)
-    {
-      placeholderSportPlus.removePaymentMethod(this);
-    }
     client = null;
   }
 
@@ -157,9 +147,9 @@ public class PaymentMethod
     return super.toString() + "["+
             "cardNumber" + ":" + getCardNumber()+ "," +
             "cvc" + ":" + getCvc()+ "," +
-            "cardHolderName" + ":" + getCardHolderName()+ "]" + System.getProperties().getProperty("line.separator") +
+            "cardHolderName" + ":" + getCardHolderName()+ "," +
+            "cardId" + ":" + getCardId()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "expDate" + "=" + (getExpDate() != null ? !getExpDate().equals(this)  ? getExpDate().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "sportPlus = "+(getSportPlus()!=null?Integer.toHexString(System.identityHashCode(getSportPlus())):"null") + System.getProperties().getProperty("line.separator") +
             "  " + "client = "+(getClient()!=null?Integer.toHexString(System.identityHashCode(getClient())):"null");
   }
 }

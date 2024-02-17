@@ -4,18 +4,28 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.33.0.6934.a386b0a58 modeling language!*/
 
+
+
+// line 38 "model.ump"
+// line 84 "model.ump"
+// line 115 "model.ump"
 @Entity
 public class Registration
 {
 
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Registration Attributes
   @Id
   @GeneratedValue
   private int regId;
 
   //Registration Associations
-  @ManyToOne
-  private SportPlus sportPlus;
   @ManyToOne
   private SpecificClass specificClass;
   @ManyToOne
@@ -25,14 +35,9 @@ public class Registration
   // CONSTRUCTOR
   //------------------------
 
-  public Registration(int aRegId, SportPlus aSportPlus, SpecificClass aSpecificClass, Client aClient)
+  public Registration(int aRegId, SpecificClass aSpecificClass, Client aClient)
   {
     regId = aRegId;
-    boolean didAddSportPlus = setSportPlus(aSportPlus);
-    if (!didAddSportPlus)
-    {
-      throw new RuntimeException("Unable to create registration due to sportPlus. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
-    }
     if (!setSpecificClass(aSpecificClass))
     {
       throw new RuntimeException("Unable to create Registration due to aSpecificClass. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
@@ -60,11 +65,6 @@ public class Registration
     return regId;
   }
   /* Code from template association_GetOne */
-  public SportPlus getSportPlus()
-  {
-    return sportPlus;
-  }
-  /* Code from template association_GetOne */
   public SpecificClass getSpecificClass()
   {
     return specificClass;
@@ -73,25 +73,6 @@ public class Registration
   public Client getClient()
   {
     return client;
-  }
-  /* Code from template association_SetOneToMany */
-  public boolean setSportPlus(SportPlus aSportPlus)
-  {
-    boolean wasSet = false;
-    if (aSportPlus == null)
-    {
-      return wasSet;
-    }
-
-    SportPlus existingSportPlus = sportPlus;
-    sportPlus = aSportPlus;
-    if (existingSportPlus != null && !existingSportPlus.equals(aSportPlus))
-    {
-      existingSportPlus.removeRegistration(this);
-    }
-    sportPlus.addRegistration(this);
-    wasSet = true;
-    return wasSet;
   }
   /* Code from template association_SetUnidirectionalOne */
   public boolean setSpecificClass(SpecificClass aNewSpecificClass)
@@ -118,12 +99,6 @@ public class Registration
 
   public void delete()
   {
-    SportPlus placeholderSportPlus = sportPlus;
-    this.sportPlus = null;
-    if(placeholderSportPlus != null)
-    {
-      placeholderSportPlus.removeRegistration(this);
-    }
     specificClass = null;
     client = null;
   }
@@ -133,7 +108,6 @@ public class Registration
   {
     return super.toString() + "["+
             "regId" + ":" + getRegId()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "sportPlus = "+(getSportPlus()!=null?Integer.toHexString(System.identityHashCode(getSportPlus())):"null") + System.getProperties().getProperty("line.separator") +
             "  " + "specificClass = "+(getSpecificClass()!=null?Integer.toHexString(System.identityHashCode(getSpecificClass())):"null") + System.getProperties().getProperty("line.separator") +
             "  " + "client = "+(getClient()!=null?Integer.toHexString(System.identityHashCode(getClient())):"null");
   }
