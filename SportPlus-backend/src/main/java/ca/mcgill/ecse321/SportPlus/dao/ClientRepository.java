@@ -8,6 +8,7 @@ import org.springframework.data.repository.CrudRepository;
 public interface ClientRepository extends CrudRepository<Client, Integer> {
     /**
      * Find a client by email
+     * 
      * @param email
      * @return Client
      */
@@ -15,24 +16,24 @@ public interface ClientRepository extends CrudRepository<Client, Integer> {
 
     /**
      * Delete the client by email
+     * 
      * @param email
      */
     void deleteClientByEmail(String email);
 
     /**
      * Find all clients
+     * 
      * @return List<Clients>
      */
     List<Client> findAll();
 
     /**
      * Find client by accountId
+     * 
      * @param accountId
      * @return
      */
     Client findByAccountId(Integer accountId);
-    
-    
-    void deleteAll();
 
 }

@@ -8,13 +8,16 @@ public interface ClassTypeRepository extends CrudRepository<ClassType, Integer> 
 
     /**
      * Find ClassType by name
+     * 
      * @param name
      * @return ClassType
      */
 
     ClassType findByName(String name);
+
     /**
      * Find ClassType by id
+     * 
      * @param typeId
      * @return ClassType
      */
@@ -22,20 +25,24 @@ public interface ClassTypeRepository extends CrudRepository<ClassType, Integer> 
 
     /**
      * Returns a list of classType by their approval
+     * 
      * @param approved
      * @return List<ClassType> by approved or not approved
      */
     List<ClassType> findByApproved(Boolean approved);
+
     /**
      * Find all classTypes
+     * 
      * @return List<ClassType>
      */
     List<ClassType> findAll();
 
     /**
      * Deletes ClassType by name
+     * 
      * @param name
      */
     void deleteByName(String name);
-    
+
 }

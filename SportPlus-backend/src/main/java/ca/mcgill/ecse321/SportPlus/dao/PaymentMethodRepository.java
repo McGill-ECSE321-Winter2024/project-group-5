@@ -1,12 +1,29 @@
 package ca.mcgill.ecse321.SportPlus.dao;
 
+import ca.mcgill.ecse321.SportPlus.model.ClassType;
+import ca.mcgill.ecse321.SportPlus.model.Client;
 import ca.mcgill.ecse321.SportPlus.model.PaymentMethod;
-import org.springframework.data.repository.CrudRepository;
 import java.util.List;
+import org.springframework.data.repository.CrudRepository;
 
 public interface PaymentMethodRepository extends CrudRepository<PaymentMethod, Integer> {
-    // Find a payment method by card number
+
+    /**
+     * Find PpaymentMethods by card number
+     * 
+     * @param cardNumber
+     * @return PaymentMethod
+     */
     PaymentMethod findByCardNumber(String cardNumber);
 
-    // Additional custom methods can be added here
+    /**
+     * Find all PpaymentMethods for a client
+     * 
+     * @param Client
+     * @return List<PaymentMethod>
+     */
+
+    List<PaymentMethod> findByClient(Client client);
+
+
 }
