@@ -1,6 +1,5 @@
 package ca.mcgill.ecse321.SportPlus.dao;
 
-import ca.mcgill.ecse321.SportPlus.model.ClassType;
 import ca.mcgill.ecse321.SportPlus.model.Client;
 import ca.mcgill.ecse321.SportPlus.model.PaymentMethod;
 import java.util.List;

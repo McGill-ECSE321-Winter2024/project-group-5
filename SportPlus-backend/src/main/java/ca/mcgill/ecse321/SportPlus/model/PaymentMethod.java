@@ -12,6 +12,7 @@ import jakarta.persistence.ManyToOne;
 /*This code was generated using the UMPLE 1.33.0.6934.a386b0a58 modeling language!*/
 
 import java.sql.Date;
+import java.util.Objects;
 
 @Entity
 public class PaymentMethod {
@@ -144,5 +145,26 @@ public class PaymentMethod {
             : "null")
         + System.getProperties().getProperty("line.separator") +
         "  " + "client = " + (getClient() != null ? Integer.toHexString(System.identityHashCode(getClient())) : "null");
+  }
+
+  // What it means for two PaymentMethods to be equal
+  // There atributes are equal
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null || getClass() != obj.getClass())
+      return false;
+    PaymentMethod paymentMethod = (PaymentMethod) obj;
+    return Objects.equals(cardNumber, paymentMethod.cardNumber) &&
+        Objects.equals(cvc, paymentMethod.cvc) &&
+        Objects.equals(cardHolderName, paymentMethod.cardHolderName) &&
+        cardId == paymentMethod.cardId &&
+        Objects.equals(expDate, paymentMethod.expDate);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(cardNumber, cvc, cardHolderName, cardId, expDate);
   }
 }
