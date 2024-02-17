@@ -3,10 +3,14 @@ package ca.mcgill.ecse321.SportPlus.model;
 import java.sql.Date;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class PaymentMethod
 {
+  @Id
+  private int paymentId;
 
   private String cardNumber;
   private Date expDate;
@@ -14,7 +18,9 @@ public class PaymentMethod
   private String cardHolderName;
 
   //PaymentMethod Associations
+  @ManyToOne
   private SportPlus sportPlus;
+  @ManyToOne
   private Client client;
 
   //------------------------

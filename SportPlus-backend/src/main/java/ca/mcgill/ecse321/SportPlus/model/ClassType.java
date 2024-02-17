@@ -19,7 +19,6 @@ public class ClassType {
 
   // ClassType Associations
   @ManyToOne
-  @JoinColumn(name = "sportPlus_id")
   private SportPlus sportPlus;
 
   @ManyToOne

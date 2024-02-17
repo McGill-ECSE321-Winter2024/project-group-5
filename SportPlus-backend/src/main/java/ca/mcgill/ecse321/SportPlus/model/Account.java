@@ -9,9 +9,9 @@ import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MappedSuperclass;
 
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Account {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +23,6 @@ public abstract class Account {
 
   // Account Associations
   @ManyToOne
-  @JoinColumn(name = "sportPlus_id", nullable = false)
   private SportPlus sportPlus;
 
   // ------------------------

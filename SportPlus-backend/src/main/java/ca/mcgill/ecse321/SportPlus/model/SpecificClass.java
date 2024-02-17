@@ -6,6 +6,7 @@ import java.sql.Time;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class SpecificClass
@@ -19,8 +20,11 @@ public class SpecificClass
 
 
   //SpecificClass Associations
+  @ManyToOne
   private SportPlus sportPlus;
+  @ManyToOne
   private Instructor supervisor;
+  @ManyToOne
   private ClassType classType;
 
   //------------------------

@@ -3,6 +3,7 @@ package ca.mcgill.ecse321.SportPlus.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Registration
@@ -13,8 +14,11 @@ public class Registration
   private int regId;
 
   //Registration Associations
+  @ManyToOne
   private SportPlus sportPlus;
+  @ManyToOne
   private SpecificClass specificClass;
+  @ManyToOne
   private Client client;
 
   //------------------------
