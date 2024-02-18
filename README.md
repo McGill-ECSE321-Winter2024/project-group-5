@@ -20,7 +20,7 @@ This project is an app to manage different classes and schedules within SportPlu
 | Sophia Carbone | ezlilcoconut       | Project manager |  |
 | Lynn Haddad | haddadlynn             | Documentation |  |
 | Nizar Kheir Eddine | justsom1-nizar             | Tester | |
-| Dmytro Martyniuk | dmytromartyniuk  | Back-end developer |  |
+| Dmytro Martyniuk | dmytromartyniuk  | Back-end developer | 42 |
 | Sirine Tarhouni | SirineTarhouni             | Front-end developer |  |
 
 ### Team roles scope of work:  
