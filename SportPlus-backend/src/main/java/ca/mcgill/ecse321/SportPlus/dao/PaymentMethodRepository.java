@@ -8,12 +8,20 @@ import org.springframework.data.repository.CrudRepository;
 public interface PaymentMethodRepository extends CrudRepository<PaymentMethod, Integer> {
 
     /**
-     * Find PpaymentMethods by card number
+     * Find PaymentMethods by card number
      * 
      * @param cardNumber
      * @return PaymentMethod
      */
     PaymentMethod findByCardNumber(String cardNumber);
+
+    /**
+     * Deletes PpaymentMethods by card number
+     * 
+     * @param cardNumber
+     * 
+     */
+    void deleteByCardNumber(String cardNumber);
 
     /**
      * Find all PpaymentMethods for a client
@@ -24,5 +32,11 @@ public interface PaymentMethodRepository extends CrudRepository<PaymentMethod, I
 
     List<PaymentMethod> findByClient(Client client);
 
-
+    /**
+     * Deletes all paymentMethods from a client
+     * 
+     * @param Client
+     * 
+     */
+    void dedeleteByClient(Client client);
 }
