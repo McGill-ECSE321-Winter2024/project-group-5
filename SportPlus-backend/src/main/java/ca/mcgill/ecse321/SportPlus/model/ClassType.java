@@ -45,6 +45,7 @@ public class ClassType {
     description = aDescription;
     typeId = aTypeId;
     approved = aApproved;
+    approver = aApprover;
     if (!setApprover(aApprover)) {
       throw new RuntimeException(
           "Unable to create ClassType due to aApprover. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");

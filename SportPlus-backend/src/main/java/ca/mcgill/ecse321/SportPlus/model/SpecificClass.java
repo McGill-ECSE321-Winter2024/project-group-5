@@ -6,13 +6,10 @@ import java.sql.Time;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.33.0.6934.a386b0a58 modeling language!*/
-
-
-import java.sql.Date;
-import java.sql.Time;
 
 // line 31 "model.ump"
 // line 76 "model.ump"
@@ -36,17 +33,21 @@ public class SpecificClass
   //SpecificClass Associations
   @ManyToOne
   private Instructor supervisor;
+
   @ManyToOne
+  @JoinColumn(name = "type_id")
   private ClassType classType;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
+  protected SpecificClass(){
 
-  public SpecificClass(Date aDate, Time aStartTime, Time aEndTime, int aSessionId, ClassType aClassType)
+  }
+  public SpecificClass(Date aDate, Time start1, Time aEndTime, int aSessionId, ClassType aClassType)
   {
     date = aDate;
-    startTime = aStartTime;
+    startTime = start1;
     endTime = aEndTime;
     sessionId = aSessionId;
     if (!setClassType(aClassType))

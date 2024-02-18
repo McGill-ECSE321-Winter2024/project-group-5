@@ -1,5 +1,6 @@
 package ca.mcgill.ecse321.SportPlus.dao;
 
+
 import org.springframework.data.repository.CrudRepository;
 
 import ca.mcgill.ecse321.SportPlus.model.SpecificClass;
@@ -8,6 +9,7 @@ import ca.mcgill.ecse321.SportPlus.model.Instructor;
 
 import java.util.Date;
 import java.util.List;
+import java.sql.Time;
 
 public interface SpecificClassRepository extends CrudRepository<SpecificClass, Integer> {
     // private int sessionId;
@@ -18,7 +20,7 @@ public interface SpecificClassRepository extends CrudRepository<SpecificClass, I
      * @param sessionId
      * @return SpecificClass
      */
-    SpecificClass findBysessionId(int sessionId);
+    SpecificClass findBySessionId(int sessionId);
 
     /**
      * Find specific classes by date
@@ -42,11 +44,10 @@ public interface SpecificClassRepository extends CrudRepository<SpecificClass, I
      * @param date, startTime, endTime
      * @return List<SpecificClass>
      */
-    List<SpecificClass> findByDateAndStartTimeBeforeAndEndTimeAfter(Date date,
-            Date startTime, Date endTime);
+    List<SpecificClass> findByDateAndStartTimeBeforeAndEndTimeAfter(Date date, Time startTime, Time endTime);
 
     /**
-     * Find specific classes by instructor/supervisor IDe
+     * Find specific classes by instructor/supervisor ID
      * 
      * @param supervisor
      * @return List<SpecificClass>
