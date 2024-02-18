@@ -26,6 +26,8 @@ public class OwnerRepositoryTests {
 
     @Test
     public void testFindownerByEmail() {
+
+        // Given an owner
         String aEmail = "owner@sportplus.com";
         String aFirstName = "Owner";
         String aPassword = "123321";
@@ -36,8 +38,10 @@ public class OwnerRepositoryTests {
 
         ownerRepository.save(owner);
 
+        // When owner is fetched from databse by the email
         Owner ownerFromDb = ownerRepository.findByEmail(aEmail);
 
+        // Then the owner should correspond to the initail owner
         assertNotNull(ownerFromDb);
         assertEquals(aEmail, ownerFromDb.getEmail());
         assertEquals(aFirstName, ownerFromDb.getFirstName());
@@ -48,6 +52,8 @@ public class OwnerRepositoryTests {
     @Test
     @Transactional
     public void testFindByAccountId() {
+
+        // Given an owner
         String aEmail = "owner@sportplus.com";
         String aFirstName = "Owner";
         String aPassword = "123321";
@@ -62,8 +68,10 @@ public class OwnerRepositoryTests {
 
         int accountId = ownerFromDb.getAccountId();
 
+        // When owner is fetched from databse by the AccountId
         Owner savedFromDb = ownerRepository.findByAccountId(accountId);
 
+        // Then the owner should correspond to the initail owner
         assertNotNull(savedFromDb);
         assertEquals(aEmail, savedFromDb.getEmail());
         assertEquals(aFirstName, savedFromDb.getFirstName());

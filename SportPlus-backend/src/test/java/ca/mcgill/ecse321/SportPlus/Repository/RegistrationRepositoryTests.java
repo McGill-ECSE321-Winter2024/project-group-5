@@ -55,6 +55,7 @@ public class RegistrationRepositoryTests {
     @Transactional
     public void testFindByRegId() {
 
+        // Given a registration
         Owner owner = new Owner("Owner@email.com", "Owner", "123", "owner last anme", 0);
         ownerRepository.save(owner);
 
@@ -70,8 +71,10 @@ public class RegistrationRepositoryTests {
         Registration registration = new Registration(0, specificClass, client);
         registrationRepository.save(registration);
 
+        // When the registration is fetched by Id
         Registration foundRegistration = registrationRepository.findByRegId(registration.getRegId());
 
+        // Then the registration should match the initail registration
         assertNotNull(foundRegistration, "Registration should not be null");
         assertEquals(specificClass.getSessionId(), foundRegistration.getSpecificClass().getSessionId(),
                 "SpecificClass should match");
@@ -136,6 +139,8 @@ public class RegistrationRepositoryTests {
     @Test
     @Transactional
     public void testFinBySpecificClass() {
+
+        // Given two registrations
         Owner owner = new Owner("Owner@email.com", "Owner", "123", "owner last anme", 0);
         ownerRepository.save(owner);
 
@@ -165,11 +170,13 @@ public class RegistrationRepositoryTests {
         registrationRepository.save(registration2);
         registrationRepository.save(registration3);
 
+        // When the registrations are feteched from database by SpecificClass
         List<Registration> foundRegistrations = registrationRepository.findBySpecificClass(specificClass);
 
         // Should have the 2 registrations not 3.
         assertEquals(2, foundRegistrations.size());
 
+        // The found registrations should contain registration and registration2
         assertThat(foundRegistrations).contains(registration, registration2);
 
     }
@@ -220,6 +227,7 @@ public class RegistrationRepositoryTests {
     @Transactional
     public void testFindByClient() {
 
+        // Given 3 registrations
         Owner owner = new Owner("Owner@email.com", "Owner", "123", "owner last anme", 0);
         ownerRepository.save(owner);
 
@@ -237,6 +245,7 @@ public class RegistrationRepositoryTests {
         SpecificClass specificClass2 = new SpecificClass(null, null, null, 0, tennis);
         specificClassRepository.save(specificClass);
         specificClassRepository.save(specificClass2);
+
         // 3 Registrations, client(John) has 2 registrations
         Registration registration = new Registration(0, specificClass, john);
         Registration registrationSameClient = new Registration(0, specificClass2, john);
@@ -252,6 +261,8 @@ public class RegistrationRepositoryTests {
         // Should have the 2 registrations John registered for, not 3.
         assertEquals(2, foundRegistrations.size());
 
+        // Then the found registrations should contain registration and
+        // registrationSameClient
         assertThat(foundRegistrations).contains(registration, registrationSameClient);
 
     }

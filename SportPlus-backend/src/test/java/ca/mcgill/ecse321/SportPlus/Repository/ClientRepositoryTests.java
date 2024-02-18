@@ -29,6 +29,8 @@ public class ClientRepositoryTests {
 
     @Test
     public void testFindClientByEmail() {
+
+        // Setup the client
         String aEmail = "example.last@gmail.com";
         String aFirstName = "Example";
         String aPassword = "1234567890";
@@ -37,10 +39,13 @@ public class ClientRepositoryTests {
 
         Client aClient = new Client(aEmail, aFirstName, aPassword, aLastName, aAccountId);
 
+        // Save the client in the database
         clientRepository.save(aClient);
 
+        // Fetch the client from teh databse
         Client clientFromDb = clientRepository.findClientByEmail(aEmail);
 
+        // Verify if the right client was fetched
         assertNotNull(clientFromDb);
         assertEquals(aEmail, clientFromDb.getEmail());
         assertEquals(aFirstName, clientFromDb.getFirstName());
@@ -52,6 +57,7 @@ public class ClientRepositoryTests {
     @Transactional
     public void testDeleteClientByEmail() {
 
+        // Setup 2 clients
         String aEmail = "example.last@gmail.com";
         String aFirstName = "Example";
         String aPassword = "1234567890";
@@ -62,18 +68,21 @@ public class ClientRepositoryTests {
 
         Client aClientToBeSaved = new Client("anEmail", "aFirstName", "aPassword", "aLastName", 2);
 
+        // Save both clients to the database
         clientRepository.save(aClientToBeDeleted);
         clientRepository.save(aClientToBeSaved);
 
+        // Delete only one client with email
         clientRepository.deleteClientByEmail(aEmail);
 
+        // Verify if the client was removed
         assertThat(clientRepository.findClientByEmail(aEmail)).isNull();
 
         // Checks if aClientToBeSaved still there
         assertThat(clientRepository.findAll()).hasSize(1);
         Client remainingClient = clientRepository.findClientByEmail("anEmail");
         assertThat(remainingClient).isNotNull();
-        assertThat(remainingClient.getEmail()).isEqualTo("anEmail"); // Further verify the details if needed
+        assertThat(remainingClient.getEmail()).isEqualTo("anEmail");
     }
 
     @Test
@@ -119,17 +128,23 @@ public class ClientRepositoryTests {
     @Test
     @Transactional
     public void testFindByAccountId() {
+
+        // Setup client
         String aEmail = "example.last@gmail.com";
         String aFirstName = "Example";
         String aPassword = "1234567890";
         String aLastName = "Last";
 
         Client client = new Client(aEmail, aFirstName, aPassword, aLastName, 0);
+
+        // Save the client
         Client savedClient = clientRepository.save(client);
         int accountId = savedClient.getAccountId();
 
+        // Fetch the client from the databse with the accountID
         Client clientFromDb = clientRepository.findByAccountId(accountId);
 
+        // Verify if the client is right
         assertNotNull(clientFromDb);
         assertEquals(aEmail, clientFromDb.getEmail());
         assertEquals(aFirstName, clientFromDb.getFirstName());

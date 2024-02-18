@@ -29,6 +29,8 @@ public class InstructorRepositoryTests {
 
     @Test
     public void testFindInstructorByEmail() {
+
+        // Given an instructor
         String aEmail = "instructor.last@gmail.com";
         String aFirstName = "Example";
         String aPassword = "1234567890";
@@ -37,10 +39,13 @@ public class InstructorRepositoryTests {
 
         Instructor instructor = new Instructor(aEmail, aFirstName, aPassword, aLastName, aAccountId);
 
+        // Save the instructor
         instructorRepository.save(instructor);
 
+        // Fetch the instructor from the database
         Instructor instructorFromDb = instructorRepository.findInstructorByEmail(aEmail);
 
+        // Verify if the instrucor is right
         assertNotNull(instructorFromDb);
         assertEquals(aEmail, instructorFromDb.getEmail());
         assertEquals(aFirstName, instructorFromDb.getFirstName());
@@ -52,6 +57,7 @@ public class InstructorRepositoryTests {
     @Transactional
     public void testDeleteInstructorByEmail() {
 
+        // Given two instructors
         String aEmail = "instructor.last@gmail.com";
         String aFirstName = "Example";
         String aPassword = "1234567890";
@@ -65,8 +71,10 @@ public class InstructorRepositoryTests {
         instructorRepository.save(instructorToBeDeleted);
         instructorRepository.save(InstrucotrToBeSaved);
 
+        // Delete only one instructor
         instructorRepository.deleteInstructorByEmail(aEmail);
 
+        // Verify that instructor does not exist
         assertThat(instructorRepository.findInstructorByEmail(aEmail)).isNull();
 
         // Checks if aClientToBeSaved still there
@@ -122,6 +130,8 @@ public class InstructorRepositoryTests {
     @Test
     @Transactional
     public void testFindByAccountId() {
+
+        // Given an instrcutor
         String aEmail = "instructor.last@gmail.com";
         String aFirstName = "Example";
         String aPassword = "1234567890";
@@ -133,8 +143,10 @@ public class InstructorRepositoryTests {
         instructorRepository.save(savedInstructor);
         int accountId = savedInstructor.getAccountId();
 
+        // When we fetch the instrucotr by AccountID
         Instructor instructorFromDb = instructorRepository.findByAccountId(accountId);
 
+        // Then the instructor should match the inital instructor
         assertNotNull(instructorFromDb);
         assertEquals(aEmail, instructorFromDb.getEmail());
         assertEquals(aFirstName, instructorFromDb.getFirstName());
