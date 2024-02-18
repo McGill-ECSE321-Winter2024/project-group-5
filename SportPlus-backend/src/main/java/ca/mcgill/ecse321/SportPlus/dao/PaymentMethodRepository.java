@@ -38,5 +38,5 @@ public interface PaymentMethodRepository extends CrudRepository<PaymentMethod, I
      * @param Client
      * 
      */
-    void dedeleteByClient(Client client);
+    void deleteByClient(Client client);
 }
