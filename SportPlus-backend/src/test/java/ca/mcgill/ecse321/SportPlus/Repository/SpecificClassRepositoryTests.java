@@ -68,14 +68,12 @@ public class SpecificClassRepositoryTests {
 
     }
 
-    // List<SpecificClass> findByDate(Date date);
-    // TODO: TO FInish
     @Test
     @Transactional
     public void testFindBydate() {
 
         // Define the dates
-        // First 2 Are the same different hours
+        // First 2 Are the same date different hours
         LocalDateTime localDateTime = LocalDateTime.of(2024, 3, 6, 10, 0);
         LocalDateTime localDateTime2 = LocalDateTime.of(2024, 3, 6, 11, 0);
         LocalDateTime localDateTime3 = LocalDateTime.of(2024, 3, 8, 10, 0);
@@ -99,7 +97,7 @@ public class SpecificClassRepositoryTests {
 
         List<SpecificClass> foundSpecificClasses = specificClassRepository.findByDate(date1);
 
-        // First 2 shgould have the same date
+        // First 2 should have the same date
         assertEquals(2, foundSpecificClasses.size());
         assertThat(foundSpecificClasses).contains(specificClass, specificClass2);
 
