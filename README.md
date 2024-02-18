@@ -12,15 +12,16 @@ This project is an app to manage different classes and schedules within SportPlu
 
 
 ## Team Members
-
-| Name          | GitHub username | Team Roles |
-| ------------- | --------------- | --------------- |
-| John-Paul Chouery | JPGC04    | | 
-| Sophia Carbone | ezlilcoconut       | |
-| Lynn Haddad | haddadlynn             | |
-| Nizar Kheir Eddine | justsom1-nizar             | |
-| Dmytro Martyniuk | dmytromartyniuk  | |
-| Sirine Tarhouni | SirineTarhouni             | |
+                                               
+                                                  
+| Name          | GitHub username |   Team Roles    | Deliverable 1 contribution hours|
+| ------------- | --------------- | --------------- |---------------------------------|
+| John-Paul Chouery | JPGC04    | Tester |  |
+| Sophia Carbone | ezlilcoconut       | Back-end developer |  |
+| Lynn Haddad | haddadlynn             | Documentation |  |
+| Nizar Kheir Eddine | justsom1-nizar             | Tester | |
+| Dmytro Martyniuk | dmytromartyniuk  | Back-end developer |  |
+| Sirine Tarhouni | SirineTarhouni             | Front-end developer |  |
 
 [Team report 1](https://github.com/McGill-ECSE321-Winter2024/project-group-5/wiki/Project-Reports#project-report-1) includes the division of hours between the team members, the key design decisions and [meeting minutes](https://github.com/McGill-ECSE321-Winter2024/project-group-5/wiki/Minutes) for deliverable 1.
 
