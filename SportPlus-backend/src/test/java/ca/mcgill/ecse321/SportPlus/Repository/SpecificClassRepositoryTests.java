@@ -47,6 +47,7 @@ public class SpecificClassRepositoryTests {
         specificClassRepository.deleteAll();
         classTypeRepository.deleteAll();
         ownerRepository.deleteAll();
+        instructorRepository.deleteAll();
     }
 
     @Test
