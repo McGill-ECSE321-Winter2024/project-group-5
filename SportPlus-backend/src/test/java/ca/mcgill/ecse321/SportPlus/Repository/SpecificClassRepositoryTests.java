@@ -23,7 +23,6 @@ import ca.mcgill.ecse321.SportPlus.model.Instructor;
 
 import java.sql.Date;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
 import java.sql.Time;
 
@@ -97,11 +96,9 @@ public class SpecificClassRepositoryTests {
         SpecificClass specificClass2 = new SpecificClass(date2, null, null, 0, yoga);
         SpecificClass specificClass3 = new SpecificClass(date3, null, null, 0, yoga);
 
-       
         specificClassRepository.save(specificClass);
         specificClassRepository.save(specificClass2);
         specificClassRepository.save(specificClass3);
-    
 
         List<SpecificClass> foundSpecificClasses = specificClassRepository.findByDate(date1);
 
@@ -141,8 +138,6 @@ public class SpecificClassRepositoryTests {
         specificClassRepository.save(specificClass2);
         specificClassRepository.save(specificClass3);
         specificClassRepository.save(specificClass4);
-        
-        
 
         List<SpecificClass> foundYogaSpecificClasses = specificClassRepository.findByClassType(yoga);
         List<SpecificClass> foundTennisSpecificClasses = specificClassRepository.findByClassType(tennis);
@@ -193,7 +188,7 @@ public class SpecificClassRepositoryTests {
         ClassType tennis = new ClassType("tennis", "heh class", 0, true, owner);
         classTypeRepository.save(yoga);
         classTypeRepository.save(tennis);
-       
+
         SpecificClass specificClass = new SpecificClass(date1start, start1, end1, 0, yoga);
         SpecificClass specificClass2 = new SpecificClass(date2start, start2, end2, 0, tennis);
         SpecificClass specificClass3 = new SpecificClass(date3start, start3, end3, 0, tennis);
@@ -203,7 +198,6 @@ public class SpecificClassRepositoryTests {
         specificClass2.setSupervisor(supervisor2);
         specificClass3.setSupervisor(supervisor1);
         specificClass4.setSupervisor(supervisor2);
-
 
         specificClassRepository.save(specificClass);
         specificClassRepository.save(specificClass2);
@@ -220,5 +214,5 @@ public class SpecificClassRepositoryTests {
         assertThat(foundSpecificClasses2).contains(specificClass2, specificClass4);
 
     }
-    // findBySupervisor(Instructor supervisor);
+
 }
