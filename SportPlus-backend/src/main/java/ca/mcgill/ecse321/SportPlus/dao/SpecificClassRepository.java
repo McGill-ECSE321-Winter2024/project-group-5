@@ -1,6 +1,5 @@
 package ca.mcgill.ecse321.SportPlus.dao;
 
-
 import org.springframework.data.repository.CrudRepository;
 
 import ca.mcgill.ecse321.SportPlus.model.SpecificClass;
@@ -37,14 +36,6 @@ public interface SpecificClassRepository extends CrudRepository<SpecificClass, I
      * @return List<SpecificClass>
      */
     List<SpecificClass> findByClassType(ClassType classType);
-
-    /**
-     * Find specific classes within a time range on a specific date
-     * 
-     * @param date, startTime, endTime
-     * @return List<SpecificClass>
-     */
-    List<SpecificClass> findByDateAndStartTimeBeforeAndEndTimeAfter(Date date, Time startTime, Time endTime);
 
     /**
      * Find specific classes by instructor/supervisor ID
