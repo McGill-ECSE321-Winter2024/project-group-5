@@ -33,41 +33,41 @@ public class ClassTypeTests {
     @Test
     public void testFindByName() {
 
-        // Given
+        // Given owner and a classtype
         Owner owner = new Owner(null, null, null, null, 0);
         owner = ownerRepository.save(owner);
 
         ClassType classType = new ClassType("Yoga", "A relaxing class", 0, true, owner);
         classType = classTypeRepository.save(classType); // Save and reassign to capture the persisted entity
 
-        // When
+        // When we find the clastype by the name
         ClassType found = classTypeRepository.findByName(classType.getName());
 
-        // Then
+        // Then the classtype name should be the the as the one created
         assertThat(found.getName()).isEqualTo(classType.getName());
     }
 
     @Test
     public void testfindByTypeId() {
 
-        // Given
+        // Given owner and a classtype
         Owner owner = new Owner("owner@sportplus.com", "steve", "123", "harvey", 0);
         owner = ownerRepository.save(owner);
 
         ClassType classType = new ClassType("Yoga", "A relaxing class", 12, true, owner);
         classType = classTypeRepository.save(classType); // Save and reassign to capture the persisted entity
 
-        // When
+        // When we find the clastype by the TypeId
         ClassType found = classTypeRepository.findByTypeId(classType.getTypeId());
 
-        // Then
+        // Then the Id from the databse should match the one created
         assertThat(found.getTypeId()).isEqualTo(classType.getTypeId());
     }
 
     @Test
     public void findByApproved() {
 
-        // Given
+        // Given owner and 4 classtypes with different approvals
         Owner owner = new Owner(null, null, null, null, 0);
         owner = ownerRepository.save(owner);
 
@@ -77,9 +77,12 @@ public class ClassTypeTests {
         classTypeRepository.save(new ClassType("Kickboxing", "A high-intensity class", 3, false, owner));
         classTypeRepository.save(new ClassType("Zumba", "A dance fitness class", 4, false, owner));
 
+        // When we finf by approval from the databse
         List<ClassType> approvedClasses = classTypeRepository.findByApproved(true);
         List<ClassType> notApprovedClasses = classTypeRepository.findByApproved(false);
 
+        // Then the size of the approved should match
+        // It should contain the right approvals
         assertThat(approvedClasses).hasSize(2);
         assertThat(approvedClasses.stream().allMatch(ClassType::getApproved)).isTrue();
 
@@ -88,11 +91,10 @@ public class ClassTypeTests {
 
     }
 
-    // List<ClassType> findAll();
     @Test
     public void findAll() {
 
-        // Given
+        // Given an owner and 4 classtypes with diifferent approvals
         Owner owner = new Owner(null, null, null, null, 0);
         owner = ownerRepository.save(owner);
 
@@ -106,8 +108,10 @@ public class ClassTypeTests {
         classTypeRepository.save(classType3);
         classTypeRepository.save(classType4);
 
+        // When we find allclasstypes
         List<ClassType> allClassTypes = (List<ClassType>) classTypeRepository.findAll();
 
+        // Then the size should be 4 and contains the 4 classtypes created
         assertThat(allClassTypes).hasSize(4);
 
         assertThat(allClassTypes).contains(classType1, classType2, classType3, classType4);
@@ -118,7 +122,6 @@ public class ClassTypeTests {
     @Transactional
     public void testDeleteByName() {
         // Setup
-
         Owner owner = new Owner(null, null, null, null, 0);
         owner = ownerRepository.save(owner);
 

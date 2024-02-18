@@ -8,7 +8,6 @@ import ca.mcgill.ecse321.SportPlus.model.Instructor;
 
 import java.util.Date;
 import java.util.List;
-import java.sql.Time;
 
 public interface SpecificClassRepository extends CrudRepository<SpecificClass, Integer> {
     // private int sessionId;
