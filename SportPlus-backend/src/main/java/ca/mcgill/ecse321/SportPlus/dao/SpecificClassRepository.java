@@ -8,6 +8,7 @@ import ca.mcgill.ecse321.SportPlus.model.Instructor;
 
 import java.util.Date;
 import java.util.List;
+import java.sql.Time;
 
 public interface SpecificClassRepository extends CrudRepository<SpecificClass, Integer> {
     // private int sessionId;
@@ -18,7 +19,7 @@ public interface SpecificClassRepository extends CrudRepository<SpecificClass, I
      * @param sessionId
      * @return SpecificClass
      */
-    SpecificClass findBysessionId(int sessionId);
+    SpecificClass findBySessionId(int sessionId);
 
     /**
      * Find specific classes by date
@@ -37,16 +38,7 @@ public interface SpecificClassRepository extends CrudRepository<SpecificClass, I
     List<SpecificClass> findByClassType(ClassType classType);
 
     /**
-     * Find specific classes within a time range on a specific date
-     * 
-     * @param date, startTime, endTime
-     * @return List<SpecificClass>
-     */
-    List<SpecificClass> findByDateAndStartTimeBeforeAndEndTimeAfter(Date date,
-            Date startTime, Date endTime);
-
-    /**
-     * Find specific classes by instructor/supervisor IDe
+     * Find specific classes by instructor/supervisor ID
      * 
      * @param supervisor
      * @return List<SpecificClass>

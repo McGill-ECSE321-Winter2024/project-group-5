@@ -51,7 +51,7 @@ public class ClassTypeTests {
     public void testfindByTypeId() {
 
         // Given
-        Owner owner = new Owner(null, null, null, null, 0);
+        Owner owner = new Owner("owner@sportplus.com", "steve", "123", "harvey", 0);
         owner = ownerRepository.save(owner);
 
         ClassType classType = new ClassType("Yoga", "A relaxing class", 12, true, owner);

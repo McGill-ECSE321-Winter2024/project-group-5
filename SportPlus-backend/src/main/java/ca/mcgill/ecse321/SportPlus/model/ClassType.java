@@ -30,7 +30,7 @@ public class ClassType {
 
   // ClassType Associations
   @ManyToOne
-  @JoinColumn(name = "approver_id")
+  @JoinColumn(name = "approver_account_id")
   private Owner approver;
 
   // ------------------------
@@ -45,10 +45,11 @@ public class ClassType {
     description = aDescription;
     typeId = aTypeId;
     approved = aApproved;
-    if (!setApprover(aApprover)) {
-      throw new RuntimeException(
-          "Unable to create ClassType due to aApprover. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
-    }
+    approver = aApprover;
+    // if (!setApprover(aApprover)) {
+    //   throw new RuntimeException(
+    //       "Unable to create ClassType due to aApprover. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+    // }
   }
 
   // ------------------------
