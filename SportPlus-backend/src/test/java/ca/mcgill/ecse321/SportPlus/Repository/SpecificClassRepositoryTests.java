@@ -54,14 +54,13 @@ public class SpecificClassRepositoryTests {
     public void testFindBySessionId() {
 
         Owner owner = new Owner("Owner@email.com", "Owner", "123", "owner last anme", 0);
+        ownerRepository.save(owner);
 
         ClassType yoga = new ClassType("yoga", "cool class", 0, true, owner);
+        classTypeRepository.save(yoga);
 
         SpecificClass specificClass = new SpecificClass(null, null, null, 0, yoga);
-
         specificClassRepository.save(specificClass);
-        classTypeRepository.save(yoga);
-        ownerRepository.save(owner);
 
         SpecificClass foundSpecificClass = specificClassRepository.findBySessionId(specificClass.getSessionId());
 
@@ -88,18 +87,20 @@ public class SpecificClassRepositoryTests {
         Date date3 = Date.valueOf(localDateTime3.toLocalDate());
 
         Owner owner = new Owner("Owner@email.com", "Owner", "123", "owner last anme", 0);
+        ownerRepository.save(owner);
 
         ClassType yoga = new ClassType("yoga", "cool class", 0, true, owner);
+        classTypeRepository.save(yoga);
 
         SpecificClass specificClass = new SpecificClass(date1, null, null, 0, yoga);
         SpecificClass specificClass2 = new SpecificClass(date2, null, null, 0, yoga);
         SpecificClass specificClass3 = new SpecificClass(date3, null, null, 0, yoga);
 
-        ownerRepository.save(owner);
+       
         specificClassRepository.save(specificClass);
         specificClassRepository.save(specificClass2);
         specificClassRepository.save(specificClass3);
-        classTypeRepository.save(yoga);
+    
 
         List<SpecificClass> foundSpecificClasses = specificClassRepository.findByDate(date1);
 
@@ -123,9 +124,12 @@ public class SpecificClassRepositoryTests {
         Date date3 = Date.valueOf(localDateTime3.toLocalDate());
 
         Owner owner = new Owner("Owner@email.com", "Owner", "123", "owner last anme", 0);
+        ownerRepository.save(owner);
 
         ClassType yoga = new ClassType("yoga", "cool class", 0, true, owner);
         ClassType tennis = new ClassType("tennis", "heh class", 0, true, owner);
+        classTypeRepository.save(yoga);
+        classTypeRepository.save(tennis);
 
         SpecificClass specificClass = new SpecificClass(date1, null, null, 0, yoga);
         SpecificClass specificClass2 = new SpecificClass(date2, null, null, 0, tennis);
@@ -136,9 +140,8 @@ public class SpecificClassRepositoryTests {
         specificClassRepository.save(specificClass2);
         specificClassRepository.save(specificClass3);
         specificClassRepository.save(specificClass4);
-        classTypeRepository.save(yoga);
-        classTypeRepository.save(tennis);
-        ownerRepository.save(owner);
+        
+        
 
         List<SpecificClass> foundYogaSpecificClasses = specificClassRepository.findByClassType(yoga);
         List<SpecificClass> foundTennisSpecificClasses = specificClassRepository.findByClassType(tennis);
@@ -178,12 +181,18 @@ public class SpecificClassRepositoryTests {
         Time end4 = Time.valueOf(localDateTime44.toLocalTime());
 
         Owner owner = new Owner("Owner@email.com", "Owner", "123", "owner last anme", 0);
+        ownerRepository.save(owner);
+
         Instructor supervisor1 = new Instructor("kyle@gmail.com", "kyle", "1234", "elyk", 4);
         Instructor supervisor2 = new Instructor("leandro@gmail.com", "leandro", "12564", "ordnael", 5);
+        instructorRepository.save(supervisor1);
+        instructorRepository.save(supervisor2);
 
         ClassType yoga = new ClassType("yoga", "cool class", 0, true, owner);
         ClassType tennis = new ClassType("tennis", "heh class", 0, true, owner);
-
+        classTypeRepository.save(yoga);
+        classTypeRepository.save(tennis);
+       
         SpecificClass specificClass = new SpecificClass(date1start, start1, end1, 0, yoga);
         SpecificClass specificClass2 = new SpecificClass(date2start, start2, end2, 0, tennis);
         SpecificClass specificClass3 = new SpecificClass(date3start, start3, end3, 0, tennis);
@@ -194,11 +203,7 @@ public class SpecificClassRepositoryTests {
         specificClass3.setSupervisor(supervisor1);
         specificClass4.setSupervisor(supervisor2);
 
-        ownerRepository.save(owner);
-        classTypeRepository.save(yoga);
-        classTypeRepository.save(tennis);
-        instructorRepository.save(supervisor1);
-        instructorRepository.save(supervisor2);
+
         specificClassRepository.save(specificClass);
         specificClassRepository.save(specificClass2);
         specificClassRepository.save(specificClass3);

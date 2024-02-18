@@ -35,7 +35,7 @@ public class SpecificClass {
   private Instructor supervisor;
 
   @ManyToOne
-  @JoinColumn(name = "type_id")
+  @JoinColumn(name = "class_type_type_id")
   private ClassType classType;
 
   // ------------------------
