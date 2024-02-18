@@ -23,7 +23,8 @@ This project is an app to manage different classes and schedules within SportPlu
 | Dmytro Martyniuk | dmytromartyniuk  | Back-end developer |  |
 | Sirine Tarhouni | SirineTarhouni             | Front-end developer |  |
 
-*Team roles scope of work:  
+### Team roles scope of work:  
+ Project manager: Responsible for overseeing the planning, execution, and delivery of a project within the defined constraints of time, resources, and scope.  
  Front-end developer: Responsible for developing the user-facing aspects of the website  
  Back-end developer: Responsible of handling the server-side development and database management of the website  
  Tester: Responsible for evaluating the quality and functionality of the software product  
