@@ -20,5 +20,6 @@ This project is an app to manage different classes and schedules within SportPlu
 | Dmytro Martyniuk | dmytromartyniuk  | |
 | Sirine Tarhouni | SirineTarhouni             | |
 
+[Team report 1](https://github.com/McGill-ECSE321-Winter2024/project-group-5/wiki/Project-Reports#project-report-1) includes the division of hours between the team members, the key design decisions and meeting minutes for deliverable 1.
 
-For more information about the SportPlus application, and team reports please consult the [wiki](../../wiki).
+For more information about the SportPlus application, please consult the [wiki](../../wiki).
