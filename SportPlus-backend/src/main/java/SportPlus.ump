@@ -1,0 +1,122 @@
+class Account
+{
+  abstract;
+  email;
+  firstName;
+  password;
+  String lastName;
+  Integer accountId;
+}
+class Instructor
+{
+  isA Account;
+}
+class Client
+{
+  isA Account;
+    1 <- * PaymentMethod;
+}
+class Owner
+{
+  isA Account;
+}
+class ClassType
+{
+  name;
+  description;
+  Integer typeId;
+  boolean approved;
+}
+class SpecificClass
+{
+  Date date;
+  Time startTime;
+  Time endTime;
+    Integer sessionId;
+}
+class Registration
+{
+  Integer regId;
+}
+association {  
+  * Registration -> 1 SpecificClass;
+  * Registration -> 1 Client;
+  * SpecificClass -> 0..1 Instructor supervisor;
+  * SpecificClass -> 1 ClassType;
+  * ClassType -> 1 Owner approver;
+}
+
+namespace -;
+class PaymentMethod
+{
+  cardNumber;
+  Date expDate;
+  cvc;
+  cardHolderName;
+  Integer cardId;
+}
+class Account
+{
+  position 403 107 141.15625 125.359375;
+}
+class Instructor
+{
+  position 423 334 109 41.359375;
+}
+class Client
+{
+  position 201 325 109 58.359375;
+    position.association Client__PaymentMethod 29,0 187,84;
+}
+class Owner
+{
+  position 608 336 109 41.359375;
+}
+class SpecificClass
+{
+  position 411 575 146.203125 109.359375;
+}
+class ClassType
+{
+  position 665 562 147.828125 92.359375;
+}
+class Registration
+{
+  position 106 608 119.171875 58.359375;
+  position.association Registration__SpecificClass 119,22 0,56;
+}
+namespace -;
+
+class Account
+{
+  position 403 107 141.15625 125.359375;
+}
+class Instructor
+{
+  position 423 334 109 41.359375;
+}
+class Client
+{
+  position 201 325 109 58.359375;
+  }
+class Owner
+{
+  position 608 336 109 41.359375;
+}
+class SpecificClass
+{
+  position 411 575 146.203125 109.359375;
+}
+class ClassType
+{
+  position 665 562 147.828125 92.359375;
+}
+class Registration
+{
+  position 106 608 119.171875 58.359375;
+  position.association Registration__SpecificClass 119,22 0,56;
+}
+class PaymentMethod
+{
+  position 9 156 186.140625 109.359375;
+}
