@@ -19,7 +19,6 @@ import ca.mcgill.ecse321.SportPlus.dao.ClassTypeRepository;
 import ca.mcgill.ecse321.SportPlus.dao.OwnerRepository;
 import ca.mcgill.ecse321.SportPlus.model.Client;
 import ca.mcgill.ecse321.SportPlus.model.Owner;
-import ca.mcgill.ecse321.SportPlus.model.PaymentMethod;
 import ca.mcgill.ecse321.SportPlus.model.Registration;
 import ca.mcgill.ecse321.SportPlus.model.SpecificClass;
 import ca.mcgill.ecse321.SportPlus.model.ClassType;
