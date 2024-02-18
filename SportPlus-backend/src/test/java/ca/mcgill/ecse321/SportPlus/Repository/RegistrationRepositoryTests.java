@@ -19,6 +19,7 @@ import ca.mcgill.ecse321.SportPlus.dao.ClassTypeRepository;
 import ca.mcgill.ecse321.SportPlus.dao.OwnerRepository;
 import ca.mcgill.ecse321.SportPlus.model.Client;
 import ca.mcgill.ecse321.SportPlus.model.Owner;
+import ca.mcgill.ecse321.SportPlus.model.PaymentMethod;
 import ca.mcgill.ecse321.SportPlus.model.Registration;
 import ca.mcgill.ecse321.SportPlus.model.SpecificClass;
 import ca.mcgill.ecse321.SportPlus.model.ClassType;
@@ -51,7 +52,6 @@ public class RegistrationRepositoryTests {
         ownerRepository.deleteAll();
     }
 
-    // Registration findByRegId(int regId);
     @Test
     @Transactional
     public void testFindByRegId() {
@@ -79,6 +79,56 @@ public class RegistrationRepositoryTests {
         assertEquals(client.getAccountId(), foundRegistration.getClient().getAccountId(), "Client should match");
         assertEquals("John", foundRegistration.getClient().getFirstName(), "Client should match the name");
         assertEquals(registration.getSpecificClass().getClassType(),
+                foundRegistration.getSpecificClass().getClassType(),
+                "Type should match the name");
+
+    }
+
+    @Test
+    @Transactional
+    public void testDeleteByRegId() {
+
+        // Setup 2 registrations
+        Owner owner = new Owner("Owner@email.com", "Owner", "123", "owner last anme", 0);
+        ownerRepository.save(owner);
+
+        Client client = new Client("test@email.com", "John", "123", "Doe", 0);
+        clientRepository.save(client);
+
+        ClassType yoga = new ClassType("yoga", "cool class", 0, true, owner);
+        classTypeRepository.save(yoga);
+
+        ClassType tennis = new ClassType("tennis", "tennis class", 0, true, owner);
+        classTypeRepository.save(tennis);
+
+        SpecificClass specificClass = new SpecificClass(null, null, null, 0, yoga);
+        specificClassRepository.save(specificClass);
+
+        SpecificClass specificClass2 = new SpecificClass(null, null, null, 0, tennis);
+        specificClassRepository.save(specificClass2);
+
+        Registration registration1 = new Registration(0, specificClass, client);
+        registrationRepository.save(registration1);
+
+        Registration registration2 = new Registration(0, specificClass2, client);
+        registrationRepository.save(registration2);
+
+        // Delete only the second registration
+        registrationRepository.deleteByRegId(registration2.getRegId());
+
+        // Then
+        // registration2 Should not be there
+        assertThat(registrationRepository.findByRegId(registration2.getRegId())).isNull();
+
+        // registration1 should still be there
+        Registration foundRegistration = registrationRepository.findByRegId(registration1.getRegId());
+
+        assertNotNull(foundRegistration, "Registration should not be null");
+        assertEquals(specificClass.getSessionId(), foundRegistration.getSpecificClass().getSessionId(),
+                "SpecificClass should match");
+        assertEquals(client.getAccountId(), foundRegistration.getClient().getAccountId(), "Client should match");
+        assertEquals("John", foundRegistration.getClient().getFirstName(), "Client should match the name");
+        assertEquals(registration1.getSpecificClass().getClassType(),
                 foundRegistration.getSpecificClass().getClassType(),
                 "Type should match the name");
 
@@ -115,7 +165,6 @@ public class RegistrationRepositoryTests {
         registrationRepository.save(registration);
         registrationRepository.save(registration2);
         registrationRepository.save(registration3);
-    
 
         List<Registration> foundRegistrations = registrationRepository.findBySpecificClass(specificClass);
 
@@ -128,7 +177,49 @@ public class RegistrationRepositoryTests {
 
     @Test
     @Transactional
-    public void testFinByClient() {
+    public void testDeleteBySpecificClass() {
+
+        // Setup 2 specifc classes
+        Owner owner = new Owner("Owner@email.com", "Owner", "123", "owner last anme", 0);
+        ownerRepository.save(owner);
+
+        Client client = new Client("test@email.com", "John", "123", "Doe", 0);
+        clientRepository.save(client);
+
+        ClassType yoga = new ClassType("yoga", "cool class", 0, true, owner);
+        ClassType tennis = new ClassType("tennis", "tennis class", 0, true, owner);
+        classTypeRepository.save(yoga);
+        classTypeRepository.save(tennis);
+
+        SpecificClass specificClass = new SpecificClass(null, null, null, 0, yoga);
+        SpecificClass specificClass2 = new SpecificClass(null, null, null, 0, tennis);
+        specificClassRepository.save(specificClass);
+        specificClassRepository.save(specificClass2);
+
+        Registration registration = new Registration(0, specificClass, client);
+        Registration registration2 = new Registration(0, specificClass2, client);
+        registrationRepository.save(registration);
+        registrationRepository.save(registration2);
+
+        // Delete only 1 registration
+        // Delete specificClass2
+        registrationRepository.deleteBySpecificClass(specificClass2);
+
+        // Then
+        // registration Should not be there
+        assertThat(registrationRepository.findBySpecificClass(specificClass2)).isEmpty();
+
+        // registration should still be there
+        List<Registration> foundRegistrations = registrationRepository.findBySpecificClass(specificClass);
+        assertEquals(1, foundRegistrations.size());
+
+        assertThat(foundRegistrations).contains(registration);
+
+    }
+
+    @Test
+    @Transactional
+    public void testFindByClient() {
 
         Owner owner = new Owner("Owner@email.com", "Owner", "123", "owner last anme", 0);
         ownerRepository.save(owner);
@@ -163,6 +254,46 @@ public class RegistrationRepositoryTests {
         assertEquals(2, foundRegistrations.size());
 
         assertThat(foundRegistrations).contains(registration, registrationSameClient);
+
+    }
+
+    @Test
+    @Transactional
+    public void testDeleteByClient() {
+
+        // Setup 2 registrations with diffferent clients
+        Owner owner = new Owner("Owner@email.com", "Owner", "123", "owner last anme", 0);
+        ownerRepository.save(owner);
+
+        Client client = new Client("test@email.com", "John", "123", "Doe", 0);
+        Client clientToBeDeleted = new Client("tes2t@email.com", "Paul", "321", "Bob", 0);
+        clientRepository.save(client);
+        clientRepository.save(clientToBeDeleted);
+
+        ClassType yoga = new ClassType("yoga", "cool class", 0, true, owner);
+        classTypeRepository.save(yoga);
+
+        SpecificClass specificClass = new SpecificClass(null, null, null, 0, yoga);
+        specificClassRepository.save(specificClass);
+
+        Registration registration = new Registration(0, specificClass, client);
+        Registration registrationToBeDeleted = new Registration(0, specificClass, clientToBeDeleted);
+        registrationRepository.save(registration);
+        registrationRepository.save(registrationToBeDeleted);
+
+        // Delete only 1 registration
+        registrationRepository.deleteByClient(clientToBeDeleted);
+
+        // Then
+        // Registration with clientToBeDeleted should be empty
+        assertThat(registrationRepository.findByClient(clientToBeDeleted)).isEmpty();
+
+        // Second registration with client should still be there
+        List<Registration> foundRegistrations = registrationRepository.findByClient(client);
+
+        assertEquals(1, foundRegistrations.size());
+
+        assertThat(foundRegistrations).contains(registration);
 
     }
 

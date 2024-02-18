@@ -18,12 +18,27 @@ public interface RegistrationRepository extends CrudRepository<Registration, Int
     Registration findByRegId(int regId);
 
     /**
+     * / Delets a Registration by its ID
+     * 
+     * @param regId
+     *
+     */
+    void deleteByRegId(int regId);
+
+    /**
      * / Find all registrations for a specific class
      * 
      * @param specificClass
      * @return List<Registration>
      */
     List<Registration> findBySpecificClass(SpecificClass specificClass);
+
+    /**
+     * / Deletes all registrations from a specific class
+     * 
+     * @param specificClass
+     */
+    void deleteBySpecificClass(SpecificClass specificClass);
 
     /**
      * Find all registrations for a client
@@ -33,5 +48,12 @@ public interface RegistrationRepository extends CrudRepository<Registration, Int
      */
 
     List<Registration> findByClient(Client client);
+
+    /**
+     * Deletes all registrations from a client
+     * 
+     * @param Client
+     */
+    void deleteByClient(Client client);
 
 }
