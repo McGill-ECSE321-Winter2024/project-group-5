@@ -19,7 +19,7 @@ This project is an app to manage different classes and schedules within SportPlu
 | John-Paul Chouery | JPGC04    | Tester | 30 |
 | Sophia Carbone | ezlilcoconut       | Project manager | 31 |
 | Lynn Haddad | haddadlynn             | Documentation | 38 |
-| Nizar Kheir Eddine | justsom1-nizar             | Tester | 20 |
+| Nizar Kheir Eddine | justsom1-nizar             | Tester | 27 |
 | Dmytro Martyniuk | dmytromartyniuk  | Back-end developer | 42 |
 | Sirine Tarhouni | SirineTarhouni             | Front-end developer | 29 |
 
