@@ -1,17 +1,16 @@
 package ca.mcgill.ecse321.SportPlus.Repository;
 
-import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
 
 import ca.mcgill.ecse321.SportPlus.dao.InstructorRepository;
 import ca.mcgill.ecse321.SportPlus.model.Instructor;
@@ -29,7 +28,6 @@ public class InstructorRepositoryTests {
 
     @Test
     public void testFindInstructorByEmail() {
-
         // Given an instructor
         String aEmail = "instructor.last@gmail.com";
         String aFirstName = "Example";
@@ -56,7 +54,6 @@ public class InstructorRepositoryTests {
     @Test
     @Transactional
     public void testDeleteInstructorByEmail() {
-
         // Given two instructors
         String aEmail = "instructor.last@gmail.com";
         String aFirstName = "Example";
@@ -65,7 +62,6 @@ public class InstructorRepositoryTests {
         int aAccountId = 0;
 
         Instructor instructorToBeDeleted = new Instructor(aEmail, aFirstName, aPassword, aLastName, aAccountId);
-
         Instructor InstrucotrToBeSaved = new Instructor("anEmail", "aFirstName", "aPassword", "aLastName", 0);
 
         instructorRepository.save(instructorToBeDeleted);
@@ -86,7 +82,6 @@ public class InstructorRepositoryTests {
 
     @Test
     public void findAll() {
-
         // Given 4 instrucotrs
         Instructor instructor1 = new Instructor("test", "John", "123", "Fie", 0);
         Instructor instructor2 = new Instructor("test1", "John1", "123", "Fie1", 0);
@@ -130,7 +125,6 @@ public class InstructorRepositoryTests {
     @Test
     @Transactional
     public void testFindByAccountId() {
-
         // Given an instrcutor
         String aEmail = "instructor.last@gmail.com";
         String aFirstName = "Example";

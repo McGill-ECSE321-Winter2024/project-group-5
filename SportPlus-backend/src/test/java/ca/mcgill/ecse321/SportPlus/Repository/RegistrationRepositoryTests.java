@@ -25,19 +25,14 @@ import ca.mcgill.ecse321.SportPlus.model.ClassType;
 
 @SpringBootTest
 public class RegistrationRepositoryTests {
-
     @Autowired
     private RegistrationRepository registrationRepository;
-
     @Autowired
     private ClientRepository clientRepository;
-
     @Autowired
     private SpecificClassRepository specificClassRepository;
-
     @Autowired
     private ClassTypeRepository classTypeRepository;
-
     @Autowired
     private OwnerRepository ownerRepository;
 
@@ -54,7 +49,6 @@ public class RegistrationRepositoryTests {
     @Test
     @Transactional
     public void testFindByRegId() {
-
         // Given a registration
         Owner owner = new Owner("Owner@email.com", "Owner", "123", "owner last anme", 0);
         ownerRepository.save(owner);
@@ -83,13 +77,11 @@ public class RegistrationRepositoryTests {
         assertEquals(registration.getSpecificClass().getClassType(),
                 foundRegistration.getSpecificClass().getClassType(),
                 "Type should match the name");
-
     }
 
     @Test
     @Transactional
     public void testDeleteByRegId() {
-
         // Setup 2 registrations
         Owner owner = new Owner("Owner@email.com", "Owner", "123", "owner last anme", 0);
         ownerRepository.save(owner);
@@ -118,13 +110,11 @@ public class RegistrationRepositoryTests {
         // Delete only the second registration
         registrationRepository.deleteByRegId(registration2.getRegId());
 
-        // Then
-        // registration2 Should not be there
+        // Then, registration2 Should not be there
         assertThat(registrationRepository.findByRegId(registration2.getRegId())).isNull();
 
         // registration1 should still be there
         Registration foundRegistration = registrationRepository.findByRegId(registration1.getRegId());
-
         assertNotNull(foundRegistration, "Registration should not be null");
         assertEquals(specificClass.getSessionId(), foundRegistration.getSpecificClass().getSessionId(),
                 "SpecificClass should match");
@@ -133,13 +123,11 @@ public class RegistrationRepositoryTests {
         assertEquals(registration1.getSpecificClass().getClassType(),
                 foundRegistration.getSpecificClass().getClassType(),
                 "Type should match the name");
-
     }
 
     @Test
     @Transactional
     public void testFinBySpecificClass() {
-
         // Given two registrations
         Owner owner = new Owner("Owner@email.com", "Owner", "123", "owner last anme", 0);
         ownerRepository.save(owner);
@@ -163,6 +151,7 @@ public class RegistrationRepositoryTests {
 
         Registration registration = new Registration(0, specificClass, client);
         Registration registration2 = new Registration(0, specificClass, client2);
+
         // Different class
         Registration registration3 = new Registration(0, specificClass2, client3);
 
@@ -178,13 +167,11 @@ public class RegistrationRepositoryTests {
 
         // The found registrations should contain registration and registration2
         assertThat(foundRegistrations).contains(registration, registration2);
-
     }
 
     @Test
     @Transactional
     public void testDeleteBySpecificClass() {
-
         // Setup 2 specifc classes
         Owner owner = new Owner("Owner@email.com", "Owner", "123", "owner last anme", 0);
         ownerRepository.save(owner);
@@ -207,26 +194,21 @@ public class RegistrationRepositoryTests {
         registrationRepository.save(registration);
         registrationRepository.save(registration2);
 
-        // Delete only 1 registration
-        // Delete specificClass2
+        // Delete only 1 registration that is specificClass2
         registrationRepository.deleteBySpecificClass(specificClass2);
 
-        // Then
-        // registration Should not be there
+        // Then, registration Should not be there
         assertThat(registrationRepository.findBySpecificClass(specificClass2)).isEmpty();
 
         // registration should still be there
         List<Registration> foundRegistrations = registrationRepository.findBySpecificClass(specificClass);
         assertEquals(1, foundRegistrations.size());
-
         assertThat(foundRegistrations).contains(registration);
-
     }
 
     @Test
     @Transactional
     public void testFindByClient() {
-
         // Given 3 registrations
         Owner owner = new Owner("Owner@email.com", "Owner", "123", "owner last anme", 0);
         ownerRepository.save(owner);
@@ -264,13 +246,11 @@ public class RegistrationRepositoryTests {
         // Then the found registrations should contain registration and
         // registrationSameClient
         assertThat(foundRegistrations).contains(registration, registrationSameClient);
-
     }
 
     @Test
     @Transactional
     public void testDeleteByClient() {
-
         // Setup 2 registrations with diffferent clients
         Owner owner = new Owner("Owner@email.com", "Owner", "123", "owner last anme", 0);
         ownerRepository.save(owner);
@@ -294,17 +274,13 @@ public class RegistrationRepositoryTests {
         // Delete only 1 registration
         registrationRepository.deleteByClient(clientToBeDeleted);
 
-        // Then
-        // Registration with clientToBeDeleted should be empty
+        // Then, registration with clientToBeDeleted should be empty
         assertThat(registrationRepository.findByClient(clientToBeDeleted)).isEmpty();
 
         // Second registration with client should still be there
         List<Registration> foundRegistrations = registrationRepository.findByClient(client);
-
         assertEquals(1, foundRegistrations.size());
-
         assertThat(foundRegistrations).contains(registration);
-
     }
 
 }

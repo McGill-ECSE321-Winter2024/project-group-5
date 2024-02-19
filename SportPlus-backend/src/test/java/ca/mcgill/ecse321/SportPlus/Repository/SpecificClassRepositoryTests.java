@@ -10,6 +10,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+import java.sql.Date;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.sql.Time;
 
 import ca.mcgill.ecse321.SportPlus.dao.SpecificClassRepository;
 import ca.mcgill.ecse321.SportPlus.dao.ClassTypeRepository;
@@ -20,14 +24,8 @@ import ca.mcgill.ecse321.SportPlus.model.Owner;
 import ca.mcgill.ecse321.SportPlus.model.SpecificClass;
 import ca.mcgill.ecse321.SportPlus.model.Instructor;
 
-import java.sql.Date;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.sql.Time;
-
 @SpringBootTest
 public class SpecificClassRepositoryTests {
-
     @Autowired
     private SpecificClassRepository specificClassRepository;
 
@@ -36,6 +34,7 @@ public class SpecificClassRepositoryTests {
 
     @Autowired
     private OwnerRepository ownerRepository;
+
     @Autowired
     private InstructorRepository instructorRepository;
 
@@ -51,7 +50,7 @@ public class SpecificClassRepositoryTests {
     @Test
     @Transactional
     public void testFindBySessionId() {
-
+        // creates owner and class type in order to create a specific class
         Owner owner = new Owner("Owner@email.com", "Owner", "123", "owner last anme", 0);
         ownerRepository.save(owner);
 
@@ -61,23 +60,22 @@ public class SpecificClassRepositoryTests {
         SpecificClass specificClass = new SpecificClass(null, null, null, 0, yoga);
         specificClassRepository.save(specificClass);
 
+        // gets the specific class's id
         SpecificClass foundSpecificClass = specificClassRepository.findBySessionId(specificClass.getSessionId());
 
+        // checks that the specific class exists in the database
         assertNotNull(foundSpecificClass, "The specific class should not be null");
         assertEquals(specificClass.getSessionId(), foundSpecificClass.getSessionId(), "Session IDs should match");
         assertEquals(foundSpecificClass.getClassType(), foundSpecificClass.getClassType(),
                 "Class type should be the same");
         assertEquals("Owner", foundSpecificClass.getClassType().getApprover().getFirstName(),
                 "Owner should be the same");
-
     }
 
     @Test
     @Transactional
     public void testFindBydate() {
-
-        // Define the dates
-        // First 2 Are the same date different hours
+        // Define the dates, such that the first two have same dates but diffrent hours
         LocalDateTime localDateTime = LocalDateTime.of(2024, 3, 6, 10, 0);
         LocalDateTime localDateTime2 = LocalDateTime.of(2024, 3, 6, 11, 0);
         LocalDateTime localDateTime3 = LocalDateTime.of(2024, 3, 8, 10, 0);
@@ -104,15 +102,12 @@ public class SpecificClassRepositoryTests {
         // First 2 should have the same date
         assertEquals(2, foundSpecificClasses.size());
         assertThat(foundSpecificClasses).contains(specificClass, specificClass2);
-
     }
 
     @Test
     @Transactional
     public void testFindByClassType() {
-
-        // Define the dates
-        // First 2 Are the same date different hours
+        // Define the dates, such that the first two have same dates but diffrent hours
         LocalDateTime localDateTime = LocalDateTime.of(2024, 3, 6, 10, 0);
         LocalDateTime localDateTime2 = LocalDateTime.of(2024, 3, 6, 11, 0);
         LocalDateTime localDateTime3 = LocalDateTime.of(2024, 3, 8, 10, 0);
@@ -146,12 +141,12 @@ public class SpecificClassRepositoryTests {
         assertThat(foundYogaSpecificClasses).contains(specificClass, specificClass3);
         assertEquals(2, foundTennisSpecificClasses.size());
         assertThat(foundTennisSpecificClasses).contains(specificClass2, specificClass4);
-
     }
 
     @Test
     @Transactional
     public void testFindBySupervisor() {
+        // creates 8 local date objects and sets them to starting and ending times of specific classes
         LocalDateTime localDateTime1 = LocalDateTime.of(2024, 3, 6, 10, 0);
         LocalDateTime localDateTime11 = LocalDateTime.of(2024, 3, 6, 11, 0);
         LocalDateTime localDateTime2 = LocalDateTime.of(2024, 3, 7, 11, 0);
@@ -198,6 +193,7 @@ public class SpecificClassRepositoryTests {
         specificClass3.setSupervisor(supervisor1);
         specificClass4.setSupervisor(supervisor2);
 
+        // saves the specific classes into the database
         specificClassRepository.save(specificClass);
         specificClassRepository.save(specificClass2);
         specificClassRepository.save(specificClass3);
@@ -211,7 +207,6 @@ public class SpecificClassRepositoryTests {
         assertThat(foundSpecificClasses1).contains(specificClass, specificClass3);
         assertEquals(2, foundSpecificClasses2.size());
         assertThat(foundSpecificClasses2).contains(specificClass2, specificClass4);
-
     }
 
 }

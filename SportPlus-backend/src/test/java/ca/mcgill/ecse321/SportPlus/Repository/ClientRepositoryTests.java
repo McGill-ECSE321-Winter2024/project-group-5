@@ -3,15 +3,14 @@ package ca.mcgill.ecse321.SportPlus.Repository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import java.util.List;
 
 import ca.mcgill.ecse321.SportPlus.dao.ClientRepository;
 import ca.mcgill.ecse321.SportPlus.model.Client;
@@ -29,7 +28,6 @@ public class ClientRepositoryTests {
 
     @Test
     public void testFindClientByEmail() {
-
         // Setup the client
         String aEmail = "example.last@gmail.com";
         String aFirstName = "Example";
@@ -56,7 +54,6 @@ public class ClientRepositoryTests {
     @Test
     @Transactional
     public void testDeleteClientByEmail() {
-
         // Setup 2 clients
         String aEmail = "example.last@gmail.com";
         String aFirstName = "Example";
@@ -65,7 +62,6 @@ public class ClientRepositoryTests {
         int aAccountId = 0;
 
         Client aClientToBeDeleted = new Client(aEmail, aFirstName, aPassword, aLastName, aAccountId);
-
         Client aClientToBeSaved = new Client("anEmail", "aFirstName", "aPassword", "aLastName", 2);
 
         // Save both clients to the database
@@ -87,7 +83,6 @@ public class ClientRepositoryTests {
 
     @Test
     public void findAll() {
-
         // Given 4 clients
         Client client1 = new Client("test", "John", "123", "Fie", 0);
         Client client2 = new Client("test1", "John1", "123", "Fie1", 0);
@@ -128,7 +123,6 @@ public class ClientRepositoryTests {
     @Test
     @Transactional
     public void testFindByAccountId() {
-
         // Setup client
         String aEmail = "example.last@gmail.com";
         String aFirstName = "Example";

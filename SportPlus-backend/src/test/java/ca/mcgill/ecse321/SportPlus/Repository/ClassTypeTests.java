@@ -1,14 +1,14 @@
 package ca.mcgill.ecse321.SportPlus.Repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
 
 import ca.mcgill.ecse321.SportPlus.dao.ClassTypeRepository;
 import ca.mcgill.ecse321.SportPlus.dao.OwnerRepository;
@@ -17,7 +17,6 @@ import ca.mcgill.ecse321.SportPlus.model.Owner;
 
 @SpringBootTest
 public class ClassTypeTests {
-
     @Autowired
     private ClassTypeRepository classTypeRepository;
     @Autowired
@@ -32,13 +31,13 @@ public class ClassTypeTests {
 
     @Test
     public void testFindByName() {
-
         // Given owner and a classtype
         Owner owner = new Owner(null, null, null, null, 0);
         owner = ownerRepository.save(owner);
 
         ClassType classType = new ClassType("Yoga", "A relaxing class", 0, true, owner);
-        classType = classTypeRepository.save(classType); // Save and reassign to capture the persisted entity
+        // Save and reassign to capture the persisted entity
+        classType = classTypeRepository.save(classType);
 
         // When we find the clastype by the name
         ClassType found = classTypeRepository.findByName(classType.getName());
@@ -49,13 +48,13 @@ public class ClassTypeTests {
 
     @Test
     public void testfindByTypeId() {
-
         // Given owner and a classtype
         Owner owner = new Owner("owner@sportplus.com", "steve", "123", "harvey", 0);
         owner = ownerRepository.save(owner);
 
         ClassType classType = new ClassType("Yoga", "A relaxing class", 12, true, owner);
-        classType = classTypeRepository.save(classType); // Save and reassign to capture the persisted entity
+        // Save and reassign to capture the persisted entity
+        classType = classTypeRepository.save(classType);
 
         // When we find the clastype by the TypeId
         ClassType found = classTypeRepository.findByTypeId(classType.getTypeId());
@@ -66,7 +65,6 @@ public class ClassTypeTests {
 
     @Test
     public void findByApproved() {
-
         // Given owner and 4 classtypes with different approvals
         Owner owner = new Owner(null, null, null, null, 0);
         owner = ownerRepository.save(owner);
@@ -77,23 +75,19 @@ public class ClassTypeTests {
         classTypeRepository.save(new ClassType("Kickboxing", "A high-intensity class", 3, false, owner));
         classTypeRepository.save(new ClassType("Zumba", "A dance fitness class", 4, false, owner));
 
-        // When we finf by approval from the databse
+        // When we find by approval from the databse
         List<ClassType> approvedClasses = classTypeRepository.findByApproved(true);
         List<ClassType> notApprovedClasses = classTypeRepository.findByApproved(false);
 
-        // Then the size of the approved should match
-        // It should contain the right approvals
+        // Then the size of the approved should match and contain the correct approvals
         assertThat(approvedClasses).hasSize(2);
         assertThat(approvedClasses.stream().allMatch(ClassType::getApproved)).isTrue();
-
         assertThat(notApprovedClasses).hasSize(2);
         assertThat(notApprovedClasses.stream().noneMatch(ClassType::getApproved)).isTrue();
-
     }
 
     @Test
     public void findAll() {
-
         // Given an owner and 4 classtypes with diifferent approvals
         Owner owner = new Owner(null, null, null, null, 0);
         owner = ownerRepository.save(owner);
@@ -113,9 +107,7 @@ public class ClassTypeTests {
 
         // Then the size should be 4 and contains the 4 classtypes created
         assertThat(allClassTypes).hasSize(4);
-
         assertThat(allClassTypes).contains(classType1, classType2, classType3, classType4);
-
     }
 
     @Test
@@ -133,21 +125,17 @@ public class ClassTypeTests {
         classTypeRepository.save(yoga);
         classTypeRepository.save(pilates);
 
-        // Action
         // Delete only yoga
         classTypeRepository.deleteByName(nameToDelete);
 
-        // Verification
         // Checks if yoga is deleted
-        // Checks if pilates is still there
         assertThat(classTypeRepository.findByName(nameToDelete)).isNull();
 
-        // Checks if pilates still there
+        // Checks if pilates still exists
         assertThat(classTypeRepository.findAll()).hasSize(1);
         ClassType remainingClassType = classTypeRepository.findByName("Pilates");
-        assertThat(remainingClassType).isNotNull(); // Verify "Pilates" still exists
-        assertThat(remainingClassType.getName()).isEqualTo("Pilates"); // Further verify the details if needed
-
+        assertThat(remainingClassType).isNotNull();
+        assertThat(remainingClassType.getName()).isEqualTo("Pilates");
     }
 
 }

@@ -2,11 +2,11 @@ package ca.mcgill.ecse321.SportPlus.Repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import org.springframework.transaction.annotation.Transactional;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -26,7 +26,6 @@ public class OwnerRepositoryTests {
 
     @Test
     public void testFindownerByEmail() {
-
         // Given an owner
         String aEmail = "owner@sportplus.com";
         String aFirstName = "Owner";
@@ -52,7 +51,6 @@ public class OwnerRepositoryTests {
     @Test
     @Transactional
     public void testFindByAccountId() {
-
         // Given an owner
         String aEmail = "owner@sportplus.com";
         String aFirstName = "Owner";
@@ -61,11 +59,8 @@ public class OwnerRepositoryTests {
         int aAccountId = 0;
 
         Owner owner = new Owner(aEmail, aFirstName, aPassword, aLastName, aAccountId);
-
         ownerRepository.save(owner);
-
         Owner ownerFromDb = ownerRepository.findByEmail(aEmail);
-
         int accountId = ownerFromDb.getAccountId();
 
         // When owner is fetched from databse by the AccountId
