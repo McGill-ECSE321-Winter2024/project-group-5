@@ -4,11 +4,9 @@ import org.springframework.data.repository.CrudRepository;
 import ca.mcgill.ecse321.SportPlus.model.Registration;
 import ca.mcgill.ecse321.SportPlus.model.SpecificClass;
 import ca.mcgill.ecse321.SportPlus.model.Client;
-
 import java.util.List;
 
 public interface RegistrationRepository extends CrudRepository<Registration, Integer> {
-
     /**
      * / Find a Registration by its ID
      * 
@@ -55,5 +53,4 @@ public interface RegistrationRepository extends CrudRepository<Registration, Int
      * @param Client
      */
     void deleteByClient(Client client);
-
 }

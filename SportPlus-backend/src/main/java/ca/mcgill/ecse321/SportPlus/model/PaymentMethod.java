@@ -1,15 +1,11 @@
 package ca.mcgill.ecse321.SportPlus.model;
 
-import java.sql.Date;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-/*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.33.0.6934.a386b0a58 modeling language!*/
-
 import java.util.Objects;
+import java.sql.Date;
 
 @Entity
 public class PaymentMethod {
@@ -19,15 +15,13 @@ public class PaymentMethod {
   // ------------------------
 
   // PaymentMethod Attributes
+  @Id
+  @Column(name = "card_id")
+  private int cardId;
   private String cardNumber;
   private Date expDate;
   private String cvc;
   private String cardHolderName;
-
-  @Id
-  // @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "card_id")
-  private int cardId;
 
   // PaymentMethod Associations
   @ManyToOne
@@ -36,6 +30,7 @@ public class PaymentMethod {
   // ------------------------
   // CONSTRUCTOR
   // ------------------------
+
   protected PaymentMethod() {
 
   }
@@ -112,12 +107,10 @@ public class PaymentMethod {
     return cardId;
   }
 
-  /* Code from template association_GetOne */
   public Client getClient() {
     return client;
   }
 
-  /* Code from template association_SetUnidirectionalOne */
   public boolean setClient(Client aNewClient) {
     boolean wasSet = false;
     if (aNewClient != null) {
@@ -144,8 +137,6 @@ public class PaymentMethod {
         "  " + "client = " + (getClient() != null ? Integer.toHexString(System.identityHashCode(getClient())) : "null");
   }
 
-  // What it means for two PaymentMethods to be equal
-  // There atributes are equal
   @Override
   public boolean equals(Object obj) {
     if (this == obj)

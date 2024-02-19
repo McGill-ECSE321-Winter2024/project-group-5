@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.data.repository.CrudRepository;
 
 public interface PaymentMethodRepository extends CrudRepository<PaymentMethod, Integer> {
-
     /**
      * Find PaymentMethods by card number
      * 
@@ -26,7 +25,7 @@ public interface PaymentMethodRepository extends CrudRepository<PaymentMethod, I
     /**
      * Find all PpaymentMethods for a client
      * 
-     * @param Client
+     * @param client
      * @return List<PaymentMethod>
      */
 
@@ -35,7 +34,7 @@ public interface PaymentMethodRepository extends CrudRepository<PaymentMethod, I
     /**
      * Deletes all paymentMethods from a client
      * 
-     * @param Client
+     * @param client
      * 
      */
     void deleteByClient(Client client);

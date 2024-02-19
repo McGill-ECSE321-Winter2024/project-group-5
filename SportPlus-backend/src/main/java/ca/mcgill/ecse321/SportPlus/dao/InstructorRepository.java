@@ -5,7 +5,6 @@ import java.util.List;
 import ca.mcgill.ecse321.SportPlus.model.Instructor;
 
 public interface InstructorRepository extends CrudRepository<Instructor, Integer> {
-
     /**
      * Find a Instructor by email
      * 
@@ -35,5 +34,4 @@ public interface InstructorRepository extends CrudRepository<Instructor, Integer
      * @return
      */
     Instructor findByAccountId(Integer accountId);
-
 }

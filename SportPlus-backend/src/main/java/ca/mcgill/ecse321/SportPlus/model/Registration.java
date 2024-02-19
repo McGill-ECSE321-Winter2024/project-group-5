@@ -4,12 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-/*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.33.0.6934.a386b0a58 modeling language!*/
 
-// line 38 "model.ump"
-// line 84 "model.ump"
-// line 115 "model.ump"
 @Entity
 public class Registration {
 
@@ -31,6 +26,7 @@ public class Registration {
   // ------------------------
   // CONSTRUCTOR
   // ------------------------
+
   protected Registration() {
   }
 
@@ -61,17 +57,14 @@ public class Registration {
     return regId;
   }
 
-  /* Code from template association_GetOne */
   public SpecificClass getSpecificClass() {
     return specificClass;
   }
 
-  /* Code from template association_GetOne */
   public Client getClient() {
     return client;
   }
 
-  /* Code from template association_SetUnidirectionalOne */
   public boolean setSpecificClass(SpecificClass aNewSpecificClass) {
     boolean wasSet = false;
     if (aNewSpecificClass != null) {
@@ -81,7 +74,6 @@ public class Registration {
     return wasSet;
   }
 
-  /* Code from template association_SetUnidirectionalOne */
   public boolean setClient(Client aNewClient) {
     boolean wasSet = false;
     if (aNewClient != null) {

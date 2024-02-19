@@ -5,14 +5,12 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 public interface ClassTypeRepository extends CrudRepository<ClassType, Integer> {
-
     /**
      * Find ClassType by name
      * 
      * @param name
      * @return ClassType
      */
-
     ClassType findByName(String name);
 
     /**
@@ -44,5 +42,4 @@ public interface ClassTypeRepository extends CrudRepository<ClassType, Integer> 
      * @param name
      */
     void deleteByName(String name);
-
 }

@@ -1,20 +1,14 @@
 package ca.mcgill.ecse321.SportPlus.model;
 
-import java.sql.Date;
-import java.sql.Time;
-
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import java.util.Objects;
-/*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.33.0.6934.a386b0a58 modeling language!*/
+import java.sql.Date;
+import java.sql.Time;
 
-// line 31 "model.ump"
-// line 76 "model.ump"
-// line 107 "model.ump"
 @Entity
 public class SpecificClass {
 
@@ -23,17 +17,16 @@ public class SpecificClass {
   // ------------------------
 
   // SpecificClass Attributes
-  private Date date;
-  private Time startTime;
-  private Time endTime;
   @Id
   @GeneratedValue
   private int sessionId;
+  private Date date;
+  private Time startTime;
+  private Time endTime;
 
   // SpecificClass Associations
   @ManyToOne
   private Instructor supervisor;
-
   @ManyToOne
   @JoinColumn(name = "class_type_type_id")
   private ClassType classType;
@@ -41,8 +34,8 @@ public class SpecificClass {
   // ------------------------
   // CONSTRUCTOR
   // ------------------------
-  protected SpecificClass() {
 
+  protected SpecificClass() {
   }
 
   public SpecificClass(Date aDate, Time start1, Time aEndTime, int aSessionId, ClassType aClassType) {
@@ -104,7 +97,6 @@ public class SpecificClass {
     return sessionId;
   }
 
-  /* Code from template association_GetOne */
   public Instructor getSupervisor() {
     return supervisor;
   }
@@ -114,12 +106,10 @@ public class SpecificClass {
     return has;
   }
 
-  /* Code from template association_GetOne */
   public ClassType getClassType() {
     return classType;
   }
 
-  /* Code from template association_SetUnidirectionalOptionalOne */
   public boolean setSupervisor(Instructor aNewSupervisor) {
     boolean wasSet = false;
     supervisor = aNewSupervisor;
@@ -127,7 +117,6 @@ public class SpecificClass {
     return wasSet;
   }
 
-  /* Code from template association_SetUnidirectionalOne */
   public boolean setClassType(ClassType aNewClassType) {
     boolean wasSet = false;
     if (aNewClassType != null) {

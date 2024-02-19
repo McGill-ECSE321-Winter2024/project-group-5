@@ -10,8 +10,6 @@ import java.util.Date;
 import java.util.List;
 
 public interface SpecificClassRepository extends CrudRepository<SpecificClass, Integer> {
-    // private int sessionId;
-
     /**
      * / Find a registration by its ID
      * 
@@ -42,6 +40,5 @@ public interface SpecificClassRepository extends CrudRepository<SpecificClass, I
      * @param supervisor
      * @return List<SpecificClass>
      */
-
     List<SpecificClass> findBySupervisor(Instructor supervisor);
 }

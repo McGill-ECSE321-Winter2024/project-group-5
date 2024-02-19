@@ -1,10 +1,6 @@
 package ca.mcgill.ecse321.SportPlus.model;
-/*PLEASE DO NOT EDIT THIS CODE*/
 
 import jakarta.persistence.DiscriminatorColumn;
-
-/*This code was generated using the UMPLE 1.33.0.6934.a386b0a58 modeling language!*/
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -13,7 +9,7 @@ import jakarta.persistence.InheritanceType;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name = "dtype") // This line is crucial
+@DiscriminatorColumn(name = "dtype")
 public abstract class Account {
 
   // ------------------------
@@ -21,22 +17,19 @@ public abstract class Account {
   // ------------------------
 
   // Account Attributes
+  @Id
+  @GeneratedValue
+  private int accountId;
   private String email;
   private String firstName;
   private String password;
   private String lastName;
 
-  // @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Id
-  @GeneratedValue
-  private int accountId;
-
   // ------------------------
   // CONSTRUCTOR
   // ------------------------
-  protected Account() {
 
-  }
+  protected Account() {}
 
   public Account(String aEmail, String aFirstName, String aPassword, String aLastName, int aAccountId) {
     email = aEmail;

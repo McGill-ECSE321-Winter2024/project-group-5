@@ -6,12 +6,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import java.util.Objects;
-/*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.33.0.6934.a386b0a58 modeling language!*/
 
-// line 24 "model.ump"
-// line 80 "model.ump"
-// line 111 "model.ump"
 @Entity
 public class ClassType {
 
@@ -20,11 +15,11 @@ public class ClassType {
   // ------------------------
 
   // ClassType Attributes
-  private String name;
-  private String description;
   @Id
   @GeneratedValue
   private int typeId;
+  private String name;
+  private String description;
   private boolean approved;
 
   // ClassType Associations
@@ -35,8 +30,8 @@ public class ClassType {
   // ------------------------
   // CONSTRUCTOR
   // ------------------------
-  protected ClassType() {
 
+  protected ClassType() {
   }
 
   public ClassType(String aName, String aDescription, int aTypeId, boolean aApproved, Owner aApprover) {
@@ -45,10 +40,6 @@ public class ClassType {
     typeId = aTypeId;
     approved = aApproved;
     approver = aApprover;
-    // if (!setApprover(aApprover)) {
-    //   throw new RuntimeException(
-    //       "Unable to create ClassType due to aApprover. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
-    // }
   }
 
   // ------------------------
@@ -99,12 +90,10 @@ public class ClassType {
     return approved;
   }
 
-  /* Code from template association_GetOne */
   public Owner getApprover() {
     return approver;
   }
 
-  /* Code from template association_SetUnidirectionalOne */
   public boolean setApprover(Owner aNewApprover) {
     boolean wasSet = false;
     if (aNewApprover != null) {
