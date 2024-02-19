@@ -21,7 +21,7 @@ This project is an app to manage different classes and schedules within SportPlu
 | Lynn Haddad | haddadlynn             | Documentation | 38 |
 | Nizar Kheir Eddine | justsom1-nizar             | Tester | 20 |
 | Dmytro Martyniuk | dmytromartyniuk  | Back-end developer | 42 |
-| Sirine Tarhouni | SirineTarhouni             | Front-end developer | 23 |
+| Sirine Tarhouni | SirineTarhouni             | Front-end developer | 29 |
 
 ### Team roles scope of work:  
  Project manager: Responsible for overseeing the planning, execution, and delivery of a project within the defined constraints of time, resources, and scope.  
