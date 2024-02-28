@@ -8,6 +8,7 @@ import ca.mcgill.ecse321.SportPlus.model.Instructor;
 
 import java.util.Date;
 import java.util.List;
+import java.sql.Time;
 
 public interface SpecificClassRepository extends CrudRepository<SpecificClass, Integer> {
     /**
@@ -41,4 +42,48 @@ public interface SpecificClassRepository extends CrudRepository<SpecificClass, I
      * @return List<SpecificClass>
      */
     List<SpecificClass> findBySupervisor(Instructor supervisor);
+
+    /**
+     * Find specific classes by date and startTime
+     * 
+     * @param date
+     * @param startTime
+     * @return SpecificClass
+     */
+
+    SpecificClass findByDateAndStartTime(Date date, Time startTime);
+
+    /**
+     * Find Specific Classes with supervisors
+     * @return List<SpecificClass>
+     */
+    List<SpecificClass> findBySupervisorIsNotNull();
+
+     /**
+     * Find all Specific Classes
+     * 
+     * @return List<SpecificClass>
+     */
+    List<SpecificClass> findAll();
+
+    /**
+     * Deletes by ClassType 
+     * 
+     * @param classType
+     */
+    void deleteByClassType(ClassType classType);
+
+    /**
+     * Deletes by supervisor 
+     * 
+     * @param supervisor
+     */
+    void deleteBySupervisor(Instructor supervisor);
+
+    /**
+     * Deletes by Date
+     * 
+     * @param date
+     */
+    void deleteByDate(Date date);
 }
