@@ -17,7 +17,7 @@ public interface SpecificClassRepository extends CrudRepository<SpecificClass, I
      * @param sessionId
      * @return SpecificClass
      */
-    SpecificClass findBySessionId(int sessionId);
+    SpecificClass findBySessionId(Integer sessionId);
 
     /**
      * Find specific classes by date
@@ -86,4 +86,11 @@ public interface SpecificClassRepository extends CrudRepository<SpecificClass, I
      * @param date
      */
     void deleteByDate(Date date);
+
+    // /**
+    //  * Deletes by SessionId
+    //  * 
+    //  * @param sessionId
+    //  */
+    // void deleteSessionId(int sessionId);
 }

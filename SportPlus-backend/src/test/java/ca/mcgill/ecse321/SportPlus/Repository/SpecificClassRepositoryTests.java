@@ -569,6 +569,11 @@ public class SpecificClassRepositoryTests {
         assertEquals(0, found3.size());
 
     }
-    
+    // @Test
+    // @Transactional
+    // public void  deleteSessionId(){
 
+
+    // }
+    
 }

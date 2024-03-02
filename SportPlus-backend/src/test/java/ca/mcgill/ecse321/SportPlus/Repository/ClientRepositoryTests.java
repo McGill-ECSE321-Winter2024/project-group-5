@@ -27,7 +27,7 @@ public class ClientRepositoryTests {
     }
 
     @Test
-    public void testFindClientByEmail() {
+    public void testFindByEmail() {
         // Setup the client
         String aEmail = "example.last@gmail.com";
         String aFirstName = "Example";
@@ -41,7 +41,7 @@ public class ClientRepositoryTests {
         clientRepository.save(aClient);
 
         // Fetch the client from teh databse
-        Client clientFromDb = clientRepository.findClientByEmail(aEmail);
+        Client clientFromDb = clientRepository.findByEmail(aEmail);
 
         // Verify if the right client was fetched
         assertNotNull(clientFromDb);
@@ -53,7 +53,7 @@ public class ClientRepositoryTests {
 
     @Test
     @Transactional
-    public void testDeleteClientByEmail() {
+    public void testDeleteByEmail() {
         // Setup 2 clients
         String aEmail = "example.last@gmail.com";
         String aFirstName = "Example";
@@ -69,14 +69,14 @@ public class ClientRepositoryTests {
         clientRepository.save(aClientToBeSaved);
 
         // Delete only one client with email
-        clientRepository.deleteClientByEmail(aEmail);
+        clientRepository.deleteByEmail(aEmail);
 
         // Verify if the client was removed
-        assertThat(clientRepository.findClientByEmail(aEmail)).isNull();
+        assertThat(clientRepository.findByEmail(aEmail)).isNull();
 
         // Checks if aClientToBeSaved still there
         assertThat(clientRepository.findAll()).hasSize(1);
-        Client remainingClient = clientRepository.findClientByEmail("anEmail");
+        Client remainingClient = clientRepository.findByEmail("anEmail");
         assertThat(remainingClient).isNotNull();
         assertThat(remainingClient.getEmail()).isEqualTo("anEmail");
     }

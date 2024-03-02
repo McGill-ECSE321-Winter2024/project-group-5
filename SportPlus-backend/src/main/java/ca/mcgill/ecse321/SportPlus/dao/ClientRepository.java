@@ -12,14 +12,14 @@ public interface ClientRepository extends CrudRepository<Client, Integer> {
      * @param email
      * @return Client
      */
-    Client findClientByEmail(String email);
+    Client findByEmail(String email);
 
     /**
      * Delete the client by email
      * 
      * @param email
      */
-    void deleteClientByEmail(String email);
+    void deleteByEmail(String email);
 
     /**
      * Find all clients

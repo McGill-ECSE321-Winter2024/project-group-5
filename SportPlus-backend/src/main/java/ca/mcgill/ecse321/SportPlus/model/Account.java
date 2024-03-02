@@ -19,7 +19,7 @@ public abstract class Account {
   // Account Attributes
   @Id
   @GeneratedValue
-  private int accountId;
+  private Integer accountId;
   private String email;
   private String firstName;
   private String password;
@@ -31,7 +31,7 @@ public abstract class Account {
 
   protected Account() {}
 
-  public Account(String aEmail, String aFirstName, String aPassword, String aLastName, int aAccountId) {
+  public Account(String aEmail, String aFirstName, String aPassword, String aLastName, Integer aAccountId) {
     email = aEmail;
     firstName = aFirstName;
     password = aPassword;
@@ -71,7 +71,7 @@ public abstract class Account {
     return wasSet;
   }
 
-  public boolean setAccountId(int aAccountId) {
+  public boolean setAccountId(Integer aAccountId) {
     boolean wasSet = false;
     accountId = aAccountId;
     wasSet = true;
@@ -101,12 +101,4 @@ public abstract class Account {
   public void delete() {
   }
 
-  public String toString() {
-    return super.toString() + "[" +
-        "email" + ":" + getEmail() + "," +
-        "firstName" + ":" + getFirstName() + "," +
-        "password" + ":" + getPassword() + "," +
-        "lastName" + ":" + getLastName() + "," +
-        "accountId" + ":" + getAccountId() + "]";
-  }
 }
