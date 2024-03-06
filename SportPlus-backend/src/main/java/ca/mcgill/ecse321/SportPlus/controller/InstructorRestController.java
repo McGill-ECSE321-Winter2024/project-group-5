@@ -85,7 +85,7 @@ public class InstructorRestController {
         return new InstructorRequestDto(instructor.getEmail(), instructor.getFirstName(), instructor.getLastName(), instructor.getPassword());
     }
 
-    @PutMapping(value = { "/instructors/password/{specificEmail}/{specificPassword}", "/instructors/lastName/{specificEmail}/{specificPassword}/" })
+    @PutMapping(value = { "/instructors/password/{specificEmail}/{specificPassword}", "/instructors/password/{specificEmail}/{specificPassword}/" })
     public InstructorRequestDto updateInstructorPassword(@PathVariable("specificEmail") String theEmail, @PathVariable("specificPassword") String thePassword) {
         Instructor instructor = instructorService.getInstructor(theEmail);
         instructorService.updateInstructorPassword(theEmail, thePassword);
