@@ -10,8 +10,6 @@ import ca.mcgill.ecse321.SportPlus.dao.InstructorRepository;
 import ca.mcgill.ecse321.SportPlus.model.Instructor;
 import ca.mcgill.ecse321.SportPlus.service.utilities.HelperMethods;
 
-// add some input validation
-
 @Service
 public class InstructorService {
 
@@ -22,12 +20,18 @@ public class InstructorService {
 
     @Transactional
 	public Instructor getInstructor(String email) {
+        if (email == null || email.trim().length() == 0) {
+            throw new IllegalArgumentException("Instructor email cannot be empty!");
+        }
         Instructor instructor = instructorRepository.findInstructorByEmail(email);
         return instructor;
 	}
 
     @Transactional
     public Instructor getInstructor(Integer accountId) {
+        if (accountId < 0) {
+            throw new IllegalArgumentException("Account Id cannot be less than 0!");
+        }
         Instructor instructor = instructorRepository.findByAccountId(accountId);
         return instructor;
     }
@@ -39,6 +43,9 @@ public class InstructorService {
 
     @Transactional
     public void deleteInstructor(String email) {
+        if (email == null || email.trim().length() == 0) {
+            throw new IllegalArgumentException("Person name cannot be empty!");
+        }
         instructorRepository.deleteInstructorByEmail(email);
     }
     
@@ -46,35 +53,56 @@ public class InstructorService {
 
     @Transactional
     public Instructor createInstructor(String email, String firstName, String password, String lastName) {
-        String message1 = HelperMethods.ClientEmailCheck(email);
-        String message2 = HelperMethods.PasswordCheck(password);
-        if (message1.isEmpty() || message2.isEmpty()) {
-            Instructor instructor = new Instructor();
-            instructor.setEmail(email);
-            instructor.setFirstName(firstName);
-            instructor.setPassword(password);
-            instructor.setLastName(lastName);
-            instructorRepository.save(instructor);
-            return instructor;
+        if (email == null || HelperMethods.ClientEmailCheck(email).trim().length() != 0) {
+            throw new IllegalArgumentException("Invalid email!");
         }
-        return null;
+        if (password == null || HelperMethods.PasswordCheck(password).trim().length() != 0) {
+            throw new IllegalArgumentException("Invalid password!");
+        }
+        if (firstName == null || firstName.trim().length() == 0) {
+            throw new IllegalArgumentException("Instructor first name cannot be empty!");
+        }
+        if (lastName == null || lastName.trim().length() == 0) {
+            throw new IllegalArgumentException("Instructor last name cannot be empty!");
+        }
+        Instructor instructor = new Instructor();
+        instructor.setEmail(email);
+        instructor.setFirstName(firstName);
+        instructor.setPassword(password);
+        instructor.setLastName(lastName);
+        instructorRepository.save(instructor);
+        return instructor;
     }
 
     @Transactional
     public Instructor updateInstructorEmail(int accountId, String email) {
-        String message = HelperMethods.ClientEmailCheck(email);
-        if (message.isEmpty()) {
-            Instructor instructor = getInstructor(accountId);
-            instructor.setEmail(email);
-            instructorRepository.save(instructor);
-            return instructor;
+        if (accountId < 0) {
+            throw new IllegalArgumentException("Account Id cannot be less than 0!");
         }
-        return null;
+        Instructor instructor = getInstructor(accountId);
+        if (instructor == null) {
+            throw new IllegalArgumentException("Instructor with account Id does not exist!");
+        }
+        if (email == null || HelperMethods.ClientEmailCheck(email).trim().length() != 0) {
+            throw new IllegalArgumentException("Invalid email!");
+        }
+        instructor.setEmail(email);
+        instructorRepository.save(instructor);
+        return instructor;
     }
 
     @Transactional
     public Instructor updateInstructorFirstName(String email, String firstName) {
+        if (email == null || HelperMethods.ClientEmailCheck(email).trim().length() != 0) {
+            throw new IllegalArgumentException("Invalid email!");
+        }
         Instructor instructor = getInstructor(email);
+        if (instructor == null) {
+            throw new IllegalArgumentException("Instructor with email does not exist!");
+        }
+        if (firstName == null || firstName.trim().length() == 0) {
+            throw new IllegalArgumentException("Instructor first name cannot be empty!");
+        }
         instructor.setFirstName(firstName);
         instructorRepository.save(instructor);
         return instructor;
@@ -82,7 +110,16 @@ public class InstructorService {
 
     @Transactional
     public Instructor updateInstructorLastName(String email, String lastName) {
+        if (email == null || HelperMethods.ClientEmailCheck(email).trim().length() != 0) {
+            throw new IllegalArgumentException("Invalid email!");
+        }
         Instructor instructor = getInstructor(email);
+        if (instructor == null) {
+            throw new IllegalArgumentException("Instructor with email does not exist!");
+        }
+        if (lastName == null || lastName.trim().length() == 0) {
+            throw new IllegalArgumentException("Instructor last name cannot be empty!");
+        }
         instructor.setLastName(lastName);
         instructorRepository.save(instructor);
         return instructor;
@@ -90,14 +127,19 @@ public class InstructorService {
 
     @Transactional
     public Instructor updateInstructorPassword(String email, String password) {
-        String message = HelperMethods.PasswordCheck(password);
-        if (message.isEmpty()) {
-            Instructor instructor = getInstructor(email);
-            instructor.setPassword(password);
-            instructorRepository.save(instructor);
-            return instructor;
+        if (email == null || HelperMethods.ClientEmailCheck(email).trim().length() != 0) {
+            throw new IllegalArgumentException("Invalid email!");
         }
-        return null;
+        Instructor instructor = getInstructor(email);
+        if (instructor == null) {
+            throw new IllegalArgumentException("Instructor with email does not exist!");
+        }
+        if (password == null || HelperMethods.PasswordCheck(password).trim().length() != 0) {
+            throw new IllegalArgumentException("Invalid password!");
+        }
+        instructor.setPassword(password);
+        instructorRepository.save(instructor);
+        return instructor;
     }
     
 }

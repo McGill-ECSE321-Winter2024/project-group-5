@@ -67,7 +67,7 @@ public class TestInstructorService {
         String email = "newinstructor@email.com";
         String firstName = "Paul";
         String lastName = "Dmyt";
-        String password = "ro123";
+        String password = "Ro1234";
 
 		assertEquals(0, instructorService.getAllInstructors().size());
 
@@ -75,7 +75,6 @@ public class TestInstructorService {
 		try {
             instructor = instructorService.createInstructor(email, firstName, password, lastName);
 		} catch (IllegalArgumentException e) {
-			// Check that no error occurred
 			fail();
 		}
 		assertNotNull(instructor);
