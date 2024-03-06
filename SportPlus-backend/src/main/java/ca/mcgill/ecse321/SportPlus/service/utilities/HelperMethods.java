@@ -1,5 +1,8 @@
 package ca.mcgill.ecse321.SportPlus.service.utilities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class HelperMethods {
 
     public static String PasswordCheck(String password){
@@ -36,7 +39,12 @@ public class HelperMethods {
           }
         return "";
     }
-    
 
-    
+    public static <T> List<T> toList(Iterable<T> iterable){
+		List<T> resultList = new ArrayList<T>();
+		for (T t : iterable) {
+			resultList.add(t);
+		}
+		return resultList;
+	}
 }
