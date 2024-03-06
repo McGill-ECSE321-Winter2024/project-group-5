@@ -1,5 +1,7 @@
 package ca.mcgill.ecse321.SportPlus.model;
 
+import java.util.Objects;
+
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,7 +31,8 @@ public abstract class Account {
   // CONSTRUCTOR
   // ------------------------
 
-  protected Account() {}
+  protected Account() {
+  }
 
   public Account(String aEmail, String aFirstName, String aPassword, String aLastName, Integer aAccountId) {
     email = aEmail;
@@ -101,4 +104,22 @@ public abstract class Account {
   public void delete() {
   }
 
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null || getClass() != obj.getClass())
+      return false;
+    Account account = (Account) obj;
+    return Objects.equals(email, account.email) &&
+        Objects.equals(accountId, account.accountId) &&
+        Objects.equals(firstName, account.firstName) &&
+        Objects.equals(password, account.password) &&
+        Objects.equals(lastName, account.lastName);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(email, accountId, firstName, password, lastName);
+  }
 }
