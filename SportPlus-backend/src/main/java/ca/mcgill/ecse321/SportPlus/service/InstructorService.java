@@ -10,6 +10,8 @@ import ca.mcgill.ecse321.SportPlus.dao.InstructorRepository;
 import ca.mcgill.ecse321.SportPlus.model.Instructor;
 import ca.mcgill.ecse321.SportPlus.service.utilities.HelperMethods;
 
+// add some input validation
+
 @Service
 public class InstructorService {
 
