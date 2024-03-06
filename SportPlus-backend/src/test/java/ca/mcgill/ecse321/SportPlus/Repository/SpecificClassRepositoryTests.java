@@ -146,7 +146,8 @@ public class SpecificClassRepositoryTests {
     @Test
     @Transactional
     public void testFindBySupervisor() {
-        // creates 8 local date objects and sets them to starting and ending times of specific classes
+        // creates 8 local date objects and sets them to starting and ending times of
+        // specific classes
         LocalDateTime localDateTime1 = LocalDateTime.of(2024, 3, 6, 10, 0);
         LocalDateTime localDateTime11 = LocalDateTime.of(2024, 3, 6, 11, 0);
         LocalDateTime localDateTime2 = LocalDateTime.of(2024, 3, 7, 11, 0);
@@ -173,8 +174,8 @@ public class SpecificClassRepositoryTests {
         Owner owner = new Owner("Owner@email.com", "Owner", "123", "owner last anme", 0);
         ownerRepository.save(owner);
 
-        Instructor supervisor1 = new Instructor("kyle@gmail.com", "kyle", "1234", "elyk", 4);
-        Instructor supervisor2 = new Instructor("leandro@gmail.com", "leandro", "12564", "ordnael", 5);
+        Instructor supervisor1 = new Instructor("kyle@gmail.com", "kyle", "1234", "elyk", 0);
+        Instructor supervisor2 = new Instructor("leandro@gmail.com", "leandro", "12564", "ordnael", 0);
         instructorRepository.save(supervisor1);
         instructorRepository.save(supervisor2);
 
@@ -208,6 +209,7 @@ public class SpecificClassRepositoryTests {
         assertEquals(2, foundSpecificClasses2.size());
         assertThat(foundSpecificClasses2).contains(specificClass2, specificClass4);
     }
+
     @Test
     @Transactional
     public void findByDateAndStartTime() {
@@ -237,8 +239,8 @@ public class SpecificClassRepositoryTests {
         Owner owner = new Owner("Owner@email.com", "Owner", "123", "owner last anme", 0);
         ownerRepository.save(owner);
 
-        Instructor supervisor1 = new Instructor("kyle@gmail.com", "kyle", "1234", "elyk", 4);
-        Instructor supervisor2 = new Instructor("leandro@gmail.com", "leandro", "12564", "ordnael", 5);
+        Instructor supervisor1 = new Instructor("kyle@gmail.com", "kyle", "1234", "elyk", 0);
+        Instructor supervisor2 = new Instructor("leandro@gmail.com", "leandro", "12564", "ordnael", 0);
         instructorRepository.save(supervisor1);
         instructorRepository.save(supervisor2);
 
@@ -275,11 +277,9 @@ public class SpecificClassRepositoryTests {
 
     }
 
-    
-
     @Test
     @Transactional
-    public void findBySupervisorIsNotNull(){
+    public void findBySupervisorIsNotNull() {
         LocalDateTime localDateTime1 = LocalDateTime.of(2024, 3, 6, 10, 0);
         LocalDateTime localDateTime11 = LocalDateTime.of(2024, 3, 6, 11, 0);
         LocalDateTime localDateTime2 = LocalDateTime.of(2024, 3, 7, 11, 0);
@@ -306,8 +306,8 @@ public class SpecificClassRepositoryTests {
         Owner owner = new Owner("Owner@email.com", "Owner", "123", "owner last anme", 0);
         ownerRepository.save(owner);
 
-        Instructor supervisor1 = new Instructor("kyle@gmail.com", "kyle", "1234", "elyk", 4);
-        Instructor supervisor2 = new Instructor("leandro@gmail.com", "leandro", "12564", "ordnael", 5);
+        Instructor supervisor1 = new Instructor("kyle@gmail.com", "kyle", "1234", "elyk", 0);
+        Instructor supervisor2 = new Instructor("leandro@gmail.com", "leandro", "12564", "ordnael", 0);
         instructorRepository.save(supervisor1);
         instructorRepository.save(supervisor2);
 
@@ -339,7 +339,7 @@ public class SpecificClassRepositoryTests {
 
     @Test
     @Transactional
-    public void findAll(){
+    public void findAll() {
         LocalDateTime localDateTime1 = LocalDateTime.of(2024, 3, 6, 10, 0);
         LocalDateTime localDateTime11 = LocalDateTime.of(2024, 3, 6, 11, 0);
         LocalDateTime localDateTime2 = LocalDateTime.of(2024, 3, 7, 11, 0);
@@ -366,8 +366,8 @@ public class SpecificClassRepositoryTests {
         Owner owner = new Owner("Owner@email.com", "Owner", "123", "owner last anme", 0);
         ownerRepository.save(owner);
 
-        Instructor supervisor1 = new Instructor("kyle@gmail.com", "kyle", "1234", "elyk", 4);
-        Instructor supervisor2 = new Instructor("leandro@gmail.com", "leandro", "12564", "ordnael", 5);
+        Instructor supervisor1 = new Instructor("kyle@gmail.com", "kyle", "1234", "elyk", 0);
+        Instructor supervisor2 = new Instructor("leandro@gmail.com", "leandro", "12564", "ordnael", 0);
         instructorRepository.save(supervisor1);
         instructorRepository.save(supervisor2);
 
@@ -394,12 +394,13 @@ public class SpecificClassRepositoryTests {
         List<SpecificClass> found = specificClassRepository.findAll();
 
         assertEquals(4, found.size());
-        assertThat(found).contains(specificClass,specificClass2,specificClass3, specificClass4);
+        assertThat(found).contains(specificClass, specificClass2, specificClass3, specificClass4);
 
     }
+
     @Test
     @Transactional
-    public void deleteByClassType(){
+    public void deleteByClassType() {
         LocalDateTime localDateTime = LocalDateTime.of(2024, 3, 6, 10, 0);
         LocalDateTime localDateTime2 = LocalDateTime.of(2024, 3, 6, 11, 0);
         LocalDateTime localDateTime3 = LocalDateTime.of(2024, 3, 8, 10, 0);
@@ -434,10 +435,10 @@ public class SpecificClassRepositoryTests {
         List<SpecificClass> found1 = specificClassRepository.findAll();
         assertEquals(0, found1.size());
     }
-    
+
     @Test
     @Transactional
-    public void deleteBySupervisor(){
+    public void deleteBySupervisor() {
         LocalDateTime localDateTime1 = LocalDateTime.of(2024, 3, 6, 10, 0);
         LocalDateTime localDateTime11 = LocalDateTime.of(2024, 3, 6, 11, 0);
         LocalDateTime localDateTime2 = LocalDateTime.of(2024, 3, 7, 11, 0);
@@ -464,8 +465,8 @@ public class SpecificClassRepositoryTests {
         Owner owner = new Owner("Owner@email.com", "Owner", "123", "owner last anme", 0);
         ownerRepository.save(owner);
 
-        Instructor supervisor1 = new Instructor("kyle@gmail.com", "kyle", "1234", "elyk", 4);
-        Instructor supervisor2 = new Instructor("leandro@gmail.com", "leandro", "12564", "ordnael", 5);
+        Instructor supervisor1 = new Instructor("kyle@gmail.com", "kyle", "1234", "elyk", 0);
+        Instructor supervisor2 = new Instructor("leandro@gmail.com", "leandro", "12564", "ordnael", 0);
         instructorRepository.save(supervisor1);
         instructorRepository.save(supervisor2);
 
@@ -503,7 +504,7 @@ public class SpecificClassRepositoryTests {
 
     @Test
     @Transactional
-    public void  deleteByDate(){
+    public void deleteByDate() {
         LocalDateTime localDateTime1 = LocalDateTime.of(2024, 3, 6, 10, 0);
         LocalDateTime localDateTime11 = LocalDateTime.of(2024, 3, 6, 11, 0);
         LocalDateTime localDateTime2 = LocalDateTime.of(2024, 3, 7, 11, 0);
@@ -529,8 +530,8 @@ public class SpecificClassRepositoryTests {
         Owner owner = new Owner("Owner@email.com", "Owner", "123", "owner last anme", 0);
         ownerRepository.save(owner);
 
-        Instructor supervisor1 = new Instructor("kyle@gmail.com", "kyle", "1234", "elyk", 4);
-        Instructor supervisor2 = new Instructor("leandro@gmail.com", "leandro", "12564", "ordnael", 5);
+        Instructor supervisor1 = new Instructor("kyle@gmail.com", "kyle", "1234", "elyk", 0);
+        Instructor supervisor2 = new Instructor("leandro@gmail.com", "leandro", "12564", "ordnael", 0);
         instructorRepository.save(supervisor1);
         instructorRepository.save(supervisor2);
 
@@ -571,9 +572,8 @@ public class SpecificClassRepositoryTests {
     }
     // @Test
     // @Transactional
-    // public void  deleteSessionId(){
-
+    // public void deleteSessionId(){
 
     // }
-    
+
 }
