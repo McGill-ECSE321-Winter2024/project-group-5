@@ -28,19 +28,19 @@ public class InstructorRestController {
     @Autowired
     private InstructorService instructorService;
 
-    @GetMapping(value = { "/instructors/email/{specificEmail}", "/instructors/email/{specificEmail}/" })
-    public InstructorResponseDto findInstructorByEmail(@PathVariable("specificEmail") String theEmail) {
+    @GetMapping(value = { "/instructors/getByEmail/{email}", "/instructors/getByEmail/{email}/" })
+    public InstructorResponseDto findInstructorByEmail(@PathVariable("email") String theEmail) {
         Instructor instructor = instructorService.getInstructor(theEmail);
         return new InstructorResponseDto(instructor);
     }
 
-    @GetMapping(value = { "/instructors/accountId/{specificId}", "/instructors/accountId/{specificId}/" })
-    public InstructorResponseDto findInstructorByAccoutnId(@PathVariable("specificId") int theId) {
+    @GetMapping(value = { "/instructors/getById/{accountId}", "/instructors/getById/{accountId}/" })
+    public InstructorResponseDto findInstructorByAccountId(@PathVariable("accountId") int theId) {
         Instructor instructor = instructorService.getInstructor(theId);
         return new InstructorResponseDto(instructor);
     }
 
-    @GetMapping(value = { "/instructors", "instructors/" })
+    @GetMapping(value = { "/instructors/all", "/instructors/all/" })
     public InstructorListDto getAllInstructors() {
         List<InstructorResponseDto> instructors = new ArrayList<>();
         for (Instructor instructor : instructorService.getAllInstructors()) {
@@ -49,44 +49,44 @@ public class InstructorRestController {
         return new InstructorListDto(instructors);
     }
 
-    @DeleteMapping(value = { "/instructors/email/{specificEmail}", "/instructors/email/{specificEmail}/" })
-    public void deleteInstructor(@PathVariable("specificEmail") String theEmail) {
+    @DeleteMapping(value = { "/instructors/delete/{email}", "/instructors/delete/{email}/" })
+    public void deleteInstructorByEmail(@PathVariable("email") String theEmail) {
         instructorService.deleteInstructor(theEmail);
     }
 
-    @PostMapping(value = { "/instructors", "/instructors/" })
+    @PostMapping(value = { "/instructors/create", "/instructors/create/" })
     @ResponseStatus(HttpStatus.CREATED)
     public InstructorRequestDto createInstructor(@RequestBody InstructorRequestDto instructor) {
         Instructor createdInstructor = instructorService.createInstructor(instructor.getEmail(), instructor.getFirstName(), instructor.getPassword(), instructor.getLastName());
         return new InstructorRequestDto(createdInstructor.getEmail(), createdInstructor.getFirstName(), createdInstructor.getLastName(), createdInstructor.getPassword());
     }
 
-    @PutMapping(value = { "/instructors/email/{accountId}/{specificEmail}", "/instructors/email/{accountId}/{specificEmail}/" })
-    public InstructorRequestDto updateInstructorEmail(@PathVariable("specificEmail") String theEmail, @PathVariable("accountId") int theId) {
+    @PutMapping(value = { "/instructors/updateEmail/{accountId}/{newEmail}", "/instructors/updateEmail/{accountId}/{newEmail}/" })
+    public InstructorRequestDto updateInstructorEmail(@PathVariable("newEmail") String theEmail, @PathVariable("accountId") int theId) {
         Instructor instructor = instructorService.getInstructor(theId);
         instructorService.updateInstructorEmail(theId, theEmail);
         instructor = instructorService.getInstructor(theId);
         return new InstructorRequestDto(instructor.getEmail(), instructor.getFirstName(), instructor.getLastName(), instructor.getPassword());
     }
 
-    @PutMapping(value = { "/instructors/firstName/{specificEmail}/{specificFirstName}", "/instructors/firstName/{specificEmail}/{specificFirstName}/" })
-    public InstructorRequestDto updateInstructorFirstName(@PathVariable("specificEmail") String theEmail, @PathVariable("specificFirstName") String theFirstName) {
+    @PutMapping(value = { "/instructors/updateFirstName/{email}/{newFirstName}", "/instructors/updateFirstName/{email}/{newFirstName}/" })
+    public InstructorRequestDto updateInstructorFirstName(@PathVariable("email") String theEmail, @PathVariable("newFirstName") String theFirstName) {
         Instructor instructor = instructorService.getInstructor(theEmail);
         instructorService.updateInstructorFirstName(theEmail, theFirstName);
         instructor = instructorService.getInstructor(theEmail);
         return new InstructorRequestDto(instructor.getEmail(), instructor.getFirstName(), instructor.getLastName(), instructor.getPassword());
     }
 
-    @PutMapping(value = { "/instructors/lastName/{specificEmail}/{specificLastName}", "/instructors/lastName/{specificEmail}/{specificLastName}/" })
-    public InstructorRequestDto updateInstructorLastName(@PathVariable("specificEmail") String theEmail, @PathVariable("specificLastName") String theLastName) {
+    @PutMapping(value = { "/instructors/updateLastName/{email}/{newLastName}", "/instructors/updateLastName/{email}/{newLastName}/" })
+    public InstructorRequestDto updateInstructorLastName(@PathVariable("email") String theEmail, @PathVariable("newLastName") String theLastName) {
         Instructor instructor = instructorService.getInstructor(theEmail);
         instructorService.updateInstructorLastName(theEmail, theLastName);
         instructor = instructorService.getInstructor(theEmail);
         return new InstructorRequestDto(instructor.getEmail(), instructor.getFirstName(), instructor.getLastName(), instructor.getPassword());
     }
 
-    @PutMapping(value = { "/instructors/password/{specificEmail}/{specificPassword}", "/instructors/password/{specificEmail}/{specificPassword}/" })
-    public InstructorRequestDto updateInstructorPassword(@PathVariable("specificEmail") String theEmail, @PathVariable("specificPassword") String thePassword) {
+    @PutMapping(value = { "/instructors/updatePassword/{email}/{newPassword}", "/instructors/updatePassword/{email}/{newPassword}/" })
+    public InstructorRequestDto updateInstructorPassword(@PathVariable("email") String theEmail, @PathVariable("newPassword") String thePassword) {
         Instructor instructor = instructorService.getInstructor(theEmail);
         instructorService.updateInstructorPassword(theEmail, thePassword);
         instructor = instructorService.getInstructor(theEmail);
