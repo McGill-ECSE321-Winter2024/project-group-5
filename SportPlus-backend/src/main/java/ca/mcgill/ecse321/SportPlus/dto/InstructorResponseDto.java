@@ -1,24 +1,33 @@
 package ca.mcgill.ecse321.SportPlus.dto;
 
-public class InstructorDto {
+import ca.mcgill.ecse321.SportPlus.model.Instructor;
 
+public class InstructorResponseDto {
+
+    private int accountId;
     private String email;
     private String firstName;
     private String lastName;
     private String password;
 
-    public InstructorDto() {
+    @SuppressWarnings("unused")
+    public InstructorResponseDto() {
     }
 
-    public InstructorDto(String email) {
-        this.email = email;
+    public InstructorResponseDto(Instructor instructor) {
+        this.accountId = instructor.getAccountId();
+        this.email = instructor.getEmail();
+        this.firstName = instructor.getFirstName();
+        this.lastName = instructor.getLastName();
+        this.password = instructor.getPassword();
     }
 
-    public InstructorDto(String email, String firstName, String lastName, String password) {
-        this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.password = password;
+    public int getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(int accountId) {
+        this.accountId = accountId;
     }
 
     public String getEmail() {

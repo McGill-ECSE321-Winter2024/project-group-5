@@ -64,6 +64,7 @@ public class InstructorService {
         if (message.isEmpty()) {
             Instructor instructor = getInstructor(accountId);
             instructor.setEmail(email);
+            instructorRepository.save(instructor);
             return instructor;
         }
         return null;
@@ -73,6 +74,7 @@ public class InstructorService {
     public Instructor updateInstructorFirstName(String email, String firstName) {
         Instructor instructor = getInstructor(email);
         instructor.setFirstName(firstName);
+        instructorRepository.save(instructor);
         return instructor;
     }
 
@@ -80,6 +82,7 @@ public class InstructorService {
     public Instructor updateInstructorLastName(String email, String lastName) {
         Instructor instructor = getInstructor(email);
         instructor.setLastName(lastName);
+        instructorRepository.save(instructor);
         return instructor;
     }
 
@@ -89,6 +92,7 @@ public class InstructorService {
         if (message.isEmpty()) {
             Instructor instructor = getInstructor(email);
             instructor.setPassword(password);
+            instructorRepository.save(instructor);
             return instructor;
         }
         return null;
