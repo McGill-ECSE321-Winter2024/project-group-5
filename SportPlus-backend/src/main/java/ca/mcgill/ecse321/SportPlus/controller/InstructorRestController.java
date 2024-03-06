@@ -70,7 +70,7 @@ public class InstructorRestController {
     }
 
     @PutMapping(value = { "/instructors/firstName/{specificEmail}/{specificFirstName}", "/instructors/firstName/{specificEmail}/{specificFirstName}/" })
-    public InstructorRequestDto updateInstructorFirstName(@PathVariable("specificEmail") String theEmail, @PathVariable("firstName") String theFirstName) {
+    public InstructorRequestDto updateInstructorFirstName(@PathVariable("specificEmail") String theEmail, @PathVariable("specificFirstName") String theFirstName) {
         Instructor instructor = instructorService.getInstructor(theEmail);
         instructorService.updateInstructorFirstName(theEmail, theFirstName);
         instructor = instructorService.getInstructor(theEmail);
@@ -78,17 +78,17 @@ public class InstructorRestController {
     }
 
     @PutMapping(value = { "/instructors/lastName/{specificEmail}/{specificLastName}", "/instructors/lastName/{specificEmail}/{specificLastName}/" })
-    public InstructorRequestDto updateInstructorLastName(@PathVariable("specificEmail") String theEmail, @PathVariable("lastName") String theLastName) {
+    public InstructorRequestDto updateInstructorLastName(@PathVariable("specificEmail") String theEmail, @PathVariable("specificLastName") String theLastName) {
         Instructor instructor = instructorService.getInstructor(theEmail);
-        instructorService.updateInstructorFirstName(theEmail, theLastName);
+        instructorService.updateInstructorLastName(theEmail, theLastName);
         instructor = instructorService.getInstructor(theEmail);
         return new InstructorRequestDto(instructor.getEmail(), instructor.getFirstName(), instructor.getLastName(), instructor.getPassword());
     }
 
     @PutMapping(value = { "/instructors/password/{specificEmail}/{specificPassword}", "/instructors/lastName/{specificEmail}/{specificPassword}/" })
-    public InstructorRequestDto updateInstructorPassword(@PathVariable("specificEmail") String theEmail, @PathVariable("lastName") String thePassword) {
+    public InstructorRequestDto updateInstructorPassword(@PathVariable("specificEmail") String theEmail, @PathVariable("specificPassword") String thePassword) {
         Instructor instructor = instructorService.getInstructor(theEmail);
-        instructorService.updateInstructorFirstName(theEmail, thePassword);
+        instructorService.updateInstructorPassword(theEmail, thePassword);
         instructor = instructorService.getInstructor(theEmail);
         return new InstructorRequestDto(instructor.getEmail(), instructor.getFirstName(), instructor.getLastName(), instructor.getPassword());
     }
