@@ -2,6 +2,7 @@ package ca.mcgill.ecse321.SportPlus.service;
 
 import ca.mcgill.ecse321.SportPlus.service.utilities.HelperMethods;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,18 +23,27 @@ public class ClientService {
 
     @Transactional
 	public Client getClient(String email) {
+        if (email == null || email.trim().length() == 0) {
+            throw new IllegalArgumentException("Client email cannot be empty!");
+        }
 		Client client = clientRepository.findByEmail(email);
 		return client;
 	}
 
     @Transactional
     public Client getClient(Integer accountId){
+        if (accountId < 0) {
+            throw new IllegalArgumentException("Account Id cannot be less than 0!");
+        }
         Client client = clientRepository.findByAccountId(accountId);
         return client;
 
     }
     @Transactional
     public void deleteClient(String email){
+        if (email == null || email.trim().length() == 0) {
+            throw new IllegalArgumentException("Person name cannot be empty!");
+        }
         clientRepository.deleteByEmail(email);
     }
 
@@ -43,41 +53,102 @@ public class ClientService {
     }
     //------------EndWrappers----------//
 
+    //-----------Helper--------------//
     @Transactional
-	public String createClient(String email, String password) {
+    public boolean clientWithEmailExists(String email){
+        Client client = getClient(email);
+        if (client == null) {
+            return false;
+        }
+        return true;
+    }
+    //-----------EndHelper----------//
+
+    @Transactional
+	public Client createClient(String email, String password, String firstName, String lastName) {
 		Client client = new Client();
-        String mess1 = HelperMethods.ClientEmailCheck(email);
-        String mess2 = HelperMethods.PasswordCheck(password);
-        if(!mess1.isEmpty()){return mess1;}
-        if(!mess2.isEmpty()){return mess2;}
+        if (email == null || HelperMethods.ClientEmailCheck(email).trim().length() != 0) {
+            throw new IllegalArgumentException("Invalid email!");
+        }
+        if (password == null || HelperMethods.PasswordCheck(password).trim().length() != 0) {
+            throw new IllegalArgumentException("Invalid password!");
+        }
+        if (firstName == null || firstName.trim().length() == 0) {
+            throw new IllegalArgumentException("Client first name cannot be empty!");
+        }
+        if (lastName == null || lastName.trim().length() == 0) {
+            throw new IllegalArgumentException("Client last name cannot be empty!");
+        }
 		client.setEmail(email);
         client.setPassword(password);
+        client.setFirstName(firstName);
+        client.setLastName(lastName);
 		clientRepository.save(client);
-		return ""; //TODO
+		return client;
 	}
 
     @Transactional
-    public String updateClientFirstName(String email, String firstName){
-        Client client = getClient(email);
-        client.setFirstName(firstName);
-        return ""; //TODO
-    }
-
-    @Transactional
-    public String updateClientLastName(String email, String LastName){
-        Client client = getClient(email);
-        client.setLastName(LastName);
-        return ""; //TODO
-    }
-    @Transactional
-    public String updateClientPassword(String email, String password){
-        Client client = getClient(email);
-        String message = HelperMethods.PasswordCheck(password);
-        if(message.isEmpty()){
-            client.setPassword(password);
+    public Client updateClientFirstName(String email, String firstName){
+        if (firstName == null || firstName.trim().length() == 0) {
+            throw new IllegalArgumentException("Client first name cannot be empty!");
         }
-        return message; 
+        Client client = getClient(email);
+        if (client == null) {
+            throw new IllegalArgumentException("Client with email does not exist!");
+        }
+        client.setFirstName(firstName);
+        clientRepository.save(client);
+        return client;
     }
 
+    @Transactional
+    public Client updateClientLastName(String email, String lastName){
+        if (lastName == null || lastName.trim().length() == 0) {
+            throw new IllegalArgumentException("Client first name cannot be empty!");
+        }
+        Client client = getClient(email);
+        if (client == null) {
+            throw new IllegalArgumentException("Client with email does not exist!");
+        }
+        client.setLastName(lastName);
+        clientRepository.save(client);
+        return client;
+    }
+    @Transactional
+    public Client updateClientPassword(String email, String password){
+         if (email == null || HelperMethods.ClientEmailCheck(email).trim().length() != 0) {
+            throw new IllegalArgumentException("Invalid email!");
+        }
+        Client client = getClient(email);
+        if (client == null) {
+            throw new IllegalArgumentException("Client with email does not exist!");
+        }
+        if (password == null || HelperMethods.PasswordCheck(password).trim().length() != 0) {
+            throw new IllegalArgumentException("Invalid password!");
+        }
+        client.setPassword(password);
+        clientRepository.save(client);
+        return client; 
+    }
+
+    @Transactional
+    public Client updateClientEmail(int accountId, String email){
+        if (accountId < 0) {
+            throw new IllegalArgumentException("Account Id cannot be less than 0!");
+        }
+        Client client = getClient(accountId);
+        if (client == null) {
+            throw new IllegalArgumentException("Client with account Id does not exist!");
+        }
+        if (email == null || HelperMethods.ClientEmailCheck(email).trim().length() != 0) {
+            throw new IllegalArgumentException("Invalid email!");
+        }
+        if(clientWithEmailExists(email)){
+            throw new IllegalArgumentException("Email already in use");
+        }
+        client.setEmail(email);
+        clientRepository.save(client);
+        return client;
+    }
     
 }
