@@ -4,15 +4,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+
+import java.util.Arrays;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,59 +39,106 @@ public class TestInstructorService {
     private static final String INSTRUCTOR_FISTNAME = "John";
     private static final String INSTRUCTOR_LASTNAME = "Doe";
     private static final String INSTRUCTOR_PASSWORD = "password123";
-
+    private static final int INSTRUCTOR_ACCOUNTID = 2;
     private static final String NOT_INSTRUCTOR_EMAIL = "notemail@email.com";
 
     @BeforeEach
     public void setMockOutput() {
-        lenient().when(instructorRepository.findInstructorByEmail(anyString())).thenAnswer( (InvocationOnMock invocation) -> {
-            if(invocation.getArgument(0).equals(INSTRUCTOR_EMAIL)) {
-                Instructor instructor = new Instructor();
-                instructor.setEmail(INSTRUCTOR_EMAIL);
-                instructor.setFirstName(INSTRUCTOR_FISTNAME);
-                instructor.setLastName(INSTRUCTOR_LASTNAME);
-                instructor.setPassword(INSTRUCTOR_PASSWORD);
-                return instructor;
-            } else {
-                return null;
-            }
-        });
-		Answer<?> returnParameterAsAnswer = (InvocationOnMock invocation) -> {
+        lenient().when(instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL)).thenReturn(new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD, INSTRUCTOR_LASTNAME, INSTRUCTOR_ACCOUNTID));
+        lenient().when(instructorRepository.findByAccountId(INSTRUCTOR_ACCOUNTID)).thenReturn(new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD, INSTRUCTOR_LASTNAME, INSTRUCTOR_ACCOUNTID));
+        lenient().when(instructorRepository.findAll()).thenReturn(Arrays.asList(new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD, INSTRUCTOR_LASTNAME, INSTRUCTOR_ACCOUNTID)));
+        Answer<?> returnParameterAsAnswer = (InvocationOnMock invocation) -> {
 			return invocation.getArgument(0);
 		};
 		lenient().when(instructorRepository.save(any(Instructor.class))).thenAnswer(returnParameterAsAnswer);
     }
     
-    @SuppressWarnings("null")
     @Test
 	public void testCreateInstructor() {
         String email = "newinstructor@email.com";
         String firstName = "Paul";
         String lastName = "Dmyt";
         String password = "Ro1234";
-
-		assertEquals(0, instructorService.getAllInstructors().size());
-
-        Instructor instructor = null;
-		try {
-            instructor = instructorService.createInstructor(email, firstName, password, lastName);
-		} catch (IllegalArgumentException e) {
-			fail();
-		}
+        
+        Instructor instructor = instructorService.createInstructor(email, firstName, password, lastName);
+		
 		assertNotNull(instructor);
 		assertEquals(email, instructor.getEmail());
         assertEquals(firstName, instructor.getFirstName());
         assertEquals(lastName, instructor.getLastName());
         assertEquals(password, instructor.getPassword());
+        
         verify(instructorRepository, times(1)).save(instructor);
 	}
 
     @Test
-    public void testReadInstructorById() {
-        int accountId = 2810;
-        Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD, INSTRUCTOR_LASTNAME, accountId);
-        when(instructorRepository.findByAccountId(accountId)).thenReturn(instructor);
+    public void testUpdateInstructorEmail() {
+        String newEmail = "newinstructor@email.com";
+        
+        Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD, INSTRUCTOR_LASTNAME, INSTRUCTOR_ACCOUNTID);
+        Instructor updatedInstructor = instructorRepository.findByAccountId(INSTRUCTOR_ACCOUNTID);
+        
+        instructorService.updateInstructorEmail(INSTRUCTOR_ACCOUNTID, newEmail);
 
+        assertNotNull(updatedInstructor);
+        assertNotEquals(instructor.getEmail(), updatedInstructor.getEmail());
+        assertEquals(instructor.getAccountId(), updatedInstructor.getAccountId());
+        assertEquals(updatedInstructor.getAccountId(), INSTRUCTOR_ACCOUNTID);
+        assertEquals(updatedInstructor.getEmail(), newEmail);
+        
+        verify(instructorRepository, times(1)).save(any(Instructor.class));
+    }
+
+    @Test
+    public void testUpdateInstructor() {
+        String newPassword = "NewPass123";
+        String newFirstName = "NewJohn";
+        String newLastName = "NewDoe";
+        
+        Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD, INSTRUCTOR_LASTNAME, INSTRUCTOR_ACCOUNTID);
+        Instructor updatedInstructor = instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL);
+        
+        instructorService.updateInstructorFirstName(INSTRUCTOR_EMAIL, newFirstName);
+        instructorService.updateInstructorLastName(INSTRUCTOR_EMAIL, newLastName);
+        instructorService.updateInstructorPassword(INSTRUCTOR_EMAIL, newPassword);
+
+        assertNotNull(updatedInstructor);
+        assertEquals(instructor.getEmail(), updatedInstructor.getEmail());
+        assertEquals(instructor.getAccountId(), updatedInstructor.getAccountId());
+        assertNotEquals(instructor.getFirstName(), updatedInstructor.getFirstName());
+        assertNotEquals(instructor.getLastName(), updatedInstructor.getLastName());
+        assertNotEquals(instructor.getPassword(), updatedInstructor.getPassword());
+        assertEquals(newPassword, updatedInstructor.getPassword());
+        assertEquals(newFirstName, updatedInstructor.getFirstName());
+        assertEquals(newLastName, updatedInstructor.getLastName());
+        
+        verify(instructorRepository, times(3)).save(any(Instructor.class));
+    }
+
+    @Test
+    public void testDeleteInstructor() {
+        Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD, INSTRUCTOR_LASTNAME, INSTRUCTOR_ACCOUNTID);
+
+        instructorService.deleteInstructor(instructor.getEmail());
+
+        verify(instructorRepository, times(1)).deleteInstructorByEmail(INSTRUCTOR_EMAIL);
+    }
+
+    @Test
+	public void testGetExistingInstructor() {
+		assertEquals(INSTRUCTOR_EMAIL, instructorService.getInstructor(INSTRUCTOR_EMAIL).getEmail());
+	}
+
+	@Test
+	public void testGetNonExistingInstructor() {
+		assertNull(instructorService.getInstructor(NOT_INSTRUCTOR_EMAIL));
+	}
+
+    @Test
+    public void testReadInstructorById() {
+        int accountId = INSTRUCTOR_ACCOUNTID;
+        
+        Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD, INSTRUCTOR_LASTNAME, accountId);
         Instructor searchInstructor = instructorService.getInstructor(accountId);
 
         assertNotNull(searchInstructor);
@@ -102,15 +150,13 @@ public class TestInstructorService {
     }
 
     @Test
-	public void testGetExistingInstructor() {
-		assertEquals(INSTRUCTOR_EMAIL, instructorService.getInstructor(INSTRUCTOR_EMAIL).getEmail());
-	}
+    public void testGetAllInstructors() {
+        Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD, INSTRUCTOR_LASTNAME, INSTRUCTOR_ACCOUNTID);
+        List<Instructor> instructors = Arrays.asList(instructor);
+        List<Instructor> instructorsFromRepo = instructorService.getAllInstructors();
 
-	@Test
-	public void testGetNonExistingPerson() {
-		assertNull(instructorService.getInstructor(NOT_INSTRUCTOR_EMAIL));
-	}
-
-    // add more tests from service
-
+        assertNotNull(instructorsFromRepo);
+        assertEquals(instructors, instructorsFromRepo);
+    }
+    
 }
