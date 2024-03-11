@@ -1,10 +1,13 @@
 package ca.mcgill.ecse321.SportPlus.dto;
 
-import java.util.List; 
+import java.util.List;
 
 public class InstructorListDto {
 
     private List<InstructorResponseDto> instructors;
+
+    public InstructorListDto() {
+    }
 
     public InstructorListDto(List<InstructorResponseDto> instructors) {
         this.instructors = instructors;
@@ -14,8 +17,8 @@ public class InstructorListDto {
         return instructors;
     }
 
-    public void setPeople(List<InstructorResponseDto> instructors) {
+    public void setInstructors(List<InstructorResponseDto> instructors) {
         this.instructors = instructors;
     }
-    
+
 }
