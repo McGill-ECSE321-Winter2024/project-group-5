@@ -37,7 +37,7 @@ public class InstructorIntegrationTests {
         instructorRepository.deleteAll();
     }
 
-    private static final String INSTRUCTOR_EMAIL = "example@email.com";
+    private static final String INSTRUCTOR_EMAIL = "example@sportplus.com";
     private static final String INSTRUCTOR_FISTNAME = "John";
     private static final String INSTRUCTOR_LASTNAME = "Doe";
     private static final String INSTRUCTOR_PASSWORD = "Password123";
@@ -281,7 +281,7 @@ public class InstructorIntegrationTests {
         assertTrue(createdInstructor.getAccountId() > 0, "Response should have a positive ID.");
         INSTRUCTOR_VALID_ACCOUNTID = createdInstructor.getAccountId();
 
-        String newEmail = "exampleNew@email.com";
+        String newEmail = "exampleNew@sportplus.com";
 
         String url = "/instructors/updateEmail/" + INSTRUCTOR_VALID_ACCOUNTID + "/" + newEmail;
 
@@ -313,7 +313,7 @@ public class InstructorIntegrationTests {
         assertTrue(createdInstructor.getAccountId() > 0, "Response should have a positive ID.");
         INSTRUCTOR_VALID_ACCOUNTID = createdInstructor.getAccountId();
 
-        String newEmail = "exampleNew@email.com";
+        String newEmail = "exampleNew@sportplus.com";
 
         String url = "/instructors/updateEmail/" + INSTRUCTOR_VALID_ACCOUNTID + "/" + newEmail + "/";
 
