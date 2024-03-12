@@ -70,6 +70,9 @@ public class ClientService {
         if (email == null || HelperMethods.ClientEmailCheck(email).trim().length() != 0) {
             throw new IllegalArgumentException("Invalid email!");
         }
+        if(clientWithEmailExists(email)){
+            throw new IllegalArgumentException("Email already in use");
+        }
         if (password == null || HelperMethods.PasswordCheck(password).trim().length() != 0) {
             throw new IllegalArgumentException("Invalid password!");
         }
