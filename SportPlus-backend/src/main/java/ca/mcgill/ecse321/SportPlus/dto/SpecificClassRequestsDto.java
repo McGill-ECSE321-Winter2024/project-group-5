@@ -9,8 +9,8 @@ public class SpecificClassRequestsDto {
     private Time startTime;
     private Time endTime;
     private Integer instructorId;
-
     private Integer classTypeId;
+    private Integer dayOfWeek;
 
     public SpecificClassRequestsDto() {
     }
@@ -35,6 +35,11 @@ public class SpecificClassRequestsDto {
         return classTypeId;
     }
 
+    public Integer getDayOfWeek() {
+        return dayOfWeek;
+    }
+
+
     public void setDate(Date date) {
         this.date = date;
     }
@@ -53,5 +58,9 @@ public class SpecificClassRequestsDto {
 
     public void setClassTypeId(Integer classTypeId) {
         this.classTypeId = classTypeId;
+    }
+
+    public void setDayOfWeekint(Integer dayOfWeek) {
+        this.dayOfWeek = dayOfWeek;
     }
 }
