@@ -4,13 +4,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+
+import java.util.Arrays;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,81 +35,128 @@ public class TestClientService {
     @InjectMocks
     private ClientService clientService;
 
-    private final String EMAIL = "example@gmail.com";
-    private final String FIRSTNAME = "Hiccup Horrendus";
-    private final String LASTNAME = "Haddock III";
-    private final String PASSWORD = "ILoveToothlessMoreThanAstrid";
-    private final String ACCOUNTID = "0";
+    private static final String CLIENT_EMAIL = "example@email.com";
+    private static final String CLIENT_FISTNAME = "John";
+    private static final String CLIENT_LASTNAME = "Doe";
+    private static final String CLIENT_PASSWORD = "password123";
+    private static final int CLIENT_ACCOUNTID = 2;
+    private static final String NOT_CLIENT_EMAIL = "notemail@email.com";
 
     @BeforeEach
     public void setMockOutput() {
-        lenient().when(clientRepository.findByEmail(anyString())).thenAnswer( (InvocationOnMock invocation) -> {
-            if(invocation.getArgument(0).equals(ACCOUNTID)) {
-                Client client = new Client();
-                client.setEmail(EMAIL);
-                client.setFirstName(FIRSTNAME);
-                client.setLastName(LASTNAME);
-                client.setPassword(PASSWORD);
-                return client;
-            } else {
-               return null;
-            }
-        });
-		Answer<?> returnParameterAsAnswer = (InvocationOnMock invocation) -> {
+        lenient().when(clientRepository.findByEmail(CLIENT_EMAIL)).thenReturn(new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME, CLIENT_ACCOUNTID));
+        lenient().when(clientRepository.findByAccountId(CLIENT_ACCOUNTID)).thenReturn(new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME, CLIENT_ACCOUNTID));
+        lenient().when(clientRepository.findAll()).thenReturn(Arrays.asList(new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME, CLIENT_ACCOUNTID)));
+        Answer<?> returnParameterAsAnswer = (InvocationOnMock invocation) -> {
 			return invocation.getArgument(0);
 		};
 		lenient().when(clientRepository.save(any(Client.class))).thenAnswer(returnParameterAsAnswer);
     }
-
-    @SuppressWarnings("null")
+    
     @Test
-	public void testCreateInstructor() {
-        String email = "newClient@email.com";
-        String firstName = "Jake";
-        String lastName = "Travolta";
-        String password = "dropWisdom";
-
-		assertEquals(0, clientService.getAllClients().size());
-
-        Client client = null;
-		try {
-            client = clientService.createClient(email, password, firstName, lastName);
-		} catch (IllegalArgumentException e) {
-			fail();
-		}
+	public void testCreateClient() {
+        String email = "newclient@email.com";
+        String firstName = "Paul";
+        String lastName = "Dmyt";
+        String password = "Ro1234";
+        
+        Client client = clientService.createClient(email, firstName, password, lastName);
+		
 		assertNotNull(client);
 		assertEquals(email, client.getEmail());
         assertEquals(firstName, client.getFirstName());
         assertEquals(lastName, client.getLastName());
         assertEquals(password, client.getPassword());
+        
         verify(clientRepository, times(1)).save(client);
 	}
-    //TODO : 
-    // @Test
-    // public void testUpdateClientFirstName(){
-    //     String email = "newClient@email.com";
-    //     String firstName = "Zachary";
 
-    // }
-    // @Test
-    // public void testUpdateClientLastName(){
-    //     String email = "newClient@email.com";
-    //     String lastName = "Hillander";
+    @Test
+    public void testUpdateClientEmail() {
+        String newEmail = "newclient@email.com";
+        
+        Client client = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME, CLIENT_ACCOUNTID);
+        Client updatedClient = clientRepository.findByAccountId(CLIENT_ACCOUNTID);
+        
+        clientService.updateClientEmail(CLIENT_ACCOUNTID, newEmail);
 
-    // }
-    // @Test
-    // public void testUpdateClientPassword(){
-    //     String email = "newClient@email.com";
-    //     String password = "passworD4";
+        assertNotNull(updatedClient);
+        assertNotEquals(client.getEmail(), updatedClient.getEmail());
+        assertEquals(client.getAccountId(), updatedClient.getAccountId());
+        assertEquals(updatedClient.getAccountId(), CLIENT_ACCOUNTID);
+        assertEquals(updatedClient.getEmail(), newEmail);
+        
+        verify(clientRepository, times(1)).save(any(Client.class));
+    }
 
-    // }
-    // @Test
-    // public void testUpdateClientEmail(){
-    //     int accountId = 333;
-    //     String email = "this@email.com";
-    // }
+    @Test
+    public void testUpdateClient() {
+        String newPassword = "NewPass123";
+        String newFirstName = "NewJohn";
+        String newLastName = "NewDoe";
+        
+        Client client = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME, CLIENT_ACCOUNTID);
+        Client updatedClient = clientRepository.findByEmail(CLIENT_EMAIL);
+        
+        clientService.updateClientFirstName(CLIENT_EMAIL, newFirstName);
+        clientService.updateClientLastName(CLIENT_EMAIL, newLastName);
+        clientService.updateClientPassword(CLIENT_EMAIL, newPassword);
 
+        assertNotNull(updatedClient);
+        assertEquals(client.getEmail(), updatedClient.getEmail());
+        assertEquals(client.getAccountId(), updatedClient.getAccountId());
+        assertNotEquals(client.getFirstName(), updatedClient.getFirstName());
+        assertNotEquals(client.getLastName(), updatedClient.getLastName());
+        assertNotEquals(client.getPassword(), updatedClient.getPassword());
+        assertEquals(newPassword, updatedClient.getPassword());
+        assertEquals(newFirstName, updatedClient.getFirstName());
+        assertEquals(newLastName, updatedClient.getLastName());
+        
+        verify(clientRepository, times(3)).save(any(Client.class));
+    }
 
+    @Test
+    public void testDeleteClient() {
+        Client client = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME, CLIENT_ACCOUNTID);
 
+        clientService.deleteClient(client.getEmail());
+
+        verify(clientRepository, times(1)).deleteByEmail(CLIENT_EMAIL);
+    }
+
+    @Test
+	public void testGetExistingClient() {
+		assertEquals(CLIENT_EMAIL, clientService.getClient(CLIENT_EMAIL).getEmail());
+	}
+
+	@Test
+	public void testGetNonExistingClient() {
+		assertNull(clientService.getClient(NOT_CLIENT_EMAIL));
+	}
+
+    @Test
+    public void testReadClientById() {
+        int accountId = CLIENT_ACCOUNTID;
+        
+        Client client = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME, accountId);
+        Client searchClient = clientService.getClient(accountId);
+
+        assertNotNull(searchClient);
+        assertEquals(client.getAccountId(), searchClient.getAccountId());
+        assertEquals(client.getEmail(), searchClient.getEmail());
+        assertEquals(client.getFirstName(), searchClient.getFirstName());
+        assertEquals(client.getLastName(), searchClient.getLastName());
+        assertEquals(client.getPassword(), searchClient.getPassword());
+    }
+
+    @Test
+    public void testGetAllClients() {
+        Client client = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME, CLIENT_ACCOUNTID);
+        List<Client> clients = Arrays.asList(client);
+        List<Client> clientsFromRepo = clientService.getAllClients();
+
+        assertNotNull(clientsFromRepo);
+        assertEquals(clients, clientsFromRepo);
+    }
     
 }
