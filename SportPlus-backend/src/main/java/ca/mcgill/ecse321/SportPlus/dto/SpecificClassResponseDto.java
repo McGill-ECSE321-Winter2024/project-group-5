@@ -14,7 +14,7 @@ public class SpecificClassResponseDto {
     private Time startTime;
     private Time endTime;
     private InstructorResponseDto supervisor;
-    private ClassTypeDto classType;
+    //private ClassTypeDto classType;
 
     // Constructors, Getters, and Setters
 
@@ -24,7 +24,7 @@ public class SpecificClassResponseDto {
         this.startTime = specificclass.getStartTime();
         this.endTime = specificclass.getEndTime();
         this.supervisor = new InstructorResponseDto(specificclass.getSupervisor());
-        this.classType = new ClassTypeDto(specificclass.getClassType()); 
+        //this.classType = new ClassTypeDto(specificclass.getClassType()); 
 
     }
 
@@ -49,9 +49,9 @@ public class SpecificClassResponseDto {
         return supervisor;
     }
 
-    public ClassTypeDto getClassType() {
-        return classType;
-    }
+    // public ClassTypeDto getClassType() {
+    //     return classType;
+    // }
 
     // Setters
     public void setId(Integer id) {
@@ -74,7 +74,7 @@ public class SpecificClassResponseDto {
         this.supervisor = instructor;
     }
 
-    public void setClassType(ClassTypeDTO classType) {
-        this.classType = classType;
-    }
+    // public void setClassType(ClassTypeDTO classType) {
+    //     this.classType = classType;
+    // }
 }
