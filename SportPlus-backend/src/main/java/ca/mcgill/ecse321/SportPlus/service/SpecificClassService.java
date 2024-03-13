@@ -75,7 +75,7 @@ public class SpecificClassService {
         ClassType classType = classTypeRepository.findByTypeId(classTypeId);
 
         for (LocalDate date = start; !date.isAfter(end); date = date.plusDays(1)) { //Iterates through all the days in the range 
-            if (date.getDayOfWeek().getValue() == dayOfWeek) {
+            if (date.getDayOfWeek().getValue() == dayOfWeek) {//If the day of the week matches the date add that class with the date to the list
                 
                 SpecificClass specificClass = new SpecificClass(java.sql.Date.valueOf(date), java.sql.Time.valueOf(startTim), java.sql.Time.valueOf(endTim), 0, classType);
                 specificClass.setSupervisor(instructor); // Set the instructor separately
