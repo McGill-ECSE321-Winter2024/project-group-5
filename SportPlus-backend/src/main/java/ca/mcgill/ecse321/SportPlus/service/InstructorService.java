@@ -53,7 +53,7 @@ public class InstructorService {
 
     @Transactional
     public Instructor createInstructor(String email, String firstName, String password, String lastName) {
-        if (email == null || HelperMethods.ClientEmailCheck(email).trim().length() != 0) {
+        if (email == null || HelperMethods.InstructorEmailCheck(email).trim().length() != 0) {
             throw new IllegalArgumentException("Invalid email!");
         }
         if (password == null || HelperMethods.PasswordCheck(password).trim().length() != 0) {
@@ -83,7 +83,7 @@ public class InstructorService {
         if (instructor == null) {
             throw new IllegalArgumentException("Instructor with account Id does not exist!");
         }
-        if (email == null || HelperMethods.ClientEmailCheck(email).trim().length() != 0) {
+        if (email == null || HelperMethods.InstructorEmailCheck(email).trim().length() != 0) {
             throw new IllegalArgumentException("Invalid email!");
         }
         instructor.setEmail(email);
@@ -93,7 +93,7 @@ public class InstructorService {
 
     @Transactional
     public Instructor updateInstructorFirstName(String email, String firstName) {
-        if (email == null || HelperMethods.ClientEmailCheck(email).trim().length() != 0) {
+        if (email == null || HelperMethods.InstructorEmailCheck(email).trim().length() != 0) {
             throw new IllegalArgumentException("Invalid email!");
         }
         Instructor instructor = getInstructor(email);
@@ -110,7 +110,7 @@ public class InstructorService {
 
     @Transactional
     public Instructor updateInstructorLastName(String email, String lastName) {
-        if (email == null || HelperMethods.ClientEmailCheck(email).trim().length() != 0) {
+        if (email == null || HelperMethods.InstructorEmailCheck(email).trim().length() != 0) {
             throw new IllegalArgumentException("Invalid email!");
         }
         Instructor instructor = getInstructor(email);
@@ -127,7 +127,7 @@ public class InstructorService {
 
     @Transactional
     public Instructor updateInstructorPassword(String email, String password) {
-        if (email == null || HelperMethods.ClientEmailCheck(email).trim().length() != 0) {
+        if (email == null || HelperMethods.InstructorEmailCheck(email).trim().length() != 0) {
             throw new IllegalArgumentException("Invalid email!");
         }
         Instructor instructor = getInstructor(email);

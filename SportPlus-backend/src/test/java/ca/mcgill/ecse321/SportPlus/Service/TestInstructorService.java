@@ -35,12 +35,12 @@ public class TestInstructorService {
     @InjectMocks
     private InstructorService instructorService;
 
-    private static final String INSTRUCTOR_EMAIL = "example@email.com";
+    private static final String INSTRUCTOR_EMAIL = "example@sportplus.com";
     private static final String INSTRUCTOR_FISTNAME = "John";
     private static final String INSTRUCTOR_LASTNAME = "Doe";
     private static final String INSTRUCTOR_PASSWORD = "password123";
     private static final int INSTRUCTOR_ACCOUNTID = 2;
-    private static final String NOT_INSTRUCTOR_EMAIL = "notemail@email.com";
+    private static final String NOT_INSTRUCTOR_EMAIL = "notemail@sportplus.com";
 
     @BeforeEach
     public void setMockOutput() {
@@ -55,7 +55,7 @@ public class TestInstructorService {
     
     @Test
 	public void testCreateInstructor() {
-        String email = "newinstructor@email.com";
+        String email = "newinstructor@sportplus.com";
         String firstName = "Paul";
         String lastName = "Dmyt";
         String password = "Ro1234";
@@ -73,7 +73,7 @@ public class TestInstructorService {
 
     @Test
     public void testUpdateInstructorEmail() {
-        String newEmail = "newinstructor@email.com";
+        String newEmail = "newinstructor@sportplus.com";
         
         Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD, INSTRUCTOR_LASTNAME, INSTRUCTOR_ACCOUNTID);
         Instructor updatedInstructor = instructorRepository.findByAccountId(INSTRUCTOR_ACCOUNTID);
