@@ -1,5 +1,8 @@
 package ca.mcgill.ecse321.SportPlus.service.utilities;
 
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,6 +73,11 @@ public class HelperMethods {
       }
     }
     return "";
+  }
+
+  public static boolean hasDatePassed(Date inputDate) {
+    LocalDate currentDate = LocalDate.now();
+    return inputDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().isBefore(currentDate);
   }
 
   public static <T> List<T> toList(Iterable<T> iterable) {
