@@ -72,24 +72,6 @@ public class TestClientService {
 	}
 
     @Test
-    public void testUpdateClientEmail() {
-        String newEmail = "newclient@email.com";
-        
-        Client client = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME, CLIENT_ACCOUNTID);
-        Client updatedClient = clientRepository.findByAccountId(CLIENT_ACCOUNTID);
-        
-        clientService.updateClientEmail(CLIENT_ACCOUNTID, newEmail);
-
-        assertNotNull(updatedClient);
-        assertNotEquals(client.getEmail(), updatedClient.getEmail());
-        assertEquals(client.getAccountId(), updatedClient.getAccountId());
-        assertEquals(updatedClient.getAccountId(), CLIENT_ACCOUNTID);
-        assertEquals(updatedClient.getEmail(), newEmail);
-        
-        verify(clientRepository, times(1)).save(any(Client.class));
-    }
-
-    @Test
     public void testUpdateClient() {
         String newPassword = "NewPass123";
         String newFirstName = "NewJohn";
@@ -100,7 +82,7 @@ public class TestClientService {
         
         clientService.updateClientFirstName(CLIENT_EMAIL, newFirstName);
         clientService.updateClientLastName(CLIENT_EMAIL, newLastName);
-        clientService.updateClientPassword(CLIENT_EMAIL, newPassword);
+        clientService.updateClientPassword(CLIENT_EMAIL, CLIENT_PASSWORD, newPassword);
 
         assertNotNull(updatedClient);
         assertEquals(client.getEmail(), updatedClient.getEmail());

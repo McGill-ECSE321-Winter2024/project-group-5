@@ -44,13 +44,23 @@ public class OwnerService {
         if (lastName == null || lastName.trim().length() == 0) {
             throw new IllegalArgumentException("Owner last name cannot be empty!");
         }
-        Owner owner = new Owner();
-        owner.setEmail(ownerEmail);
-        owner.setFirstName(firstName);
-        owner.setPassword(password);
-        owner.setLastName(lastName);
-        ownerRepository.save(owner);
-        return owner;
+        if (getOwner() == null) {
+            Owner owner = new Owner();
+            owner.setEmail(ownerEmail);
+            owner.setFirstName(firstName);
+            owner.setPassword(password);
+            owner.setLastName(lastName);
+            ownerRepository.save(owner);
+            return owner;
+        } else {
+            Owner owner = getOwner();
+            owner.setEmail(ownerEmail);
+            owner.setFirstName(firstName);
+            owner.setPassword(password);
+            owner.setLastName(lastName);
+            ownerRepository.save(owner);
+            return owner;
+        }
     }
 
     @Transactional
@@ -82,13 +92,16 @@ public class OwnerService {
     }
 
     @Transactional
-    public Owner updateOwnerPassword(String password) {
+    public Owner updateOwnerPassword(String oldPassword, String password) {
         Owner owner = getOwner();
         if (owner == null) {
-            throw new IllegalArgumentException("Owner does not exist!");
+            owner = new Owner();
+        }
+        if (owner.getPassword() != null && !owner.getPassword().equals(oldPassword)) {
+            throw new IllegalArgumentException("Wrong old password!");
         }
         if (password == null || HelperMethods.PasswordCheck(password).trim().length() != 0) {
-            throw new IllegalArgumentException("Invalid password!");
+            throw new IllegalArgumentException("Invalid new password!");
         }
         owner.setPassword(password);
         ownerRepository.save(owner);

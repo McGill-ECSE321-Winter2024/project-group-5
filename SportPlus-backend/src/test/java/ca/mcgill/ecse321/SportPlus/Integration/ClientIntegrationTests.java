@@ -61,7 +61,6 @@ public class ClientIntegrationTests {
         assertEquals(CLIENT_EMAIL, clientResponse.getEmail());
         assertEquals(CLIENT_FISTNAME, clientResponse.getFirstName());
         assertEquals(CLIENT_LASTNAME, clientResponse.getLastName());
-        assertEquals(CLIENT_PASSWORD, clientResponse.getPassword());
     }
 
     @Test
@@ -81,7 +80,6 @@ public class ClientIntegrationTests {
         assertEquals(CLIENT_EMAIL, clientResponse.getEmail());
         assertEquals(CLIENT_FISTNAME, clientResponse.getFirstName());
         assertEquals(CLIENT_LASTNAME, clientResponse.getLastName());
-        assertEquals(CLIENT_PASSWORD, clientResponse.getPassword());
     }
 
     @Test
@@ -102,7 +100,6 @@ public class ClientIntegrationTests {
         assertEquals(CLIENT_EMAIL, clientResponse.getEmail());
         assertEquals(CLIENT_FISTNAME, clientResponse.getFirstName());
         assertEquals(CLIENT_LASTNAME, clientResponse.getLastName());
-        assertEquals(CLIENT_PASSWORD, clientResponse.getPassword());
     }
 
     @Test
@@ -123,7 +120,6 @@ public class ClientIntegrationTests {
         assertEquals(CLIENT_EMAIL, clientResponse.getEmail());
         assertEquals(CLIENT_FISTNAME, clientResponse.getFirstName());
         assertEquals(CLIENT_LASTNAME, clientResponse.getLastName());
-        assertEquals(CLIENT_PASSWORD, clientResponse.getPassword());
     }
 
     @Test
@@ -147,7 +143,6 @@ public class ClientIntegrationTests {
             assertEquals(CLIENT_EMAIL, client.getEmail());
             assertEquals(CLIENT_FISTNAME, client.getFirstName());
             assertEquals(CLIENT_LASTNAME, client.getLastName());
-            assertEquals(CLIENT_PASSWORD, client.getPassword());
         }
     }
 
@@ -172,7 +167,6 @@ public class ClientIntegrationTests {
             assertEquals(CLIENT_EMAIL, client.getEmail());
             assertEquals(CLIENT_FISTNAME, client.getFirstName());
             assertEquals(CLIENT_LASTNAME, client.getLastName());
-            assertEquals(CLIENT_PASSWORD, client.getPassword());
         }
     }
 
@@ -243,7 +237,6 @@ public class ClientIntegrationTests {
         assertEquals(createdClient.getEmail(), CLIENT_EMAIL);
         assertEquals(createdClient.getFirstName(), CLIENT_FISTNAME);
         assertEquals(createdClient.getLastName(), CLIENT_LASTNAME);
-        assertEquals(createdClient.getPassword(), CLIENT_PASSWORD);
         assertNotNull(createdClient.getAccountId());
         assertTrue(createdClient.getAccountId() > 0, "Response should have a positive ID.");
         assertNotNull(clientRepository.findByEmail(CLIENT_EMAIL));
@@ -262,74 +255,9 @@ public class ClientIntegrationTests {
         assertEquals(createdClient.getEmail(), CLIENT_EMAIL);
         assertEquals(createdClient.getFirstName(), CLIENT_FISTNAME);
         assertEquals(createdClient.getLastName(), CLIENT_LASTNAME);
-        assertEquals(createdClient.getPassword(), CLIENT_PASSWORD);
         assertNotNull(createdClient.getAccountId());
         assertTrue(createdClient.getAccountId() > 0, "Response should have a positive ID.");
         assertNotNull(clientRepository.findByEmail(CLIENT_EMAIL));
-    }
-
-    @Test
-    public void testUpdateClientEmail() {
-        ClientRequestDto request = new ClientRequestDto(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_LASTNAME, CLIENT_PASSWORD);
-
-        ResponseEntity<ClientResponseDto> response = client.postForEntity("/clients/create", request, ClientResponseDto.class);
-
-        assertNotNull(response);
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        ClientResponseDto createdClient = response.getBody();
-        assertNotNull(createdClient);
-        assertTrue(createdClient.getAccountId() > 0, "Response should have a positive ID.");
-        CLIENT_VALID_ACCOUNTID = createdClient.getAccountId();
-
-        String newEmail = "exampleNew@email.com";
-
-        String url = "/clients/updateEmail/" + CLIENT_VALID_ACCOUNTID + "/" + newEmail;
-
-        ResponseEntity<ClientResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null, ClientResponseDto.class);
-        assertNotNull(responseAfterUpdate);
-        assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
-        ClientResponseDto updatedClient = responseAfterUpdate.getBody();
-        assertNotNull(updatedClient);
-        assertEquals(updatedClient.getEmail(), newEmail);
-        assertEquals(updatedClient.getFirstName(), CLIENT_FISTNAME);
-        assertEquals(updatedClient.getLastName(), CLIENT_LASTNAME);
-        assertEquals(updatedClient.getPassword(), CLIENT_PASSWORD);
-        assertNotNull(updatedClient.getAccountId());
-        assertTrue(updatedClient.getAccountId() > 0, "Response should have a positive ID.");
-        assertNull(clientRepository.findByEmail(CLIENT_EMAIL));
-        assertNotNull(clientRepository.findByEmail(newEmail));
-    }
-
-    @Test
-    public void testUpdateClientEmail2() {
-        ClientRequestDto request = new ClientRequestDto(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_LASTNAME, CLIENT_PASSWORD);
-
-        ResponseEntity<ClientResponseDto> response = client.postForEntity("/clients/create", request, ClientResponseDto.class);
-
-        assertNotNull(response);
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        ClientResponseDto createdClient = response.getBody();
-        assertNotNull(createdClient);
-        assertTrue(createdClient.getAccountId() > 0, "Response should have a positive ID.");
-        CLIENT_VALID_ACCOUNTID = createdClient.getAccountId();
-
-        String newEmail = "exampleNew@email.com";
-
-        String url = "/clients/updateEmail/" + CLIENT_VALID_ACCOUNTID + "/" + newEmail + "/";
-
-        ResponseEntity<ClientResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null, ClientResponseDto.class);
-        assertNotNull(responseAfterUpdate);
-        assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
-        ClientResponseDto updatedClient = responseAfterUpdate.getBody();
-        assertNotNull(updatedClient);
-        assertEquals(updatedClient.getEmail(), newEmail);
-        assertEquals(updatedClient.getFirstName(), CLIENT_FISTNAME);
-        assertEquals(updatedClient.getLastName(), CLIENT_LASTNAME);
-        assertEquals(updatedClient.getPassword(), CLIENT_PASSWORD);
-        assertNotNull(updatedClient.getAccountId());
-        assertTrue(updatedClient.getAccountId() > 0, "Response should have a positive ID.");
-        assertNull(clientRepository.findByEmail(CLIENT_EMAIL));
-        assertNotNull(clientRepository.findByEmail(newEmail));
     }
 
     @Test
@@ -357,7 +285,6 @@ public class ClientIntegrationTests {
         assertEquals(updatedClient.getEmail(), CLIENT_EMAIL);
         assertEquals(updatedClient.getFirstName(), newFirstName);
         assertEquals(updatedClient.getLastName(), CLIENT_LASTNAME);
-        assertEquals(updatedClient.getPassword(), CLIENT_PASSWORD);
         assertNotNull(updatedClient.getAccountId());
         assertTrue(updatedClient.getAccountId() > 0, "Response should have a positive ID.");
         assertNotNull(clientRepository.findByEmail(CLIENT_EMAIL));
@@ -390,7 +317,6 @@ public class ClientIntegrationTests {
         assertEquals(updatedClient.getEmail(), CLIENT_EMAIL);
         assertEquals(updatedClient.getFirstName(), newFirstName);
         assertEquals(updatedClient.getLastName(), CLIENT_LASTNAME);
-        assertEquals(updatedClient.getPassword(), CLIENT_PASSWORD);
         assertNotNull(updatedClient.getAccountId());
         assertTrue(updatedClient.getAccountId() > 0, "Response should have a positive ID.");
         assertNotNull(clientRepository.findByEmail(CLIENT_EMAIL));
@@ -423,7 +349,6 @@ public class ClientIntegrationTests {
         assertEquals(updatedClient.getEmail(), CLIENT_EMAIL);
         assertEquals(updatedClient.getFirstName(), CLIENT_FISTNAME);
         assertEquals(updatedClient.getLastName(), newLastName);
-        assertEquals(updatedClient.getPassword(), CLIENT_PASSWORD);
         assertNotNull(updatedClient.getAccountId());
         assertTrue(updatedClient.getAccountId() > 0, "Response should have a positive ID.");
         assertNotNull(clientRepository.findByEmail(CLIENT_EMAIL));
@@ -456,7 +381,6 @@ public class ClientIntegrationTests {
         assertEquals(updatedClient.getEmail(), CLIENT_EMAIL);
         assertEquals(updatedClient.getFirstName(), CLIENT_FISTNAME);
         assertEquals(updatedClient.getLastName(), newLastName);
-        assertEquals(updatedClient.getPassword(), CLIENT_PASSWORD);
         assertNotNull(updatedClient.getAccountId());
         assertTrue(updatedClient.getAccountId() > 0, "Response should have a positive ID.");
         assertNotNull(clientRepository.findByEmail(CLIENT_EMAIL));
@@ -479,7 +403,7 @@ public class ClientIntegrationTests {
 
         String newPassword = "TheNewPass456";
 
-        String url = "/clients/updatePassword/" + CLIENT_EMAIL + "/" + newPassword;
+        String url = "/clients/updatePassword/" + CLIENT_EMAIL + "/" + CLIENT_PASSWORD + "/" + newPassword;
 
         ResponseEntity<ClientResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null, ClientResponseDto.class);
         assertNotNull(responseAfterUpdate);
@@ -489,7 +413,6 @@ public class ClientIntegrationTests {
         assertEquals(updatedClient.getEmail(), CLIENT_EMAIL);
         assertEquals(updatedClient.getFirstName(), CLIENT_FISTNAME);
         assertEquals(updatedClient.getLastName(), CLIENT_LASTNAME);
-        assertEquals(updatedClient.getPassword(), newPassword);
         assertNotNull(updatedClient.getAccountId());
         assertTrue(updatedClient.getAccountId() > 0, "Response should have a positive ID.");
         assertNotNull(clientRepository.findByEmail(CLIENT_EMAIL));
@@ -512,7 +435,7 @@ public class ClientIntegrationTests {
 
         String newPassword = "TheNewPass456";
 
-        String url = "/clients/updatePassword/" + CLIENT_EMAIL + "/" + newPassword + "/";
+        String url = "/clients/updatePassword/" + CLIENT_EMAIL + "/" + CLIENT_PASSWORD + "/" + newPassword + "/";
 
         ResponseEntity<ClientResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null, ClientResponseDto.class);
         assertNotNull(responseAfterUpdate);
@@ -522,7 +445,6 @@ public class ClientIntegrationTests {
         assertEquals(updatedClient.getEmail(), CLIENT_EMAIL);
         assertEquals(updatedClient.getFirstName(), CLIENT_FISTNAME);
         assertEquals(updatedClient.getLastName(), CLIENT_LASTNAME);
-        assertEquals(updatedClient.getPassword(), newPassword);
         assertNotNull(updatedClient.getAccountId());
         assertTrue(updatedClient.getAccountId() > 0, "Response should have a positive ID.");
         assertNotNull(clientRepository.findByEmail(CLIENT_EMAIL));

@@ -61,7 +61,6 @@ public class InstructorIntegrationTests {
         assertEquals(INSTRUCTOR_EMAIL, instructorResponse.getEmail());
         assertEquals(INSTRUCTOR_FISTNAME, instructorResponse.getFirstName());
         assertEquals(INSTRUCTOR_LASTNAME, instructorResponse.getLastName());
-        assertEquals(INSTRUCTOR_PASSWORD, instructorResponse.getPassword());
     }
 
     @Test
@@ -81,7 +80,6 @@ public class InstructorIntegrationTests {
         assertEquals(INSTRUCTOR_EMAIL, instructorResponse.getEmail());
         assertEquals(INSTRUCTOR_FISTNAME, instructorResponse.getFirstName());
         assertEquals(INSTRUCTOR_LASTNAME, instructorResponse.getLastName());
-        assertEquals(INSTRUCTOR_PASSWORD, instructorResponse.getPassword());
     }
 
     @Test
@@ -102,7 +100,6 @@ public class InstructorIntegrationTests {
         assertEquals(INSTRUCTOR_EMAIL, instructorResponse.getEmail());
         assertEquals(INSTRUCTOR_FISTNAME, instructorResponse.getFirstName());
         assertEquals(INSTRUCTOR_LASTNAME, instructorResponse.getLastName());
-        assertEquals(INSTRUCTOR_PASSWORD, instructorResponse.getPassword());
     }
 
     @Test
@@ -123,7 +120,6 @@ public class InstructorIntegrationTests {
         assertEquals(INSTRUCTOR_EMAIL, instructorResponse.getEmail());
         assertEquals(INSTRUCTOR_FISTNAME, instructorResponse.getFirstName());
         assertEquals(INSTRUCTOR_LASTNAME, instructorResponse.getLastName());
-        assertEquals(INSTRUCTOR_PASSWORD, instructorResponse.getPassword());
     }
 
     @Test
@@ -147,7 +143,6 @@ public class InstructorIntegrationTests {
             assertEquals(INSTRUCTOR_EMAIL, instructor.getEmail());
             assertEquals(INSTRUCTOR_FISTNAME, instructor.getFirstName());
             assertEquals(INSTRUCTOR_LASTNAME, instructor.getLastName());
-            assertEquals(INSTRUCTOR_PASSWORD, instructor.getPassword());
         }
     }
 
@@ -172,7 +167,6 @@ public class InstructorIntegrationTests {
             assertEquals(INSTRUCTOR_EMAIL, instructor.getEmail());
             assertEquals(INSTRUCTOR_FISTNAME, instructor.getFirstName());
             assertEquals(INSTRUCTOR_LASTNAME, instructor.getLastName());
-            assertEquals(INSTRUCTOR_PASSWORD, instructor.getPassword());
         }
     }
 
@@ -243,7 +237,6 @@ public class InstructorIntegrationTests {
         assertEquals(createdInstructor.getEmail(), INSTRUCTOR_EMAIL);
         assertEquals(createdInstructor.getFirstName(), INSTRUCTOR_FISTNAME);
         assertEquals(createdInstructor.getLastName(), INSTRUCTOR_LASTNAME);
-        assertEquals(createdInstructor.getPassword(), INSTRUCTOR_PASSWORD);
         assertNotNull(createdInstructor.getAccountId());
         assertTrue(createdInstructor.getAccountId() > 0, "Response should have a positive ID.");
         assertNotNull(instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL));
@@ -262,74 +255,9 @@ public class InstructorIntegrationTests {
         assertEquals(createdInstructor.getEmail(), INSTRUCTOR_EMAIL);
         assertEquals(createdInstructor.getFirstName(), INSTRUCTOR_FISTNAME);
         assertEquals(createdInstructor.getLastName(), INSTRUCTOR_LASTNAME);
-        assertEquals(createdInstructor.getPassword(), INSTRUCTOR_PASSWORD);
         assertNotNull(createdInstructor.getAccountId());
         assertTrue(createdInstructor.getAccountId() > 0, "Response should have a positive ID.");
         assertNotNull(instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL));
-    }
-
-    @Test
-    public void testUpdateInstructorEmail() {
-        InstructorRequestDto request = new InstructorRequestDto(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_LASTNAME, INSTRUCTOR_PASSWORD);
-
-        ResponseEntity<InstructorResponseDto> response = client.postForEntity("/instructors/create", request, InstructorResponseDto.class);
-
-        assertNotNull(response);
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        InstructorResponseDto createdInstructor = response.getBody();
-        assertNotNull(createdInstructor);
-        assertTrue(createdInstructor.getAccountId() > 0, "Response should have a positive ID.");
-        INSTRUCTOR_VALID_ACCOUNTID = createdInstructor.getAccountId();
-
-        String newEmail = "exampleNew@sportplus.com";
-
-        String url = "/instructors/updateEmail/" + INSTRUCTOR_VALID_ACCOUNTID + "/" + newEmail;
-
-        ResponseEntity<InstructorResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null, InstructorResponseDto.class);
-        assertNotNull(responseAfterUpdate);
-        assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
-        InstructorResponseDto updatedInstructor = responseAfterUpdate.getBody();
-        assertNotNull(updatedInstructor);
-        assertEquals(updatedInstructor.getEmail(), newEmail);
-        assertEquals(updatedInstructor.getFirstName(), INSTRUCTOR_FISTNAME);
-        assertEquals(updatedInstructor.getLastName(), INSTRUCTOR_LASTNAME);
-        assertEquals(updatedInstructor.getPassword(), INSTRUCTOR_PASSWORD);
-        assertNotNull(updatedInstructor.getAccountId());
-        assertTrue(updatedInstructor.getAccountId() > 0, "Response should have a positive ID.");
-        assertNull(instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL));
-        assertNotNull(instructorRepository.findInstructorByEmail(newEmail));
-    }
-
-    @Test
-    public void testUpdateInstructorEmail2() {
-        InstructorRequestDto request = new InstructorRequestDto(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_LASTNAME, INSTRUCTOR_PASSWORD);
-
-        ResponseEntity<InstructorResponseDto> response = client.postForEntity("/instructors/create", request, InstructorResponseDto.class);
-
-        assertNotNull(response);
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        InstructorResponseDto createdInstructor = response.getBody();
-        assertNotNull(createdInstructor);
-        assertTrue(createdInstructor.getAccountId() > 0, "Response should have a positive ID.");
-        INSTRUCTOR_VALID_ACCOUNTID = createdInstructor.getAccountId();
-
-        String newEmail = "exampleNew@sportplus.com";
-
-        String url = "/instructors/updateEmail/" + INSTRUCTOR_VALID_ACCOUNTID + "/" + newEmail + "/";
-
-        ResponseEntity<InstructorResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null, InstructorResponseDto.class);
-        assertNotNull(responseAfterUpdate);
-        assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
-        InstructorResponseDto updatedInstructor = responseAfterUpdate.getBody();
-        assertNotNull(updatedInstructor);
-        assertEquals(updatedInstructor.getEmail(), newEmail);
-        assertEquals(updatedInstructor.getFirstName(), INSTRUCTOR_FISTNAME);
-        assertEquals(updatedInstructor.getLastName(), INSTRUCTOR_LASTNAME);
-        assertEquals(updatedInstructor.getPassword(), INSTRUCTOR_PASSWORD);
-        assertNotNull(updatedInstructor.getAccountId());
-        assertTrue(updatedInstructor.getAccountId() > 0, "Response should have a positive ID.");
-        assertNull(instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL));
-        assertNotNull(instructorRepository.findInstructorByEmail(newEmail));
     }
 
     @Test
@@ -357,7 +285,6 @@ public class InstructorIntegrationTests {
         assertEquals(updatedInstructor.getEmail(), INSTRUCTOR_EMAIL);
         assertEquals(updatedInstructor.getFirstName(), newFirstName);
         assertEquals(updatedInstructor.getLastName(), INSTRUCTOR_LASTNAME);
-        assertEquals(updatedInstructor.getPassword(), INSTRUCTOR_PASSWORD);
         assertNotNull(updatedInstructor.getAccountId());
         assertTrue(updatedInstructor.getAccountId() > 0, "Response should have a positive ID.");
         assertNotNull(instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL));
@@ -390,7 +317,6 @@ public class InstructorIntegrationTests {
         assertEquals(updatedInstructor.getEmail(), INSTRUCTOR_EMAIL);
         assertEquals(updatedInstructor.getFirstName(), newFirstName);
         assertEquals(updatedInstructor.getLastName(), INSTRUCTOR_LASTNAME);
-        assertEquals(updatedInstructor.getPassword(), INSTRUCTOR_PASSWORD);
         assertNotNull(updatedInstructor.getAccountId());
         assertTrue(updatedInstructor.getAccountId() > 0, "Response should have a positive ID.");
         assertNotNull(instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL));
@@ -423,7 +349,6 @@ public class InstructorIntegrationTests {
         assertEquals(updatedInstructor.getEmail(), INSTRUCTOR_EMAIL);
         assertEquals(updatedInstructor.getFirstName(), INSTRUCTOR_FISTNAME);
         assertEquals(updatedInstructor.getLastName(), newLastName);
-        assertEquals(updatedInstructor.getPassword(), INSTRUCTOR_PASSWORD);
         assertNotNull(updatedInstructor.getAccountId());
         assertTrue(updatedInstructor.getAccountId() > 0, "Response should have a positive ID.");
         assertNotNull(instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL));
@@ -456,7 +381,6 @@ public class InstructorIntegrationTests {
         assertEquals(updatedInstructor.getEmail(), INSTRUCTOR_EMAIL);
         assertEquals(updatedInstructor.getFirstName(), INSTRUCTOR_FISTNAME);
         assertEquals(updatedInstructor.getLastName(), newLastName);
-        assertEquals(updatedInstructor.getPassword(), INSTRUCTOR_PASSWORD);
         assertNotNull(updatedInstructor.getAccountId());
         assertTrue(updatedInstructor.getAccountId() > 0, "Response should have a positive ID.");
         assertNotNull(instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL));
@@ -479,7 +403,7 @@ public class InstructorIntegrationTests {
 
         String newPassword = "TheNewPass456";
 
-        String url = "/instructors/updatePassword/" + INSTRUCTOR_EMAIL + "/" + newPassword;
+        String url = "/instructors/updatePassword/" + INSTRUCTOR_EMAIL + "/" + INSTRUCTOR_PASSWORD + "/" + newPassword;
 
         ResponseEntity<InstructorResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null, InstructorResponseDto.class);
         assertNotNull(responseAfterUpdate);
@@ -489,7 +413,6 @@ public class InstructorIntegrationTests {
         assertEquals(updatedInstructor.getEmail(), INSTRUCTOR_EMAIL);
         assertEquals(updatedInstructor.getFirstName(), INSTRUCTOR_FISTNAME);
         assertEquals(updatedInstructor.getLastName(), INSTRUCTOR_LASTNAME);
-        assertEquals(updatedInstructor.getPassword(), newPassword);
         assertNotNull(updatedInstructor.getAccountId());
         assertTrue(updatedInstructor.getAccountId() > 0, "Response should have a positive ID.");
         assertNotNull(instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL));
@@ -512,7 +435,7 @@ public class InstructorIntegrationTests {
 
         String newPassword = "TheNewPass456";
 
-        String url = "/instructors/updatePassword/" + INSTRUCTOR_EMAIL + "/" + newPassword + "/";
+        String url = "/instructors/updatePassword/" + INSTRUCTOR_EMAIL + "/" + INSTRUCTOR_PASSWORD + "/" + newPassword + "/";
 
         ResponseEntity<InstructorResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null, InstructorResponseDto.class);
         assertNotNull(responseAfterUpdate);
@@ -522,7 +445,6 @@ public class InstructorIntegrationTests {
         assertEquals(updatedInstructor.getEmail(), INSTRUCTOR_EMAIL);
         assertEquals(updatedInstructor.getFirstName(), INSTRUCTOR_FISTNAME);
         assertEquals(updatedInstructor.getLastName(), INSTRUCTOR_LASTNAME);
-        assertEquals(updatedInstructor.getPassword(), newPassword);
         assertNotNull(updatedInstructor.getAccountId());
         assertTrue(updatedInstructor.getAccountId() > 0, "Response should have a positive ID.");
         assertNotNull(instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL));

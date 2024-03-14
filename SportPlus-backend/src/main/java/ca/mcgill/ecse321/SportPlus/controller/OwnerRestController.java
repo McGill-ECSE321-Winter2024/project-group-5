@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import ca.mcgill.ecse321.SportPlus.dto.OwnerRequestDto;
 import ca.mcgill.ecse321.SportPlus.dto.OwnerResponseDto;
+import ca.mcgill.ecse321.SportPlus.dto.OwnerRequestDto;
 import ca.mcgill.ecse321.SportPlus.model.Owner;
 import ca.mcgill.ecse321.SportPlus.service.OwnerService;
 
@@ -52,10 +52,10 @@ public class OwnerRestController {
         return new OwnerResponseDto(owner);
     }
 
-    @PutMapping(value = { "/owner/updatePassword/{newPassword}", "/owner/updatePassword/{newPassword}/" })
-    public OwnerResponseDto updateOwnerPassword(@PathVariable("newPassword") String thePassword) {
+    @PutMapping(value = { "/owner/updatePassword/{oldPassword}/{newPassword}", "/owner/updatePassword/{oldPassword}/{newPassword}/" })
+    public OwnerResponseDto updateOwnerPassword(@PathVariable("oldPassword") String theOldPassword, @PathVariable("newPassword") String thePassword) {
         Owner owner = ownerService.getOwner();
-        ownerService.updateOwnerPassword(thePassword);
+        ownerService.updateOwnerPassword(theOldPassword, thePassword);
         owner = ownerService.getOwner();
         return new OwnerResponseDto(owner);
     }

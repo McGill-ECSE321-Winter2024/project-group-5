@@ -76,7 +76,7 @@ public class TestOwnerService {
         
         ownerService.updateOwnerFirstName(newFirstName);
         ownerService.updateOwnerLastName(newLastName);
-        ownerService.updateOwnerPassword(newPassword);
+        ownerService.updateOwnerPassword(OWNER_PASSWORD, newPassword);
 
         assertNotNull(updatedOwner);
         assertEquals(owner.getEmail(), updatedOwner.getEmail());

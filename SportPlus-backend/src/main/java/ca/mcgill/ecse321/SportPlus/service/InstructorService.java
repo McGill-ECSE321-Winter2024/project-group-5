@@ -75,23 +75,6 @@ public class InstructorService {
     }
 
     @Transactional
-    public Instructor updateInstructorEmail(int accountId, String email) {
-        if (accountId < 0) {
-            throw new IllegalArgumentException("Account Id cannot be less than 0!");
-        }
-        Instructor instructor = getInstructor(accountId);
-        if (instructor == null) {
-            throw new IllegalArgumentException("Instructor with account Id does not exist!");
-        }
-        if (email == null || HelperMethods.InstructorEmailCheck(email).trim().length() != 0) {
-            throw new IllegalArgumentException("Invalid email!");
-        }
-        instructor.setEmail(email);
-        instructorRepository.save(instructor);
-        return instructor;
-    }
-
-    @Transactional
     public Instructor updateInstructorFirstName(String email, String firstName) {
         if (email == null || HelperMethods.InstructorEmailCheck(email).trim().length() != 0) {
             throw new IllegalArgumentException("Invalid email!");
@@ -126,7 +109,7 @@ public class InstructorService {
     }
 
     @Transactional
-    public Instructor updateInstructorPassword(String email, String password) {
+    public Instructor updateInstructorPassword(String email, String oldPassword, String password) {
         if (email == null || HelperMethods.InstructorEmailCheck(email).trim().length() != 0) {
             throw new IllegalArgumentException("Invalid email!");
         }
@@ -134,8 +117,11 @@ public class InstructorService {
         if (instructor == null) {
             throw new IllegalArgumentException("Instructor with email does not exist!");
         }
+        if (!instructor.getPassword().equals(oldPassword)) {
+            throw new IllegalArgumentException("Wrong old password!");
+        }
         if (password == null || HelperMethods.PasswordCheck(password).trim().length() != 0) {
-            throw new IllegalArgumentException("Invalid password!");
+            throw new IllegalArgumentException("Invalid new password!");
         }
         instructor.setPassword(password);
         instructorRepository.save(instructor);
