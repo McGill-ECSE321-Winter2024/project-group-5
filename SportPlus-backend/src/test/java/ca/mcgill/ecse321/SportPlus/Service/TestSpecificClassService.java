@@ -82,4 +82,8 @@ public class TestSpecificClassService {
         verify(specificClassRepository).save(any(SpecificClass.class));
     }
 
+    @Test
+    public void createRecurringSpecificClassesTest() {
+    }
+
 }
