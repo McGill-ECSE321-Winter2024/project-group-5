@@ -76,8 +76,8 @@ public class HelperMethods {
   }
 
   public static boolean hasDatePassed(Date inputDate) {
-    LocalDate currentDate = LocalDate.now();
-    return inputDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().isBefore(currentDate);
+    Date currentDate = new Date(System.currentTimeMillis());
+    return currentDate.after(inputDate);
   }
 
   public static <T> List<T> toList(Iterable<T> iterable) {
