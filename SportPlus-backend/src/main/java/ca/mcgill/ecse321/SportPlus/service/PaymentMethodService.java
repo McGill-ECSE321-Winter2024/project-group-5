@@ -41,11 +41,11 @@ public class PaymentMethodService {
         if (client == null || clientRepository.findByEmail(client.getEmail()) == null) {
             throw new IllegalArgumentException("Client is invalid!");
         }
-        List<PaymentMethod> paymentMethod = paymentMethodRepository.findByClient(client);
-        if (paymentMethod.size() == 0) {
+        List<PaymentMethod> paymentMethods = paymentMethodRepository.findByClient(client);
+        if (paymentMethods.size() == 0) {
             throw new IllegalArgumentException("Payment method does not exist!");
         }
-        return paymentMethod;
+        return paymentMethods;
     }
 
     @Transactional
