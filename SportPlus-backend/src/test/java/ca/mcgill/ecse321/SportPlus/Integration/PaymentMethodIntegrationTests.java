@@ -218,7 +218,7 @@ public class PaymentMethodIntegrationTests {
 
         assertNull(paymentMethodRepository.findByCardNumber(PAYMENTMETHOD_CARDNUMBER));
     }
-/*
+
     @Test
     public void testCreatePaymentMethod() {
         Client PAYMENTMETHOD_CLIENT = new Client(CLIENT_EMAIL, "John", "Pass123", "Doe", 2);
@@ -237,8 +237,25 @@ public class PaymentMethodIntegrationTests {
         assertEquals(createdPaymentMethod.getClient(), PAYMENTMETHOD_CLIENT);
         assertNotNull(paymentMethodRepository.findByCardNumber(PAYMENTMETHOD_CARDNUMBER));
     }
-*/
-    // add second create test
+
+    @Test
+    public void testCreatePaymentMethod2() {
+        Client PAYMENTMETHOD_CLIENT = new Client(CLIENT_EMAIL, "John", "Pass123", "Doe", 2);
+        clientRepository.save(PAYMENTMETHOD_CLIENT);
+        PaymentMethodRequestDto request = new PaymentMethodRequestDto(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE, PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CLIENT);
+
+        ResponseEntity<PaymentMethodResponseDto> response = client.postForEntity("/paymentMethod/create/", request, PaymentMethodResponseDto.class);
+        
+        assertNotNull(response);
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        PaymentMethodResponseDto createdPaymentMethod = response.getBody();
+        assertNotNull(createdPaymentMethod);
+        assertTrue(createdPaymentMethod.getCardId() > 0);
+        assertEquals(createdPaymentMethod.getCardHolderName(), PAYMENTMETHOD_CARDHOLDERNAME);
+        assertEquals(createdPaymentMethod.getCardNumber(), PAYMENTMETHOD_CARDNUMBER);
+        assertEquals(createdPaymentMethod.getClient(), PAYMENTMETHOD_CLIENT);
+        assertNotNull(paymentMethodRepository.findByCardNumber(PAYMENTMETHOD_CARDNUMBER));
+    }
     
     @Test
     public void testHasPaymentMethod() {
