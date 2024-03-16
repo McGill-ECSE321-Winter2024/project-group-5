@@ -61,14 +61,6 @@ public class ClientRestController {
         return new ClientResponseDto(createdClient);
     }
 
-    @PutMapping(value = { "/clients/updateEmail/{accountId}/{newEmail}", "/clients/updateEmail/{accountId}/{newEmail}/" })
-    public ClientResponseDto updateClientEmail(@PathVariable("newEmail") String theEmail, @PathVariable("accountId") int theId) {
-        Client client = clientService.getClient(theId);
-        clientService.updateClientEmail(theId, theEmail);
-        client = clientService.getClient(theId);
-        return new ClientResponseDto(client);
-    }
-
     @PutMapping(value = { "/clients/updateFirstName/{email}/{newFirstName}", "/clients/updateFirstName/{email}/{newFirstName}/" })
     public ClientResponseDto updateClientFirstName(@PathVariable("email") String theEmail, @PathVariable("newFirstName") String theFirstName) {
         Client client = clientService.getClient(theEmail);
@@ -85,10 +77,10 @@ public class ClientRestController {
         return new ClientResponseDto(client);
     }
 
-    @PutMapping(value = { "/clients/updatePassword/{email}/{newPassword}", "/clients/updatePassword/{email}/{newPassword}/" })
-    public ClientResponseDto updateClientPassword(@PathVariable("email") String theEmail, @PathVariable("newPassword") String thePassword) {
+    @PutMapping(value = { "/clients/updatePassword/{email}/{oldPassword}/{newPassword}", "/clients/updatePassword/{email}/{oldPassword}/{newPassword}/" })
+    public ClientResponseDto updateClientPassword(@PathVariable("email") String theEmail, @PathVariable("oldPassword") String theOldPassword, @PathVariable("newPassword") String thePassword) {
         Client client = clientService.getClient(theEmail);
-        clientService.updateClientPassword(theEmail, thePassword);
+        clientService.updateClientPassword(theEmail, theOldPassword, thePassword);
         client = clientService.getClient(theEmail);
         return new ClientResponseDto(client);
     }

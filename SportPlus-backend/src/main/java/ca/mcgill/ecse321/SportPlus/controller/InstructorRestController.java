@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import ca.mcgill.ecse321.SportPlus.dto.InstructorResponseDto;
 import ca.mcgill.ecse321.SportPlus.dto.InstructorListDto;
 import ca.mcgill.ecse321.SportPlus.dto.InstructorRequestDto;
-import ca.mcgill.ecse321.SportPlus.dto.InstructorResponseDto;
 import ca.mcgill.ecse321.SportPlus.model.Instructor;
 import ca.mcgill.ecse321.SportPlus.service.InstructorService;
 
@@ -61,14 +61,6 @@ public class InstructorRestController {
         return new InstructorResponseDto(createdInstructor);
     }
 
-    @PutMapping(value = { "/instructors/updateEmail/{accountId}/{newEmail}", "/instructors/updateEmail/{accountId}/{newEmail}/" })
-    public InstructorResponseDto updateInstructorEmail(@PathVariable("newEmail") String theEmail, @PathVariable("accountId") int theId) {
-        Instructor instructor = instructorService.getInstructor(theId);
-        instructorService.updateInstructorEmail(theId, theEmail);
-        instructor = instructorService.getInstructor(theId);
-        return new InstructorResponseDto(instructor);
-    }
-
     @PutMapping(value = { "/instructors/updateFirstName/{email}/{newFirstName}", "/instructors/updateFirstName/{email}/{newFirstName}/" })
     public InstructorResponseDto updateInstructorFirstName(@PathVariable("email") String theEmail, @PathVariable("newFirstName") String theFirstName) {
         Instructor instructor = instructorService.getInstructor(theEmail);
@@ -85,10 +77,10 @@ public class InstructorRestController {
         return new InstructorResponseDto(instructor);
     }
 
-    @PutMapping(value = { "/instructors/updatePassword/{email}/{newPassword}", "/instructors/updatePassword/{email}/{newPassword}/" })
-    public InstructorResponseDto updateInstructorPassword(@PathVariable("email") String theEmail, @PathVariable("newPassword") String thePassword) {
+    @PutMapping(value = { "/instructors/updatePassword/{email}/{oldPassword}/{newPassword}", "/instructors/updatePassword/{email}/{oldPassword}/{newPassword}/" })
+    public InstructorResponseDto updateInstructorPassword(@PathVariable("email") String theEmail, @PathVariable("oldPassword") String theOldPassword, @PathVariable("newPassword") String thePassword) {
         Instructor instructor = instructorService.getInstructor(theEmail);
-        instructorService.updateInstructorPassword(theEmail, thePassword);
+        instructorService.updateInstructorPassword(theEmail, theOldPassword, thePassword);
         instructor = instructorService.getInstructor(theEmail);
         return new InstructorResponseDto(instructor);
     }

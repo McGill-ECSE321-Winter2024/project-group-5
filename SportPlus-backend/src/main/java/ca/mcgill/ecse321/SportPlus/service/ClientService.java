@@ -75,23 +75,6 @@ public class ClientService {
     }
 
     @Transactional
-    public Client updateClientEmail(int accountId, String email) {
-        if (accountId < 0) {
-            throw new IllegalArgumentException("Account Id cannot be less than 0!");
-        }
-        Client client = getClient(accountId);
-        if (client == null) {
-            throw new IllegalArgumentException("Client with account Id does not exist!");
-        }
-        if (email == null || HelperMethods.ClientEmailCheck(email).trim().length() != 0) {
-            throw new IllegalArgumentException("Invalid email!");
-        }
-        client.setEmail(email);
-        clientRepository.save(client);
-        return client;
-    }
-
-    @Transactional
     public Client updateClientFirstName(String email, String firstName) {
         if (email == null || HelperMethods.ClientEmailCheck(email).trim().length() != 0) {
             throw new IllegalArgumentException("Invalid email!");
@@ -126,7 +109,7 @@ public class ClientService {
     }
 
     @Transactional
-    public Client updateClientPassword(String email, String password) {
+    public Client updateClientPassword(String email, String oldPassword, String password) {
         if (email == null || HelperMethods.ClientEmailCheck(email).trim().length() != 0) {
             throw new IllegalArgumentException("Invalid email!");
         }
@@ -134,8 +117,11 @@ public class ClientService {
         if (client == null) {
             throw new IllegalArgumentException("Client with email does not exist!");
         }
+        if (!client.getPassword().equals(oldPassword)) {
+            throw new IllegalArgumentException("Wrong old password!");
+        }
         if (password == null || HelperMethods.PasswordCheck(password).trim().length() != 0) {
-            throw new IllegalArgumentException("Invalid password!");
+            throw new IllegalArgumentException("Invalid new password!");
         }
         client.setPassword(password);
         clientRepository.save(client);

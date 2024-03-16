@@ -37,7 +37,6 @@ public class ClassType {
   public ClassType(String aName, String aDescription, int aTypeId, boolean aApproved, Owner aApprover) {
     name = aName;
     description = aDescription;
-    typeId = aTypeId;
     approved = aApproved;
     approver = aApprover;
   }

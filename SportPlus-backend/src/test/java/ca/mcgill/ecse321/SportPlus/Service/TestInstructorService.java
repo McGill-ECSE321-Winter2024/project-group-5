@@ -72,24 +72,6 @@ public class TestInstructorService {
 	}
 
     @Test
-    public void testUpdateInstructorEmail() {
-        String newEmail = "newinstructor@sportplus.com";
-        
-        Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD, INSTRUCTOR_LASTNAME, INSTRUCTOR_ACCOUNTID);
-        Instructor updatedInstructor = instructorRepository.findByAccountId(INSTRUCTOR_ACCOUNTID);
-        
-        instructorService.updateInstructorEmail(INSTRUCTOR_ACCOUNTID, newEmail);
-
-        assertNotNull(updatedInstructor);
-        assertNotEquals(instructor.getEmail(), updatedInstructor.getEmail());
-        assertEquals(instructor.getAccountId(), updatedInstructor.getAccountId());
-        assertEquals(updatedInstructor.getAccountId(), INSTRUCTOR_ACCOUNTID);
-        assertEquals(updatedInstructor.getEmail(), newEmail);
-        
-        verify(instructorRepository, times(1)).save(any(Instructor.class));
-    }
-
-    @Test
     public void testUpdateInstructor() {
         String newPassword = "NewPass123";
         String newFirstName = "NewJohn";
@@ -100,7 +82,7 @@ public class TestInstructorService {
         
         instructorService.updateInstructorFirstName(INSTRUCTOR_EMAIL, newFirstName);
         instructorService.updateInstructorLastName(INSTRUCTOR_EMAIL, newLastName);
-        instructorService.updateInstructorPassword(INSTRUCTOR_EMAIL, newPassword);
+        instructorService.updateInstructorPassword(INSTRUCTOR_EMAIL, INSTRUCTOR_PASSWORD, newPassword);
 
         assertNotNull(updatedInstructor);
         assertEquals(instructor.getEmail(), updatedInstructor.getEmail());

@@ -1,6 +1,7 @@
 package ca.mcgill.ecse321.SportPlus.Repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.AfterEach;
@@ -54,7 +55,7 @@ public class PaymentMethodRepositoryTests {
         assertEquals("123", foundPaymentMethod.getCvc());
         assertEquals("John Doe", foundPaymentMethod.getCardHolderName());
         assertEquals(client, foundPaymentMethod.getClient());
-        assertEquals(123, foundPaymentMethod.getCardId());
+        assertTrue(foundPaymentMethod.getCardId() > 0);
     }
 
     @Test

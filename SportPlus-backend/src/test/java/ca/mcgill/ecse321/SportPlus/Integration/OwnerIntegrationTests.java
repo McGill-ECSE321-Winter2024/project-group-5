@@ -59,7 +59,6 @@ public class OwnerIntegrationTests {
         assertEquals(OWNER_EMAIL, ownerResponse.getEmail());
         assertEquals(OWNER_FIRSTNAME, ownerResponse.getFirstName());
         assertEquals(OWNER_LASTNAME, ownerResponse.getLastName());
-        assertEquals(OWNER_PASSWORD, ownerResponse.getPassword());
     }
 
     @Test
@@ -79,7 +78,6 @@ public class OwnerIntegrationTests {
         assertEquals(OWNER_EMAIL, ownerResponse.getEmail());
         assertEquals(OWNER_FIRSTNAME, ownerResponse.getFirstName());
         assertEquals(OWNER_LASTNAME, ownerResponse.getLastName());
-        assertEquals(OWNER_PASSWORD, ownerResponse.getPassword());
     }
 
     @Test
@@ -95,7 +93,6 @@ public class OwnerIntegrationTests {
         assertEquals(createdOwner.getEmail(), OWNER_EMAIL);
         assertEquals(createdOwner.getFirstName(), OWNER_FIRSTNAME);
         assertEquals(createdOwner.getLastName(), OWNER_LASTNAME);
-        assertEquals(createdOwner.getPassword(), OWNER_PASSWORD);
         assertNotNull(createdOwner.getAccountId());
         assertTrue(createdOwner.getAccountId() > 0, "Response should have a positive ID.");
         assertNotNull(ownerRepository.findByEmail(OWNER_EMAIL));
@@ -114,7 +111,6 @@ public class OwnerIntegrationTests {
         assertEquals(createdOwner.getEmail(), OWNER_EMAIL);
         assertEquals(createdOwner.getFirstName(), OWNER_FIRSTNAME);
         assertEquals(createdOwner.getLastName(), OWNER_LASTNAME);
-        assertEquals(createdOwner.getPassword(), OWNER_PASSWORD);
         assertNotNull(createdOwner.getAccountId());
         assertTrue(createdOwner.getAccountId() > 0, "Response should have a positive ID.");
         assertNotNull(ownerRepository.findByEmail(OWNER_EMAIL));
@@ -145,7 +141,6 @@ public class OwnerIntegrationTests {
         assertEquals(updatedOwner.getEmail(), OWNER_EMAIL);
         assertEquals(updatedOwner.getFirstName(), newFirstName);
         assertEquals(updatedOwner.getLastName(), OWNER_LASTNAME);
-        assertEquals(updatedOwner.getPassword(), OWNER_PASSWORD);
         assertNotNull(updatedOwner.getAccountId());
         assertTrue(updatedOwner.getAccountId() > 0, "Response should have a positive ID.");
         assertNotNull(ownerRepository.findByEmail(OWNER_EMAIL));
@@ -177,7 +172,6 @@ public class OwnerIntegrationTests {
         assertEquals(updatedOwner.getEmail(), OWNER_EMAIL);
         assertEquals(updatedOwner.getFirstName(), newFirstName);
         assertEquals(updatedOwner.getLastName(), OWNER_LASTNAME);
-        assertEquals(updatedOwner.getPassword(), OWNER_PASSWORD);
         assertNotNull(updatedOwner.getAccountId());
         assertTrue(updatedOwner.getAccountId() > 0, "Response should have a positive ID.");
         assertNotNull(ownerRepository.findByEmail(OWNER_EMAIL));
@@ -209,7 +203,6 @@ public class OwnerIntegrationTests {
         assertEquals(updatedOwner.getEmail(), OWNER_EMAIL);
         assertEquals(updatedOwner.getFirstName(), OWNER_FIRSTNAME);
         assertEquals(updatedOwner.getLastName(), newLastName);
-        assertEquals(updatedOwner.getPassword(), OWNER_PASSWORD);
         assertNotNull(updatedOwner.getAccountId());
         assertTrue(updatedOwner.getAccountId() > 0, "Response should have a positive ID.");
         assertNotNull(ownerRepository.findByEmail(OWNER_EMAIL));
@@ -241,7 +234,6 @@ public class OwnerIntegrationTests {
         assertEquals(updatedOwner.getEmail(), OWNER_EMAIL);
         assertEquals(updatedOwner.getFirstName(), OWNER_FIRSTNAME);
         assertEquals(updatedOwner.getLastName(), newLastName);
-        assertEquals(updatedOwner.getPassword(), OWNER_PASSWORD);
         assertNotNull(updatedOwner.getAccountId());
         assertTrue(updatedOwner.getAccountId() > 0, "Response should have a positive ID.");
         assertNotNull(ownerRepository.findByEmail(OWNER_EMAIL));
@@ -263,7 +255,7 @@ public class OwnerIntegrationTests {
 
         String newPassword = "TheNewPass456";
 
-        String url = "/owner/updatePassword/" + newPassword;
+        String url = "/owner/updatePassword/" + OWNER_PASSWORD + "/" + newPassword;
 
         ResponseEntity<OwnerResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null, OwnerResponseDto.class);
         assertNotNull(responseAfterUpdate);
@@ -273,7 +265,6 @@ public class OwnerIntegrationTests {
         assertEquals(updatedOwner.getEmail(), OWNER_EMAIL);
         assertEquals(updatedOwner.getFirstName(), OWNER_FIRSTNAME);
         assertEquals(updatedOwner.getLastName(), OWNER_LASTNAME);
-        assertEquals(updatedOwner.getPassword(), newPassword);
         assertNotNull(updatedOwner.getAccountId());
         assertTrue(updatedOwner.getAccountId() > 0, "Response should have a positive ID.");
         assertNotNull(ownerRepository.findByEmail(OWNER_EMAIL));
@@ -295,7 +286,7 @@ public class OwnerIntegrationTests {
 
         String newPassword = "TheNewPass456";
 
-        String url = "/owner/updatePassword/" + newPassword + "/";
+        String url = "/owner/updatePassword/" + OWNER_PASSWORD + "/" + newPassword + "/";
 
         ResponseEntity<OwnerResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null, OwnerResponseDto.class);
         assertNotNull(responseAfterUpdate);
@@ -305,7 +296,6 @@ public class OwnerIntegrationTests {
         assertEquals(updatedOwner.getEmail(), OWNER_EMAIL);
         assertEquals(updatedOwner.getFirstName(), OWNER_FIRSTNAME);
         assertEquals(updatedOwner.getLastName(), OWNER_LASTNAME);
-        assertEquals(updatedOwner.getPassword(), newPassword);
         assertNotNull(updatedOwner.getAccountId());
         assertTrue(updatedOwner.getAccountId() > 0, "Response should have a positive ID.");
         assertNotNull(ownerRepository.findByEmail(OWNER_EMAIL));

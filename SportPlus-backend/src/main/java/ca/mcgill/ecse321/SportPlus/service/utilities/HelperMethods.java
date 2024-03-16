@@ -1,5 +1,6 @@
 package ca.mcgill.ecse321.SportPlus.service.utilities;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,6 +71,11 @@ public class HelperMethods {
       }
     }
     return "";
+  }
+
+  public static boolean hasDatePassed(Date inputDate) {
+    Date currentDate = new Date(System.currentTimeMillis() * 1000);
+    return currentDate.compareTo(inputDate) < 0;
   }
 
   public static <T> List<T> toList(Iterable<T> iterable) {
