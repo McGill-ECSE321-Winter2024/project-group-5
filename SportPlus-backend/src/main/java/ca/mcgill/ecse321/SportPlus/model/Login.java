@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import java.sql.Time;
 
 @Entity
 public class Login
@@ -12,16 +13,20 @@ public class Login
   @Id
   @GeneratedValue
   private int loginId;
+  private Time startTime;
+  private Time endTime;
 
-  @ManyToOne
+  @ManyToOne // 0..1 is not a tag, if zero or one can be handled in logic
   private Account account;
 
   protected Login() {
   }
 
-  public Login(int aLoginId, Account aAccount)
+  public Login(Integer aLoginId, Time aStartTime, Time aEndTime, Account aAccount)
   {
     loginId = aLoginId;
+    startTime = aStartTime;
+    endTime = aEndTime;
     if (!setAccount(aAccount))
     {
       throw new RuntimeException("Unable to create Login due to aAccount");
@@ -35,10 +40,34 @@ public class Login
     wasSet = true;
     return wasSet;
   }
+  public boolean setStartTime(Time aStartTime)
+  {
+    boolean wasSet = false;
+    startTime = aStartTime;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setEndTime(Time aEndTime)
+  {
+    boolean wasSet = false;
+    endTime = aEndTime;
+    wasSet = true;
+    return wasSet;
+  }
 
   public int getLoginId()
   {
     return loginId;
+  }
+  public Time getStartTime()
+  {
+    return startTime;
+  }
+
+  public Time getEndTime()
+  {
+    return endTime;
   }
   /* Code from template association_GetOne */
   public Account getAccount()
@@ -73,14 +102,4 @@ public class Login
   return loginId == other.loginId &&
          (account == null ? other.account == null : account.equals(other.account));
 }
-    
-  
-
-
-  public String toString()
-  {
-    return super.toString() + "["+
-            "loginId" + ":" + getLoginId()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "account = "+(getAccount()!=null?Integer.toHexString(System.identityHashCode(getAccount())):"null");
-  }
 }

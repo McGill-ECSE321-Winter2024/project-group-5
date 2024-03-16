@@ -14,14 +14,14 @@ This project is an app to manage different classes and schedules within SportPlu
 ## Team Members
                                                
                                                   
-| Name          | GitHub username |   Team Roles    | Deliverable 1 contribution hours|
-| ------------- | --------------- | --------------- |---------------------------------|
-| John-Paul Chouery | JPGC04    | Tester | 30 |
-| Sophia Carbone | ezlilcoconut       | Project manager | 31 |
-| Lynn Haddad | haddadlynn             | Documentation | 32 |
-| Nizar Kheir Eddine | justsom1-nizar             | Tester | 28 |
-| Dmytro Martyniuk | dmytromartyniuk  | Back-end developer | 38 |
-| Sirine Tarhouni | SirineTarhouni             | Front-end developer | 29 |
+| Name          | GitHub username |   Team Roles    | Deliverable 1 contribution hours| Deliverable 2 contribution hours|
+| ------------- | --------------- | --------------- |---------------------------------|---------------------------------|
+| John-Paul Chouery | JPGC04    | Tester | 30 | 30 |
+| Sophia Carbone | ezlilcoconut       | Project manager | 31 | 30 |
+| Lynn Haddad | haddadlynn             | Documentation | 31 | 30 |
+| Nizar Kheir Eddine | justsom1-nizar             | Tester | 28 | 30 |
+| Dmytro Martyniuk | dmytromartyniuk  | Back-end developer | 38 | 30 |
+| Sirine Tarhouni | SirineTarhouni             | Front-end developer | 29 | 30 |
 
 ### Team roles scope of work:  
  Project manager: Responsible for overseeing the planning, execution, and delivery of a project within the defined constraints of time, resources, and scope.  
@@ -33,5 +33,7 @@ This project is an app to manage different classes and schedules within SportPlu
 *Please note that these assigned roles do not mean that each person will be working on this specific aspect of the project only. We will all work together in everything. The purpose of the assigned roles is that each role ensures that this aspect of the project is complete before the milestones deadlines.
 
 [Team report 1](https://github.com/McGill-ECSE321-Winter2024/project-group-5/wiki/Project-Reports#project-report-1) includes the division of hours between the team members, the key design decisions and [meeting minutes](https://github.com/McGill-ECSE321-Winter2024/project-group-5/wiki/Minutes) for deliverable 1.
+
+
 
 For more information about the SportPlus application, please consult the [wiki](../../wiki).

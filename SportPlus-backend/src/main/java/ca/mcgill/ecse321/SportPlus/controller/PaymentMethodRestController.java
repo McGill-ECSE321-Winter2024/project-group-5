@@ -63,7 +63,7 @@ public class PaymentMethodRestController {
     @PostMapping(value = { "/paymentMethod/create", "/paymentMethod/create/" })
     @ResponseStatus(HttpStatus.CREATED)
     public PaymentMethodResponseDto createPaymentMethod(@RequestBody PaymentMethodRequestDto paymentMethod) {
-        PaymentMethod createdPaymentMethod = paymentMethodService.createPaymentMethod(paymentMethod.getCardNumber(), paymentMethod.getExDate(), paymentMethod.getCvc(), paymentMethod.getCardHolderName(), paymentMethod.getClient());
+        PaymentMethod createdPaymentMethod = paymentMethodService.createPaymentMethod(paymentMethod.getCardNumber(), paymentMethod.getExpDate(), paymentMethod.getCvc(), paymentMethod.getCardHolderName(), paymentMethod.getClient());
         return new PaymentMethodResponseDto(createdPaymentMethod);
     }
 

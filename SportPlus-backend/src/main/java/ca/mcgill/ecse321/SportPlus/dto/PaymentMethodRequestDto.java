@@ -30,7 +30,7 @@ public class PaymentMethodRequestDto {
         this.cardNumber = cardNumber;
     }
 
-    public Date getExDate() {
+    public Date getExpDate() {
         return expDate;
     }
 
