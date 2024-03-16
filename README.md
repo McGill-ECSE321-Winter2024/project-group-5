@@ -16,12 +16,12 @@ This project is an app to manage different classes and schedules within SportPlu
                                                   
 | Name          | GitHub username |   Team Roles    | Deliverable 1 contribution hours|| Deliverable 2 contribution hours|
 | ------------- | --------------- | --------------- |---------------------------------||---------------------------------|
-| John-Paul Chouery | JPGC04    | Tester | 30 |
-| Sophia Carbone | ezlilcoconut       | Project manager | 31 |
-| Lynn Haddad | haddadlynn             | Documentation | 32 |
-| Nizar Kheir Eddine | justsom1-nizar             | Tester | 28 |
-| Dmytro Martyniuk | dmytromartyniuk  | Back-end developer | 38 |
-| Sirine Tarhouni | SirineTarhouni             | Front-end developer | 29 |
+| John-Paul Chouery | JPGC04    | Tester | 30 | 30 |
+| Sophia Carbone | ezlilcoconut       | Project manager | 31 | 31 |
+| Lynn Haddad | haddadlynn             | Documentation | 31 | 31 |
+| Nizar Kheir Eddine | justsom1-nizar             | Tester | 28 | 28 |
+| Dmytro Martyniuk | dmytromartyniuk  | Back-end developer | 38 | 28 |
+| Sirine Tarhouni | SirineTarhouni             | Front-end developer | 29 | 29 |
 
 ### Team roles scope of work:  
  Project manager: Responsible for overseeing the planning, execution, and delivery of a project within the defined constraints of time, resources, and scope.  
