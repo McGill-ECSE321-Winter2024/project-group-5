@@ -51,7 +51,7 @@ public class LoginService {
      @Transactional
      public Login getLoginFromAccount(Account account){
         if(account == null){
-            throw new IllegalArgumentException("Account is nul!");
+            throw new IllegalArgumentException("Account is null!");
         }
         Login login = loginRepository.findByAccount(account);
         if(login == null){
