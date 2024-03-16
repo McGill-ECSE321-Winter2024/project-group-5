@@ -42,6 +42,7 @@ public class TestClientService {
     private static final int CLIENT_ACCOUNTID = 2;
     private static final String NOT_CLIENT_EMAIL = "notemail@email.com";
 
+    @SuppressWarnings("null")
     @BeforeEach
     public void setMockOutput() {
         lenient().when(clientRepository.findByEmail(CLIENT_EMAIL)).thenReturn(new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME, CLIENT_ACCOUNTID));
@@ -71,6 +72,7 @@ public class TestClientService {
         verify(clientRepository, times(1)).save(client);
 	}
 
+    @SuppressWarnings("null")
     @Test
     public void testUpdateClient() {
         String newPassword = "NewPass123";

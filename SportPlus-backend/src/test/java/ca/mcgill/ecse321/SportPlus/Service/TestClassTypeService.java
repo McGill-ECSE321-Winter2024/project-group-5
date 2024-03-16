@@ -12,6 +12,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import ca.mcgill.ecse321.SportPlus.dao.ClassTypeRepository;
 import ca.mcgill.ecse321.SportPlus.model.ClassType;
@@ -75,6 +76,7 @@ public class TestClassTypeService {
         assertEquals(1, classTypes.size());
     }
 
+    @SuppressWarnings("null")
     @Test
     public void testCreateInstructorClassType() {
         ClassType newClassType = classTypeService.instructorCreate("Pilates", "A class for core strength", null); // Replace null with actual logic if needed
@@ -83,6 +85,58 @@ public class TestClassTypeService {
         verify(classTypeRepository, times(1)).save(any(ClassType.class));
     }
 
-    // Add more tests as necessary for other methods like deleteByName, approve, etc.
+@Test
+public void testFindByApproval() {
+    boolean approved = false; // Assuming false to match your setup
+    List<ClassType> foundClassTypes = classTypeService.findByApproval(approved);
+    assertNotNull(foundClassTypes);
+    assertEquals(1, foundClassTypes.size()); // Assuming the setup only includes one classType
+    assertEquals(approved, foundClassTypes.get(0).getApproved());
+}
 
+@Test
+public void testDeleteByName() {
+    classTypeService.deleteByName(CLASS_TYPE_NAME);
+    verify(classTypeRepository, times(1)).deleteByName(CLASS_TYPE_NAME);
+}
+
+@SuppressWarnings("null")
+@Test
+public void testOwnerCreate() {
+    Owner owner = new Owner(OWNER_EMAIL, OWNER_FIRSTNAME, OWNER_PASSWORD, OWNER_LASTNAME, OWNER_ACCOUNTID);
+    ClassType createdClassType = classTypeService.ownerCreate("Spinning", "High intensity bike class", owner);
+    assertNotNull(createdClassType);
+    assertEquals("Spinning", createdClassType.getName());
+    assertTrue(createdClassType.getApproved()); // Assuming ownerCreate sets approved to true
+    verify(classTypeRepository, times(1)).save(any(ClassType.class));
+}
+
+@Test
+public void testApprove() {
+    int typeId = CLASS_TYPE_ID;
+    classTypeService.approve(typeId);
+    ClassType approvedClassType = classTypeService.findByTypeId(typeId);
+    assertNotNull(approvedClassType);
+    assertTrue(approvedClassType.getApproved());
+}
+
+@SuppressWarnings("null")
+@Test
+public void testUpdateDescription() {
+    String newDescription = "Updated Description";
+    ClassType updatedClassType = classTypeService.updateDescription(CLASS_TYPE_ID, newDescription);
+    assertNotNull(updatedClassType);
+    assertEquals(newDescription, updatedClassType.getDescription());
+    verify(classTypeRepository, times(1)).save(any(ClassType.class));
+}
+
+@SuppressWarnings("null")
+@Test
+public void testUpdateName() {
+    String newName = "Updated Name";
+    ClassType updatedClassType = classTypeService.updateName(CLASS_TYPE_ID, newName);
+    assertNotNull(updatedClassType);
+    assertEquals(newName, updatedClassType.getName());
+    verify(classTypeRepository, times(1)).save(any(ClassType.class));
+}
 }
