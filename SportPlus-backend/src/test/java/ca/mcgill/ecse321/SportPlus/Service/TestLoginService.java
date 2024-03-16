@@ -4,9 +4,14 @@ import java.lang.IllegalArgumentException;
 
 
 import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import java.sql.Time;
+import java.util.Arrays;
+import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -23,6 +28,8 @@ import ca.mcgill.ecse321.SportPlus.dao.ClientRepository;
 import ca.mcgill.ecse321.SportPlus.dao.InstructorRepository;
 import ca.mcgill.ecse321.SportPlus.dao.LoginRepository;
 import ca.mcgill.ecse321.SportPlus.dao.OwnerRepository;
+import ca.mcgill.ecse321.SportPlus.dto.LoginRequestDto;
+import ca.mcgill.ecse321.SportPlus.dto.LoginRequestDto.AccountType;
 import ca.mcgill.ecse321.SportPlus.model.Client;
 import ca.mcgill.ecse321.SportPlus.model.Instructor;
 import ca.mcgill.ecse321.SportPlus.model.Login;
@@ -53,6 +60,7 @@ public class TestLoginService {
 
     @InjectMocks
     private OwnerService ownerService;
+
     @InjectMocks
     private ClientService clientService;
 
@@ -77,29 +85,31 @@ public class TestLoginService {
     private static final int LOGIN_ID1 = 1;
     private static final int LOGIN_ID2 = 2;
     private static final int LOGIN_ID3 = 3;
-    private static final Time startTime = Time.valueOf("10:30:00");
-    private static final Time endTime = Time.valueOf("13:30:00");
+    private static final Time START_TIME = Time.valueOf("10:30:00");
+    private static final Time END_TIME = Time.valueOf("13:30:00");
 
     @BeforeEach
     public void setMockOutput() {
         Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FIRSTNAME, INSTRUCTOR_PASSWORD,INSTRUCTOR_LASTNAME, INSTRUCTOR_ACCOUNTID);
         Client client = new Client(CLIENT_EMAIL, CLIENT_FIRSTNAME, CLIENT_PASSWORD,CLIENT_LASTNAME, CLIENT_ACCOUNTID);
         Owner owner = new Owner(OWNER_EMAIL, OWNER_FIRSTNAME, OWNER_PASSWORD,OWNER_LASTNAME, OWNER_ACCOUNTID);
-        Login login1 = new Login(LOGIN_ID1, startTime, endTime, instructor);
-        Login login2 = new Login(LOGIN_ID2, startTime, endTime, client);
-        Login login3 = new Login(LOGIN_ID3, startTime, endTime, owner);
+        Login login1 = new Login(LOGIN_ID1, START_TIME, END_TIME, instructor);
+        Login login2 = new Login(LOGIN_ID2, START_TIME, END_TIME, client);
+        Login login3 = new Login(LOGIN_ID3, START_TIME, END_TIME, owner);
         lenient().when(instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL)).thenReturn(instructor);
         lenient().when(clientRepository.findByEmail(CLIENT_EMAIL)).thenReturn(client);
         lenient().when(ownerRepository.findByEmail(OWNER_EMAIL)).thenReturn(owner);
         lenient().when(loginRepository.findByLoginId(LOGIN_ID1)).thenReturn(login1);
         lenient().when(loginRepository.findByAccount(client)).thenReturn(login2);
         lenient().when(loginRepository.findByLoginId(LOGIN_ID3)).thenReturn(login3);
+        lenient().when(loginRepository.findAll()).thenReturn(Arrays.asList(login1, login2, login3));
+        lenient().when(clientService.getClient(CLIENT_EMAIL)).thenReturn(client);
     }
     @Test
     public void testgetLoginFromAccount(){
         Client client = new Client(CLIENT_EMAIL, CLIENT_FIRSTNAME, CLIENT_PASSWORD,CLIENT_LASTNAME, CLIENT_ACCOUNTID);
         Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FIRSTNAME, INSTRUCTOR_PASSWORD,INSTRUCTOR_LASTNAME, INSTRUCTOR_ACCOUNTID);
-        Login login =  new Login(LOGIN_ID2, startTime, endTime, client);
+        Login login =  new Login(LOGIN_ID2, START_TIME, END_TIME, client);
         Login foundLoginA = loginService.getLoginFromAccount(client);
 
         assertThrows(IllegalArgumentException.class, () -> {
@@ -117,7 +127,7 @@ public class TestLoginService {
     @Test
     public void testGetLoginFromId(){
         Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FIRSTNAME, INSTRUCTOR_PASSWORD,INSTRUCTOR_LASTNAME, INSTRUCTOR_ACCOUNTID);
-        Login login1 = new Login(LOGIN_ID1, startTime, endTime, instructor);
+        Login login1 = new Login(LOGIN_ID1, START_TIME, END_TIME, instructor);
         Login foundLogin = loginService.getLoginFromId(LOGIN_ID1);
 
         assertThrows(IllegalArgumentException.class, () -> {
@@ -129,15 +139,70 @@ public class TestLoginService {
         assertEquals(foundLogin, login1);
 
     }
+    @Test
+    public void testDeleteByLoginId(){
+        Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FIRSTNAME, INSTRUCTOR_PASSWORD,INSTRUCTOR_LASTNAME, INSTRUCTOR_ACCOUNTID);
+        Login login1 = new Login(LOGIN_ID1, START_TIME, END_TIME, instructor);
+      
+
+        loginService.deleteByLoginId(LOGIN_ID1);
+        verify(loginRepository, times(1)).deleteByLoginId(LOGIN_ID1);
+    }
+
+    @Test
+    public void testGetAllLogins(){
+        Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FIRSTNAME, INSTRUCTOR_PASSWORD,INSTRUCTOR_LASTNAME, INSTRUCTOR_ACCOUNTID);
+        Client client = new Client(CLIENT_EMAIL, CLIENT_FIRSTNAME, CLIENT_PASSWORD,CLIENT_LASTNAME, CLIENT_ACCOUNTID);
+        Owner owner = new Owner(OWNER_EMAIL, OWNER_FIRSTNAME, OWNER_PASSWORD,OWNER_LASTNAME, OWNER_ACCOUNTID);
+        Login login1 = new Login(LOGIN_ID1, START_TIME, END_TIME, instructor);
+        Login login2 = new Login(LOGIN_ID2, START_TIME, END_TIME, client);
+        Login login3 = new Login(LOGIN_ID3, START_TIME, END_TIME, owner);
+
+        List<Login> found = loginService.getAllLogins();
+        assertNotNull(found);
+        assertEquals(3, found.size());
+        assertThat(found).contains(login1, login2, login3);
+    }
+
+    @Test
+    public void testCreateLogin(){
+        Client client = new Client(CLIENT_EMAIL, CLIENT_FIRSTNAME, CLIENT_PASSWORD,CLIENT_LASTNAME, CLIENT_ACCOUNTID);
+        Login login = loginService.createLogin(LOGIN_ID1, START_TIME, END_TIME, client);
+
+        assertNotNull(login);
+        assertEquals(login.getAccount(), client);
+        assertEquals(login.getEndTime(), END_TIME);
+        assertEquals(login.getStartTime(), START_TIME);
+        assertEquals(login.getLoginId(), LOGIN_ID1);
+    }
     // @Test
-    // public void testDeleteByLoginId(){
-        
+    // public void testLogIn(){
+    //     Client client = new Client(CLIENT_EMAIL, CLIENT_FIRSTNAME, CLIENT_PASSWORD,CLIENT_LASTNAME, CLIENT_ACCOUNTID);
+    //     LoginRequestDto good_request = new LoginRequestDto(LOGIN_ID1, CLIENT_EMAIL, START_TIME, AccountType.CLIENT);
+    //     LoginRequestDto bad_request_type = new LoginRequestDto(LOGIN_ID1, CLIENT_EMAIL, START_TIME, AccountType.INSTRUCTOR);
+    //     LoginRequestDto bad_request_owner = new LoginRequestDto(LOGIN_ID1, CLIENT_EMAIL, START_TIME, AccountType.OWNER);
+
+    //     Login goodLogin = loginService.logIn(good_request, CLIENT_PASSWORD);
+
+    //     assertNotNull(goodLogin);
+    //     assertEquals(goodLogin.getAccount(), client);
+    //     assertEquals(goodLogin.getEndTime(), END_TIME);
+    //     assertEquals(goodLogin.getStartTime(), START_TIME);
+    //     assertEquals(goodLogin.getLoginId(), LOGIN_ID1);
+
+    //     assertThrows(IllegalArgumentException.class, () -> {
+    //         loginService.logIn(good_request, "NOT_PASSWORD");
+    //     }, "Wrong Password!");
+
+    //     assertThrows(IllegalArgumentException.class, () -> {
+    //         loginService.logIn(bad_request_type, CLIENT_PASSWORD);
+    //     }, "Account of Type " + bad_request_type.getAccountType()+ " with given email does not exist.");
+
+    //     assertThrows(IllegalArgumentException.class, () -> {
+    //         loginService.logIn(bad_request_owner, CLIENT_PASSWORD);
+    //     }, "This is not an Owner email.");
     // }
 
-   //deleteByLoginId
-   //getAllLogins
-   //createLogin
-   //logIn
    //logOut
    //logOut
   // isStillLoggedIn

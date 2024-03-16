@@ -96,7 +96,7 @@ public class LoginService {
                 account = clientService.getClient(loginRequest.getAccountEmail());
         }
         if(account == null){
-            throw new IllegalArgumentException("Account of Type " + loginRequest.getAccountType()+" with given email does not exist.");
+            throw new IllegalArgumentException("Account of Type " + loginRequest.getAccountType()+ " with given email does not exist.");
         }
         Login found = getLoginFromAccount(account);
         if(found != null){
