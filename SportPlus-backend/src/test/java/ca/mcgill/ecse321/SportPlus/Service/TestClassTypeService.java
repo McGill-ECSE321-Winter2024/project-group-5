@@ -21,7 +21,6 @@ import ca.mcgill.ecse321.SportPlus.service.ClassTypeService;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 public class TestClassTypeService {
@@ -32,7 +31,7 @@ public class TestClassTypeService {
     @InjectMocks
     private ClassTypeService classTypeService;
 
-    private static final int CLASS_TYPE_ID = 1;
+    private static final int CLASS_TYPE_ID =0;
     private static final String CLASS_TYPE_NAME = "Yoga";
     private static final String CLASS_TYPE_DESCRIPTION = "Description";
 
@@ -50,6 +49,7 @@ public class TestClassTypeService {
         Mockito.lenient().when(classTypeRepository.findByName(CLASS_TYPE_NAME)).thenReturn(classType);
         Mockito.lenient().when(classTypeRepository.findByTypeId(CLASS_TYPE_ID)).thenReturn(classType);
         Mockito.lenient().when(classTypeRepository.findAll()).thenReturn(Arrays.asList(classType));
+        Mockito.lenient().when(classTypeRepository.findByApproved(false)).thenReturn(Arrays.asList(classType));
         Mockito.lenient().when(classTypeRepository.save(any(ClassType.class))).thenAnswer(i -> i.getArguments()[0]);
     }
 
@@ -66,6 +66,7 @@ public class TestClassTypeService {
         int typeId = CLASS_TYPE_ID;
         ClassType foundClassType = classTypeService.findByTypeId(typeId);
         assertNotNull(foundClassType);
+        assertEquals(CLASS_TYPE_NAME, foundClassType.getName());
         assertEquals(typeId, foundClassType.getTypeId());
     }
 

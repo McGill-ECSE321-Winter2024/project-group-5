@@ -6,9 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ca.mcgill.ecse321.SportPlus.dao.ClassTypeRepository;
 import ca.mcgill.ecse321.SportPlus.model.ClassType;
-import ca.mcgill.ecse321.SportPlus.model.Client;
 import ca.mcgill.ecse321.SportPlus.model.Owner;
-import ca.mcgill.ecse321.SportPlus.service.utilities.HelperMethods;
 
 @Service
 public class ClassTypeService {
@@ -33,7 +31,7 @@ public class ClassTypeService {
     
     @Transactional
     public List<ClassType> getAllClassTypes() {
-        return HelperMethods.toList(classTypeRepository.findAll());
+        return classTypeRepository.findAll();
     }
     @Transactional
     public void deleteByName(String name) {
@@ -48,7 +46,7 @@ public class ClassTypeService {
 
     @Transactional
     public ClassType ownerCreate(String name, String description, Owner approver) {
-        ClassType classType = new ClassType(name, description, 0, false, approver);
+        ClassType classType = new ClassType(name, description, 0, true, approver);
         return classTypeRepository.save(classType);
     }
 
