@@ -157,12 +157,12 @@ public class LoginRepositoryTests {
         assertEquals(found.size(), 3);
         assertThat(found).contains(loginClient, loginInstructor, loginOwner);
 
-        loginRepository.deleteByAccount(client);
+        loginRepository.deleteByLoginId(loginClient.getLoginId());
         found = loginRepository.findAll();
         assertEquals(found.size(), 2);
         assertThat(found).contains(loginOwner, loginInstructor);
 
-        loginRepository.deleteByAccount(instructor);
+        loginRepository.deleteByLoginId(loginInstructor.getLoginId());
         found = loginRepository.findAll();
         assertEquals(found.size(), 1);
         assertThat(found).contains(loginOwner);

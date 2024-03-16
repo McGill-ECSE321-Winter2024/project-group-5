@@ -25,11 +25,11 @@ public interface LoginRepository extends CrudRepository<Login, Integer>{
     Login findByAccount(Account account);
 
      /**
-     * Delete Login by Account 
+     * Delete Login by loginId
      * 
-     * @param account
+     * @param loginId
      */
-    void deleteByAccount(Account account);
+    void deleteByLoginId(int loginId);
 
 
      /**
