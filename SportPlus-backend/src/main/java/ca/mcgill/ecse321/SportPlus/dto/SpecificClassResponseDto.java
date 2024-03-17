@@ -1,22 +1,27 @@
 package ca.mcgill.ecse321.SportPlus.dto;
 
 import ca.mcgill.ecse321.SportPlus.model.SpecificClass;
-import ca.mcgill.ecse321.SportPlus.dto.InstructorListDto;
-import ca.mcgill.ecse321.SportPlus.dto.InstructorResponseDto;
 
 import java.sql.Date;
 import java.sql.Time;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class SpecificClassResponseDto {
 
     private Integer id;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "UTC")
     private Date date;
     private Time startTime;
     private Time endTime;
     private InstructorResponseDto supervisor;
-    //private ClassTypeDto classType;
+    private ClassTypeResponseDto classType;
 
     // Constructors, Getters, and Setters
+
+    @SuppressWarnings("unused")
+    public SpecificClassResponseDto() {
+    }
 
     public SpecificClassResponseDto(SpecificClass specificclass) {
         this.id = specificclass.getSessionId();
@@ -24,7 +29,7 @@ public class SpecificClassResponseDto {
         this.startTime = specificclass.getStartTime();
         this.endTime = specificclass.getEndTime();
         this.supervisor = new InstructorResponseDto(specificclass.getSupervisor());
-        //this.classType = new ClassTypeDto(specificclass.getClassType()); 
+        // this.classType = new ClassTypeDto(specificclass.getClassType());
 
     }
 
@@ -49,9 +54,9 @@ public class SpecificClassResponseDto {
         return supervisor;
     }
 
-    // public ClassTypeDto getClassType() {
-    //     return classType;
-    // }
+    public ClassTypeResponseDto getClassType() {
+        return classType;
+    }
 
     // Setters
     public void setId(Integer id) {
@@ -74,7 +79,7 @@ public class SpecificClassResponseDto {
         this.supervisor = instructor;
     }
 
-    // public void setClassType(ClassTypeDTO classType) {
-    //     this.classType = classType;
-    // }
+    public void setClassType(ClassTypeResponseDto classType) {
+        this.classType = classType;
+    }
 }

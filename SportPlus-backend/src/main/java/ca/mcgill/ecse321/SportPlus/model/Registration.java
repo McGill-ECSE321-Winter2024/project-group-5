@@ -27,7 +27,7 @@ public class Registration {
   // CONSTRUCTOR
   // ------------------------
 
-  protected Registration() {
+  public Registration() {
   }
 
   public Registration(int aRegId, SpecificClass aSpecificClass, Client aClient) {

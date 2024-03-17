@@ -5,6 +5,10 @@ import java.util.List;
 public class RecurringSpecificClassesResponseDto {
     private List<SpecificClassResponseDto> specificClasses;
 
+    @SuppressWarnings("unused")
+    public RecurringSpecificClassesResponseDto() {
+    }
+
     public RecurringSpecificClassesResponseDto(List<SpecificClassResponseDto> specificClasses) {
         this.specificClasses = specificClasses;
     }

@@ -34,7 +34,6 @@ public class SpecificClassRequestsDto {
         return classTypeId;
     }
 
-
     public void setDate(Date date) {
         this.date = date;
     }

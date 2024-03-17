@@ -22,27 +22,28 @@ import java.sql.Time;
 
 @Service
 public class SpecificClassService {
-    
+
     @Autowired
     SpecificClassRepository specificClassRepository;
 
     @Autowired
-    InstructorRepository instructorRepository ;
-    
+    InstructorRepository instructorRepository;
+
     @Autowired
     ClassTypeRepository classTypeRepository;
-    
+
     @Autowired
-    RegistrationRepository registrationRepository; 
-    
+    RegistrationRepository registrationRepository;
+
     @Transactional
-    public SpecificClass createSpecificClass(Date date, Time startTime, Time endTime, int instructorId, int classTypeId) {
+    public SpecificClass createSpecificClass(Date date, Time startTime, Time endTime, int instructorId,
+            int classTypeId) {
         // Validate input parameters...
-        if (date.before(new java.util.Date())){
+        if (date.before(new java.util.Date())) {
             throw new IllegalArgumentException("The date must be in the future");
         }
 
-        if (startTime.after(endTime)){
+        if (startTime.after(endTime)) {
             throw new IllegalArgumentException("The start time should come before the end time");
         }
 
@@ -50,19 +51,19 @@ public class SpecificClassService {
         ClassType classType = classTypeRepository.findByTypeId(classTypeId);
         SpecificClass specificClass = new SpecificClass(date, startTime, endTime, 0, classType);
         specificClass.setSupervisor(instructor);
-           
+
         // SAve the new SpecificClass
         specificClassRepository.save(specificClass);
-        
+
         // Return it
         return specificClass;
     }
 
-    // Creates Recurring Classes on a specifc day of the week. 
+    // Creates Recurring Classes on a specifc day of the week.
     // Example yoga on Monday from 10 to 11 for 1 month
     @Transactional
-    public List<SpecificClass> createRecurringSpecificClasses(Date startDate, Date endDate, Time startTime, Time endTime, int dayOfWeek, int instructorId, int classTypeId){
-
+    public List<SpecificClass> createRecurringSpecificClasses(Date startDate, Date endDate, Time startTime,
+            Time endTime, int dayOfWeek, int instructorId, int classTypeId) {
 
         List<SpecificClass> recurringClasses = new ArrayList<>();
 
@@ -74,39 +75,40 @@ public class SpecificClassService {
         Instructor instructor = instructorRepository.findByAccountId(instructorId);
         ClassType classType = classTypeRepository.findByTypeId(classTypeId);
 
-        for (LocalDate date = start; !date.isAfter(end); date = date.plusDays(1)) { //Iterates through all the days in the range 
-            if (date.getDayOfWeek().getValue() == dayOfWeek) {//If the day of the week matches the date add that class with the date to the list
-                
-                SpecificClass specificClass = new SpecificClass(java.sql.Date.valueOf(date), java.sql.Time.valueOf(startTim), java.sql.Time.valueOf(endTim), 0, classType);
+        for (LocalDate date = start; !date.isAfter(end); date = date.plusDays(1)) { // Iterates through all the days in
+                                                                                    // the range
+            if (date.getDayOfWeek().getValue() == dayOfWeek) {// If the day of the week matches the date add that class
+                                                              // with the date to the list
+
+                SpecificClass specificClass = new SpecificClass(java.sql.Date.valueOf(date),
+                        java.sql.Time.valueOf(startTim), java.sql.Time.valueOf(endTim), 0, classType);
                 specificClass.setSupervisor(instructor); // Set the instructor separately
                 specificClassRepository.save(specificClass); // Save the SpecificClass instance
                 recurringClasses.add(specificClass); // Add to the list
             }
         }
-    
+
         return recurringClasses;
 
     }
 
     @Transactional
     public SpecificClass updateDateSpecificClass(int sessionId, Date newDate) {
-        
-        //Find the current class
+        // Find the current class
         SpecificClass specificClass = specificClassRepository.findBySessionId(sessionId);
 
         if (newDate.before(new java.util.Date())) {
             throw new IllegalArgumentException("The new date cannot be in the past.");
         }
-           
         specificClass.setDate(newDate); // Update the date
-        specificClassRepository.save(specificClass); //Save to the DB
-        return specificClass; //Return thr obj
+        specificClassRepository.save(specificClass); // Save to the DB
+        return specificClass; // Return thr obj
 
     }
-    
+
     @Transactional
     public SpecificClass updateTimeSpecificClass(int sessionId, Time newStartTime, Time newEndTime) {
-        SpecificClass specificClass = specificClassRepository.findBySessionId(sessionId); 
+        SpecificClass specificClass = specificClassRepository.findBySessionId(sessionId);
 
         if (newStartTime.after(newEndTime)) {
             throw new IllegalArgumentException("Start time must be before end time.");
@@ -122,19 +124,18 @@ public class SpecificClassService {
     @Transactional
     public SpecificClass updateClassTypeSpecificClass(int sessionId, int classTypeId) {
 
-        //Setup
-        SpecificClass specificClass = specificClassRepository.findBySessionId(sessionId); 
+        // Setup
+        SpecificClass specificClass = specificClassRepository.findBySessionId(sessionId);
         ClassType classType = classTypeRepository.findByTypeId(classTypeId);
 
-        // Updaye the classType
+        // Update the classType
         specificClass.setClassType(classType);
 
-        //Save in the DB
+        // Save in the DB
         specificClassRepository.save(specificClass);
 
         return specificClass;
     }
-
 
     @Transactional
     public SpecificClass assignInstructorSpecificClass(int sessionId, int instructorId) {
@@ -171,7 +172,7 @@ public class SpecificClassService {
 
     @Transactional
     public List<SpecificClass> getByClassType(int classTypeId) {
-        ClassType classType = classTypeRepository.findByTypeId(classTypeId); 
+        ClassType classType = classTypeRepository.findByTypeId(classTypeId);
 
         List<SpecificClass> classes = specificClassRepository.findByClassType(classType);
         return classes;
@@ -185,15 +186,16 @@ public class SpecificClassService {
 
     @Transactional
     public List<SpecificClass> getAvailable() {
-    
+
         Date now = new Date(System.currentTimeMillis()); // Current time
-        List<SpecificClass> potentialClassesWithSupervisor = specificClassRepository.findBySupervisorIsNotNullAndStartTimeAfter(now);
+        List<SpecificClass> potentialClassesWithSupervisor = specificClassRepository
+                .findBySupervisorIsNotNullAndStartTimeAfter(now);
         List<SpecificClass> availableClasses = new ArrayList<>();
 
-        for (SpecificClass specificClass : potentialClassesWithSupervisor){
+        for (SpecificClass specificClass : potentialClassesWithSupervisor) {
             List<Registration> registrations = registrationRepository.findBySpecificClass(specificClass);
 
-            if ( registrations.size() < 30 ) {
+            if (registrations.size() < 30) {
                 // specifcClass with a supervisor and less than 30 registrations
 
                 availableClasses.add(specificClass);
@@ -220,7 +222,5 @@ public class SpecificClassService {
         ClassType classType = classTypeRepository.findByTypeId(classTypeId);
         specificClassRepository.deleteByClassType(classType);
     }
-
-
 
 }

@@ -1,8 +1,10 @@
 package ca.mcgill.ecse321.SportPlus.Repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import java.sql.Date;
 import java.time.LocalDateTime;
+import java.util.Calendar;
 import java.util.List;
 import java.sql.Time;
 
@@ -575,5 +578,34 @@ public class SpecificClassRepositoryTests {
     // public void deleteSessionId(){
 
     // }
+
+    @Test
+    @Transactional
+    public void findBySupervisorIsNotNullAndStartTimeAfter() {
+        
+        // Arrange: Create and persist entities as needed
+        Instructor supervisor = new Instructor("leandro@gmail.com", "leandro", "12564", "ordnael", 0);
+        instructorRepository.save(supervisor);
+
+        // Create a Time object for "now" and one for a future time
+        Time now = new Time(System.currentTimeMillis());
+        // Add 1 hour to the current time for the future time
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(now);
+        calendar.add(Calendar.HOUR_OF_DAY, 1);
+        Time futureTime = new Time(calendar.getTimeInMillis());
+        
+        SpecificClass specificClass = new SpecificClass();
+        specificClass.setSupervisor(supervisor);
+        specificClass.setStartTime(futureTime);
+        specificClassRepository.save(specificClass);
+
+        // Act: Fetch classes with a supervisor and a future start time
+        List<SpecificClass> results = specificClassRepository.findBySupervisorIsNotNullAndStartTimeAfter(now);
+
+        // Assert: Verify the results contain the expected class
+        assertFalse(results.isEmpty());
+        assertTrue(results.contains(specificClass));
+    }
 
 }

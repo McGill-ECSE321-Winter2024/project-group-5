@@ -37,13 +37,13 @@ public class SpecificClassRestController {
     @PostMapping(value = { "/specificclasses/create", "/specificclasses/create/" })
     @ResponseStatus(HttpStatus.CREATED)
     public SpecificClassResponseDto createSpecificClass(@RequestBody SpecificClassRequestsDto specificclass) {
+
         SpecificClass createdClass = specificClassService.createSpecificClass(
                 specificclass.getDate(),
                 specificclass.getStartTime(),
                 specificclass.getEndTime(),
                 specificclass.getInstructorId(),
                 specificclass.getClassTypeId());
-
         return new SpecificClassResponseDto(createdClass);
     }
 
@@ -79,10 +79,9 @@ public class SpecificClassRestController {
 
     @PutMapping(value = { "/{id}/date" })
     @ResponseStatus(HttpStatus.OK)
-    public SpecificClassResponseDto updateSpecificClassDate(@PathVariable int sessionId,
+    public SpecificClassResponseDto updateSpecificClassDate(@PathVariable int id,
             @RequestBody SpecificClassRequestsDto requestsDtoSpecifcClass) {
-
-        SpecificClass updatedClass = specificClassService.updateDateSpecificClass(sessionId,
+        SpecificClass updatedClass = specificClassService.updateDateSpecificClass(id,
                 requestsDtoSpecifcClass.getDate());
 
         return new SpecificClassResponseDto(updatedClass);
@@ -90,10 +89,10 @@ public class SpecificClassRestController {
 
     @PutMapping(value = { "/{id}/time" })
     @ResponseStatus(HttpStatus.OK)
-    public SpecificClassResponseDto updateSpecificClassTime(@PathVariable int sessionId,
+    public SpecificClassResponseDto updateSpecificClassTime(@PathVariable int id,
             @RequestBody SpecificClassRequestsDto requestsDtoSpecifcClass) {
 
-        SpecificClass updatedClass = specificClassService.updateTimeSpecificClass(sessionId,
+        SpecificClass updatedClass = specificClassService.updateTimeSpecificClass(id,
                 requestsDtoSpecifcClass.getStartTime(), requestsDtoSpecifcClass.getEndTime());
 
         return new SpecificClassResponseDto(updatedClass);
@@ -101,10 +100,10 @@ public class SpecificClassRestController {
 
     @PutMapping(value = { "/{id}/classtype" })
     @ResponseStatus(HttpStatus.OK)
-    public SpecificClassResponseDto updateSpecificClassClassType(@PathVariable int sessionId,
+    public SpecificClassResponseDto updateSpecificClassClassType(@PathVariable int id,
             @RequestBody SpecificClassRequestsDto requestsDtoSpecifcClass) {
 
-        SpecificClass updatedClass = specificClassService.updateClassTypeSpecificClass(sessionId,
+        SpecificClass updatedClass = specificClassService.updateClassTypeSpecificClass(id,
                 requestsDtoSpecifcClass.getClassTypeId());
 
         return new SpecificClassResponseDto(updatedClass);
@@ -112,10 +111,10 @@ public class SpecificClassRestController {
 
     @PutMapping(value = { "/{id}/assign-instructor" })
     @ResponseStatus(HttpStatus.OK)
-    public SpecificClassResponseDto assignInstructorSpecificClass(@PathVariable int sessionId,
+    public SpecificClassResponseDto assignInstructorSpecificClass(@PathVariable int id,
             @RequestBody SpecificClassRequestsDto requestsDtoSpecifcClass) {
 
-        SpecificClass updatedClass = specificClassService.assignInstructorSpecificClass(sessionId,
+        SpecificClass updatedClass = specificClassService.assignInstructorSpecificClass(id,
                 requestsDtoSpecifcClass.getInstructorId());
 
         return new SpecificClassResponseDto(updatedClass);
@@ -123,9 +122,9 @@ public class SpecificClassRestController {
 
     @PutMapping(value = { "/{id}/remove-instructor" })
     @ResponseStatus(HttpStatus.OK)
-    public SpecificClassResponseDto removeInstructorSpecificClass(@PathVariable int sessionId) {
+    public SpecificClassResponseDto removeInstructorSpecificClass(@PathVariable int id) {
 
-        SpecificClass updatedClass = specificClassService.removeInstructorSpecificClass(sessionId);
+        SpecificClass updatedClass = specificClassService.removeInstructorSpecificClass(id);
 
         return new SpecificClassResponseDto(updatedClass);
     }
