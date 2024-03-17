@@ -11,7 +11,7 @@ public class ClassTypeListDto {
         this.classTypes = classTypes;
     }
 
-    public List<ClassTypeResponseDto> getClients() {
+    public List<ClassTypeResponseDto> getClassTypes() {
         return classTypes;
     }
 
