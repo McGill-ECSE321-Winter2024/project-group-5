@@ -34,6 +34,7 @@ This project is an app to manage different classes and schedules within SportPlu
 
 [Team report 1](https://github.com/McGill-ECSE321-Winter2024/project-group-5/wiki/Project-Reports#project-report-1) includes the division of hours between the team members, the key design decisions and [meeting minutes](https://github.com/McGill-ECSE321-Winter2024/project-group-5/wiki/Minutes) for deliverable 1.
 
+[Team report 2](https://github.com/McGill-ECSE321-Winter2024/project-group-5/wiki/Project-Reports#project-report-2) includes the division of hours between the team members, the key design decisions and [meeting minutes](https://github.com/McGill-ECSE321-Winter2024/project-group-5/wiki/Minutes) for deliverable 2.
 
 
 For more information about the SportPlus application, please consult the [wiki](../../wiki).
