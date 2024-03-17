@@ -91,9 +91,18 @@ public class LoginService {
                 }
                 account = ownerService.getOwner();
             case INSTRUCTOR:
-                account = instructorService.getInstructor(loginRequest.getAccountEmail());
+                try {
+                account = instructorService.getInstructor(loginRequest.getAccountEmail()); 
+                }catch(Exception e){
+                    throw new IllegalArgumentException("Account of Type " + loginRequest.getAccountType()+ " with given email does not exist.");
+                }
+
             case CLIENT:
+                try {
                 account = clientService.getClient(loginRequest.getAccountEmail());
+                }catch(Exception e){
+                throw new IllegalArgumentException("Account of Type " + loginRequest.getAccountType()+ " with given email does not exist.");
+                }
         }
         if(account == null){
             throw new IllegalArgumentException("Account of Type " + loginRequest.getAccountType()+ " with given email does not exist.");
@@ -121,7 +130,7 @@ public class LoginService {
 
     @Transactional
     public boolean isStillLoggedIn(LoginRequestDto requestDto){
-        return HelperMethods.isLoginTimeStillValid(requestDto.getCurrentTime(), getLoginFromId(requestDto.getLoginId()).getEndTime());
+        return HelperMethods.isLoginTimeStillValid(getLoginFromId(requestDto.getLoginId()).getEndTime(),requestDto.getCurrentTime());
     }
 
     @Transactional

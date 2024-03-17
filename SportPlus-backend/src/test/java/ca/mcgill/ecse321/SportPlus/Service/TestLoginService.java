@@ -13,9 +13,11 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -61,7 +63,7 @@ public class TestLoginService {
     @InjectMocks
     private OwnerService ownerService;
 
-    @InjectMocks
+    @Mock
     private ClientService clientService;
 
     private static final String INSTRUCTOR_EMAIL = "instructor@sportplus.com";
@@ -106,7 +108,7 @@ public class TestLoginService {
         lenient().when(clientService.getClient(CLIENT_EMAIL)).thenReturn(client);
     }
     @Test
-    public void testgetLoginFromAccount(){
+    public void testGetLoginFromAccount(){
         Client client = new Client(CLIENT_EMAIL, CLIENT_FIRSTNAME, CLIENT_PASSWORD,CLIENT_LASTNAME, CLIENT_ACCOUNTID);
         Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FIRSTNAME, INSTRUCTOR_PASSWORD,INSTRUCTOR_LASTNAME, INSTRUCTOR_ACCOUNTID);
         Login login =  new Login(LOGIN_ID2, START_TIME, END_TIME, client);
@@ -175,39 +177,82 @@ public class TestLoginService {
         assertEquals(login.getStartTime(), START_TIME);
         assertEquals(login.getLoginId(), LOGIN_ID1);
     }
+    @Test
+    public void testLogIn(){
+        Client client = new Client(CLIENT_EMAIL, CLIENT_FIRSTNAME, CLIENT_PASSWORD,CLIENT_LASTNAME, CLIENT_ACCOUNTID);
+        LoginRequestDto good_request = new LoginRequestDto(0, CLIENT_EMAIL, START_TIME, AccountType.CLIENT);
+        LoginRequestDto bad_request_type = new LoginRequestDto(0, CLIENT_EMAIL, START_TIME, AccountType.INSTRUCTOR);
+        LoginRequestDto bad_request_owner = new LoginRequestDto(0, CLIENT_EMAIL, START_TIME, AccountType.OWNER);
+
+        Login goodLogin = loginService.logIn(good_request, CLIENT_PASSWORD);
+
+        assertNotNull(goodLogin);
+        assertEquals(goodLogin.getAccount(), client);
+        assertEquals(goodLogin.getEndTime(), END_TIME);
+        assertEquals(goodLogin.getStartTime(), START_TIME);
+        assertEquals(goodLogin.getLoginId(), 0);//because id is @Generated, loginService puts 0 as idInput
+        //because this is simulating the database, and not actually using it, here the id is not generated
+        //in reality, it wont be 0. Additionally, when creating the Login, we dont care of the loginId that comes with the request.
+        //it is useful for other aspects of the code
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            loginService.logIn(good_request, "NOT_PASSWORD");
+        }, "Wrong Password!");
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            loginService.logIn(bad_request_type, CLIENT_PASSWORD);
+        }, "Account of Type " + bad_request_type.getAccountType()+ " with given email does not exist.");
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            loginService.logIn(bad_request_owner, CLIENT_PASSWORD);
+        }, "This is not an Owner email.");
+    }
+
+    @Test
+    public void testLogOutId(){
+        Client client = new Client(CLIENT_EMAIL, CLIENT_FIRSTNAME, CLIENT_PASSWORD,CLIENT_LASTNAME, CLIENT_ACCOUNTID);
+        LoginRequestDto clientRequest = new LoginRequestDto(0, CLIENT_EMAIL, START_TIME, AccountType.CLIENT);
+
+        loginService.logIn(clientRequest, CLIENT_PASSWORD);
+
+        loginService.logOut(0);
+        verify(loginRepository, times(1)).deleteByLoginId(0);
+    }
+    @Test
+    public void testLogOutRequest(){
+        Client client = new Client(CLIENT_EMAIL, CLIENT_FIRSTNAME, CLIENT_PASSWORD,CLIENT_LASTNAME, CLIENT_ACCOUNTID);
+        LoginRequestDto clientRequest = new LoginRequestDto(0, CLIENT_EMAIL, START_TIME, AccountType.CLIENT);
+
+        loginService.logIn(clientRequest, CLIENT_PASSWORD);
+
+        loginService.logOut(clientRequest);
+        verify(loginRepository, times(1)).deleteByLoginId(0);
+        
+    }
+
     // @Test
-    // public void testLogIn(){
+    // public void testIsStillLoggedIn(){
+    //     //create 2 logins, 
+    //     //create 2 requests and  1 of the request will have currentTime> than endTime
+    //     // the other wil have endTime > currenttime
+    //     Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FIRSTNAME, INSTRUCTOR_PASSWORD,INSTRUCTOR_LASTNAME, INSTRUCTOR_ACCOUNTID);
     //     Client client = new Client(CLIENT_EMAIL, CLIENT_FIRSTNAME, CLIENT_PASSWORD,CLIENT_LASTNAME, CLIENT_ACCOUNTID);
-    //     LoginRequestDto good_request = new LoginRequestDto(LOGIN_ID1, CLIENT_EMAIL, START_TIME, AccountType.CLIENT);
-    //     LoginRequestDto bad_request_type = new LoginRequestDto(LOGIN_ID1, CLIENT_EMAIL, START_TIME, AccountType.INSTRUCTOR);
-    //     LoginRequestDto bad_request_owner = new LoginRequestDto(LOGIN_ID1, CLIENT_EMAIL, START_TIME, AccountType.OWNER);
 
-    //     Login goodLogin = loginService.logIn(good_request, CLIENT_PASSWORD);
+    //     Login login1 = new Login(LOGIN_ID1, START_TIME, END_TIME, instructor);
+    //     Login login2 = new Login(LOGIN_ID2, START_TIME, END_TIME, client);
 
-    //     assertNotNull(goodLogin);
-    //     assertEquals(goodLogin.getAccount(), client);
-    //     assertEquals(goodLogin.getEndTime(), END_TIME);
-    //     assertEquals(goodLogin.getStartTime(), START_TIME);
-    //     assertEquals(goodLogin.getLoginId(), LOGIN_ID1);
+    //     Time good = Time.valueOf("11:30:00");
+    //     Time bad = Time.valueOf("15:30:00");
 
-    //     assertThrows(IllegalArgumentException.class, () -> {
-    //         loginService.logIn(good_request, "NOT_PASSWORD");
-    //     }, "Wrong Password!");
+    //     LoginRequestDto clientRequest = new LoginRequestDto(LOGIN_ID1, CLIENT_EMAIL, good, AccountType.CLIENT);
+    //     LoginRequestDto instructorRequest = new LoginRequestDto(LOGIN_ID2, INSTRUCTOR_EMAIL, bad, AccountType.INSTRUCTOR);
 
-    //     assertThrows(IllegalArgumentException.class, () -> {
-    //         loginService.logIn(bad_request_type, CLIENT_PASSWORD);
-    //     }, "Account of Type " + bad_request_type.getAccountType()+ " with given email does not exist.");
+    //     assertTrue(loginService.isStillLoggedIn(clientRequest));
+    //     assertFalse(loginService.isStillLoggedIn(instructorRequest));
+        
 
-    //     assertThrows(IllegalArgumentException.class, () -> {
-    //         loginService.logIn(bad_request_owner, CLIENT_PASSWORD);
-    //     }, "This is not an Owner email.");
     // }
 
-   //logOut
-   //logOut
-  // isStillLoggedIn
   //updateEndTime
-
-
     
 }
