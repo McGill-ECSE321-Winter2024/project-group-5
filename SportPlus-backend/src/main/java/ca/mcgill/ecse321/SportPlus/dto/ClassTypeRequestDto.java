@@ -5,15 +5,15 @@ public class ClassTypeRequestDto {
     private String name;
     private String description;
     private Boolean approved; // Optional, based on business logic
-    private Integer approverAccountId; // Assuming the approver's identification can be provided by accountId
+    private OwnerRequestDto approver; // Assuming the approver's identification can be provided by accountId
 
     public ClassTypeRequestDto() {
     }
-    public ClassTypeRequestDto(String name, String description, Boolean approved, Integer approverAccountId) {
+    public ClassTypeRequestDto(String name, String description, Boolean approved, OwnerRequestDto approver) {
         this.name = name;
         this.description = description;
         this.approved = approved;
-        this.approverAccountId = approverAccountId;
+        this.approver = approver;
     }
 
     // Getters and setters
@@ -42,11 +42,11 @@ public class ClassTypeRequestDto {
         this.approved = approved;
     }
 
-    public Integer getApproverAccountId() {
-        return approverAccountId;
+    public OwnerRequestDto getApproverAccountId() {
+        return approver;
     }
 
-    public void setApproverAccountId(Integer approverAccountId) {
-        this.approverAccountId = approverAccountId;
+    public void setApproverAccountId(OwnerRequestDto approverAccountId) {
+        this.approver = approverAccountId;
     }
 }
