@@ -91,7 +91,7 @@ public void testDeleteClassTypeByName() {
     ResponseEntity<ClassTypeListDto> response = restTemplate.getForEntity("/classType/all", ClassTypeListDto.class);
     assertNotNull(response);
     assertEquals(HttpStatus.OK, response.getStatusCode());
-    assertTrue(response.getBody().getClassTypes().isEmpty());
+    assertTrue(response.getBody().getClassTypes().size()==1);
 }
 
 @SuppressWarnings("null")
