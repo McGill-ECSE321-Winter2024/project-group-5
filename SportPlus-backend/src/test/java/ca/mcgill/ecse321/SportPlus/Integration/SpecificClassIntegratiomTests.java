@@ -62,20 +62,25 @@ class SpecificClassIntegratiomTests {
     private static final Time START_TIME = Time.valueOf("11:00:00");
     private static final Time END_TIME = Time.valueOf("12:00:00");
 
+
     @BeforeEach
     @AfterEach
-    public void setup() {
-
+    public void init(){
         specificClassRepository.deleteAll();
         instructorRepository.deleteAll();
         classTypeRepository.deleteAll();
         ownerRepository.deleteAll();
+    }
+
+    @BeforeEach
+    public void setup() {
+
         TimeZone.setDefault(TimeZone.getTimeZone("EDT"));
 
         Owner owner = new Owner("email@owner.com", "Johm", "password", "theOwner", 0);
         ownerRepository.save(owner);
 
-        ClassType classType = new ClassType("yoga", "Fun Class", 0, true, owner);
+        ClassType classType = new ClassType("yoga", "Fun Class Yoga it is", 0, true, owner);
         classTypeRepository.save(classType);
 
         Instructor instructor = new Instructor("Supervisor", "Bob", "password", "lastname", 0);
