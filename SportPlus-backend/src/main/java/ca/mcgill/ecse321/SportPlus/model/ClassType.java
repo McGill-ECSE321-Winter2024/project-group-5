@@ -31,7 +31,7 @@ public class ClassType {
   // CONSTRUCTOR
   // ------------------------
 
-  protected ClassType() {
+  public ClassType() {
   }
 
   public ClassType(String aName, String aDescription, int aTypeId, boolean aApproved, Owner aApprover) {

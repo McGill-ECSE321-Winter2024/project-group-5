@@ -1,8 +1,10 @@
 package ca.mcgill.ecse321.SportPlus.Repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,7 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Calendar;
 import java.util.List;
 import java.sql.Time;
 
@@ -570,10 +575,44 @@ public class SpecificClassRepositoryTests {
         assertEquals(0, found3.size());
 
     }
-    // @Test
-    // @Transactional
-    // public void deleteSessionId(){
 
-    // }
+    @Test
+    @Transactional
+    void testfindBySupervisorIsNotNullAndDateAfterOrDateEqualsAndStartTimeAfter() {
+        // Set up current date and time for the test
+        LocalDate currentDate = LocalDate.now();
+        LocalTime currentTime = LocalTime.now();
+
+        // Format to java.sql.Date and java.sql.Time\
+        LocalDate tomorrow = currentDate.plusDays(1);
+        Date sqlTomorrow = Date.valueOf(tomorrow);
+        Date sqlCurrentDate = Date.valueOf(currentDate);
+        Time sqlCurrentTime = Time.valueOf(currentTime);
+
+        //Creation of an instructor
+        Instructor supervisor = new Instructor("email@email.com", "John", "password", "Doe", 0);
+        instructorRepository.save(supervisor);
+
+        // Example test data creation
+        SpecificClass unavailableClass = new SpecificClass();
+        unavailableClass.setDate(Date.valueOf("2024-02-18")); // In the past
+        unavailableClass.setStartTime(Time.valueOf("10:00:00")); // Start time before current time
+        unavailableClass.setSupervisor(supervisor); // With supervisor
+
+        SpecificClass availableClass = new SpecificClass();
+        availableClass.setDate(sqlTomorrow); // Class tomorrow
+        availableClass.setStartTime(Time.valueOf("20:00:00")); // Start time after current time
+        availableClass.setSupervisor(supervisor); // With supervisor
+
+        // Add to repository and run
+        // findBySupervisorIsNotNullAndDateAfterOrDateEqualsAndStartTimeAfter
+        specificClassRepository.save(unavailableClass);
+        specificClassRepository.save(availableClass);
+
+        List<SpecificClass> classes = specificClassRepository
+                .findBySupervisorIsNotNullAndDateAfterOrDateEqualsAndStartTimeAfter(sqlCurrentDate, sqlCurrentTime);
+        
+        assertTrue(classes.contains(availableClass));
+    }
 
 }

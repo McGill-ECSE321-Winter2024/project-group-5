@@ -1,6 +1,8 @@
 package ca.mcgill.ecse321.SportPlus.dao;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 
 import ca.mcgill.ecse321.SportPlus.model.SpecificClass;
 import ca.mcgill.ecse321.SportPlus.model.ClassType;
@@ -55,11 +57,12 @@ public interface SpecificClassRepository extends CrudRepository<SpecificClass, I
 
     /**
      * Find Specific Classes with supervisors
+     * 
      * @return List<SpecificClass>
      */
     List<SpecificClass> findBySupervisorIsNotNull();
 
-     /**
+    /**
      * Find all Specific Classes
      * 
      * @return List<SpecificClass>
@@ -67,14 +70,14 @@ public interface SpecificClassRepository extends CrudRepository<SpecificClass, I
     List<SpecificClass> findAll();
 
     /**
-     * Deletes by ClassType 
+     * Deletes by ClassType
      * 
      * @param classType
      */
     void deleteByClassType(ClassType classType);
 
     /**
-     * Deletes by supervisor 
+     * Deletes by supervisor
      * 
      * @param supervisor
      */
@@ -88,9 +91,19 @@ public interface SpecificClassRepository extends CrudRepository<SpecificClass, I
     void deleteByDate(Date date);
 
     // /**
-    //  * Deletes by SessionId
-    //  * 
-    //  * @param sessionId
-    //  */
-    // void deleteSessionId(int sessionId);
+    // * Deletes by SessionId
+    // *
+    // * @param sessionId
+    // */
+    void deleteBySessionId(int sessionId);
+
+    // Find SpecifcClasses between a date range.
+    @Query("SELECT sc FROM SpecificClass sc WHERE sc.date BETWEEN :startDate AND :endDate")
+    List<SpecificClass> findClassesBetweenDates(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
+
+    // Finds Classes in the future with a Supervisor
+    @Query("SELECT sc FROM SpecificClass sc WHERE sc.supervisor IS NOT NULL AND (sc.date > :currentDate OR (sc.date = :currentDate AND sc.startTime > :currentTime))")
+    List<SpecificClass> findBySupervisorIsNotNullAndDateAfterOrDateEqualsAndStartTimeAfter(
+            @Param("currentDate") Date currentDate, @Param("currentTime") Time currentTime);
+
 }

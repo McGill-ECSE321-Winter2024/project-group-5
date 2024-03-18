@@ -35,7 +35,7 @@ public class SpecificClass {
   // CONSTRUCTOR
   // ------------------------
 
-  protected SpecificClass() {
+  public SpecificClass() {
   }
 
   public SpecificClass(Date aDate, Time start1, Time aEndTime, int aSessionId, ClassType aClassType) {
