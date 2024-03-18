@@ -477,9 +477,6 @@ class SpecificClassIntegratiomTests {
                                                  .queryParam("startTime", startTime)
                                                  .toUriString();
         
-                                                 System.out.println("OOOOOOOOOOOOOOOOOOOOOO");
-                                                 System.out.println(urlTemplate);
-
         ResponseEntity<SpecificClassResponseDto> response = client.getForEntity(urlTemplate, SpecificClassResponseDto.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
