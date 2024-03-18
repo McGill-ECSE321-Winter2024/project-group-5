@@ -102,6 +102,7 @@ public class TestLoginService {
         lenient().when(clientRepository.findByEmail(CLIENT_EMAIL)).thenReturn(client);
         lenient().when(ownerRepository.findByEmail(OWNER_EMAIL)).thenReturn(owner);
         lenient().when(loginRepository.findByLoginId(LOGIN_ID1)).thenReturn(login1);
+        lenient().when(loginRepository.findByLoginId(LOGIN_ID2)).thenReturn(login2);
         lenient().when(loginRepository.findByAccount(client)).thenReturn(login2);
         lenient().when(loginRepository.findByLoginId(LOGIN_ID3)).thenReturn(login3);
         lenient().when(loginRepository.findAll()).thenReturn(Arrays.asList(login1, login2, login3));
@@ -133,7 +134,7 @@ public class TestLoginService {
         Login foundLogin = loginService.getLoginFromId(LOGIN_ID1);
 
         assertThrows(IllegalArgumentException.class, () -> {
-            loginService.getLoginFromId(LOGIN_ID2);
+            loginService.getLoginFromId(5);
         }, "Login does not exist!");
 
         assertNotNull(foundLogin);
@@ -230,29 +231,40 @@ public class TestLoginService {
         
     }
 
-    // @Test
-    // public void testIsStillLoggedIn(){
-    //     //create 2 logins, 
-    //     //create 2 requests and  1 of the request will have currentTime> than endTime
-    //     // the other wil have endTime > currenttime
-    //     Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FIRSTNAME, INSTRUCTOR_PASSWORD,INSTRUCTOR_LASTNAME, INSTRUCTOR_ACCOUNTID);
-    //     Client client = new Client(CLIENT_EMAIL, CLIENT_FIRSTNAME, CLIENT_PASSWORD,CLIENT_LASTNAME, CLIENT_ACCOUNTID);
+    @Test
+    public void testIsStillLoggedIn(){
+        //create 2 logins, 
+        //create 2 requests and  1 of the request will have currentTime> than endTime
+        // the other wil have endTime > currenttime
+        Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FIRSTNAME, INSTRUCTOR_PASSWORD,INSTRUCTOR_LASTNAME, INSTRUCTOR_ACCOUNTID);
+        Client client = new Client(CLIENT_EMAIL, CLIENT_FIRSTNAME, CLIENT_PASSWORD,CLIENT_LASTNAME, CLIENT_ACCOUNTID);
 
-    //     Login login1 = new Login(LOGIN_ID1, START_TIME, END_TIME, instructor);
-    //     Login login2 = new Login(LOGIN_ID2, START_TIME, END_TIME, client);
+        Login login1 = new Login(LOGIN_ID1, START_TIME, END_TIME, instructor);
+        Login login2 = new Login(LOGIN_ID2, START_TIME, END_TIME, client);
 
-    //     Time good = Time.valueOf("11:30:00");
-    //     Time bad = Time.valueOf("15:30:00");
+        Time good = Time.valueOf("11:30:00");
+        Time bad = Time.valueOf("15:30:00");
 
-    //     LoginRequestDto clientRequest = new LoginRequestDto(LOGIN_ID1, CLIENT_EMAIL, good, AccountType.CLIENT);
-    //     LoginRequestDto instructorRequest = new LoginRequestDto(LOGIN_ID2, INSTRUCTOR_EMAIL, bad, AccountType.INSTRUCTOR);
+        LoginRequestDto clientRequest = new LoginRequestDto(LOGIN_ID1, CLIENT_EMAIL, good, AccountType.CLIENT);
+        LoginRequestDto instructorRequest = new LoginRequestDto(LOGIN_ID2, INSTRUCTOR_EMAIL, bad, AccountType.INSTRUCTOR);
 
-    //     assertTrue(loginService.isStillLoggedIn(clientRequest));
-    //     assertFalse(loginService.isStillLoggedIn(instructorRequest));
+        assertTrue(loginService.isStillLoggedIn(clientRequest));
+        assertFalse(loginService.isStillLoggedIn(instructorRequest));
         
+    }
 
-    // }
+    @Test
+    public void testUpdateEndTime(){
+        Client client = new Client(CLIENT_EMAIL, CLIENT_FIRSTNAME, CLIENT_PASSWORD,CLIENT_LASTNAME, CLIENT_ACCOUNTID);
+        Login login = new Login(LOGIN_ID2, START_TIME, END_TIME, client);
 
-  //updateEndTime
+        Time current_time = Time.valueOf("11:30:00");
+        Time new_end_time = Time.valueOf("14:30:00");
+        LoginRequestDto clientRequest = new LoginRequestDto(LOGIN_ID1, CLIENT_EMAIL, current_time, AccountType.CLIENT);
+
+        Login login2 = loginService.updateEndTime(clientRequest);
+        assertNotNull(login2);
+        assertEquals(login2.getEndTime(), new_end_time);
+    }
     
 }
