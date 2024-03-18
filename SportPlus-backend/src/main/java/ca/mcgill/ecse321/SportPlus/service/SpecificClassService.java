@@ -1,5 +1,6 @@
 package ca.mcgill.ecse321.SportPlus.service;
 
+import org.hibernate.annotations.Fetch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.sql.Time;
 
 @Service
@@ -187,12 +189,21 @@ public class SpecificClassService {
     @Transactional
     public List<SpecificClass> getAvailable() {
 
-        Date now = new Date(System.currentTimeMillis()); // Current time
-        List<SpecificClass> potentialClassesWithSupervisor = specificClassRepository
-                .findBySupervisorIsNotNullAndStartTimeAfter(now);
+        // Current date and time
+        LocalDate todayLocalDate = LocalDate.now();
+        LocalTime nowLocalTime = LocalTime.now();
+
+        // Convert LocalDate and LocalTime to java.sql.Date and java.sql.Time
+        Date today = Date.valueOf(todayLocalDate);
+        Time now = Time.valueOf(nowLocalTime);
+
+        // Get all the classes in the future with a supervisor
+        List<SpecificClass> futureClassesWithSupervisor = specificClassRepository
+                .findBySupervisorIsNotNullAndDateAfterOrDateEqualsAndStartTimeAfter(today, now);
+        
         List<SpecificClass> availableClasses = new ArrayList<>();
 
-        for (SpecificClass specificClass : potentialClassesWithSupervisor) {
+        for (SpecificClass specificClass : futureClassesWithSupervisor) {
             List<Registration> registrations = registrationRepository.findBySpecificClass(specificClass);
 
             if (registrations.size() < 30) {

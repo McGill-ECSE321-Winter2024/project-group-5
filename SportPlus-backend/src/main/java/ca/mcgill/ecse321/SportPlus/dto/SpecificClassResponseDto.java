@@ -28,8 +28,12 @@ public class SpecificClassResponseDto {
         this.date = specificclass.getDate();
         this.startTime = specificclass.getStartTime();
         this.endTime = specificclass.getEndTime();
-        this.supervisor = new InstructorResponseDto(specificclass.getSupervisor());
-        // this.classType = new ClassTypeDto(specificclass.getClassType());
+        this.classType = new ClassTypeResponseDto(specificclass.getClassType());
+        if (specificclass.getSupervisor() != null) {
+            this.supervisor = new InstructorResponseDto(specificclass.getSupervisor());
+        } else {
+            this.supervisor = null; // Or some default value that indicates no instructor
+        }
 
     }
 

@@ -150,7 +150,7 @@ public class SpecificClassRestController {
     @GetMapping("/by-date")
     @ResponseStatus(HttpStatus.OK)
     public List<SpecificClassResponseDto> getSpecificClassByDate(
-            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") java.util.Date utilDate) {
+            @RequestParam(name = "date") @DateTimeFormat(pattern = "yyyy-MM-dd") java.util.Date utilDate) {
 
         java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
 
@@ -230,12 +230,13 @@ public class SpecificClassRestController {
     @GetMapping("/by-date-and-start-time")
     @ResponseStatus(HttpStatus.OK)
     public SpecificClassResponseDto getSpecificClassByDateAndTime(
-            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") java.util.Date date,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) Time startTime) {
+            @RequestParam(name = "date") @DateTimeFormat(pattern = "yyyy-MM-dd") java.util.Date date,
+            @RequestParam(name = "startTime") String startTime) {
 
         java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+        Time startTim = Time.valueOf(startTime);
 
-        SpecificClass session = specificClassService.getByDateAndStartTime(sqlDate, startTime);
+        SpecificClass session = specificClassService.getByDateAndStartTime(sqlDate, startTim);
 
         return new SpecificClassResponseDto(session);
     }

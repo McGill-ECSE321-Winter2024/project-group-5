@@ -11,7 +11,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.mockito.junit.jupiter.MockitoExtension;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -26,7 +25,6 @@ import ca.mcgill.ecse321.SportPlus.dao.SpecificClassRepository;
 import ca.mcgill.ecse321.SportPlus.model.Instructor;
 import ca.mcgill.ecse321.SportPlus.model.Owner;
 import ca.mcgill.ecse321.SportPlus.model.ClassType;
-import ca.mcgill.ecse321.SportPlus.model.Registration;
 import ca.mcgill.ecse321.SportPlus.model.SpecificClass;
 import ca.mcgill.ecse321.SportPlus.service.SpecificClassService;
 
@@ -35,9 +33,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Calendar;
 import java.sql.Time;
+import java.util.Collections;
 
 @ExtendWith(MockitoExtension.class)
-public class TestSpecificClassService {
+class TestSpecificClassService {
 
     @Mock
     private SpecificClassRepository specificClassRepository;
@@ -55,7 +54,7 @@ public class TestSpecificClassService {
     private SpecificClassService specificClassService;
 
     @Test
-    public void testCreateSpecificClass() {
+    void testCreateSpecificClass() {
         // Arrange
         // Get the current date
         Calendar calendar = Calendar.getInstance();
@@ -96,7 +95,7 @@ public class TestSpecificClassService {
     }
 
     @Test
-    public void testCreateRecurringSpecificClasses() {
+    void testCreateRecurringSpecificClasses() {
 
         // Arrange
         // A class every Monday from 10 to 11 on April
@@ -130,7 +129,7 @@ public class TestSpecificClassService {
     }
 
     @Test
-    public void testUpdateDateSpecificClass() {
+    void testUpdateDateSpecificClass() {
 
         // Set up an existing SpecificClass that will be updated
         Owner owner = new Owner("john@onwer.com", "John", "password", "The Owner", 0);
@@ -158,7 +157,7 @@ public class TestSpecificClassService {
     }
 
     @Test
-    public void testUpdateTimeSpecificClass() {
+    void testUpdateTimeSpecificClass() {
 
         // Set up an existing SpecificClass that will be updated
         Owner owner = new Owner("john@onwer.com", "John", "password", "The Owner", 0);
@@ -188,7 +187,7 @@ public class TestSpecificClassService {
     }
 
     @Test
-    public void testUpdateClassTypeSpecificClass() {
+    void testUpdateClassTypeSpecificClass() {
 
         ClassType classtype = new ClassType();
         classtype.setTypeId(1);
@@ -226,7 +225,7 @@ public class TestSpecificClassService {
     }
 
     @Test
-    public void testAssignInstructorSpecificClass() {
+    void testAssignInstructorSpecificClass() {
 
         // Setup an existing SpecificClass
         SpecificClass existingClass = new SpecificClass();
@@ -259,7 +258,7 @@ public class TestSpecificClassService {
     }
 
     @Test
-    public void testRemoveInstructorSpecificClass() {
+    void testRemoveInstructorSpecificClass() {
         // Setup an existing SpecificClass with an instructor
         SpecificClass existingClass = new SpecificClass();
         existingClass.setSessionId(1);
@@ -286,7 +285,7 @@ public class TestSpecificClassService {
     }
 
     @Test
-    public void testGetByInstructor() {
+    void testGetByInstructor() {
         // Arrange
         int instructorId = 1;
         Instructor instructor = new Instructor();
@@ -311,7 +310,7 @@ public class TestSpecificClassService {
     }
 
     @Test
-    public void testGetByDate() {
+    void testGetByDate() {
         // Arrange
         Date queryDate = Date.valueOf("2024-04-15");
         List<SpecificClass> expectedClasses = new ArrayList<>();
@@ -334,7 +333,7 @@ public class TestSpecificClassService {
     }
 
     @Test
-    public void testGetByClassType() {
+    void testGetByClassType() {
         // Arrange
         int classTypeId = 43;
         ClassType classType = new ClassType(); // Assuming ClassType is a valid entity in your model
@@ -360,12 +359,12 @@ public class TestSpecificClassService {
     }
 
     @Test
-    public void testGetByDateRange() {
+    void testGetByDateRange() {
         // Arrange
         Date startDate = Date.valueOf("2024-04-01");
         Date endDate = Date.valueOf("2024-04-30");
         List<SpecificClass> expectedClasses = new ArrayList<>();
-        expectedClasses.add(new SpecificClass());  // Add mock SpecificClass objects as needed
+        expectedClasses.add(new SpecificClass()); // Add mock SpecificClass objects as needed
 
         when(specificClassRepository.findClassesBetweenDates(startDate, endDate)).thenReturn(expectedClasses);
 
@@ -375,47 +374,50 @@ public class TestSpecificClassService {
         // Assert
         assertNotNull(actualClasses);
         assertEquals(expectedClasses.size(), actualClasses.size());
-        assertEquals(expectedClasses, actualClasses);  // This checks if the two lists contain the same elements in the same order
+        assertEquals(expectedClasses, actualClasses); // This checks if the two lists contain the same elements in the
+                                                      // same order
 
         // Verify interaction with the repository
         verify(specificClassRepository).findClassesBetweenDates(startDate, endDate);
     }
 
     @Test
-    public void testGetAvailable() {
+    void testGetAvailable() {
 
-        Owner owner = new Owner("john@onwer.com", "John", "password", "The Owner", 0);
-        ClassType yoga = new ClassType("yoga", "Fun class", 0, true, owner);
+        // Setup
+        Owner owner = new Owner("owner@email.com", "Bob", "123321", "Tom", 0);
+        Instructor supervisor = new Instructor("instrructor@email.com", "John", "password", "TheSupervisor", 0);
+        ClassType classType = new ClassType("yoga", "Fun class", 0, true, owner);
 
-        // Arrange
-        List<SpecificClass> classesWithSupervisorAndFutureStartTime = new ArrayList<>();
-        SpecificClass classMeetingCriteria = new SpecificClass(Date.valueOf("2024-04-15"), Time.valueOf("10:00:00"), Time.valueOf("11:00:00"), 0, yoga);
-        classMeetingCriteria.setSupervisor(new Instructor());
-        classesWithSupervisorAndFutureStartTime.add(classMeetingCriteria);
-    
+        SpecificClass futureClassWithSpace = new SpecificClass(Date.valueOf("2025-05-18"), Time.valueOf("10:00:00"),
+                Time.valueOf("11:00:00"), 0, classType);
+        futureClassWithSpace.setSupervisor(supervisor);
 
-        List<Registration> fewerThan30Registrations = new ArrayList<>();  // Mimic fewer than 30 registrations
-        for (int i = 0; i < 25; i++) {  // Example to add 25 registrations
-            fewerThan30Registrations.add(new Registration());
-        }
+        // Assuming the method
+        // 'findBySupervisorIsNotNullAndDateAfterOrDateEqualsAndStartTimeAfter' returns
+        // a list of classes with supervisors, future dates, or future start times.
+        when(specificClassRepository.findBySupervisorIsNotNullAndDateAfterOrDateEqualsAndStartTimeAfter(any(Date.class),
+                any(Time.class)))
+                .thenReturn(Collections.singletonList(futureClassWithSpace));
 
-        when(specificClassRepository.findBySupervisorIsNotNullAndStartTimeAfter(any(Date.class))).thenReturn(classesWithSupervisorAndFutureStartTime);
-        when(registrationRepository.findBySpecificClass(classMeetingCriteria)).thenReturn(fewerThan30Registrations);
-        
-        // Act
+        // Assuming 'findBySpecificClass' checks if a class has less than 30
+        // registrations and returns an empty list to simulate fewer than 30
+        // registrations.
+        when(registrationRepository.findBySpecificClass(futureClassWithSpace)).thenReturn(Collections.emptyList());
+
+        // Assume registrations.size() < 30 logic is handled inside the method
+
         List<SpecificClass> availableClasses = specificClassService.getAvailable();
-        // Assert
-        assertNotNull(availableClasses);
-        assertFalse(availableClasses.isEmpty());
-        assertTrue(availableClasses.contains(classMeetingCriteria));  // The class that meets the criteria is included in the result
 
-        // Verify interactions
-        verify(specificClassRepository).findBySupervisorIsNotNullAndStartTimeAfter(any(Date.class));
-        verify(registrationRepository, atLeastOnce()).findBySpecificClass(any(SpecificClass.class));
+        assertFalse(availableClasses.isEmpty());
+        assertTrue(availableClasses.contains(futureClassWithSpace));
+        verify(specificClassRepository)
+                .findBySupervisorIsNotNullAndDateAfterOrDateEqualsAndStartTimeAfter(any(Date.class), any(Time.class));
+
     }
 
     @Test
-    public void testGeByDateAndStartTime() {
+    void testGeByDateAndStartTime() {
         // Arrange
         Date queryDate = Date.valueOf("2024-04-15");
         Time queryStartTime = Time.valueOf("10:00:00");
@@ -435,15 +437,13 @@ public class TestSpecificClassService {
         // Verify interaction with the repository
         verify(specificClassRepository).findByDateAndStartTime(queryDate, queryStartTime);
 
-
     }
 
-
     @Test
-    public void testGetAll() {
+    void testGetAll() {
         // Arrange
         List<SpecificClass> expectedClasses = new ArrayList<>();
-        expectedClasses.add(new SpecificClass());  // Add mock SpecificClass objects as needed
+        expectedClasses.add(new SpecificClass()); // Add mock SpecificClass objects as needed
         expectedClasses.add(new SpecificClass());
         expectedClasses.add(new SpecificClass());
 
@@ -455,14 +455,15 @@ public class TestSpecificClassService {
         // Assert
         assertNotNull(actualClasses);
         assertEquals(expectedClasses.size(), actualClasses.size());
-        assertEquals(expectedClasses, actualClasses);  // This checks if the two lists contain the same elements in the same order
+        assertEquals(expectedClasses, actualClasses); // This checks if the two lists contain the same elements in the
+                                                      // same order
 
         // Verify interaction with the repository
         verify(specificClassRepository).findAll();
     }
 
     @Test
-    public void testDeleteByClassType() {
+    void testDeleteByClassType() {
         // Arrange
         int classTypeId = 1;
         ClassType classType = new ClassType();
@@ -474,9 +475,10 @@ public class TestSpecificClassService {
         specificClassService.deleteByClassType(classTypeId);
 
         // Assert
-        // Verify that the deleteByClassType method was called on the repository with the correct ClassType
+        // Verify that the deleteByClassType method was called on the repository with
+        // the correct ClassType
         verify(specificClassRepository).deleteByClassType(classType);
-        verify(classTypeRepository).findByTypeId(classTypeId);  // Ensure the class type was fetched correctly
+        verify(classTypeRepository).findByTypeId(classTypeId); // Ensure the class type was fetched correctly
     }
 
 }

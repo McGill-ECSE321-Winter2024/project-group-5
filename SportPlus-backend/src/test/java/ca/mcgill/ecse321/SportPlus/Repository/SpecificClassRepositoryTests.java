@@ -13,7 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.List;
 import java.sql.Time;
@@ -573,39 +575,44 @@ public class SpecificClassRepositoryTests {
         assertEquals(0, found3.size());
 
     }
-    // @Test
-    // @Transactional
-    // public void deleteSessionId(){
-
-    // }
 
     @Test
     @Transactional
-    public void findBySupervisorIsNotNullAndStartTimeAfter() {
-        
-        // Arrange: Create and persist entities as needed
-        Instructor supervisor = new Instructor("leandro@gmail.com", "leandro", "12564", "ordnael", 0);
+    void testfindBySupervisorIsNotNullAndDateAfterOrDateEqualsAndStartTimeAfter() {
+        // Set up current date and time for the test
+        LocalDate currentDate = LocalDate.now();
+        LocalTime currentTime = LocalTime.now();
+
+        // Format to java.sql.Date and java.sql.Time\
+        LocalDate tomorrow = currentDate.plusDays(1);
+        Date sqlTomorrow = Date.valueOf(tomorrow);
+        Date sqlCurrentDate = Date.valueOf(currentDate);
+        Time sqlCurrentTime = Time.valueOf(currentTime);
+
+        //Creation of an instructor
+        Instructor supervisor = new Instructor("email@email.com", "John", "password", "Doe", 0);
         instructorRepository.save(supervisor);
 
-        // Create a Time object for "now" and one for a future time
-        Time now = new Time(System.currentTimeMillis());
-        // Add 1 hour to the current time for the future time
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(now);
-        calendar.add(Calendar.HOUR_OF_DAY, 1);
-        Time futureTime = new Time(calendar.getTimeInMillis());
+        // Example test data creation
+        SpecificClass unavailableClass = new SpecificClass();
+        unavailableClass.setDate(Date.valueOf("2024-02-18")); // In the past
+        unavailableClass.setStartTime(Time.valueOf("10:00:00")); // Start time before current time
+        unavailableClass.setSupervisor(supervisor); // With supervisor
+
+        SpecificClass availableClass = new SpecificClass();
+        availableClass.setDate(sqlTomorrow); // Class tomorrow
+        availableClass.setStartTime(Time.valueOf("20:00:00")); // Start time after current time
+        availableClass.setSupervisor(supervisor); // With supervisor
+
+        // Add to repository and run
+        // findBySupervisorIsNotNullAndDateAfterOrDateEqualsAndStartTimeAfter
+        specificClassRepository.save(unavailableClass);
+        specificClassRepository.save(availableClass);
+
+        List<SpecificClass> classes = specificClassRepository
+                .findBySupervisorIsNotNullAndDateAfterOrDateEqualsAndStartTimeAfter(sqlCurrentDate, sqlCurrentTime);
         
-        SpecificClass specificClass = new SpecificClass();
-        specificClass.setSupervisor(supervisor);
-        specificClass.setStartTime(futureTime);
-        specificClassRepository.save(specificClass);
-
-        // Act: Fetch classes with a supervisor and a future start time
-        List<SpecificClass> results = specificClassRepository.findBySupervisorIsNotNullAndStartTimeAfter(now);
-
-        // Assert: Verify the results contain the expected class
-        assertFalse(results.isEmpty());
-        assertTrue(results.contains(specificClass));
+        assertTrue(classes.contains(availableClass));
     }
 
 }

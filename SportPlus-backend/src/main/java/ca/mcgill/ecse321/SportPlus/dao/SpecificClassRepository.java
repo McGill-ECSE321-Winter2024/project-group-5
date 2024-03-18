@@ -95,13 +95,15 @@ public interface SpecificClassRepository extends CrudRepository<SpecificClass, I
     // *
     // * @param sessionId
     // */
-    // void deleteSessionId(int sessionId);
+    void deleteBySessionId(int sessionId);
 
     // Find SpecifcClasses between a date range.
     @Query("SELECT sc FROM SpecificClass sc WHERE sc.date BETWEEN :startDate AND :endDate")
     List<SpecificClass> findClassesBetweenDates(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
 
-    // Finds all upcoming classes with a supervisor 
-    List<SpecificClass> findBySupervisorIsNotNullAndStartTimeAfter(Date currentTime);
+    // Finds Classes in the future with a Supervisor
+    @Query("SELECT sc FROM SpecificClass sc WHERE sc.supervisor IS NOT NULL AND (sc.date > :currentDate OR (sc.date = :currentDate AND sc.startTime > :currentTime))")
+    List<SpecificClass> findBySupervisorIsNotNullAndDateAfterOrDateEqualsAndStartTimeAfter(
+            @Param("currentDate") Date currentDate, @Param("currentTime") Time currentTime);
 
 }
