@@ -39,31 +39,31 @@ public class ClassTypeController {
     }
 
     @GetMapping("/get/{name}")
-    public ClassTypeResponseDto findByName(@PathVariable String name) {
+    public ClassTypeResponseDto findByName(@PathVariable("name") String name) {
         ClassType classType = classTypeService.findByName(name);
         return new ClassTypeResponseDto(classType);
     }
 
     @DeleteMapping("/delete/{name}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteByName(@PathVariable String name) {
+    public void deleteByName(@PathVariable("name") String name) {
         classTypeService.deleteByName(name);
     }
 
     @PostMapping("/approve/{typeId}")
-    public ClassTypeResponseDto approveClassType(@PathVariable int typeId) {
+    public ClassTypeResponseDto approveClassType(@PathVariable("typeId") int typeId) {
         ClassType classType = classTypeService.approve(typeId);
         return new ClassTypeResponseDto(classType);
     }
 
     @PutMapping("/updateDescription/{typeId}")
-    public ClassTypeResponseDto updateDescription(@PathVariable int typeId, @RequestBody String description) {
+    public ClassTypeResponseDto updateDescription(@PathVariable("typeId") int typeId, @RequestBody String description) {
         ClassType classType = classTypeService.updateDescription(typeId, description);
         return new ClassTypeResponseDto(classType);
     }
 
     @PutMapping("/updateName/{typeId}")
-    public ClassTypeResponseDto updateName(@PathVariable int typeId, @RequestBody String name) {
+    public ClassTypeResponseDto updateName(@PathVariable("typeId") int typeId, @RequestBody String name) {
         ClassType classType = classTypeService.updateName(typeId, name);
         return new ClassTypeResponseDto(classType);
     }
