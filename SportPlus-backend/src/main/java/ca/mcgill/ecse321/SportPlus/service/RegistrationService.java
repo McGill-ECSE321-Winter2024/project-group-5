@@ -70,18 +70,6 @@ public class RegistrationService {
         return registration;
     }
 
-    // @Transactional
-    // public List<Registration> getByInstrutor(String email){
-    //     if (email == null || email.trim().length() == 0) {
-    //         throw new IllegalArgumentException("Instructor email cannot be empty!");
-    //     }
-    //     Instructor instructor = instructorRepository.findInstructorByEmail(email);
-    //     return registration;
-    // }
-
-    //find specific class and find registration ?
-
-
     @Transactional
     public void deleteByClient(String email){
         if (email == null || email.trim().length() == 0) {
