@@ -1,6 +1,7 @@
 package ca.mcgill.ecse321.SportPlus.Repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.List;
 
@@ -107,7 +108,6 @@ public class LoginRepositoryTests {
 
     }
     @Test
-    @Transactional
     public void testFindAll(){
         Client client = new Client("example.last@gmail.com", "aFirstName", "a5Password", "aLastName", 0);
         Client client2 = new Client("example4.lastname@gmail.com", "firstname", "lastName", "56Upssword", 0);
@@ -120,8 +120,8 @@ public class LoginRepositoryTests {
         ownerRepository.save(owner);
         Login loginClient = new Login(0,null, null, client);
         Login loginClient2 = new Login(0, null, null, client2);
-        Login loginInstructor = new Login(1,null, null, instructor);
-        Login loginOwner = new Login(2, null, null, owner);
+        Login loginInstructor = new Login(0,null, null, instructor);
+        Login loginOwner = new Login(0, null, null, owner);
 
         loginRepository.save(loginClient);
         loginRepository.save(loginClient2);
@@ -129,8 +129,9 @@ public class LoginRepositoryTests {
         loginRepository.save(loginOwner);
 
         List<Login> found = loginRepository.findAll();
-        
-        assertEquals(found.size(), 4);
+
+        assertNotNull(found);
+        assertEquals(4, found.size());
         assertThat(found).contains(loginClient, loginClient2, loginInstructor, loginOwner);
     }
 
