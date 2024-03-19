@@ -593,13 +593,23 @@ public class SpecificClassRepositoryTests {
         Instructor supervisor = new Instructor("email@email.com", "John", "password", "Doe", 0);
         instructorRepository.save(supervisor);
 
+        //Creation of owner
+        Owner owner = new Owner("Owner@email.com", "Owner", "123", "owner last anme", 0);
+        ownerRepository.save(owner);
+
+        //Creation of ClassType
+        ClassType classType = new ClassType("Football", "Best sport ", 0, true, owner);
+        classTypeRepository.save(classType);
+
         // Example test data creation
         SpecificClass unavailableClass = new SpecificClass();
+        unavailableClass.setClassType(classType);
         unavailableClass.setDate(Date.valueOf("2024-02-18")); // In the past
         unavailableClass.setStartTime(Time.valueOf("10:00:00")); // Start time before current time
         unavailableClass.setSupervisor(supervisor); // With supervisor
 
         SpecificClass availableClass = new SpecificClass();
+        unavailableClass.setClassType(classType);
         availableClass.setDate(sqlTomorrow); // Class tomorrow
         availableClass.setStartTime(Time.valueOf("20:00:00")); // Start time after current time
         availableClass.setSupervisor(supervisor); // With supervisor
