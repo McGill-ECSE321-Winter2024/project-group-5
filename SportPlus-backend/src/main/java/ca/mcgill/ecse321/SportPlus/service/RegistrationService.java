@@ -9,9 +9,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ca.mcgill.ecse321.SportPlus.model.Client;
 import ca.mcgill.ecse321.SportPlus.dao.ClientRepository;
+import ca.mcgill.ecse321.SportPlus.dao.InstructorRepository;
 import ca.mcgill.ecse321.SportPlus.model.SpecificClass;
 import ca.mcgill.ecse321.SportPlus.dao.SpecificClassRepository;
-
+import ca.mcgill.ecse321.SportPlus.model.Instructor;
 
 import ca.mcgill.ecse321.SportPlus.dao.RegistrationRepository;
 import ca.mcgill.ecse321.SportPlus.model.Registration;
@@ -28,6 +29,8 @@ public class RegistrationService {
     ClientRepository clientRepository;
     @Autowired
     SpecificClassRepository specificClassRepository;
+    @Autowired
+    InstructorRepository instructorRepository;
 
 
 
@@ -67,6 +70,16 @@ public class RegistrationService {
         return registration;
     }
 
+    // @Transactional
+    // public List<Registration> getByInstrutor(String email){
+    //     if (email == null || email.trim().length() == 0) {
+    //         throw new IllegalArgumentException("Instructor email cannot be empty!");
+    //     }
+    //     Instructor instructor = instructorRepository.findInstructorByEmail(email);
+    //     return registration;
+    // }
+
+    //find specific class and find registration ?
 
 
     @Transactional
@@ -92,7 +105,7 @@ public class RegistrationService {
         if (regId < 0) {
             throw new IllegalArgumentException("Registration Id cannot be less than 0!");
         }
-        registrationRepository.deleteById(regId);
+        registrationRepository.deleteByRegId(regId);
     }
 
      //------------EndWrappers----------//
