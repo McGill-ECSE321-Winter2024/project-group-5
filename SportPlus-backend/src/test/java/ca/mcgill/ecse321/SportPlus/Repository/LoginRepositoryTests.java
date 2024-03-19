@@ -147,8 +147,8 @@ public class LoginRepositoryTests {
         instructorRepository.save(instructor);
         ownerRepository.save(owner);
         Login loginClient = new Login(0,null, null, client);
-        Login loginInstructor = new Login(1,null, null, instructor);
-        Login loginOwner = new Login(2, null, null, owner);
+        Login loginInstructor = new Login(0,null, null, instructor);
+        Login loginOwner = new Login(0, null, null, owner);
 
         loginRepository.save(loginClient);
         loginRepository.save(loginInstructor);

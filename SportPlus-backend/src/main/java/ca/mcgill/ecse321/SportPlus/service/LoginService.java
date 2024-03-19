@@ -4,6 +4,7 @@ import java.sql.Time;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ca.mcgill.ecse321.SportPlus.dao.ClientRepository;
@@ -15,7 +16,7 @@ import ca.mcgill.ecse321.SportPlus.model.Account;
 import ca.mcgill.ecse321.SportPlus.model.Login;
 import ca.mcgill.ecse321.SportPlus.service.utilities.HelperMethods;
 
-
+@Service
 public class LoginService {
     @Autowired
     ClientRepository clientRepository;
