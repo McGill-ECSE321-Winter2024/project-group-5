@@ -44,6 +44,7 @@ association {
   * SpecificClass -> 0..1 Instructor supervisor;
   * SpecificClass -> 1 ClassType;
   * ClassType -> 1 Owner approver;
+  0..1 Login ->  1 Account;
 }
 
 namespace -;
@@ -55,6 +56,13 @@ class PaymentMethod
   cardHolderName;
   Integer cardId;
 }
+class Login
+{
+    Interger loginId;
+ 	Time startTime;
+  Time endTime;
+}
+
 class Account
 {
   position 403 107 141.15625 125.359375;
