@@ -10,7 +10,7 @@ import ca.mcgill.ecse321.SportPlus.dao.ClientRepository;
 import ca.mcgill.ecse321.SportPlus.dao.InstructorRepository;
 import ca.mcgill.ecse321.SportPlus.dao.LoginRepository;
 import ca.mcgill.ecse321.SportPlus.dao.OwnerRepository;
-import ca.mcgill.ecse321.SportPlus.dto.LoginRequestDto;
+import ca.mcgill.ecse321.SportPlus.dto.LoginRequestDto.AccountType;
 import ca.mcgill.ecse321.SportPlus.model.Account;
 import ca.mcgill.ecse321.SportPlus.model.Login;
 import ca.mcgill.ecse321.SportPlus.service.utilities.HelperMethods;
@@ -82,30 +82,30 @@ public class LoginService {
      
 
      @Transactional
-     public Login logIn(LoginRequestDto loginRequest, String password){
+     public Login logIn(AccountType type, String email, String password, Time currentTime){
         Account account = null;
-        switch(loginRequest.getAccountType()){
+        switch(type){
             case OWNER:
-                if(!loginRequest.getAccountEmail().equals("owner@sportplus.com")){
+                if(!email.equals("owner@sportplus.com")){
                     throw new IllegalArgumentException("This is not an Owner email.");
                 }
                 account = ownerService.getOwner();
             case INSTRUCTOR:
                 try {
-                account = instructorService.getInstructor(loginRequest.getAccountEmail()); 
+                account = instructorService.getInstructor(email); 
                 }catch(Exception e){
-                    throw new IllegalArgumentException("Account of Type " + loginRequest.getAccountType()+ " with given email does not exist.");
+                    throw new IllegalArgumentException("Account of Type " + type + " with given email does not exist.");
                 }
 
             case CLIENT:
                 try {
-                account = clientService.getClient(loginRequest.getAccountEmail());
+                account = clientService.getClient(email);
                 }catch(Exception e){
-                throw new IllegalArgumentException("Account of Type " + loginRequest.getAccountType()+ " with given email does not exist.");
+                throw new IllegalArgumentException("Account of Type " + type + " with given email does not exist.");
                 }
         }
         if(account == null){
-            throw new IllegalArgumentException("Account of Type " + loginRequest.getAccountType()+ " with given email does not exist.");
+            throw new IllegalArgumentException("Account of Type " + type + " with given email does not exist.");
         }
         Login found = getLoginFromAccount(account);
         if(found != null){
@@ -114,29 +114,25 @@ public class LoginService {
         if(!HelperMethods.isPasswordOk(account,password)){
             throw new IllegalArgumentException("Wrong Password!");
         }
-        Time endTime = HelperMethods.updateEndTime(loginRequest.getCurrentTime());
+        Time endTime = HelperMethods.updateEndTime(currentTime);
         
-        return createLogin(0, loginRequest.getCurrentTime(), endTime, account);
+        return createLogin(0, currentTime, endTime, account);
     }
 
-    @Transactional 
-    public void logOut(LoginRequestDto loginRequest){
-        deleteByLoginId(loginRequest.getLoginId());
-    }
     @Transactional 
     public void logOut(int loginId){
         deleteByLoginId(loginId);
     }
 
     @Transactional
-    public boolean isStillLoggedIn(LoginRequestDto requestDto){
-        return HelperMethods.isLoginTimeStillValid(getLoginFromId(requestDto.getLoginId()).getEndTime(),requestDto.getCurrentTime());
+    public boolean isStillLoggedIn(int loginId, Time currentTime){
+        return HelperMethods.isLoginTimeStillValid(getLoginFromId(loginId).getEndTime(),currentTime);
     }
 
     @Transactional
-    public Login updateEndTime(LoginRequestDto request){
-        Login login = getLoginFromId(request.getLoginId());
-        Time newTime = HelperMethods.updateEndTime(request.getCurrentTime());
+    public Login updateEndTime(int loginId, Time currentTime){
+        Login login = getLoginFromId(loginId);
+        Time newTime = HelperMethods.updateEndTime(currentTime);
         login.setEndTime(newTime);
         loginRepository.save(login);
         return login;

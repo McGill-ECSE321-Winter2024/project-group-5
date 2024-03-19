@@ -185,7 +185,7 @@ public class TestLoginService {
         LoginRequestDto bad_request_type = new LoginRequestDto(0, CLIENT_EMAIL, START_TIME, AccountType.INSTRUCTOR);
         LoginRequestDto bad_request_owner = new LoginRequestDto(0, CLIENT_EMAIL, START_TIME, AccountType.OWNER);
 
-        Login goodLogin = loginService.logIn(good_request, CLIENT_PASSWORD);
+        Login goodLogin = loginService.logIn(AccountType.CLIENT, CLIENT_EMAIL, CLIENT_PASSWORD, START_TIME);
 
         assertNotNull(goodLogin);
         assertEquals(goodLogin.getAccount(), client);
@@ -197,38 +197,27 @@ public class TestLoginService {
         //it is useful for other aspects of the code
 
         assertThrows(IllegalArgumentException.class, () -> {
-            loginService.logIn(good_request, "NOT_PASSWORD");
+            loginService.logIn(AccountType.CLIENT, CLIENT_EMAIL, "wrongpassworD4", START_TIME);
         }, "Wrong Password!");
 
         assertThrows(IllegalArgumentException.class, () -> {
-            loginService.logIn(bad_request_type, CLIENT_PASSWORD);
+            loginService.logIn(AccountType.INSTRUCTOR, CLIENT_EMAIL, "wrongpassworD4", START_TIME);
         }, "Account of Type " + bad_request_type.getAccountType()+ " with given email does not exist.");
 
         assertThrows(IllegalArgumentException.class, () -> {
-            loginService.logIn(bad_request_owner, CLIENT_PASSWORD);
+            loginService.logIn(AccountType.OWNER, CLIENT_EMAIL, "wrongpassworD4", START_TIME);
         }, "This is not an Owner email.");
     }
 
     @Test
-    public void testLogOutId(){
+    public void testLogOut(){
         Client client = new Client(CLIENT_EMAIL, CLIENT_FIRSTNAME, CLIENT_PASSWORD,CLIENT_LASTNAME, CLIENT_ACCOUNTID);
         LoginRequestDto clientRequest = new LoginRequestDto(0, CLIENT_EMAIL, START_TIME, AccountType.CLIENT);
 
-        loginService.logIn(clientRequest, CLIENT_PASSWORD);
+        loginService.logIn(AccountType.CLIENT, CLIENT_EMAIL, CLIENT_PASSWORD, START_TIME);
 
         loginService.logOut(0);
         verify(loginRepository, times(1)).deleteByLoginId(0);
-    }
-    @Test
-    public void testLogOutRequest(){
-        Client client = new Client(CLIENT_EMAIL, CLIENT_FIRSTNAME, CLIENT_PASSWORD,CLIENT_LASTNAME, CLIENT_ACCOUNTID);
-        LoginRequestDto clientRequest = new LoginRequestDto(0, CLIENT_EMAIL, START_TIME, AccountType.CLIENT);
-
-        loginService.logIn(clientRequest, CLIENT_PASSWORD);
-
-        loginService.logOut(clientRequest);
-        verify(loginRepository, times(1)).deleteByLoginId(0);
-        
     }
 
     @Test
@@ -242,14 +231,11 @@ public class TestLoginService {
         Login login1 = new Login(LOGIN_ID1, START_TIME, END_TIME, instructor);
         Login login2 = new Login(LOGIN_ID2, START_TIME, END_TIME, client);
 
-        Time good = Time.valueOf("11:30:00");
-        Time bad = Time.valueOf("15:30:00");
+        Time good_time = Time.valueOf("11:30:00");
+        Time bad_time = Time.valueOf("15:30:00");
 
-        LoginRequestDto clientRequest = new LoginRequestDto(LOGIN_ID1, CLIENT_EMAIL, good, AccountType.CLIENT);
-        LoginRequestDto instructorRequest = new LoginRequestDto(LOGIN_ID2, INSTRUCTOR_EMAIL, bad, AccountType.INSTRUCTOR);
-
-        assertTrue(loginService.isStillLoggedIn(clientRequest));
-        assertFalse(loginService.isStillLoggedIn(instructorRequest));
+        assertTrue(loginService.isStillLoggedIn(LOGIN_ID1, good_time));
+        assertFalse(loginService.isStillLoggedIn(LOGIN_ID2, bad_time));
         
     }
 
@@ -260,9 +246,8 @@ public class TestLoginService {
 
         Time current_time = Time.valueOf("11:30:00");
         Time new_end_time = Time.valueOf("14:30:00");
-        LoginRequestDto clientRequest = new LoginRequestDto(LOGIN_ID1, CLIENT_EMAIL, current_time, AccountType.CLIENT);
 
-        Login login2 = loginService.updateEndTime(clientRequest);
+        Login login2 = loginService.updateEndTime(LOGIN_ID2,current_time);
         assertNotNull(login2);
         assertEquals(login2.getEndTime(), new_end_time);
     }
