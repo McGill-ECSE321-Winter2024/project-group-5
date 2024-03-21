@@ -11,7 +11,6 @@ import ca.mcgill.ecse321.SportPlus.dao.ClientRepository;
 import ca.mcgill.ecse321.SportPlus.dao.InstructorRepository;
 import ca.mcgill.ecse321.SportPlus.dao.LoginRepository;
 import ca.mcgill.ecse321.SportPlus.dao.OwnerRepository;
-import ca.mcgill.ecse321.SportPlus.dto.LoginRequestDto.AccountType;
 import ca.mcgill.ecse321.SportPlus.model.Account;
 import ca.mcgill.ecse321.SportPlus.model.Login;
 import ca.mcgill.ecse321.SportPlus.service.utilities.HelperMethods;
@@ -83,31 +82,29 @@ public class LoginService {
      
 
      @Transactional
-     public Login logIn(AccountType type, String email, String password, Time currentTime){
+     public Login logIn(String type, String email, String password, Time currentTime){
         Account account = null;
         switch(type){
-            case OWNER:
+            case "OWNER":
                 if(!email.equals("owner@sportplus.com")){
                     throw new IllegalArgumentException("This is not an Owner email.");
                 }
                 account = ownerService.getOwner();
-            case INSTRUCTOR:
+            case "INSTRUCTOR":
                 try {
                 account = instructorService.getInstructor(email); 
                 }catch(Exception e){
-                    throw new IllegalArgumentException("Account of Type " + type + " with given email does not exist.");
+                    throw new IllegalArgumentException("Account of Type INSTRUCTOR with given email does not exist.");
                 }
 
-            case CLIENT:
+            case "CLIENT":
                 try {
                 account = clientService.getClient(email);
                 }catch(Exception e){
-                throw new IllegalArgumentException("Account of Type " + type + " with given email does not exist.");
+                throw new IllegalArgumentException("Account of Type CLIENT with given email does not exist.");
                 }
         }
-        if(account == null){
-            throw new IllegalArgumentException("Account of Type " + type + " with given email does not exist.");
-        }
+
         Login found = getLoginFromAccount(account);
         if(found != null){
             deleteByLoginId(found.getLoginId());
@@ -138,6 +135,5 @@ public class LoginService {
         loginRepository.save(login);
         return login;
     }
-
     
 }

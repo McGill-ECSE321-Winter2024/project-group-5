@@ -15,7 +15,7 @@ public interface LoginRepository extends CrudRepository<Login, Integer>{
      * @param loginId
      * @return Login
      */
-    Login findByLoginId(Integer loginId);
+    Login findByLoginId(int loginId);
     /**
      * Find Login by Account
      * 

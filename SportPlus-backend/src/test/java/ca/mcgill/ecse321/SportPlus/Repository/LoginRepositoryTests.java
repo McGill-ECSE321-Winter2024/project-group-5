@@ -108,6 +108,7 @@ public class LoginRepositoryTests {
 
     }
     @Test
+    @Transactional 
     public void testFindAll(){
         Client client = new Client("example.last@gmail.com", "aFirstName", "a5Password", "aLastName", 0);
         Client client2 = new Client("example4.lastname@gmail.com", "firstname", "lastName", "56Upssword", 0);

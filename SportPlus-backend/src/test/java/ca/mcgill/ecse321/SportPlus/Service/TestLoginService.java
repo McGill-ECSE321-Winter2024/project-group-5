@@ -31,7 +31,6 @@ import ca.mcgill.ecse321.SportPlus.dao.InstructorRepository;
 import ca.mcgill.ecse321.SportPlus.dao.LoginRepository;
 import ca.mcgill.ecse321.SportPlus.dao.OwnerRepository;
 import ca.mcgill.ecse321.SportPlus.dto.LoginRequestDto;
-import ca.mcgill.ecse321.SportPlus.dto.LoginRequestDto.AccountType;
 import ca.mcgill.ecse321.SportPlus.model.Client;
 import ca.mcgill.ecse321.SportPlus.model.Instructor;
 import ca.mcgill.ecse321.SportPlus.model.Login;
@@ -181,11 +180,11 @@ public class TestLoginService {
     @Test
     public void testLogIn(){
         Client client = new Client(CLIENT_EMAIL, CLIENT_FIRSTNAME, CLIENT_PASSWORD,CLIENT_LASTNAME, CLIENT_ACCOUNTID);
-        LoginRequestDto good_request = new LoginRequestDto(0, CLIENT_EMAIL, START_TIME, AccountType.CLIENT);
-        LoginRequestDto bad_request_type = new LoginRequestDto(0, CLIENT_EMAIL, START_TIME, AccountType.INSTRUCTOR);
-        LoginRequestDto bad_request_owner = new LoginRequestDto(0, CLIENT_EMAIL, START_TIME, AccountType.OWNER);
+        LoginRequestDto good_request = new LoginRequestDto(0, CLIENT_EMAIL, START_TIME, "CLIENT");
+        LoginRequestDto bad_request_type = new LoginRequestDto(0, CLIENT_EMAIL, START_TIME, "INSTRUCTOR");
+        LoginRequestDto bad_request_owner = new LoginRequestDto(0, CLIENT_EMAIL, START_TIME, "OWNER");
 
-        Login goodLogin = loginService.logIn(AccountType.CLIENT, CLIENT_EMAIL, CLIENT_PASSWORD, START_TIME);
+        Login goodLogin = loginService.logIn("CLIENT", CLIENT_EMAIL, CLIENT_PASSWORD, START_TIME);
 
         assertNotNull(goodLogin);
         assertEquals(goodLogin.getAccount(), client);
@@ -197,24 +196,24 @@ public class TestLoginService {
         //it is useful for other aspects of the code
 
         assertThrows(IllegalArgumentException.class, () -> {
-            loginService.logIn(AccountType.CLIENT, CLIENT_EMAIL, "wrongpassworD4", START_TIME);
+            loginService.logIn("CLIENT", CLIENT_EMAIL, "wrongpassworD4", START_TIME);
         }, "Wrong Password!");
 
         assertThrows(IllegalArgumentException.class, () -> {
-            loginService.logIn(AccountType.INSTRUCTOR, CLIENT_EMAIL, "wrongpassworD4", START_TIME);
+            loginService.logIn("INSTRUCTOR", CLIENT_EMAIL, "wrongpassworD4", START_TIME);
         }, "Account of Type " + bad_request_type.getAccountType()+ " with given email does not exist.");
 
         assertThrows(IllegalArgumentException.class, () -> {
-            loginService.logIn(AccountType.OWNER, CLIENT_EMAIL, "wrongpassworD4", START_TIME);
+            loginService.logIn("OWNER", CLIENT_EMAIL, "wrongpassworD4", START_TIME);
         }, "This is not an Owner email.");
     }
 
     @Test
     public void testLogOut(){
         Client client = new Client(CLIENT_EMAIL, CLIENT_FIRSTNAME, CLIENT_PASSWORD,CLIENT_LASTNAME, CLIENT_ACCOUNTID);
-        LoginRequestDto clientRequest = new LoginRequestDto(0, CLIENT_EMAIL, START_TIME, AccountType.CLIENT);
+        LoginRequestDto clientRequest = new LoginRequestDto(0, CLIENT_EMAIL, START_TIME, "CLIENT");
 
-        loginService.logIn(AccountType.CLIENT, CLIENT_EMAIL, CLIENT_PASSWORD, START_TIME);
+        loginService.logIn("CLIENT", CLIENT_EMAIL, CLIENT_PASSWORD, START_TIME);
 
         loginService.logOut(0);
         verify(loginRepository, times(1)).deleteByLoginId(0);

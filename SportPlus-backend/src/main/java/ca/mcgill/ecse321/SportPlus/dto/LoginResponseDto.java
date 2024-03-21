@@ -1,23 +1,16 @@
 package ca.mcgill.ecse321.SportPlus.dto;
-import ca.mcgill.ecse321.SportPlus.dto.LoginRequestDto.AccountType;
 import ca.mcgill.ecse321.SportPlus.model.Login;
 
 public class LoginResponseDto {
 
     private int loginId;
     private String accountEmail;
-    private AccountType accountType;
+    private String accountType;
 
     public LoginResponseDto() {
     }
 
-    // public LoginResponseDto(int aLoginId, String email, AccountType type) {
-    //     loginId = aLoginId;
-    //     accountEmail = email;
-    //     accountType = type;
-    // }
-
-    public LoginResponseDto(Login login, AccountType type) {
+    public LoginResponseDto(Login login, String type) {
         loginId = login.getLoginId();
         accountEmail = login.getAccount().getEmail();
         accountType = type;
@@ -27,11 +20,11 @@ public class LoginResponseDto {
         loginId = id;
     }
 
-    public void setAccountType(AccountType type) {
+    public void setAccountType(String type) {
         accountType = type;
     }
 
-    public AccountType getAccountType() {
+    public String getAccountType() {
         return accountType;
     }
 

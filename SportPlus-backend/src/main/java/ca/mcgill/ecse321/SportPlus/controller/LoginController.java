@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+
 import ca.mcgill.ecse321.SportPlus.dto.LoginRequestDto;
 import ca.mcgill.ecse321.SportPlus.dto.LoginResponseDto;
 import ca.mcgill.ecse321.SportPlus.model.Login;
@@ -25,7 +26,7 @@ public class LoginController {
     @PostMapping(value = { "/login/{password}", "/login/{password}/" })
     @ResponseStatus(HttpStatus.CREATED)
     public LoginResponseDto login(@RequestBody LoginRequestDto loginRequest, @PathVariable("password") String password){
-        Login login = loginService.logIn(loginRequest.getAccountType(), loginRequest.getAccountEmail(), password,loginRequest.getCurrentTime());
+        Login login = loginService.logIn(loginRequest.getAccountType(), loginRequest.getAccountEmail(), password, loginRequest.getCurrentTime());
         return new LoginResponseDto(login, loginRequest.getAccountType());
     }
 
