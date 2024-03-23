@@ -28,10 +28,6 @@ import ca.mcgill.ecse321.SportPlus.dao.ClientRepository;
 import ca.mcgill.ecse321.SportPlus.dao.InstructorRepository;
 import ca.mcgill.ecse321.SportPlus.dao.LoginRepository;
 import ca.mcgill.ecse321.SportPlus.dao.OwnerRepository;
-<<<<<<< HEAD
-import ca.mcgill.ecse321.SportPlus.dto.LoginRequestDto;
-=======
->>>>>>> origin/jplogin
 import ca.mcgill.ecse321.SportPlus.model.Client;
 import ca.mcgill.ecse321.SportPlus.model.Instructor;
 import ca.mcgill.ecse321.SportPlus.model.Login;
@@ -207,21 +203,11 @@ public class TestLoginService {
         assertEquals(login.getStartTime(), START_TIME);
         assertEquals(login.getLoginId(), LOGIN_ID1);
     }
-<<<<<<< HEAD
-    @Test
-    public void testLogIn(){
-        Client client = new Client(CLIENT_EMAIL, CLIENT_FIRSTNAME, CLIENT_PASSWORD,CLIENT_LASTNAME, CLIENT_ACCOUNTID);
-        LoginRequestDto good_request = new LoginRequestDto(0, CLIENT_EMAIL, START_TIME, "CLIENT");
-        LoginRequestDto bad_request_type = new LoginRequestDto(0, CLIENT_EMAIL, START_TIME, "INSTRUCTOR");
-        LoginRequestDto bad_request_owner = new LoginRequestDto(0, CLIENT_EMAIL, START_TIME, "OWNER");
-
-=======
 
     @Test
     public void testLogIn() {
         Client client = new Client(CLIENT_EMAIL, CLIENT_FIRSTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME, CLIENT_ACCOUNTID);
 
->>>>>>> origin/jplogin
         Login goodLogin = loginService.logIn("CLIENT", CLIENT_EMAIL, CLIENT_PASSWORD, START_TIME);
 
         assertNotNull(goodLogin);
@@ -241,11 +227,7 @@ public class TestLoginService {
 
         assertThrows(IllegalArgumentException.class, () -> {
             loginService.logIn("INSTRUCTOR", CLIENT_EMAIL, "wrongpassworD4", START_TIME);
-<<<<<<< HEAD
-        }, "Account of Type " + bad_request_type.getAccountType()+ " with given email does not exist.");
-=======
         }, "Account of Type " + "INSTRUCTOR" + " with given email does not exist.");
->>>>>>> origin/jplogin
 
         assertThrows(IllegalArgumentException.class, () -> {
             loginService.logIn("OWNER", CLIENT_EMAIL, "wrongpassworD4", START_TIME);
@@ -253,16 +235,10 @@ public class TestLoginService {
     }
 
     @Test
-<<<<<<< HEAD
-    public void testLogOut(){
-        Client client = new Client(CLIENT_EMAIL, CLIENT_FIRSTNAME, CLIENT_PASSWORD,CLIENT_LASTNAME, CLIENT_ACCOUNTID);
-        LoginRequestDto clientRequest = new LoginRequestDto(0, CLIENT_EMAIL, START_TIME, "CLIENT");
-=======
     public void testLogOut() {
         Client client = new Client(CLIENT_EMAIL, CLIENT_FIRSTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME, CLIENT_ACCOUNTID);
         clientRepository.save(client);
         verify(clientRepository, times(1)).save(client);
->>>>>>> origin/jplogin
 
         loginService.logIn("CLIENT", CLIENT_EMAIL, CLIENT_PASSWORD, START_TIME);
 
