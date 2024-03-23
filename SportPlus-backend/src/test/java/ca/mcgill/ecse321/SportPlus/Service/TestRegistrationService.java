@@ -3,9 +3,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.times;
@@ -16,15 +14,12 @@ import java.util.List;
 import java.sql.Date;
 import java.sql.Time;
 
-import org.glassfish.jaxb.runtime.v2.runtime.unmarshaller.XsiNilLoader.Array;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.servlet.config.annotation.ResourceChainRegistration;
 import ca.mcgill.ecse321.SportPlus.dao.ClientRepository;
 import ca.mcgill.ecse321.SportPlus.dao.InstructorRepository;
 import ca.mcgill.ecse321.SportPlus.model.Registration;
@@ -51,7 +46,7 @@ public class TestRegistrationService {
     @InjectMocks
     private RegistrationService registrationService;
 
-    private static final int REGISTRATION_ID = 2;
+    private static final int REGISTRATION_ID = 0;
 
 
     private static final String CLIENT_EMAIL = "example@email.com";
@@ -100,7 +95,7 @@ public class TestRegistrationService {
     @Test
     public void testCreateRegistration(){
 
-        Registration registration = registrationService.createRegistration(REGISTRATION_ID, SPECIFICCLASS_ID, CLIENT_EMAIL);
+        Registration registration = registrationService.createRegistration(SPECIFICCLASS_ID, CLIENT_EMAIL);
 
         assertNotNull(registration);
         assertEquals(REGISTRATION_ID, registration.getRegId());

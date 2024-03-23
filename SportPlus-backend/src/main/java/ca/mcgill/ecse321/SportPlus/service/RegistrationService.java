@@ -96,15 +96,14 @@ public class RegistrationService {
         registrationRepository.deleteByRegId(regId);
     }
 
+
+
      //------------EndWrappers----------//
 
      @Transactional
-     public Registration createRegistration(Integer regId, Integer specificClassId, String clientEmail){
+     public Registration createRegistration(Integer specificClassId, String clientEmail){
         if (clientEmail == null || HelperMethods.ClientEmailCheck(clientEmail).trim().length() != 0) {
             throw new IllegalArgumentException("Invalid email!");
-        }
-        if (regId < 0) {
-            throw new IllegalArgumentException("Registration Id cannot be less than 0!");
         }
         if (specificClassId < 0) {
             throw new IllegalArgumentException("Registration Id cannot be less than 0!");
@@ -113,7 +112,8 @@ public class RegistrationService {
         SpecificClass specificClass = specificClassRepository.findBySessionId(specificClassId);
         Client client = clientRepository.findByEmail(clientEmail);
 
-        Registration registration = new Registration(regId, specificClass, client);
+        Registration registration = new Registration(0, specificClass, client);
+        registrationRepository.save(registration);
         return registration;
      }
 
