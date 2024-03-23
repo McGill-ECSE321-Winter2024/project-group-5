@@ -1,11 +1,10 @@
 package ca.mcgill.ecse321.SportPlus.Repository;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,8 +30,10 @@ public class LoginRepositoryTests {
 
     @Autowired
     private ClientRepository clientRepository;
+
     @Autowired
     private InstructorRepository instructorRepository;
+
     @Autowired
     private OwnerRepository ownerRepository;
 
@@ -48,16 +49,15 @@ public class LoginRepositoryTests {
     @Test
     @Transactional
     public void testFindByLoginId() {
-       
         Client client = new Client("example.last@gmail.com", "aFirstName", "a5Password", "aLastName", 0);
-        Instructor instructor = new Instructor("example2.last@gmail.com", "aFirstName", "a5Password","aLastName", 0 );
-        Owner owner = new Owner("example3.last@gmail.com", "aFirstName", "a5Password","aLastName", 0);
+        Instructor instructor = new Instructor("example2.last@gmail.com", "aFirstName", "a5Password", "aLastName", 0);
+        Owner owner = new Owner("example3.last@gmail.com", "aFirstName", "a5Password", "aLastName", 0);
         // Save the client in the database
         clientRepository.save(client);
         instructorRepository.save(instructor);
         ownerRepository.save(owner);
-        Login loginClient = new Login(0,null, null, client);
-        Login loginInstructor = new Login(0,null, null, instructor);
+        Login loginClient = new Login(0, null, null, client);
+        Login loginInstructor = new Login(0, null, null, instructor);
         Login loginOwner = new Login(0, null, null, owner);
 
         loginRepository.save(loginClient);
@@ -79,16 +79,16 @@ public class LoginRepositoryTests {
 
     @Test
     @Transactional
-    public void findByAccount(){
+    public void findByAccount() {
         Client client = new Client("jerry.last@gmail.com", "aFirstName", "a5Password", "aLastName", 0);
-        Instructor instructor = new Instructor("tom.last@gmail.com", "aFirstName", "a5Password","aLastName", 0 );
-        Owner owner = new Owner("bugs.last@gmail.com", "aFirstName", "a5Password","aLastName", 0);
+        Instructor instructor = new Instructor("tom.last@gmail.com", "aFirstName", "a5Password", "aLastName", 0);
+        Owner owner = new Owner("bugs.last@gmail.com", "aFirstName", "a5Password", "aLastName", 0);
         // Save the client in the database
         clientRepository.save(client);
         instructorRepository.save(instructor);
         ownerRepository.save(owner);
-        Login loginClient = new Login(0,null, null, client);
-        Login loginInstructor = new Login(0,null, null, instructor);
+        Login loginClient = new Login(0, null, null, client);
+        Login loginInstructor = new Login(0, null, null, instructor);
         Login loginOwner = new Login(0, null, null, owner);
 
         loginRepository.save(loginClient);
@@ -105,22 +105,23 @@ public class LoginRepositoryTests {
         assertEquals(foundClient, loginClient);
         assertEquals(foundInstructor, loginInstructor);
         assertEquals(foundOwner, loginOwner);
-
     }
+
     @Test
-    public void testFindAll(){
+    @Transactional
+    public void testFindAll() {
         Client client = new Client("example.last@gmail.com", "aFirstName", "a5Password", "aLastName", 0);
         Client client2 = new Client("example4.lastname@gmail.com", "firstname", "lastName", "56Upssword", 0);
-        Instructor instructor = new Instructor("example2.last@gmail.com", "aFirstName", "a5Password","aLastName", 0 );
-        Owner owner = new Owner("example3.last@gmail.com", "aFirstName", "a5Password","aLastName", 0);
+        Instructor instructor = new Instructor("example2.last@gmail.com", "aFirstName", "a5Password", "aLastName", 0);
+        Owner owner = new Owner("example3.last@gmail.com", "aFirstName", "a5Password", "aLastName", 0);
         // Save the client in the database
         clientRepository.save(client);
         clientRepository.save(client2);
         instructorRepository.save(instructor);
         ownerRepository.save(owner);
-        Login loginClient = new Login(0,null, null, client);
+        Login loginClient = new Login(0, null, null, client);
         Login loginClient2 = new Login(0, null, null, client2);
-        Login loginInstructor = new Login(0,null, null, instructor);
+        Login loginInstructor = new Login(0, null, null, instructor);
         Login loginOwner = new Login(0, null, null, owner);
 
         loginRepository.save(loginClient);
@@ -135,19 +136,18 @@ public class LoginRepositoryTests {
         assertThat(found).contains(loginClient, loginClient2, loginInstructor, loginOwner);
     }
 
-
     @Test
     @Transactional
-    public void testDeleteByAccount(){
+    public void testDeleteByAccount() {
         Client client = new Client("jerry.last@gmail.com", "aFirstName", "a5Password", "aLastName", 0);
-        Instructor instructor = new Instructor("tom.last@gmail.com", "aFirstName", "a5Password","aLastName", 0 );
-        Owner owner = new Owner("bugs.last@gmail.com", "aFirstName", "a5Password","aLastName", 0);
+        Instructor instructor = new Instructor("tom.last@gmail.com", "aFirstName", "a5Password", "aLastName", 0);
+        Owner owner = new Owner("bugs.last@gmail.com", "aFirstName", "a5Password", "aLastName", 0);
         // Save the client in the database
         clientRepository.save(client);
         instructorRepository.save(instructor);
         ownerRepository.save(owner);
-        Login loginClient = new Login(0,null, null, client);
-        Login loginInstructor = new Login(0,null, null, instructor);
+        Login loginClient = new Login(0, null, null, client);
+        Login loginInstructor = new Login(0, null, null, instructor);
         Login loginOwner = new Login(0, null, null, owner);
 
         loginRepository.save(loginClient);
@@ -155,6 +155,7 @@ public class LoginRepositoryTests {
         loginRepository.save(loginOwner);
 
         List<Login> found = loginRepository.findAll();
+        assertNotNull(found);
         assertEquals(found.size(), 3);
         assertThat(found).contains(loginClient, loginInstructor, loginOwner);
 
@@ -168,5 +169,5 @@ public class LoginRepositoryTests {
         assertEquals(found.size(), 1);
         assertThat(found).contains(loginOwner);
     }
-      
+
 }

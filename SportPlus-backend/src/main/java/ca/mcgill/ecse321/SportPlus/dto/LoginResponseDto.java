@@ -1,38 +1,24 @@
 package ca.mcgill.ecse321.SportPlus.dto;
-import ca.mcgill.ecse321.SportPlus.dto.LoginRequestDto.AccountType;
+
 import ca.mcgill.ecse321.SportPlus.model.Login;
 
 public class LoginResponseDto {
 
     private int loginId;
     private String accountEmail;
-    private AccountType accountType;
+    private String accountType;
 
+    @SuppressWarnings("unused")
     public LoginResponseDto() {
     }
 
-    // public LoginResponseDto(int aLoginId, String email, AccountType type) {
-    //     loginId = aLoginId;
-    //     accountEmail = email;
-    //     accountType = type;
-    // }
-
-    public LoginResponseDto(Login login, AccountType type) {
-        loginId = login.getLoginId();
-        accountEmail = login.getAccount().getEmail();
-        accountType = type;
-    }
-
-    public void setLoginId(int id) {
-        loginId = id;
-    }
-
-    public void setAccountType(AccountType type) {
-        accountType = type;
-    }
-
-    public AccountType getAccountType() {
-        return accountType;
+    public LoginResponseDto(Login login, String accountType) {
+        if (login == null) {
+            throw new IllegalArgumentException("Login cannot be null");
+        }
+        this.loginId = login.getLoginId();
+        this.accountEmail = login.getAccount().getEmail();
+        this.accountType = accountType;
     }
 
     public int getLoginId() {
@@ -43,7 +29,20 @@ public class LoginResponseDto {
         return accountEmail;
     }
 
-    public void setAccountEmail(String email) {
-        accountEmail = email;
+    public String getAccountType() {
+        return accountType;
     }
+
+    public void setLoginId(int loginId) {
+        this.loginId = loginId;
+    }
+
+    public void setAccountEmail(String accountEmail) {
+        this.accountEmail = accountEmail;
+    }
+
+    public void setAccountType(String accountType) {
+        this.accountType = accountType;
+    }
+
 }
