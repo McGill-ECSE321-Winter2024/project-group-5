@@ -37,5 +37,4 @@ public interface LoginRepository extends CrudRepository<Login, Integer> {
      * @return List<Login>
      */
     List<Login> findAll();
-
 }
