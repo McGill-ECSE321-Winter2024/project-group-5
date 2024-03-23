@@ -17,7 +17,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import ca.mcgill.ecse321.SportPlus.dao.ClassTypeRepository;
+import ca.mcgill.ecse321.SportPlus.dao.ClientRepository;
+import ca.mcgill.ecse321.SportPlus.dao.InstructorRepository;
+import ca.mcgill.ecse321.SportPlus.dao.OwnerRepository;
 import ca.mcgill.ecse321.SportPlus.dao.RegistrationRepository;
+import ca.mcgill.ecse321.SportPlus.dao.SpecificClassRepository;
 import ca.mcgill.ecse321.SportPlus.dto.ClassTypeListDto;
 import ca.mcgill.ecse321.SportPlus.dto.ClassTypeRequestDto;
 import ca.mcgill.ecse321.SportPlus.dto.ClassTypeResponseDto;
@@ -36,12 +40,32 @@ public class RegistrationIntegrationTests {
     private TestRestTemplate restTemplate;
 
     @Autowired
-    private RegistrationRepository registrationRepository; 
+    private RegistrationRepository registrationRepository;
+
+    @Autowired
+    private OwnerRepository ownerRepository;
+
+    @Autowired
+    private ClientRepository clientRepository;
+
+    @Autowired
+    private InstructorRepository instructorRepository;
+
+    @Autowired
+    private ClassTypeRepository classTypeRepository;
+
+    @Autowired
+    private SpecificClassRepository specificClassRepository;
 
     @BeforeEach
     @AfterEach
     public void clearDatabase() {
+        instructorRepository.deleteAll();
         registrationRepository.deleteAll();
+        specificClassRepository.deleteAll();
+        classTypeRepository.deleteAll();
+        clientRepository.deleteAll();
+        ownerRepository.deleteAll();
     }
 
     private static final int REGISTRATION_ID = 0;
@@ -291,7 +315,20 @@ public class RegistrationIntegrationTests {
 
     @Test 
     public void testDeleteRegistrationByRegId(){
-        Registration registration1 = new Registration(REGISTRATION_ID, aSpecificClass, aClient);
+        Client client = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME, CLIENT_ACCOUNTID);
+        Owner owner = new Owner(OWNER_EMAIL, OWNER_FIRSTNAME, OWNER_PASSWORD, OWNER_LASTNAME, OWNER_ACCOUNTID);
+        ClassType aClassType = new ClassType(CLASS_TYPE_NAME, CLASS_TYPE_DESCRIPTION, CLASS_TYPE_ID, true, owner);
+        SpecificClass specificClass = new SpecificClass(SPECIFICCLASS_DATE, SPECIFICCLASS_STARTTIME, SPECIFICCLASS_ENDTIME, SPECIFICCLASS_ID, aClassType);
+        
+        clientRepository.save(client);
+        ownerRepository.save(owner);
+        classTypeRepository.save(aClassType);
+        specificClassRepository.save(specificClass);
+
+        specificClass = specificClassRepository.findByDateAndStartTime(SPECIFICCLASS_DATE, SPECIFICCLASS_STARTTIME);
+        client = clientRepository.findByEmail(CLIENT_EMAIL);
+        int reg_id = 0;
+        Registration registration1 = new Registration(reg_id, specificClass, client);
         registrationRepository.save(registration1);
 
         String url = "/registrations/getBySpecificClass/" + String.valueOf(SPECIFICCLASS_ID) + "/";
