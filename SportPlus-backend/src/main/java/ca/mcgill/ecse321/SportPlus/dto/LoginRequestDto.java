@@ -4,52 +4,52 @@ import java.sql.Time;
 
 public class LoginRequestDto {
 
-    private int loginId;
-    private String accountEmail;
+    private String type;
+    private String email;
+    private String password;
     private Time currentTime;
-    private String accountType;
 
-    // @SuppressWarnings("unused")
-    public LoginRequestDto(){
+    @SuppressWarnings("unused")
+    public LoginRequestDto() {
     }
 
-    public LoginRequestDto(int aLoginId, String email,Time aStartTime, String type ){
-        loginId = aLoginId;
-        accountEmail = email;
-        currentTime = aStartTime;
-        accountType = type;
-    
+    public LoginRequestDto(String type, String email, String password, Time currentTime) {
+        this.type = type;
+        this.email = email;
+        this.password = password;
+        this.currentTime = currentTime;
     }
 
-    public void setStartTime(Time time){
-        currentTime = time;
+    public String getType() {
+        return type;
     }
 
-    public void setLoginId(int id){
-        loginId = id;
+    public String getEmail() {
+        return email;
     }
 
-    public void setAccountType(String type){
-        accountType = type;
+    public String getPassword() {
+        return password;
     }
 
-    public String getAccountType(){
-        return accountType;
-    }
-
-    public int getLoginId(){
-        return loginId;
-    }
-
-    public Time getCurrentTime(){
+    public Time getCurrentTime() {
         return currentTime;
     }
 
-    public String getAccountEmail(){
-        return accountEmail;
+    public void setType(String type) {
+        this.type = type;
     }
-    
-    public void setAccountEmail(String email){
-        accountEmail = email; 
+
+    public void setEmail(String email) {
+        this.email = email;
     }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setCurrentTime(Time currentTime) {
+        this.currentTime = currentTime;
+    }
+
 }

@@ -6,8 +6,6 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
 import ca.mcgill.ecse321.SportPlus.model.Account;
 
 public class HelperMethods {
@@ -91,23 +89,26 @@ public class HelperMethods {
     }
     return resultList;
   }
-  public static Time updateEndTime(Time time){
+
+  public static Time updateEndTime(Time time) {
     LocalTime temp = time.toLocalTime();
     temp = temp.plusHours(3); // after 3 hours of being logged in without activity, logout
     Time endTime = Time.valueOf(temp);
     return endTime;
-   }
+  }
 
-  public static boolean isLoginTimeStillValid(Time endTime, Time currentTime){
-    if(endTime.compareTo(currentTime) < 0){return false;} // if endTime before currentTime, compareTo returns negative int
+  public static boolean isLoginTimeStillValid(Time endTime, Time currentTime) {
+    if (endTime.compareTo(currentTime) < 0) {
+      return false;
+    } // if endTime before currentTime, compareTo returns negative int
     return true;
   }
 
- public static boolean isPasswordOk(Account account, String password){
-  if(password == account.getPassword()){
-    return true;
+  public static boolean isPasswordOk(Account account, String password) {
+    if (password.equals(account.getPassword())) {
+      return true;
+    }
+    return false;
   }
-  return false;
- }
 
 }

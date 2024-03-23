@@ -6,8 +6,7 @@ import ca.mcgill.ecse321.SportPlus.model.Account;
 import ca.mcgill.ecse321.SportPlus.model.Login;
 import java.util.List;
 
-
-public interface LoginRepository extends CrudRepository<Login, Integer>{
+public interface LoginRepository extends CrudRepository<Login, Integer> {
 
     /**
      * Find Login by loginId
@@ -15,29 +14,28 @@ public interface LoginRepository extends CrudRepository<Login, Integer>{
      * @param loginId
      * @return Login
      */
-    Login findByLoginId(int loginId);
+    Login findByLoginId(Integer loginId);
+
     /**
      * Find Login by Account
      * 
      * @param account
      * @return Login
-     */  
+     */
     Login findByAccount(Account account);
 
-     /**
+    /**
      * Delete Login by loginId
      * 
      * @param loginId
      */
-    void deleteByLoginId(int loginId);
+    void deleteByLoginId(Integer loginId);
 
-
-     /**
+    /**
      * Find all Logins
      * 
      * @return List<Login>
      */
     List<Login> findAll();
 
-    
 }

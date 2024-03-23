@@ -1,6 +1,5 @@
 package ca.mcgill.ecse321.SportPlus.service;
 
-import org.hibernate.annotations.Fetch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
@@ -19,7 +18,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.sql.Time;
 
 @Service
@@ -200,7 +198,7 @@ public class SpecificClassService {
         // Get all the classes in the future with a supervisor
         List<SpecificClass> futureClassesWithSupervisor = specificClassRepository
                 .findBySupervisorIsNotNullAndDateAfterOrDateEqualsAndStartTimeAfter(today, now);
-        
+
         List<SpecificClass> availableClasses = new ArrayList<>();
 
         for (SpecificClass specificClass : futureClassesWithSupervisor) {

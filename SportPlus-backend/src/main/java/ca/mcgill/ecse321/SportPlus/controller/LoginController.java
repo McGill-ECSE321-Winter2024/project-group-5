@@ -6,15 +6,14 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
-
-import ca.mcgill.ecse321.SportPlus.dto.LoginRequestDto;
 import ca.mcgill.ecse321.SportPlus.dto.LoginResponseDto;
+import ca.mcgill.ecse321.SportPlus.dto.LoginRequestDto;
 import ca.mcgill.ecse321.SportPlus.model.Login;
 import ca.mcgill.ecse321.SportPlus.service.LoginService;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -23,16 +22,17 @@ public class LoginController {
     @Autowired
     private LoginService loginService;
 
-    @PostMapping(value = { "/login/{password}", "/login/{password}/" })
+    @PostMapping(value = { "/login", "/login/" })
     @ResponseStatus(HttpStatus.CREATED)
-    public LoginResponseDto login(@RequestBody LoginRequestDto loginRequest, @PathVariable("password") String password){
-        Login login = loginService.logIn(loginRequest.getAccountType(), loginRequest.getAccountEmail(), password, loginRequest.getCurrentTime());
-        return new LoginResponseDto(login, loginRequest.getAccountType());
+    public LoginResponseDto logIn(@RequestBody LoginRequestDto newLogin) {
+        Login createdLogin = loginService.logIn(newLogin.getType(), newLogin.getEmail(), newLogin.getPassword(),
+                newLogin.getCurrentTime());
+        return new LoginResponseDto(createdLogin, newLogin.getType());
     }
 
-    @DeleteMapping(value = { "/logout", "/logout/" })
-    public void logout(@RequestBody LoginRequestDto request){
-        loginService.logOut(request.getLoginId());
+    @DeleteMapping(value = { "/logout/{loginId}", "/logout/{loginId}/" })
+    public void logOut(@PathVariable("loginId") String theId) {
+        loginService.logOut(Integer.parseInt(theId));
     }
 
 }

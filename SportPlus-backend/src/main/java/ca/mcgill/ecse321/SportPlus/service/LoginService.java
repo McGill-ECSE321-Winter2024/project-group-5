@@ -17,6 +17,7 @@ import ca.mcgill.ecse321.SportPlus.service.utilities.HelperMethods;
 
 @Service
 public class LoginService {
+
     @Autowired
     ClientRepository clientRepository;
 
@@ -29,111 +30,99 @@ public class LoginService {
     @Autowired
     LoginRepository loginRepository;
 
-    @Autowired
-    private InstructorService instructorService;
-    @Autowired 
-    private OwnerService ownerService;
-
-    @Autowired
-    private ClientService clientService;
-
-     //-----------Wrappers-----------//
+    // -----------Wrappers-----------//
 
     @Transactional
-     public Login getLoginFromId(int id){
-        Login login  = loginRepository.findByLoginId(id);
-        if(login == null){
+    public Login getLoginFromId(int id) {
+        Login login = loginRepository.findByLoginId(id);
+        if (login == null) {
             throw new IllegalArgumentException("Login does not exist!");
         }
         return login;
-     }
- 
-     @Transactional
-     public Login getLoginFromAccount(Account account){
-        if(account == null){
+    }
+
+    @Transactional
+    public Login getLoginFromAccount(Account account) {
+        if (account == null) {
             throw new IllegalArgumentException("Account is null!");
         }
         Login login = loginRepository.findByAccount(account);
-        if(login == null){
+        if (login == null) {
             throw new IllegalArgumentException("Login does not exist!");
         }
         return login;
-     }
+    }
 
-     @Transactional
-     public void deleteByLoginId(int id){
+    @Transactional
+    public void deleteByLoginId(int id) {
         loginRepository.deleteByLoginId(id);
-     }
+    }
 
-
-     @Transactional
-     public List<Login> getAllLogins(){
+    @Transactional
+    public List<Login> getAllLogins() {
         return HelperMethods.toList(loginRepository.findAll());
-     }
-     //------------EndWrappers----------//
+    }
+    // ------------EndWrappers----------//
 
-    
-     @Transactional
-     public Login createLogin(int id, Time startTime, Time endTime, Account account){
+    @Transactional
+    public Login createLogin(int id, Time startTime, Time endTime, Account account) {
         Login login = new Login(id, startTime, endTime, account);
         loginRepository.save(login);
         return login;
-     }
-     
+    }
 
-     @Transactional
-     public Login logIn(String type, String email, String password, Time currentTime){
+    @Transactional
+    public Login logIn(String type, String email, String password, Time currentTime) {
         Account account = null;
-        switch(type){
-            case "OWNER":
-                if(!email.equals("owner@sportplus.com")){
-                    throw new IllegalArgumentException("This is not an Owner email.");
-                }
-                account = ownerService.getOwner();
-            case "INSTRUCTOR":
-                try {
-                account = instructorService.getInstructor(email); 
-                }catch(Exception e){
-                    throw new IllegalArgumentException("Account of Type INSTRUCTOR with given email does not exist.");
-                }
-
-            case "CLIENT":
-                try {
-                account = clientService.getClient(email);
-                }catch(Exception e){
-                throw new IllegalArgumentException("Account of Type CLIENT with given email does not exist.");
-                }
+        if (type.equals("OWNER")) {
+            if (!email.equals("owner@sportplus.com")) {
+                throw new IllegalArgumentException("This is not and Owner email.");
+            }
+            account = ownerRepository.findByEmail(email);
+        } else if (type.equals("INSTRUCTOR")) {
+            account = instructorRepository.findInstructorByEmail(email);
+        } else if (type.equals("CLIENT")) {
+            account = clientRepository.findByEmail(email);
+        } else {
+            throw new IllegalArgumentException("Account type is invalid!");
         }
 
-        Login found = getLoginFromAccount(account);
-        if(found != null){
-            deleteByLoginId(found.getLoginId());
+        if (account == null) {
+            throw new IllegalArgumentException("Account of Type " + type + " with given email does not exist.");
         }
-        if(!HelperMethods.isPasswordOk(account,password)){
+        Login found = null;
+        try {
+            found = getLoginFromAccount(account);
+            if (found != null) {
+                deleteByLoginId(found.getLoginId());
+            }
+        } catch (Exception e) {
+        }
+        if (!HelperMethods.isPasswordOk(account, password)) {
             throw new IllegalArgumentException("Wrong Password!");
         }
         Time endTime = HelperMethods.updateEndTime(currentTime);
-        
+
         return createLogin(0, currentTime, endTime, account);
     }
 
-    @Transactional 
-    public void logOut(int loginId){
+    @Transactional
+    public void logOut(int loginId) {
         deleteByLoginId(loginId);
     }
 
     @Transactional
-    public boolean isStillLoggedIn(int loginId, Time currentTime){
-        return HelperMethods.isLoginTimeStillValid(getLoginFromId(loginId).getEndTime(),currentTime);
+    public boolean isStillLoggedIn(int loginId, Time currentTime) {
+        return HelperMethods.isLoginTimeStillValid(getLoginFromId(loginId).getEndTime(), currentTime);
     }
 
     @Transactional
-    public Login updateEndTime(int loginId, Time currentTime){
+    public Login updateEndTime(int loginId, Time currentTime) {
         Login login = getLoginFromId(loginId);
         Time newTime = HelperMethods.updateEndTime(currentTime);
         login.setEndTime(newTime);
         loginRepository.save(login);
         return login;
     }
-    
+
 }

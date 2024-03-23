@@ -1,7 +1,6 @@
 package ca.mcgill.ecse321.SportPlus.Repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -16,7 +15,6 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Calendar;
 import java.util.List;
 import java.sql.Time;
 
@@ -589,15 +587,15 @@ public class SpecificClassRepositoryTests {
         Date sqlCurrentDate = Date.valueOf(currentDate);
         Time sqlCurrentTime = Time.valueOf(currentTime);
 
-        //Creation of an instructor
+        // Creation of an instructor
         Instructor supervisor = new Instructor("email@email.com", "John", "password", "Doe", 0);
         instructorRepository.save(supervisor);
 
-        //Creation of owner
+        // Creation of owner
         Owner owner = new Owner("Owner@email.com", "Owner", "123", "owner last anme", 0);
         ownerRepository.save(owner);
 
-        //Creation of ClassType
+        // Creation of ClassType
         ClassType classType = new ClassType("Football", "Best sport ", 0, true, owner);
         classTypeRepository.save(classType);
 
@@ -621,7 +619,7 @@ public class SpecificClassRepositoryTests {
 
         List<SpecificClass> classes = specificClassRepository
                 .findBySupervisorIsNotNullAndDateAfterOrDateEqualsAndStartTimeAfter(sqlCurrentDate, sqlCurrentTime);
-        
+
         assertTrue(classes.contains(availableClass));
     }
 
