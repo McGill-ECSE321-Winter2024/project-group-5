@@ -7,8 +7,7 @@ import jakarta.persistence.ManyToOne;
 import java.sql.Time;
 
 @Entity
-public class Login
-{
+public class Login {
 
   @Id
   @GeneratedValue
@@ -22,84 +21,77 @@ public class Login
   protected Login() {
   }
 
-  public Login(Integer aLoginId, Time aStartTime, Time aEndTime, Account aAccount)
-  {
+  public Login(Integer aLoginId, Time aStartTime, Time aEndTime, Account aAccount) {
     loginId = aLoginId;
     startTime = aStartTime;
     endTime = aEndTime;
-    if (!setAccount(aAccount))
-    {
+    if (!setAccount(aAccount)) {
       throw new RuntimeException("Unable to create Login due to aAccount");
     }
   }
 
-  public boolean setLoginId(int aLoginId)
-  {
+  public boolean setLoginId(int aLoginId) {
     boolean wasSet = false;
     loginId = aLoginId;
     wasSet = true;
     return wasSet;
   }
-  public boolean setStartTime(Time aStartTime)
-  {
+
+  public boolean setStartTime(Time aStartTime) {
     boolean wasSet = false;
     startTime = aStartTime;
     wasSet = true;
     return wasSet;
   }
 
-  public boolean setEndTime(Time aEndTime)
-  {
+  public boolean setEndTime(Time aEndTime) {
     boolean wasSet = false;
     endTime = aEndTime;
     wasSet = true;
     return wasSet;
   }
 
-  public int getLoginId()
-  {
+  public int getLoginId() {
     return loginId;
   }
-  public Time getStartTime()
-  {
+
+  public Time getStartTime() {
     return startTime;
   }
 
-  public Time getEndTime()
-  {
+  public Time getEndTime() {
     return endTime;
   }
+
   /* Code from template association_GetOne */
-  public Account getAccount()
-  {
+  public Account getAccount() {
     return account;
   }
+
   /* Code from template association_SetUnidirectionalOne */
-  public boolean setAccount(Account aNewAccount)
-  {
+  public boolean setAccount(Account aNewAccount) {
     boolean wasSet = false;
-    if (aNewAccount != null)
-    {
+    if (aNewAccount != null) {
       account = aNewAccount;
       wasSet = true;
     }
     return wasSet;
   }
 
-  public void delete()
-  {
+  public void delete() {
     account = null;
   }
+
   @Override
-  public boolean equals(Object obj){
+  public boolean equals(Object obj) {
     if (this == obj) {
       return true;
-  }
-  if (obj == null || getClass() != obj.getClass()) {
+    }
+    if (obj == null || getClass() != obj.getClass()) {
       return false;
+    }
+    Login other = (Login) obj;
+    return loginId == other.loginId &&
+        (account == null ? other.account == null : account.equals(other.account));
   }
-  Login other = (Login) obj;
-  return loginId == other.loginId &&
-         (account == null ? other.account == null : account.equals(other.account));
-}
 }

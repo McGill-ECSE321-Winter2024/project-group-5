@@ -25,14 +25,19 @@ import ca.mcgill.ecse321.SportPlus.model.ClassType;
 
 @SpringBootTest
 public class RegistrationRepositoryTests {
+
     @Autowired
     private RegistrationRepository registrationRepository;
+
     @Autowired
     private ClientRepository clientRepository;
+
     @Autowired
     private SpecificClassRepository specificClassRepository;
+
     @Autowired
     private ClassTypeRepository classTypeRepository;
+
     @Autowired
     private OwnerRepository ownerRepository;
 

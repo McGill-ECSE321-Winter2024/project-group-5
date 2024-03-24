@@ -7,24 +7,24 @@ public class RegistrationRequestDto {
     private SpecificClass specificClass;
     private Client client;
 
-    public RegistrationRequestDto(SpecificClass specificClass, Client client ){
+    public RegistrationRequestDto(SpecificClass specificClass, Client client) {
         this.client = client;
         this.specificClass = specificClass;
     }
-    
-    public SpecificClass getSpecificClass(){
+
+    public SpecificClass getSpecificClass() {
         return specificClass;
     }
-    
-    public void setSpecificClass(SpecificClass specificClass){
+
+    public void setSpecificClass(SpecificClass specificClass) {
         this.specificClass = specificClass;
     }
 
-    public Client getClient(){
+    public Client getClient() {
         return client;
     }
 
-    public void setClient(Client client){
+    public void setClient(Client client) {
         this.client = client;
     }
 

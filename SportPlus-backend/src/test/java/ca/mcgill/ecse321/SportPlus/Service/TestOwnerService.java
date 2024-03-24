@@ -39,30 +39,31 @@ public class TestOwnerService {
 
     @BeforeEach
     public void setMockOutput() {
-        lenient().when(ownerRepository.findByEmail(OWNER_EMAIL)).thenReturn(new Owner(OWNER_EMAIL, OWNER_FIRSTNAME, OWNER_PASSWORD, OWNER_LASTNAME, OWNER_ACCOUNTID));
+        lenient().when(ownerRepository.findByEmail(OWNER_EMAIL))
+                .thenReturn(new Owner(OWNER_EMAIL, OWNER_FIRSTNAME, OWNER_PASSWORD, OWNER_LASTNAME, OWNER_ACCOUNTID));
         Answer<?> returnParameterAsAnswer = (InvocationOnMock invocation) -> {
-			return invocation.getArgument(0);
-		};
-		lenient().when(ownerRepository.save(any(Owner.class))).thenAnswer(returnParameterAsAnswer);
+            return invocation.getArgument(0);
+        };
+        lenient().when(ownerRepository.save(any(Owner.class))).thenAnswer(returnParameterAsAnswer);
     }
-    
+
     @Test
-	public void testCreateOwner() {
+    public void testCreateOwner() {
         String email = "owner@sportplus.com";
         String firstName = "Paul";
         String lastName = "Dmyt";
         String password = "Ro1234";
-        
+
         Owner owner = ownerService.createOwner(firstName, password, lastName);
-		
-		assertNotNull(owner);
-		assertEquals(email, owner.getEmail());
+
+        assertNotNull(owner);
+        assertEquals(email, owner.getEmail());
         assertEquals(firstName, owner.getFirstName());
         assertEquals(lastName, owner.getLastName());
         assertEquals(password, owner.getPassword());
-        
+
         verify(ownerRepository, times(1)).save(owner);
-	}
+    }
 
     @Test
     public void testUpdateOwnerAndCreateWithoutInit() {
@@ -71,9 +72,9 @@ public class TestOwnerService {
         String newLastName = "NewDoe";
 
         Owner owner = ownerService.createOwner();
-        
+
         Owner updatedOwner = ownerRepository.findByEmail(OWNER_EMAIL);
-        
+
         ownerService.updateOwnerFirstName(newFirstName);
         ownerService.updateOwnerLastName(newLastName);
         ownerService.updateOwnerPassword(OWNER_PASSWORD, newPassword);
@@ -87,13 +88,13 @@ public class TestOwnerService {
         assertEquals(newPassword, updatedOwner.getPassword());
         assertEquals(newFirstName, updatedOwner.getFirstName());
         assertEquals(newLastName, updatedOwner.getLastName());
-        
+
         verify(ownerRepository, times(4)).save(any(Owner.class));
     }
 
     @Test
-	public void testGetExistingOwner() {
-		assertEquals(OWNER_EMAIL, ownerService.getOwner().getEmail());
-	}
+    public void testGetExistingOwner() {
+        assertEquals(OWNER_EMAIL, ownerService.getOwner().getEmail());
+    }
 
 }

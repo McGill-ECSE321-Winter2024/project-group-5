@@ -29,6 +29,7 @@ import ca.mcgill.ecse321.SportPlus.model.Instructor;
 
 @SpringBootTest
 public class SpecificClassRepositoryTests {
+
     @Autowired
     private SpecificClassRepository specificClassRepository;
 
@@ -73,6 +74,32 @@ public class SpecificClassRepositoryTests {
                 "Class type should be the same");
         assertEquals("Owner", foundSpecificClass.getClassType().getApprover().getFirstName(),
                 "Owner should be the same");
+    }
+
+    @Test
+    @Transactional
+    public void testFindByName() {
+        // creates owner and class type in order to create a specific class
+        Owner owner = new Owner("Owner@email.com", "Owner", "123", "owner last anme", 0);
+        ownerRepository.save(owner);
+
+        ClassType yoga = new ClassType("yoga", "cool class", 0, true, owner);
+        classTypeRepository.save(yoga);
+
+        SpecificClass specificClass = new SpecificClass(null, null, null, 0, yoga, "NewName");
+        specificClassRepository.save(specificClass);
+
+        // gets the specific class's id
+        SpecificClass foundSpecificClass = specificClassRepository.findByName("NewName");
+
+        // checks that the specific class exists in the database
+        assertNotNull(foundSpecificClass, "The specific class should not be null");
+        assertEquals(specificClass.getSessionId(), foundSpecificClass.getSessionId(), "Session IDs should match");
+        assertEquals(foundSpecificClass.getClassType(), foundSpecificClass.getClassType(),
+                "Class type should be the same");
+        assertEquals("Owner", foundSpecificClass.getClassType().getApprover().getFirstName(),
+                "Owner should be the same");
+        assertEquals("NewName", foundSpecificClass.getName());
     }
 
     @Test

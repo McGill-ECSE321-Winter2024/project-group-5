@@ -17,8 +17,10 @@ import ca.mcgill.ecse321.SportPlus.model.Owner;
 
 @SpringBootTest
 public class ClassTypeTests {
+
     @Autowired
     private ClassTypeRepository classTypeRepository;
+
     @Autowired
     private OwnerRepository ownerRepository;
 

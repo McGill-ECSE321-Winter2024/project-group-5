@@ -50,26 +50,30 @@ public class TestPaymentMethodService {
 
     private static final String CLIENT_EMAIL = "johndoe@email.com";
     private static final Client PAYMENTMETHOD_CLIENT = new Client(CLIENT_EMAIL, "John", "Pass123", "Doe", 2);
-    private static final Client WITHOUTPAYMENTMETHOD_CLIENT = new Client("nopaymentmethod@email.com", "John", "Pass123", "Doe", 3);
+    private static final Client WITHOUTPAYMENTMETHOD_CLIENT = new Client("nopaymentmethod@email.com", "John", "Pass123",
+            "Doe", 3);
 
     @BeforeEach
     public void setMockOutput() {
-        PaymentMethod paymentMethod = new PaymentMethod(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE, PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CARDID, PAYMENTMETHOD_CLIENT);
+        PaymentMethod paymentMethod = new PaymentMethod(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE,
+                PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CARDID, PAYMENTMETHOD_CLIENT);
         List<PaymentMethod> paymentMethods = new ArrayList<>();
         paymentMethods.add(paymentMethod);
         lenient().when(paymentMethodRepository.findByCardNumber(PAYMENTMETHOD_CARDNUMBER)).thenReturn(paymentMethod);
         lenient().when(paymentMethodRepository.findByClient(PAYMENTMETHOD_CLIENT)).thenReturn(paymentMethods);
         Answer<?> returnParameterAsAnswer = (InvocationOnMock invocation) -> {
-			return invocation.getArgument(0);
-		};
-		lenient().when(paymentMethodRepository.save(any(PaymentMethod.class))).thenAnswer(returnParameterAsAnswer);
+            return invocation.getArgument(0);
+        };
+        lenient().when(paymentMethodRepository.save(any(PaymentMethod.class))).thenAnswer(returnParameterAsAnswer);
         lenient().when(clientRepository.findByEmail(CLIENT_EMAIL)).thenReturn(PAYMENTMETHOD_CLIENT);
-        lenient().when(clientRepository.findByEmail("nopaymentmethod@email.com")).thenReturn(WITHOUTPAYMENTMETHOD_CLIENT);
+        lenient().when(clientRepository.findByEmail("nopaymentmethod@email.com"))
+                .thenReturn(WITHOUTPAYMENTMETHOD_CLIENT);
     }
 
     @Test
     public void testCreatePaymentMethod() {
-        PaymentMethod paymentMethod = paymentMethodService.createPaymentMethod(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE, PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CLIENT);
+        PaymentMethod paymentMethod = paymentMethodService.createPaymentMethod(PAYMENTMETHOD_CARDNUMBER,
+                PAYMENTMETHOD_EXPDATE, PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CLIENT);
 
         assertNotNull(paymentMethod);
         assertEquals(paymentMethod.getCardHolderName(), PAYMENTMETHOD_CARDHOLDERNAME);
@@ -83,7 +87,8 @@ public class TestPaymentMethodService {
 
     @Test
     public void testDeletePaymentMethod() {
-        PaymentMethod paymentMethod = new PaymentMethod(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE, PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CARDID, PAYMENTMETHOD_CLIENT);
+        PaymentMethod paymentMethod = new PaymentMethod(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE,
+                PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CARDID, PAYMENTMETHOD_CLIENT);
 
         paymentMethodService.deletePaymentMethod(paymentMethod.getCardNumber());
 
@@ -92,7 +97,8 @@ public class TestPaymentMethodService {
 
     @Test
     public void testDeletePaymentMethodsByClient() {
-        PaymentMethod paymentMethod = new PaymentMethod(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE, PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CARDID, PAYMENTMETHOD_CLIENT);
+        PaymentMethod paymentMethod = new PaymentMethod(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE,
+                PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CARDID, PAYMENTMETHOD_CLIENT);
 
         paymentMethodService.deletePaymentMethods(paymentMethod.getClient());
 
@@ -102,7 +108,7 @@ public class TestPaymentMethodService {
     @Test
     public void tetGetPaymentMethod() {
         PaymentMethod paymentMethod = paymentMethodService.getPaymentMethod(PAYMENTMETHOD_CARDNUMBER);
-        
+
         assertNotNull(paymentMethod);
         assertEquals(paymentMethod.getCardHolderName(), PAYMENTMETHOD_CARDHOLDERNAME);
         assertEquals(paymentMethod.getCardId(), PAYMENTMETHOD_CARDID);
@@ -142,5 +148,5 @@ public class TestPaymentMethodService {
     public void testDoesNotHavePaymentMethod() {
         assertFalse(paymentMethodService.hasPaymentMethod(WITHOUTPAYMENTMETHOD_CLIENT));
     }
-    
+
 }

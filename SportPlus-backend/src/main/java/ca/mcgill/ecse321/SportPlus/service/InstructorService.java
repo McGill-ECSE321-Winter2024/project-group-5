@@ -16,16 +16,16 @@ public class InstructorService {
     @Autowired
     InstructorRepository instructorRepository;
 
-    //-----------Wrappers-----------//
+    // -----------Wrappers-----------//
 
     @Transactional
-	public Instructor getInstructor(String email) {
+    public Instructor getInstructor(String email) {
         if (email == null || email.trim().length() == 0) {
             throw new IllegalArgumentException("Instructor email cannot be empty!");
         }
         Instructor instructor = instructorRepository.findInstructorByEmail(email);
         return instructor;
-	}
+    }
 
     @Transactional
     public Instructor getInstructor(Integer accountId) {
@@ -48,8 +48,8 @@ public class InstructorService {
         }
         instructorRepository.deleteInstructorByEmail(email);
     }
-    
-    //------------EndWrappers----------//
+
+    // ------------EndWrappers----------//
 
     @Transactional
     public Instructor createInstructor(String email, String firstName, String password, String lastName) {
@@ -127,5 +127,5 @@ public class InstructorService {
         instructorRepository.save(instructor);
         return instructor;
     }
-    
+
 }

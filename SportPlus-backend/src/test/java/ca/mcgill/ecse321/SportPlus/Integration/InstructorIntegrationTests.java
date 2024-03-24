@@ -45,13 +45,14 @@ public class InstructorIntegrationTests {
 
     @Test
     public void testFindInstructorByEmail() {
-        Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD, INSTRUCTOR_LASTNAME, INSTRUCTOR_VALID_ACCOUNTID);
+        Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD,
+                INSTRUCTOR_LASTNAME, INSTRUCTOR_VALID_ACCOUNTID);
         instructorRepository.save(instructor);
 
         String url = "/instructors/getByEmail/" + String.valueOf(INSTRUCTOR_EMAIL);
 
         ResponseEntity<InstructorResponseDto> response = client.getForEntity(url, InstructorResponseDto.class);
-        
+
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         InstructorResponseDto instructorResponse = response.getBody();
@@ -64,13 +65,14 @@ public class InstructorIntegrationTests {
 
     @Test
     public void testFindInstructorByEmail2() {
-        Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD, INSTRUCTOR_LASTNAME, INSTRUCTOR_VALID_ACCOUNTID);
+        Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD,
+                INSTRUCTOR_LASTNAME, INSTRUCTOR_VALID_ACCOUNTID);
         instructorRepository.save(instructor);
 
         String url = "/instructors/getByEmail/" + String.valueOf(INSTRUCTOR_EMAIL) + "/";
 
         ResponseEntity<InstructorResponseDto> response = client.getForEntity(url, InstructorResponseDto.class);
-        
+
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         InstructorResponseDto instructorResponse = response.getBody();
@@ -83,14 +85,15 @@ public class InstructorIntegrationTests {
 
     @Test
     public void testFindInstructorByAccountId() {
-        Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD, INSTRUCTOR_LASTNAME, INSTRUCTOR_VALID_ACCOUNTID);
+        Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD,
+                INSTRUCTOR_LASTNAME, INSTRUCTOR_VALID_ACCOUNTID);
         instructorRepository.save(instructor);
         int validId = instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL).getAccountId();
 
         String url = "/instructors/getById/" + String.valueOf(validId);
 
         ResponseEntity<InstructorResponseDto> response = client.getForEntity(url, InstructorResponseDto.class);
-        
+
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         InstructorResponseDto instructorResponse = response.getBody();
@@ -103,14 +106,15 @@ public class InstructorIntegrationTests {
 
     @Test
     public void testFindInstructorByAccountId2() {
-        Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD, INSTRUCTOR_LASTNAME, INSTRUCTOR_VALID_ACCOUNTID);
+        Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD,
+                INSTRUCTOR_LASTNAME, INSTRUCTOR_VALID_ACCOUNTID);
         instructorRepository.save(instructor);
         int validId = instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL).getAccountId();
 
         String url = "/instructors/getById/" + String.valueOf(validId) + "/";
 
         ResponseEntity<InstructorResponseDto> response = client.getForEntity(url, InstructorResponseDto.class);
-        
+
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         InstructorResponseDto instructorResponse = response.getBody();
@@ -123,15 +127,17 @@ public class InstructorIntegrationTests {
 
     @Test
     public void testGetAllInstructors() {
-        Instructor instructor1 = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD, INSTRUCTOR_LASTNAME, INSTRUCTOR_VALID_ACCOUNTID);
-        Instructor instructor2 = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD, INSTRUCTOR_LASTNAME, INSTRUCTOR_VALID_ACCOUNTID);
+        Instructor instructor1 = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD,
+                INSTRUCTOR_LASTNAME, INSTRUCTOR_VALID_ACCOUNTID);
+        Instructor instructor2 = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD,
+                INSTRUCTOR_LASTNAME, INSTRUCTOR_VALID_ACCOUNTID);
         instructorRepository.save(instructor1);
         instructorRepository.save(instructor2);
 
         String url = "/instructors/all";
 
-        ResponseEntity<InstructorListDto> response = client.getForEntity(url,InstructorListDto.class);
-        
+        ResponseEntity<InstructorListDto> response = client.getForEntity(url, InstructorListDto.class);
+
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         InstructorListDto instructorResponse = response.getBody();
@@ -147,15 +153,17 @@ public class InstructorIntegrationTests {
 
     @Test
     public void testGetAllInstructors2() {
-        Instructor instructor1 = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD, INSTRUCTOR_LASTNAME, INSTRUCTOR_VALID_ACCOUNTID);
-        Instructor instructor2 = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD, INSTRUCTOR_LASTNAME, INSTRUCTOR_VALID_ACCOUNTID);
+        Instructor instructor1 = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD,
+                INSTRUCTOR_LASTNAME, INSTRUCTOR_VALID_ACCOUNTID);
+        Instructor instructor2 = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD,
+                INSTRUCTOR_LASTNAME, INSTRUCTOR_VALID_ACCOUNTID);
         instructorRepository.save(instructor1);
         instructorRepository.save(instructor2);
 
         String url = "/instructors/all/";
 
-        ResponseEntity<InstructorListDto> response = client.getForEntity(url,InstructorListDto.class);
-        
+        ResponseEntity<InstructorListDto> response = client.getForEntity(url, InstructorListDto.class);
+
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         InstructorListDto instructorResponse = response.getBody();
@@ -171,12 +179,13 @@ public class InstructorIntegrationTests {
 
     @Test
     public void testDeleteInstructorByEmail() {
-        Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD, INSTRUCTOR_LASTNAME, INSTRUCTOR_VALID_ACCOUNTID);
+        Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD,
+                INSTRUCTOR_LASTNAME, INSTRUCTOR_VALID_ACCOUNTID);
         instructorRepository.save(instructor);
 
         String url = "/instructors/all";
 
-        ResponseEntity<InstructorListDto> response = client.getForEntity(url,InstructorListDto.class);
+        ResponseEntity<InstructorListDto> response = client.getForEntity(url, InstructorListDto.class);
 
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -188,7 +197,7 @@ public class InstructorIntegrationTests {
 
         client.delete(urlToDelete);
 
-        response = client.getForEntity(url,InstructorListDto.class);
+        response = client.getForEntity(url, InstructorListDto.class);
 
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -198,12 +207,13 @@ public class InstructorIntegrationTests {
 
     @Test
     public void testDeleteInstructorByEmail2() {
-        Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD, INSTRUCTOR_LASTNAME, INSTRUCTOR_VALID_ACCOUNTID);
+        Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD,
+                INSTRUCTOR_LASTNAME, INSTRUCTOR_VALID_ACCOUNTID);
         instructorRepository.save(instructor);
 
         String url = "/instructors/all";
 
-        ResponseEntity<InstructorListDto> response = client.getForEntity(url,InstructorListDto.class);
+        ResponseEntity<InstructorListDto> response = client.getForEntity(url, InstructorListDto.class);
 
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -215,7 +225,7 @@ public class InstructorIntegrationTests {
 
         client.delete(urlToDelete);
 
-        response = client.getForEntity(url,InstructorListDto.class);
+        response = client.getForEntity(url, InstructorListDto.class);
 
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -225,9 +235,11 @@ public class InstructorIntegrationTests {
 
     @Test
     public void testCreateInstructor() {
-        InstructorRequestDto request = new InstructorRequestDto(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_LASTNAME, INSTRUCTOR_PASSWORD);
+        InstructorRequestDto request = new InstructorRequestDto(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME,
+                INSTRUCTOR_LASTNAME, INSTRUCTOR_PASSWORD);
 
-        ResponseEntity<InstructorResponseDto> response = client.postForEntity("/instructors/create", request, InstructorResponseDto.class);
+        ResponseEntity<InstructorResponseDto> response = client.postForEntity("/instructors/create", request,
+                InstructorResponseDto.class);
 
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
@@ -243,9 +255,11 @@ public class InstructorIntegrationTests {
 
     @Test
     public void testCreateInstructor2() {
-        InstructorRequestDto request = new InstructorRequestDto(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_LASTNAME, INSTRUCTOR_PASSWORD);
+        InstructorRequestDto request = new InstructorRequestDto(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME,
+                INSTRUCTOR_LASTNAME, INSTRUCTOR_PASSWORD);
 
-        ResponseEntity<InstructorResponseDto> response = client.postForEntity("/instructors/create/", request, InstructorResponseDto.class);
+        ResponseEntity<InstructorResponseDto> response = client.postForEntity("/instructors/create/", request,
+                InstructorResponseDto.class);
 
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
@@ -261,9 +275,11 @@ public class InstructorIntegrationTests {
 
     @Test
     public void testUpdateInstructorFirstName() {
-        InstructorRequestDto request = new InstructorRequestDto(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_LASTNAME, INSTRUCTOR_PASSWORD);
+        InstructorRequestDto request = new InstructorRequestDto(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME,
+                INSTRUCTOR_LASTNAME, INSTRUCTOR_PASSWORD);
 
-        ResponseEntity<InstructorResponseDto> response = client.postForEntity("/instructors/create", request, InstructorResponseDto.class);
+        ResponseEntity<InstructorResponseDto> response = client.postForEntity("/instructors/create", request,
+                InstructorResponseDto.class);
 
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
@@ -276,7 +292,8 @@ public class InstructorIntegrationTests {
 
         String url = "/instructors/updateFirstName/" + INSTRUCTOR_EMAIL + "/" + newFirstName;
 
-        ResponseEntity<InstructorResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null, InstructorResponseDto.class);
+        ResponseEntity<InstructorResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
+                InstructorResponseDto.class);
         assertNotNull(responseAfterUpdate);
         assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
         InstructorResponseDto updatedInstructor = responseAfterUpdate.getBody();
@@ -293,9 +310,11 @@ public class InstructorIntegrationTests {
 
     @Test
     public void testUpdateInstructorFirstName2() {
-        InstructorRequestDto request = new InstructorRequestDto(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_LASTNAME, INSTRUCTOR_PASSWORD);
+        InstructorRequestDto request = new InstructorRequestDto(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME,
+                INSTRUCTOR_LASTNAME, INSTRUCTOR_PASSWORD);
 
-        ResponseEntity<InstructorResponseDto> response = client.postForEntity("/instructors/create", request, InstructorResponseDto.class);
+        ResponseEntity<InstructorResponseDto> response = client.postForEntity("/instructors/create", request,
+                InstructorResponseDto.class);
 
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
@@ -308,7 +327,8 @@ public class InstructorIntegrationTests {
 
         String url = "/instructors/updateFirstName/" + INSTRUCTOR_EMAIL + "/" + newFirstName + "/";
 
-        ResponseEntity<InstructorResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null, InstructorResponseDto.class);
+        ResponseEntity<InstructorResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
+                InstructorResponseDto.class);
         assertNotNull(responseAfterUpdate);
         assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
         InstructorResponseDto updatedInstructor = responseAfterUpdate.getBody();
@@ -325,9 +345,11 @@ public class InstructorIntegrationTests {
 
     @Test
     public void testUpdateInstructorLastName() {
-        InstructorRequestDto request = new InstructorRequestDto(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_LASTNAME, INSTRUCTOR_PASSWORD);
+        InstructorRequestDto request = new InstructorRequestDto(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME,
+                INSTRUCTOR_LASTNAME, INSTRUCTOR_PASSWORD);
 
-        ResponseEntity<InstructorResponseDto> response = client.postForEntity("/instructors/create", request, InstructorResponseDto.class);
+        ResponseEntity<InstructorResponseDto> response = client.postForEntity("/instructors/create", request,
+                InstructorResponseDto.class);
 
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
@@ -340,7 +362,8 @@ public class InstructorIntegrationTests {
 
         String url = "/instructors/updateLastName/" + INSTRUCTOR_EMAIL + "/" + newLastName;
 
-        ResponseEntity<InstructorResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null, InstructorResponseDto.class);
+        ResponseEntity<InstructorResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
+                InstructorResponseDto.class);
         assertNotNull(responseAfterUpdate);
         assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
         InstructorResponseDto updatedInstructor = responseAfterUpdate.getBody();
@@ -357,9 +380,11 @@ public class InstructorIntegrationTests {
 
     @Test
     public void testUpdateInstructorLastName2() {
-        InstructorRequestDto request = new InstructorRequestDto(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_LASTNAME, INSTRUCTOR_PASSWORD);
+        InstructorRequestDto request = new InstructorRequestDto(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME,
+                INSTRUCTOR_LASTNAME, INSTRUCTOR_PASSWORD);
 
-        ResponseEntity<InstructorResponseDto> response = client.postForEntity("/instructors/create", request, InstructorResponseDto.class);
+        ResponseEntity<InstructorResponseDto> response = client.postForEntity("/instructors/create", request,
+                InstructorResponseDto.class);
 
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
@@ -372,7 +397,8 @@ public class InstructorIntegrationTests {
 
         String url = "/instructors/updateLastName/" + INSTRUCTOR_EMAIL + "/" + newLastName + "/";
 
-        ResponseEntity<InstructorResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null, InstructorResponseDto.class);
+        ResponseEntity<InstructorResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
+                InstructorResponseDto.class);
         assertNotNull(responseAfterUpdate);
         assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
         InstructorResponseDto updatedInstructor = responseAfterUpdate.getBody();
@@ -389,9 +415,11 @@ public class InstructorIntegrationTests {
 
     @Test
     public void testUpdateInstructorPassword() {
-        InstructorRequestDto request = new InstructorRequestDto(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_LASTNAME, INSTRUCTOR_PASSWORD);
+        InstructorRequestDto request = new InstructorRequestDto(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME,
+                INSTRUCTOR_LASTNAME, INSTRUCTOR_PASSWORD);
 
-        ResponseEntity<InstructorResponseDto> response = client.postForEntity("/instructors/create", request, InstructorResponseDto.class);
+        ResponseEntity<InstructorResponseDto> response = client.postForEntity("/instructors/create", request,
+                InstructorResponseDto.class);
 
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
@@ -404,7 +432,8 @@ public class InstructorIntegrationTests {
 
         String url = "/instructors/updatePassword/" + INSTRUCTOR_EMAIL + "/" + INSTRUCTOR_PASSWORD + "/" + newPassword;
 
-        ResponseEntity<InstructorResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null, InstructorResponseDto.class);
+        ResponseEntity<InstructorResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
+                InstructorResponseDto.class);
         assertNotNull(responseAfterUpdate);
         assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
         InstructorResponseDto updatedInstructor = responseAfterUpdate.getBody();
@@ -421,9 +450,11 @@ public class InstructorIntegrationTests {
 
     @Test
     public void testUpdateInstructorPassword2() {
-        InstructorRequestDto request = new InstructorRequestDto(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_LASTNAME, INSTRUCTOR_PASSWORD);
+        InstructorRequestDto request = new InstructorRequestDto(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME,
+                INSTRUCTOR_LASTNAME, INSTRUCTOR_PASSWORD);
 
-        ResponseEntity<InstructorResponseDto> response = client.postForEntity("/instructors/create", request, InstructorResponseDto.class);
+        ResponseEntity<InstructorResponseDto> response = client.postForEntity("/instructors/create", request,
+                InstructorResponseDto.class);
 
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
@@ -434,9 +465,11 @@ public class InstructorIntegrationTests {
 
         String newPassword = "TheNewPass456";
 
-        String url = "/instructors/updatePassword/" + INSTRUCTOR_EMAIL + "/" + INSTRUCTOR_PASSWORD + "/" + newPassword + "/";
+        String url = "/instructors/updatePassword/" + INSTRUCTOR_EMAIL + "/" + INSTRUCTOR_PASSWORD + "/" + newPassword
+                + "/";
 
-        ResponseEntity<InstructorResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null, InstructorResponseDto.class);
+        ResponseEntity<InstructorResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
+                InstructorResponseDto.class);
         assertNotNull(responseAfterUpdate);
         assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
         InstructorResponseDto updatedInstructor = responseAfterUpdate.getBody();
@@ -450,5 +483,5 @@ public class InstructorIntegrationTests {
         assertEquals(instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL).getPassword(), newPassword);
         assertTrue(instructorRepository.findAll().size() == 1);
     }
-    
+
 }

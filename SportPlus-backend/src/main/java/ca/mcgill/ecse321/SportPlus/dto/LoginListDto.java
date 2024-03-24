@@ -3,7 +3,7 @@ package ca.mcgill.ecse321.SportPlus.dto;
 import java.util.List;
 
 public class LoginListDto {
-     private List<LoginResponseDto> logins;
+    private List<LoginResponseDto> logins;
 
     public LoginListDto() {
     }
@@ -20,5 +20,4 @@ public class LoginListDto {
         this.logins = logins;
     }
 
-    
 }

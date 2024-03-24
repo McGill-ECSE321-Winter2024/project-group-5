@@ -16,5 +16,5 @@ public class OwnerInitializationConfig {
             ownerService.createOwner();
         }
     }
-    
+
 }

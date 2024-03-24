@@ -20,6 +20,7 @@ import ca.mcgill.ecse321.SportPlus.dto.RecurringSpecificClassRequestDto;
 import ca.mcgill.ecse321.SportPlus.dto.RecurringSpecificClassesResponseDto;
 
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -29,12 +30,13 @@ import java.sql.Time;
 
 @CrossOrigin(origins = "*")
 @RestController
+@RequestMapping("/specificClass")
 public class SpecificClassRestController {
 
     @Autowired
     private SpecificClassService specificClassService;
 
-    @PostMapping(value = { "/specificclasses/create", "/specificclasses/create/" })
+    @PostMapping(value = { "/create", "/create/" })
     @ResponseStatus(HttpStatus.CREATED)
     public SpecificClassResponseDto createSpecificClass(@RequestBody SpecificClassRequestsDto specificclass) {
 
@@ -47,7 +49,7 @@ public class SpecificClassRestController {
         return new SpecificClassResponseDto(createdClass);
     }
 
-    @PostMapping(value = { "/recurring" })
+    @PostMapping(value = { "/recurring", "/recurring/" })
     @ResponseStatus(HttpStatus.CREATED)
     public RecurringSpecificClassesResponseDto createRecurrigSpecificClasses(
             @RequestBody RecurringSpecificClassRequestDto recurringSpecificCLassRequest) {
@@ -77,7 +79,7 @@ public class SpecificClassRestController {
 
     }
 
-    @PutMapping(value = { "/{id}/date" })
+    @PutMapping(value = { "/{id}/date", "/{id}/date/" })
     @ResponseStatus(HttpStatus.OK)
     public SpecificClassResponseDto updateSpecificClassDate(@PathVariable("id") int id,
             @RequestBody SpecificClassRequestsDto requestsDtoSpecifcClass) {
@@ -87,7 +89,7 @@ public class SpecificClassRestController {
         return new SpecificClassResponseDto(updatedClass);
     }
 
-    @PutMapping(value = { "/{id}/time" })
+    @PutMapping(value = { "/{id}/time", "/{id}/time/" })
     @ResponseStatus(HttpStatus.OK)
     public SpecificClassResponseDto updateSpecificClassTime(@PathVariable("id") int id,
             @RequestBody SpecificClassRequestsDto requestsDtoSpecifcClass) {
@@ -98,7 +100,7 @@ public class SpecificClassRestController {
         return new SpecificClassResponseDto(updatedClass);
     }
 
-    @PutMapping(value = { "/{id}/classtype" })
+    @PutMapping(value = { "/{id}/classtype", "/{id}/classtype/" })
     @ResponseStatus(HttpStatus.OK)
     public SpecificClassResponseDto updateSpecificClassClassType(@PathVariable("id") int id,
             @RequestBody SpecificClassRequestsDto requestsDtoSpecifcClass) {
@@ -109,7 +111,7 @@ public class SpecificClassRestController {
         return new SpecificClassResponseDto(updatedClass);
     }
 
-    @PutMapping(value = { "/{id}/assign-instructor" })
+    @PutMapping(value = { "/{id}/assign-instructor", "/{id}/assign-instructor/" })
     @ResponseStatus(HttpStatus.OK)
     public SpecificClassResponseDto assignInstructorSpecificClass(@PathVariable("id") int id,
             @RequestBody SpecificClassRequestsDto requestsDtoSpecifcClass) {
@@ -120,7 +122,7 @@ public class SpecificClassRestController {
         return new SpecificClassResponseDto(updatedClass);
     }
 
-    @PutMapping(value = { "/{id}/remove-instructor" })
+    @PutMapping(value = { "/{id}/remove-instructor", "/{id}/remove-instructor/" })
     @ResponseStatus(HttpStatus.OK)
     public SpecificClassResponseDto removeInstructorSpecificClass(@PathVariable("id") int id) {
 
@@ -129,7 +131,7 @@ public class SpecificClassRestController {
         return new SpecificClassResponseDto(updatedClass);
     }
 
-    @GetMapping("/instructor/{instructorId}")
+    @GetMapping(value = { "/instructor/{instructorId}", "/instructor/{instructorId}/" })
     @ResponseStatus(HttpStatus.OK)
     public List<SpecificClassResponseDto> getSpecificClassByInstructor(@PathVariable("instructorId") int instructorId) {
 
@@ -147,7 +149,7 @@ public class SpecificClassRestController {
         return responseDtos;
     }
 
-    @GetMapping("/by-date")
+    @GetMapping(value = { "/by-date", "/by-date/" })
     @ResponseStatus(HttpStatus.OK)
     public List<SpecificClassResponseDto> getSpecificClassByDate(
             @RequestParam(name = "date") @DateTimeFormat(pattern = "yyyy-MM-dd") java.util.Date utilDate) {
@@ -168,7 +170,7 @@ public class SpecificClassRestController {
         return responseDtos;
     }
 
-    @GetMapping("/class-type/{classTypeId}")
+    @GetMapping(value = { "/class-type/{classTypeId}", "/class-type/{classTypeId}/" })
     @ResponseStatus(HttpStatus.OK)
     public List<SpecificClassResponseDto> getSpecificClassByClassType(@PathVariable("classTypeId") int classTypeId) {
 
@@ -186,7 +188,7 @@ public class SpecificClassRestController {
         return responseDtos;
     }
 
-    @GetMapping("/by-date-range")
+    @GetMapping(value = { "/by-date-range", "/by-date-range/" })
     @ResponseStatus(HttpStatus.OK)
     public List<SpecificClassResponseDto> getSpecificClassByDateRange(
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") java.util.Date startDate,
@@ -209,7 +211,7 @@ public class SpecificClassRestController {
         return responseDtos;
     }
 
-    @GetMapping("/available")
+    @GetMapping(value = { "/available", "available/" })
     @ResponseStatus(HttpStatus.OK)
     public List<SpecificClassResponseDto> getAvailableSpecificClasses() {
 
@@ -227,7 +229,7 @@ public class SpecificClassRestController {
         return responseDtos;
     }
 
-    @GetMapping("/by-date-and-start-time")
+    @GetMapping(value = { "/by-date-and-start-time", "/by-date-and-start-time/" })
     @ResponseStatus(HttpStatus.OK)
     public SpecificClassResponseDto getSpecificClassByDateAndTime(
             @RequestParam(name = "date") @DateTimeFormat(pattern = "yyyy-MM-dd") java.util.Date date,
@@ -241,7 +243,7 @@ public class SpecificClassRestController {
         return new SpecificClassResponseDto(session);
     }
 
-    @GetMapping("/all")
+    @GetMapping(value = { "/all", "all/" })
     @ResponseStatus(HttpStatus.OK)
     public List<SpecificClassResponseDto> getAllSpecificClasses() {
 
@@ -259,7 +261,7 @@ public class SpecificClassRestController {
         return responseDtos;
     }
 
-    @DeleteMapping("/class-type/{classTypeId}")
+    @DeleteMapping(value = { "/class-type/{classTypeId}", "/class-type/{classTypeId}/" })
     public ResponseEntity<Void> deleteSpecificClassesByClassType(@PathVariable("classTypeId") int classTypeId) {
         specificClassService.deleteByClassType(classTypeId);
         return ResponseEntity.noContent().build();

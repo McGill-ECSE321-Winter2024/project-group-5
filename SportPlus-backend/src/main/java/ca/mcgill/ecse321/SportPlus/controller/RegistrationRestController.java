@@ -23,55 +23,58 @@ import ca.mcgill.ecse321.SportPlus.service.RegistrationService;
 @CrossOrigin(origins = "*")
 @RestController
 public class RegistrationRestController {
-   
+
     @Autowired
     private RegistrationService registrationService;
 
-    @GetMapping(value = {"/registrations/getByClient/{email}", "/registrations/getByClient/{email}/"})
+    @GetMapping(value = { "/registrations/getByClient/{email}", "/registrations/getByClient/{email}/" })
     public RegistrationListDto findRegistrationByClient(@PathVariable("email") String theEmail) {
         List<RegistrationResponseDto> registrations = new ArrayList<>();
-        for(Registration registration : registrationService.getByClient(theEmail)){
+        for (Registration registration : registrationService.getByClient(theEmail)) {
             registrations.add(new RegistrationResponseDto(registration));
         }
         return new RegistrationListDto(registrations);
     }
 
-    @GetMapping(value = {"/registrations/getBySpecificClass/{sessionId}", "/registrations/getBySpecificClass/{sessionId}/"})
+    @GetMapping(value = { "/registrations/getBySpecificClass/{sessionId}",
+            "/registrations/getBySpecificClass/{sessionId}/" })
     public RegistrationListDto findRegistrationBySpecificClass(@PathVariable("sessionId") int theSessionId) {
         List<RegistrationResponseDto> registrations = new ArrayList<>();
-        for(Registration registration : registrationService.getBySpecificClass(theSessionId)){
+        for (Registration registration : registrationService.getBySpecificClass(theSessionId)) {
             registrations.add(new RegistrationResponseDto(registration));
         }
         return new RegistrationListDto(registrations);
     }
 
-    @GetMapping(value = {"/registrations/getByRegistrationId/{regId}", "/registrations/getByRegistrationId/{regId}/"})
+    @GetMapping(value = { "/registrations/getByRegistrationId/{regId}", "/registrations/getByRegistrationId/{regId}/" })
     public RegistrationResponseDto findRegistrationByRegId(@PathVariable("regId") int theRegId) {
         Registration registration = registrationService.getByRegistrationId(theRegId);
         return new RegistrationResponseDto(registration);
     }
 
-
-
-    @DeleteMapping(value = {"/registrations/deleteByClient/{email}", "/registrations/deleteByClient/{email}/"})
+    @DeleteMapping(value = { "/registrations/deleteByClient/{email}", "/registrations/deleteByClient/{email}/" })
     public void deleteRegistrationByClient(@PathVariable("email") String theEmail) {
         registrationService.deleteByClient(theEmail);
     }
 
-    @DeleteMapping(value = {"/registrations/deleteBySpecificClass/{sessionId}", "/registrations/getBySpecificClass/{sessionId}/"})
+    @DeleteMapping(value = { "/registrations/deleteBySpecificClass/{sessionId}",
+            "/registrations/getBySpecificClass/{sessionId}/" })
     public void deleteRegistrationBySpecificClass(@PathVariable("sessionId") int theSessionId) {
         registrationService.deleteBySpecificClass(theSessionId);
     }
 
-    @DeleteMapping(value = {"/registrations/deleteByRegistrationId/{regId}", "/registrations/getByRegistrationId/{regId}/"})
+    @DeleteMapping(value = { "/registrations/deleteByRegistrationId/{regId}",
+            "/registrations/getByRegistrationId/{regId}/" })
     public void deleteRegistrationByRegId(@PathVariable("regId") int theRegId) {
         registrationService.deleteByRegistrationId(theRegId);
     }
 
-    @PostMapping(value = {"/registrations/create", "registrations/create/"})
+    @PostMapping(value = { "/registrations/create", "registrations/create/" })
     @ResponseStatus(HttpStatus.CREATED)
-    public RegistrationResponseDto createRegistration(@RequestBody RegistrationRequestDto registration){
-        Registration createRegistration = registrationService.createRegistration(registration.getSpecificClass().getName(), registration.getClient().getEmail());
+    public RegistrationResponseDto createRegistration(@RequestBody RegistrationRequestDto registration) {
+        Registration createRegistration = registrationService
+                .createRegistration(registration.getSpecificClass().getName(), registration.getClient().getEmail());
         return new RegistrationResponseDto(createRegistration);
     }
+
 }

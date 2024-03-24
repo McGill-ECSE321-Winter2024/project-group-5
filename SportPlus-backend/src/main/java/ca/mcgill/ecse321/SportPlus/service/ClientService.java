@@ -16,16 +16,16 @@ public class ClientService {
     @Autowired
     ClientRepository clientRepository;
 
-    //-----------Wrappers-----------//
+    // -----------Wrappers-----------//
 
     @Transactional
-	public Client getClient(String email) {
+    public Client getClient(String email) {
         if (email == null || email.trim().length() == 0) {
             throw new IllegalArgumentException("Client email cannot be empty!");
         }
         Client client = clientRepository.findByEmail(email);
         return client;
-	}
+    }
 
     @Transactional
     public Client getClient(Integer accountId) {
@@ -48,8 +48,8 @@ public class ClientService {
         }
         clientRepository.deleteByEmail(email);
     }
-    
-    //------------EndWrappers----------//
+
+    // ------------EndWrappers----------//
 
     @Transactional
     public Client createClient(String email, String firstName, String password, String lastName) {
@@ -127,5 +127,5 @@ public class ClientService {
         clientRepository.save(client);
         return client;
     }
-    
+
 }

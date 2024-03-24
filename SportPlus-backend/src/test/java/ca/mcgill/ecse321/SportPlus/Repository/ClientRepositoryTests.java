@@ -17,6 +17,7 @@ import ca.mcgill.ecse321.SportPlus.model.Client;
 
 @SpringBootTest
 public class ClientRepositoryTests {
+
     @Autowired
     private ClientRepository clientRepository;
 

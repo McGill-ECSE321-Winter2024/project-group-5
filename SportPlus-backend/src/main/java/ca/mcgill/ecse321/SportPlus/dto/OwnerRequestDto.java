@@ -1,7 +1,7 @@
 package ca.mcgill.ecse321.SportPlus.dto;
 
 public class OwnerRequestDto {
-     
+
     private String firstName;
     private String lastName;
     private String password;
@@ -38,5 +38,5 @@ public class OwnerRequestDto {
     public void setPassword(String password) {
         this.password = password;
     }
-    
+
 }

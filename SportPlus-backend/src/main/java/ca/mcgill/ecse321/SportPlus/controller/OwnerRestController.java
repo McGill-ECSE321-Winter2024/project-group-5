@@ -52,8 +52,10 @@ public class OwnerRestController {
         return new OwnerResponseDto(owner);
     }
 
-    @PutMapping(value = { "/owner/updatePassword/{oldPassword}/{newPassword}", "/owner/updatePassword/{oldPassword}/{newPassword}/" })
-    public OwnerResponseDto updateOwnerPassword(@PathVariable("oldPassword") String theOldPassword, @PathVariable("newPassword") String thePassword) {
+    @PutMapping(value = { "/owner/updatePassword/{oldPassword}/{newPassword}",
+            "/owner/updatePassword/{oldPassword}/{newPassword}/" })
+    public OwnerResponseDto updateOwnerPassword(@PathVariable("oldPassword") String theOldPassword,
+            @PathVariable("newPassword") String thePassword) {
         Owner owner = ownerService.getOwner();
         ownerService.updateOwnerPassword(theOldPassword, thePassword);
         owner = ownerService.getOwner();

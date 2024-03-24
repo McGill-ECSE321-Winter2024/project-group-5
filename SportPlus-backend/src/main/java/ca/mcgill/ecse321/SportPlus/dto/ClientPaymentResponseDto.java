@@ -19,5 +19,5 @@ public class ClientPaymentResponseDto {
     public void setHasPaymentMethod(boolean hasPaymentMethod) {
         this.hasPaymentMethod = hasPaymentMethod;
     }
-    
+
 }

@@ -20,7 +20,7 @@ public class PaymentMethodRequestDto {
         this.cvc = cvc;
         this.cardHolderName = cardHolderName;
         this.client = client;
-    }    
+    }
 
     public String getCardNumber() {
         return cardNumber;

@@ -33,7 +33,8 @@ public class PaymentMethodRestController {
     @Autowired
     private ClientService clientService;
 
-    @GetMapping(value = { "/paymentMethod/getByCardNumber/{cardNumber}", "/paymentMethod/getByCardNumber/{cardNumber}/" })
+    @GetMapping(value = { "/paymentMethod/getByCardNumber/{cardNumber}",
+            "/paymentMethod/getByCardNumber/{cardNumber}/" })
     public PaymentMethodResponseDto findPaymentMethodByCardNumber(@PathVariable("cardNumber") String theCardNumber) {
         PaymentMethod paymentMethod = paymentMethodService.getPaymentMethod(theCardNumber);
         return new PaymentMethodResponseDto(paymentMethod);
@@ -49,7 +50,8 @@ public class PaymentMethodRestController {
         return new PaymentMethodListDto(paymentMethods);
     }
 
-    @DeleteMapping(value = { "paymentMethod/deleteByCardNumber/{cardNumber}", "paymentMethod/deleteByCardNumber/{cardNumber}/" })
+    @DeleteMapping(value = { "paymentMethod/deleteByCardNumber/{cardNumber}",
+            "paymentMethod/deleteByCardNumber/{cardNumber}/" })
     public void deletePaymentMethodByCardNumber(@PathVariable("cardNumber") String theCardNumber) {
         paymentMethodService.deletePaymentMethod(theCardNumber);
     }
@@ -63,7 +65,9 @@ public class PaymentMethodRestController {
     @PostMapping(value = { "/paymentMethod/create", "/paymentMethod/create/" })
     @ResponseStatus(HttpStatus.CREATED)
     public PaymentMethodResponseDto createPaymentMethod(@RequestBody PaymentMethodRequestDto paymentMethod) {
-        PaymentMethod createdPaymentMethod = paymentMethodService.createPaymentMethod(paymentMethod.getCardNumber(), paymentMethod.getExpDate(), paymentMethod.getCvc(), paymentMethod.getCardHolderName(), paymentMethod.getClient());
+        PaymentMethod createdPaymentMethod = paymentMethodService.createPaymentMethod(paymentMethod.getCardNumber(),
+                paymentMethod.getExpDate(), paymentMethod.getCvc(), paymentMethod.getCardHolderName(),
+                paymentMethod.getClient());
         return new PaymentMethodResponseDto(createdPaymentMethod);
     }
 

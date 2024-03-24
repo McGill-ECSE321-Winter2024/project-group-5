@@ -54,12 +54,13 @@ public class PaymentMethodIntegrationTests {
     private static final int PAYMENTMETHOD_CARDID = 1;
 
     private static final String CLIENT_EMAIL = "johndoe@email.com";
-    
+
     @Test
     public void testFindPaymentMethodByCardNumber() {
         Client PAYMENTMETHOD_CLIENT = new Client(CLIENT_EMAIL, "John", "Pass123", "Doe", 2);
         clientRepository.save(PAYMENTMETHOD_CLIENT);
-        PaymentMethod paymentMethod = new PaymentMethod(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE, PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CARDID, PAYMENTMETHOD_CLIENT);
+        PaymentMethod paymentMethod = new PaymentMethod(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE,
+                PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CARDID, PAYMENTMETHOD_CLIENT);
         paymentMethodRepository.save(paymentMethod);
 
         String url = "/paymentMethod/getByCardNumber/" + PAYMENTMETHOD_CARDNUMBER;
@@ -80,7 +81,8 @@ public class PaymentMethodIntegrationTests {
     public void testFindPaymentMethodByCardNumber2() {
         Client PAYMENTMETHOD_CLIENT = new Client(CLIENT_EMAIL, "John", "Pass123", "Doe", 2);
         clientRepository.save(PAYMENTMETHOD_CLIENT);
-        PaymentMethod paymentMethod = new PaymentMethod(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE, PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CARDID, PAYMENTMETHOD_CLIENT);
+        PaymentMethod paymentMethod = new PaymentMethod(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE,
+                PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CARDID, PAYMENTMETHOD_CLIENT);
         paymentMethodRepository.save(paymentMethod);
 
         String url = "/paymentMethod/getByCardNumber/" + PAYMENTMETHOD_CARDNUMBER + "/";
@@ -101,7 +103,8 @@ public class PaymentMethodIntegrationTests {
     public void testFindPaymentMethodByClient() {
         Client PAYMENTMETHOD_CLIENT = new Client(CLIENT_EMAIL, "John", "Pass123", "Doe", 2);
         clientRepository.save(PAYMENTMETHOD_CLIENT);
-        PaymentMethod paymentMethod = new PaymentMethod(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE, PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CARDID, PAYMENTMETHOD_CLIENT);
+        PaymentMethod paymentMethod = new PaymentMethod(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE,
+                PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CARDID, PAYMENTMETHOD_CLIENT);
         paymentMethodRepository.save(paymentMethod);
 
         int clientId = clientRepository.findByEmail(CLIENT_EMAIL).getAccountId();
@@ -128,7 +131,8 @@ public class PaymentMethodIntegrationTests {
     public void testFindPaymentMethodByClient2() {
         Client PAYMENTMETHOD_CLIENT = new Client(CLIENT_EMAIL, "John", "Pass123", "Doe", 2);
         clientRepository.save(PAYMENTMETHOD_CLIENT);
-        PaymentMethod paymentMethod = new PaymentMethod(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE, PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CARDID, PAYMENTMETHOD_CLIENT);
+        PaymentMethod paymentMethod = new PaymentMethod(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE,
+                PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CARDID, PAYMENTMETHOD_CLIENT);
         paymentMethodRepository.save(paymentMethod);
 
         int clientId = clientRepository.findByEmail(CLIENT_EMAIL).getAccountId();
@@ -155,7 +159,8 @@ public class PaymentMethodIntegrationTests {
     public void testDeletePaymentMethodByCardNumber() {
         Client PAYMENTMETHOD_CLIENT = new Client(CLIENT_EMAIL, "John", "Pass123", "Doe", 2);
         clientRepository.save(PAYMENTMETHOD_CLIENT);
-        PaymentMethod paymentMethod = new PaymentMethod(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE, PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CARDID, PAYMENTMETHOD_CLIENT);
+        PaymentMethod paymentMethod = new PaymentMethod(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE,
+                PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CARDID, PAYMENTMETHOD_CLIENT);
         paymentMethodRepository.save(paymentMethod);
 
         assertNotNull(paymentMethodRepository.findByCardNumber(PAYMENTMETHOD_CARDNUMBER));
@@ -171,7 +176,8 @@ public class PaymentMethodIntegrationTests {
     public void testDeletePaymentMethodByCardNumber2() {
         Client PAYMENTMETHOD_CLIENT = new Client(CLIENT_EMAIL, "John", "Pass123", "Doe", 2);
         clientRepository.save(PAYMENTMETHOD_CLIENT);
-        PaymentMethod paymentMethod = new PaymentMethod(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE, PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CARDID, PAYMENTMETHOD_CLIENT);
+        PaymentMethod paymentMethod = new PaymentMethod(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE,
+                PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CARDID, PAYMENTMETHOD_CLIENT);
         paymentMethodRepository.save(paymentMethod);
 
         assertNotNull(paymentMethodRepository.findByCardNumber(PAYMENTMETHOD_CARDNUMBER));
@@ -187,7 +193,8 @@ public class PaymentMethodIntegrationTests {
     public void testDeletePaymentMethodsByClient() {
         Client PAYMENTMETHOD_CLIENT = new Client(CLIENT_EMAIL, "John", "Pass123", "Doe", 2);
         clientRepository.save(PAYMENTMETHOD_CLIENT);
-        PaymentMethod paymentMethod = new PaymentMethod(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE, PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CARDID, PAYMENTMETHOD_CLIENT);
+        PaymentMethod paymentMethod = new PaymentMethod(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE,
+                PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CARDID, PAYMENTMETHOD_CLIENT);
         paymentMethodRepository.save(paymentMethod);
 
         assertNotNull(paymentMethodRepository.findByCardNumber(PAYMENTMETHOD_CARDNUMBER));
@@ -205,7 +212,8 @@ public class PaymentMethodIntegrationTests {
     public void testDeletePaymentMethodsByClient2() {
         Client PAYMENTMETHOD_CLIENT = new Client(CLIENT_EMAIL, "John", "Pass123", "Doe", 2);
         clientRepository.save(PAYMENTMETHOD_CLIENT);
-        PaymentMethod paymentMethod = new PaymentMethod(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE, PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CARDID, PAYMENTMETHOD_CLIENT);
+        PaymentMethod paymentMethod = new PaymentMethod(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE,
+                PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CARDID, PAYMENTMETHOD_CLIENT);
         paymentMethodRepository.save(paymentMethod);
 
         assertNotNull(paymentMethodRepository.findByCardNumber(PAYMENTMETHOD_CARDNUMBER));
@@ -223,10 +231,12 @@ public class PaymentMethodIntegrationTests {
     public void testCreatePaymentMethod() {
         Client PAYMENTMETHOD_CLIENT = new Client(CLIENT_EMAIL, "John", "Pass123", "Doe", 2);
         clientRepository.save(PAYMENTMETHOD_CLIENT);
-        PaymentMethodRequestDto request = new PaymentMethodRequestDto(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE, PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CLIENT);
+        PaymentMethodRequestDto request = new PaymentMethodRequestDto(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE,
+                PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CLIENT);
 
-        ResponseEntity<PaymentMethodResponseDto> response = client.postForEntity("/paymentMethod/create", request, PaymentMethodResponseDto.class);
-        
+        ResponseEntity<PaymentMethodResponseDto> response = client.postForEntity("/paymentMethod/create", request,
+                PaymentMethodResponseDto.class);
+
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         PaymentMethodResponseDto createdPaymentMethod = response.getBody();
@@ -242,10 +252,12 @@ public class PaymentMethodIntegrationTests {
     public void testCreatePaymentMethod2() {
         Client PAYMENTMETHOD_CLIENT = new Client(CLIENT_EMAIL, "John", "Pass123", "Doe", 2);
         clientRepository.save(PAYMENTMETHOD_CLIENT);
-        PaymentMethodRequestDto request = new PaymentMethodRequestDto(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE, PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CLIENT);
+        PaymentMethodRequestDto request = new PaymentMethodRequestDto(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE,
+                PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CLIENT);
 
-        ResponseEntity<PaymentMethodResponseDto> response = client.postForEntity("/paymentMethod/create/", request, PaymentMethodResponseDto.class);
-        
+        ResponseEntity<PaymentMethodResponseDto> response = client.postForEntity("/paymentMethod/create/", request,
+                PaymentMethodResponseDto.class);
+
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         PaymentMethodResponseDto createdPaymentMethod = response.getBody();
@@ -256,12 +268,13 @@ public class PaymentMethodIntegrationTests {
         assertEquals(createdPaymentMethod.getClient(), PAYMENTMETHOD_CLIENT);
         assertNotNull(paymentMethodRepository.findByCardNumber(PAYMENTMETHOD_CARDNUMBER));
     }
-    
+
     @Test
     public void testHasPaymentMethod() {
         Client PAYMENTMETHOD_CLIENT = new Client(CLIENT_EMAIL, "John", "Pass123", "Doe", 2);
         clientRepository.save(PAYMENTMETHOD_CLIENT);
-        PaymentMethod paymentMethod = new PaymentMethod(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE, PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CARDID, PAYMENTMETHOD_CLIENT);
+        PaymentMethod paymentMethod = new PaymentMethod(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE,
+                PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CARDID, PAYMENTMETHOD_CLIENT);
         paymentMethodRepository.save(paymentMethod);
 
         String url = "/clients/hasPaymentMethod/" + CLIENT_EMAIL;
@@ -279,7 +292,8 @@ public class PaymentMethodIntegrationTests {
     public void testHasPaymentMethod2() {
         Client PAYMENTMETHOD_CLIENT = new Client(CLIENT_EMAIL, "John", "Pass123", "Doe", 2);
         clientRepository.save(PAYMENTMETHOD_CLIENT);
-        PaymentMethod paymentMethod = new PaymentMethod(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE, PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CARDID, PAYMENTMETHOD_CLIENT);
+        PaymentMethod paymentMethod = new PaymentMethod(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE,
+                PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CARDID, PAYMENTMETHOD_CLIENT);
         paymentMethodRepository.save(paymentMethod);
 
         String url = "/clients/hasPaymentMethod/" + CLIENT_EMAIL + "/";
@@ -297,7 +311,8 @@ public class PaymentMethodIntegrationTests {
     public void testDoesNotHavePaymentMethod() {
         Client PAYMENTMETHOD_CLIENT = new Client(CLIENT_EMAIL, "John", "Pass123", "Doe", 2);
         clientRepository.save(PAYMENTMETHOD_CLIENT);
-        PaymentMethod paymentMethod = new PaymentMethod(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE, PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CARDID, PAYMENTMETHOD_CLIENT);
+        PaymentMethod paymentMethod = new PaymentMethod(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE,
+                PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CARDID, PAYMENTMETHOD_CLIENT);
         paymentMethodRepository.save(paymentMethod);
         Client OTHER_CLIENT = new Client("notme@email.com", "John", "Pass123", "Doe", 2);
         clientRepository.save(OTHER_CLIENT);
@@ -317,7 +332,8 @@ public class PaymentMethodIntegrationTests {
     public void testDoesNotHavePaymentMethod2() {
         Client PAYMENTMETHOD_CLIENT = new Client(CLIENT_EMAIL, "John", "Pass123", "Doe", 2);
         clientRepository.save(PAYMENTMETHOD_CLIENT);
-        PaymentMethod paymentMethod = new PaymentMethod(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE, PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CARDID, PAYMENTMETHOD_CLIENT);
+        PaymentMethod paymentMethod = new PaymentMethod(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE,
+                PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CARDID, PAYMENTMETHOD_CLIENT);
         paymentMethodRepository.save(paymentMethod);
         Client OTHER_CLIENT = new Client("notme@email.com", "John", "Pass123", "Doe", 2);
         clientRepository.save(OTHER_CLIENT);

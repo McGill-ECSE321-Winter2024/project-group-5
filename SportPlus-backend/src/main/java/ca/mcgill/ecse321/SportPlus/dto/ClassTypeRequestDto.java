@@ -9,6 +9,7 @@ public class ClassTypeRequestDto {
 
     public ClassTypeRequestDto() {
     }
+
     public ClassTypeRequestDto(String name, String description, Boolean approved, OwnerRequestDto approver) {
         this.name = name;
         this.description = description;

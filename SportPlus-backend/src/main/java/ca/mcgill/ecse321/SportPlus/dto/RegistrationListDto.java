@@ -6,19 +6,19 @@ public class RegistrationListDto {
 
     private List<RegistrationResponseDto> registrations;
 
-    public RegistrationListDto(){
+    public RegistrationListDto() {
 
     }
 
-    public RegistrationListDto(List<RegistrationResponseDto> registrations){
+    public RegistrationListDto(List<RegistrationResponseDto> registrations) {
         this.registrations = registrations;
     }
-    
-    public List<RegistrationResponseDto> getRegistrations(){
+
+    public List<RegistrationResponseDto> getRegistrations() {
         return registrations;
     }
 
-    public void setRegistrations(List<RegistrationResponseDto> registrations){
+    public void setRegistrations(List<RegistrationResponseDto> registrations) {
         this.registrations = registrations;
     }
 }

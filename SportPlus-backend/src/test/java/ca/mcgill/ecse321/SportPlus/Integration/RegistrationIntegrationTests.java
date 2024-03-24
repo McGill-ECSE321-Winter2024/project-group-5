@@ -76,7 +76,7 @@ public class RegistrationIntegrationTests {
     private static final Time SPECIFICCLASS_STARTTIME = Time.valueOf("11:00:00");
     private static final Time SPECIFICCLASS_ENDTIME = Time.valueOf("12:00:00");
 
-    private static final int CLASS_TYPE_ID =6;
+    private static final int CLASS_TYPE_ID = 6;
     private static final String CLASS_TYPE_NAME = "Yoga";
     private static final String CLASS_TYPE_DESCRIPTION = "Description";
 
@@ -89,13 +89,14 @@ public class RegistrationIntegrationTests {
     private static final String SPECIFICCLASS_NAME = "YogaonMonday";
 
     @Test
-    public void testFindRegistrationByClient(){
+    public void testFindRegistrationByClient() {
 
         Client client = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME, CLIENT_ACCOUNTID);
         Owner owner = new Owner(OWNER_EMAIL, OWNER_FIRSTNAME, OWNER_PASSWORD, OWNER_LASTNAME, OWNER_ACCOUNTID);
         ClassType aClassType = new ClassType(CLASS_TYPE_NAME, CLASS_TYPE_DESCRIPTION, CLASS_TYPE_ID, true, owner);
-        SpecificClass specificClass = new SpecificClass(SPECIFICCLASS_DATE, SPECIFICCLASS_STARTTIME, SPECIFICCLASS_ENDTIME, SPECIFICCLASS_ID, aClassType, SPECIFICCLASS_NAME);
-        
+        SpecificClass specificClass = new SpecificClass(SPECIFICCLASS_DATE, SPECIFICCLASS_STARTTIME,
+                SPECIFICCLASS_ENDTIME, SPECIFICCLASS_ID, aClassType, SPECIFICCLASS_NAME);
+
         clientRepository.save(client);
         ownerRepository.save(owner);
         classTypeRepository.save(aClassType);
@@ -116,7 +117,7 @@ public class RegistrationIntegrationTests {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         RegistrationListDto registrationList = response.getBody();
         assertNotNull(registrationList);
-        for(RegistrationResponseDto registration : registrationList.getRegistrations()){
+        for (RegistrationResponseDto registration : registrationList.getRegistrations()) {
             assertNotNull(registration);
             assertEquals(CLIENT_EMAIL, registration.getClient().getEmail());
             assertEquals(CLASS_TYPE_NAME, registration.getSpecificClass().getClassType().getName());
@@ -127,23 +128,23 @@ public class RegistrationIntegrationTests {
     }
 
     @Test
-    public void testFindRegistrationByClient2(){
-         Client client = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME, CLIENT_ACCOUNTID);
+    public void testFindRegistrationByClient2() {
+        Client client = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME, CLIENT_ACCOUNTID);
         Owner owner = new Owner(OWNER_EMAIL, OWNER_FIRSTNAME, OWNER_PASSWORD, OWNER_LASTNAME, OWNER_ACCOUNTID);
         ClassType aClassType = new ClassType(CLASS_TYPE_NAME, CLASS_TYPE_DESCRIPTION, CLASS_TYPE_ID, true, owner);
-        SpecificClass specificClass = new SpecificClass(SPECIFICCLASS_DATE, SPECIFICCLASS_STARTTIME, SPECIFICCLASS_ENDTIME, SPECIFICCLASS_ID, aClassType, SPECIFICCLASS_NAME);
-        
+        SpecificClass specificClass = new SpecificClass(SPECIFICCLASS_DATE, SPECIFICCLASS_STARTTIME,
+                SPECIFICCLASS_ENDTIME, SPECIFICCLASS_ID, aClassType, SPECIFICCLASS_NAME);
+
         clientRepository.save(client);
         ownerRepository.save(owner);
         classTypeRepository.save(aClassType);
         specificClassRepository.save(specificClass);
-        
+
         specificClass = specificClassRepository.findByDateAndStartTime(SPECIFICCLASS_DATE, SPECIFICCLASS_STARTTIME);
         client = clientRepository.findByEmail(CLIENT_EMAIL);
         int reg_id = 0;
         Registration registration1 = new Registration(reg_id, specificClass, client);
         Registration registration2 = new Registration(reg_id, specificClass, client);
-
 
         registrationRepository.save(registration1);
         registrationRepository.save(registration2);
@@ -155,7 +156,7 @@ public class RegistrationIntegrationTests {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         RegistrationListDto registrationList = response.getBody();
         assertNotNull(registrationList);
-        for(RegistrationResponseDto registration : registrationList.getRegistrations()){
+        for (RegistrationResponseDto registration : registrationList.getRegistrations()) {
             assertNotNull(registration);
             assertEquals(CLIENT_EMAIL, registration.getClient().getEmail());
             assertEquals(CLASS_TYPE_NAME, registration.getSpecificClass().getClassType().getName());
@@ -163,23 +164,23 @@ public class RegistrationIntegrationTests {
     }
 
     @Test
-    public void testFindRegistrationBySpecificClass(){
+    public void testFindRegistrationBySpecificClass() {
         Client client = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME, CLIENT_ACCOUNTID);
         Owner owner = new Owner(OWNER_EMAIL, OWNER_FIRSTNAME, OWNER_PASSWORD, OWNER_LASTNAME, OWNER_ACCOUNTID);
         ClassType aClassType = new ClassType(CLASS_TYPE_NAME, CLASS_TYPE_DESCRIPTION, CLASS_TYPE_ID, true, owner);
-        SpecificClass specificClass = new SpecificClass(SPECIFICCLASS_DATE, SPECIFICCLASS_STARTTIME, SPECIFICCLASS_ENDTIME, SPECIFICCLASS_ID, aClassType, SPECIFICCLASS_NAME);
-        
+        SpecificClass specificClass = new SpecificClass(SPECIFICCLASS_DATE, SPECIFICCLASS_STARTTIME,
+                SPECIFICCLASS_ENDTIME, SPECIFICCLASS_ID, aClassType, SPECIFICCLASS_NAME);
+
         clientRepository.save(client);
         ownerRepository.save(owner);
         classTypeRepository.save(aClassType);
         specificClassRepository.save(specificClass);
-        
+
         specificClass = specificClassRepository.findByDateAndStartTime(SPECIFICCLASS_DATE, SPECIFICCLASS_STARTTIME);
         client = clientRepository.findByEmail(CLIENT_EMAIL);
         int reg_id = 0;
         Registration registration1 = new Registration(reg_id, specificClass, client);
         Registration registration2 = new Registration(reg_id, specificClass, client);
-
 
         registrationRepository.save(registration1);
         registrationRepository.save(registration2);
@@ -191,7 +192,7 @@ public class RegistrationIntegrationTests {
         RegistrationListDto registrationList = response.getBody();
         assertNotNull(registrationList);
 
-        for(RegistrationResponseDto registration : registrationList.getRegistrations()){
+        for (RegistrationResponseDto registration : registrationList.getRegistrations()) {
             assertNotNull(registration);
             assertEquals(CLIENT_EMAIL, registration.getClient().getEmail());
             assertEquals(CLASS_TYPE_NAME, registration.getSpecificClass().getClassType().getName());
@@ -203,23 +204,23 @@ public class RegistrationIntegrationTests {
     }
 
     @Test
-    public void testFindRegistrationBySpecificClass2(){
+    public void testFindRegistrationBySpecificClass2() {
         Client client = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME, CLIENT_ACCOUNTID);
         Owner owner = new Owner(OWNER_EMAIL, OWNER_FIRSTNAME, OWNER_PASSWORD, OWNER_LASTNAME, OWNER_ACCOUNTID);
         ClassType aClassType = new ClassType(CLASS_TYPE_NAME, CLASS_TYPE_DESCRIPTION, CLASS_TYPE_ID, true, owner);
-        SpecificClass specificClass = new SpecificClass(SPECIFICCLASS_DATE, SPECIFICCLASS_STARTTIME, SPECIFICCLASS_ENDTIME, SPECIFICCLASS_ID, aClassType, SPECIFICCLASS_NAME);
-        
+        SpecificClass specificClass = new SpecificClass(SPECIFICCLASS_DATE, SPECIFICCLASS_STARTTIME,
+                SPECIFICCLASS_ENDTIME, SPECIFICCLASS_ID, aClassType, SPECIFICCLASS_NAME);
+
         clientRepository.save(client);
         ownerRepository.save(owner);
         classTypeRepository.save(aClassType);
         specificClassRepository.save(specificClass);
-        
+
         specificClass = specificClassRepository.findByDateAndStartTime(SPECIFICCLASS_DATE, SPECIFICCLASS_STARTTIME);
         client = clientRepository.findByEmail(CLIENT_EMAIL);
         int reg_id = 0;
         Registration registration1 = new Registration(reg_id, specificClass, client);
         Registration registration2 = new Registration(reg_id, specificClass, client);
-
 
         registrationRepository.save(registration1);
         registrationRepository.save(registration2);
@@ -230,8 +231,8 @@ public class RegistrationIntegrationTests {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         RegistrationListDto registrationList = response.getBody();
         assertNotNull(registrationList);
-        
-        for(RegistrationResponseDto registration : registrationList.getRegistrations()){
+
+        for (RegistrationResponseDto registration : registrationList.getRegistrations()) {
             assertNotNull(registration);
             assertEquals(CLIENT_EMAIL, registration.getClient().getEmail());
             assertEquals(CLASS_TYPE_NAME, registration.getSpecificClass().getClassType().getName());
@@ -242,18 +243,19 @@ public class RegistrationIntegrationTests {
 
     }
 
-    @Test 
-    public void testFindRegistrationByRegId(){
+    @Test
+    public void testFindRegistrationByRegId() {
         Client client = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME, CLIENT_ACCOUNTID);
         Owner owner = new Owner(OWNER_EMAIL, OWNER_FIRSTNAME, OWNER_PASSWORD, OWNER_LASTNAME, OWNER_ACCOUNTID);
         ClassType aClassType = new ClassType(CLASS_TYPE_NAME, CLASS_TYPE_DESCRIPTION, CLASS_TYPE_ID, true, owner);
-        SpecificClass specificClass = new SpecificClass(SPECIFICCLASS_DATE, SPECIFICCLASS_STARTTIME, SPECIFICCLASS_ENDTIME, SPECIFICCLASS_ID, aClassType, SPECIFICCLASS_NAME);
-        
+        SpecificClass specificClass = new SpecificClass(SPECIFICCLASS_DATE, SPECIFICCLASS_STARTTIME,
+                SPECIFICCLASS_ENDTIME, SPECIFICCLASS_ID, aClassType, SPECIFICCLASS_NAME);
+
         clientRepository.save(client);
         ownerRepository.save(owner);
         classTypeRepository.save(aClassType);
         specificClassRepository.save(specificClass);
-        
+
         specificClass = specificClassRepository.findByDateAndStartTime(SPECIFICCLASS_DATE, SPECIFICCLASS_STARTTIME);
         client = clientRepository.findByEmail(CLIENT_EMAIL);
         int reg_id = 0;
@@ -263,31 +265,33 @@ public class RegistrationIntegrationTests {
         reg_id = registration1.getRegId();
 
         String url = "/registrations/getByRegistrationId/" + String.valueOf(reg_id);
-        ResponseEntity<RegistrationResponseDto> response = restTemplate.getForEntity(url, RegistrationResponseDto.class);
+        ResponseEntity<RegistrationResponseDto> response = restTemplate.getForEntity(url,
+                RegistrationResponseDto.class);
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         RegistrationResponseDto registrationResponse = response.getBody();
         assertNotNull(registrationResponse);
 
         assertNotNull(registrationResponse);
-            assertEquals(CLIENT_EMAIL, registrationResponse.getClient().getEmail());
-            assertEquals(CLASS_TYPE_NAME, registrationResponse.getSpecificClass().getClassType().getName());
-            assertEquals(SPECIFICCLASS_ENDTIME, registrationResponse.getSpecificClass().getEndTime());
-            assertEquals(SPECIFICCLASS_STARTTIME, registrationResponse.getSpecificClass().getStartTime());
+        assertEquals(CLIENT_EMAIL, registrationResponse.getClient().getEmail());
+        assertEquals(CLASS_TYPE_NAME, registrationResponse.getSpecificClass().getClassType().getName());
+        assertEquals(SPECIFICCLASS_ENDTIME, registrationResponse.getSpecificClass().getEndTime());
+        assertEquals(SPECIFICCLASS_STARTTIME, registrationResponse.getSpecificClass().getStartTime());
     }
 
-    @Test 
-    public void testFindRegistrationByRegId2(){
+    @Test
+    public void testFindRegistrationByRegId2() {
         Client client = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME, CLIENT_ACCOUNTID);
         Owner owner = new Owner(OWNER_EMAIL, OWNER_FIRSTNAME, OWNER_PASSWORD, OWNER_LASTNAME, OWNER_ACCOUNTID);
         ClassType aClassType = new ClassType(CLASS_TYPE_NAME, CLASS_TYPE_DESCRIPTION, CLASS_TYPE_ID, true, owner);
-        SpecificClass specificClass = new SpecificClass(SPECIFICCLASS_DATE, SPECIFICCLASS_STARTTIME, SPECIFICCLASS_ENDTIME, SPECIFICCLASS_ID, aClassType, SPECIFICCLASS_NAME);
-        
+        SpecificClass specificClass = new SpecificClass(SPECIFICCLASS_DATE, SPECIFICCLASS_STARTTIME,
+                SPECIFICCLASS_ENDTIME, SPECIFICCLASS_ID, aClassType, SPECIFICCLASS_NAME);
+
         clientRepository.save(client);
         ownerRepository.save(owner);
         classTypeRepository.save(aClassType);
         specificClassRepository.save(specificClass);
-        
+
         specificClass = specificClassRepository.findByDateAndStartTime(SPECIFICCLASS_DATE, SPECIFICCLASS_STARTTIME);
         client = clientRepository.findByEmail(CLIENT_EMAIL);
         int reg_id = 0;
@@ -297,7 +301,8 @@ public class RegistrationIntegrationTests {
         reg_id = registration1.getRegId();
 
         String url = "/registrations/getByRegistrationId/" + String.valueOf(reg_id) + "/";
-        ResponseEntity<RegistrationResponseDto> response = restTemplate.getForEntity(url, RegistrationResponseDto.class);
+        ResponseEntity<RegistrationResponseDto> response = restTemplate.getForEntity(url,
+                RegistrationResponseDto.class);
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         RegistrationResponseDto registrationResponse = response.getBody();
@@ -310,17 +315,18 @@ public class RegistrationIntegrationTests {
     }
 
     @Test
-    public void testDeleteRegistrationByClient(){
+    public void testDeleteRegistrationByClient() {
         Client client = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME, CLIENT_ACCOUNTID);
         Owner owner = new Owner(OWNER_EMAIL, OWNER_FIRSTNAME, OWNER_PASSWORD, OWNER_LASTNAME, OWNER_ACCOUNTID);
         ClassType aClassType = new ClassType(CLASS_TYPE_NAME, CLASS_TYPE_DESCRIPTION, CLASS_TYPE_ID, true, owner);
-        SpecificClass specificClass = new SpecificClass(SPECIFICCLASS_DATE, SPECIFICCLASS_STARTTIME, SPECIFICCLASS_ENDTIME, SPECIFICCLASS_ID, aClassType, SPECIFICCLASS_NAME);
-        
+        SpecificClass specificClass = new SpecificClass(SPECIFICCLASS_DATE, SPECIFICCLASS_STARTTIME,
+                SPECIFICCLASS_ENDTIME, SPECIFICCLASS_ID, aClassType, SPECIFICCLASS_NAME);
+
         clientRepository.save(client);
         ownerRepository.save(owner);
         classTypeRepository.save(aClassType);
         specificClassRepository.save(specificClass);
-        
+
         specificClass = specificClassRepository.findByDateAndStartTime(SPECIFICCLASS_DATE, SPECIFICCLASS_STARTTIME);
         client = clientRepository.findByEmail(CLIENT_EMAIL);
         int reg_id = 0;
@@ -346,24 +352,25 @@ public class RegistrationIntegrationTests {
     }
 
     @Test
-    public void testDeleteRegistrationByClient2(){
+    public void testDeleteRegistrationByClient2() {
         Client client = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME, CLIENT_ACCOUNTID);
         Owner owner = new Owner(OWNER_EMAIL, OWNER_FIRSTNAME, OWNER_PASSWORD, OWNER_LASTNAME, OWNER_ACCOUNTID);
         ClassType aClassType = new ClassType(CLASS_TYPE_NAME, CLASS_TYPE_DESCRIPTION, CLASS_TYPE_ID, true, owner);
-        SpecificClass specificClass = new SpecificClass(SPECIFICCLASS_DATE, SPECIFICCLASS_STARTTIME, SPECIFICCLASS_ENDTIME, SPECIFICCLASS_ID, aClassType, SPECIFICCLASS_NAME);
-        
+        SpecificClass specificClass = new SpecificClass(SPECIFICCLASS_DATE, SPECIFICCLASS_STARTTIME,
+                SPECIFICCLASS_ENDTIME, SPECIFICCLASS_ID, aClassType, SPECIFICCLASS_NAME);
+
         clientRepository.save(client);
         ownerRepository.save(owner);
         classTypeRepository.save(aClassType);
         specificClassRepository.save(specificClass);
-        
+
         specificClass = specificClassRepository.findByDateAndStartTime(SPECIFICCLASS_DATE, SPECIFICCLASS_STARTTIME);
         client = clientRepository.findByEmail(CLIENT_EMAIL);
         int reg_id = 0;
         Registration registration1 = new Registration(reg_id, specificClass, client);
         registrationRepository.save(registration1);
 
-        String url = "/registrations/getByClient/" + String.valueOf(CLIENT_EMAIL)+ "/";
+        String url = "/registrations/getByClient/" + String.valueOf(CLIENT_EMAIL) + "/";
         ResponseEntity<RegistrationListDto> response = restTemplate.getForEntity(url, RegistrationListDto.class);
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -382,17 +389,18 @@ public class RegistrationIntegrationTests {
     }
 
     @Test
-    public void testDeleteRegistrationBySpecificClass(){
+    public void testDeleteRegistrationBySpecificClass() {
         Client client = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME, CLIENT_ACCOUNTID);
         Owner owner = new Owner(OWNER_EMAIL, OWNER_FIRSTNAME, OWNER_PASSWORD, OWNER_LASTNAME, OWNER_ACCOUNTID);
         ClassType aClassType = new ClassType(CLASS_TYPE_NAME, CLASS_TYPE_DESCRIPTION, CLASS_TYPE_ID, true, owner);
-        SpecificClass specificClass = new SpecificClass(SPECIFICCLASS_DATE, SPECIFICCLASS_STARTTIME, SPECIFICCLASS_ENDTIME, SPECIFICCLASS_ID, aClassType, SPECIFICCLASS_NAME);
-        
+        SpecificClass specificClass = new SpecificClass(SPECIFICCLASS_DATE, SPECIFICCLASS_STARTTIME,
+                SPECIFICCLASS_ENDTIME, SPECIFICCLASS_ID, aClassType, SPECIFICCLASS_NAME);
+
         clientRepository.save(client);
         ownerRepository.save(owner);
         classTypeRepository.save(aClassType);
         specificClassRepository.save(specificClass);
-        
+
         specificClass = specificClassRepository.findByDateAndStartTime(SPECIFICCLASS_DATE, SPECIFICCLASS_STARTTIME);
         client = clientRepository.findByEmail(CLIENT_EMAIL);
         int reg_id = 0;
@@ -417,17 +425,18 @@ public class RegistrationIntegrationTests {
     }
 
     @Test
-    public void testDeleteRegistrationBySpecificClass2(){
+    public void testDeleteRegistrationBySpecificClass2() {
         Client client = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME, CLIENT_ACCOUNTID);
         Owner owner = new Owner(OWNER_EMAIL, OWNER_FIRSTNAME, OWNER_PASSWORD, OWNER_LASTNAME, OWNER_ACCOUNTID);
         ClassType aClassType = new ClassType(CLASS_TYPE_NAME, CLASS_TYPE_DESCRIPTION, CLASS_TYPE_ID, true, owner);
-        SpecificClass specificClass = new SpecificClass(SPECIFICCLASS_DATE, SPECIFICCLASS_STARTTIME, SPECIFICCLASS_ENDTIME, SPECIFICCLASS_ID, aClassType, SPECIFICCLASS_NAME);
-        
+        SpecificClass specificClass = new SpecificClass(SPECIFICCLASS_DATE, SPECIFICCLASS_STARTTIME,
+                SPECIFICCLASS_ENDTIME, SPECIFICCLASS_ID, aClassType, SPECIFICCLASS_NAME);
+
         clientRepository.save(client);
         ownerRepository.save(owner);
         classTypeRepository.save(aClassType);
         specificClassRepository.save(specificClass);
-        
+
         specificClass = specificClassRepository.findByDateAndStartTime(SPECIFICCLASS_DATE, SPECIFICCLASS_STARTTIME);
         client = clientRepository.findByEmail(CLIENT_EMAIL);
         int reg_id = 0;
@@ -451,13 +460,41 @@ public class RegistrationIntegrationTests {
         assertTrue(registrationList.getRegistrations().size() == 0);
     }
 
-    @Test 
-    public void testDeleteRegistrationByRegId(){
+    @Test
+    public void testDeleteRegistrationByRegId() {
         Client client = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME, CLIENT_ACCOUNTID);
         Owner owner = new Owner(OWNER_EMAIL, OWNER_FIRSTNAME, OWNER_PASSWORD, OWNER_LASTNAME, OWNER_ACCOUNTID);
         ClassType aClassType = new ClassType(CLASS_TYPE_NAME, CLASS_TYPE_DESCRIPTION, CLASS_TYPE_ID, true, owner);
-        SpecificClass specificClass = new SpecificClass(SPECIFICCLASS_DATE, SPECIFICCLASS_STARTTIME, SPECIFICCLASS_ENDTIME, SPECIFICCLASS_ID, aClassType, SPECIFICCLASS_NAME);
-        
+        SpecificClass specificClass = new SpecificClass(SPECIFICCLASS_DATE, SPECIFICCLASS_STARTTIME,
+                SPECIFICCLASS_ENDTIME, SPECIFICCLASS_ID, aClassType, SPECIFICCLASS_NAME);
+
+        clientRepository.save(client);
+        ownerRepository.save(owner);
+        classTypeRepository.save(aClassType);
+        specificClassRepository.save(specificClass);
+
+        specificClass = specificClassRepository.findByDateAndStartTime(SPECIFICCLASS_DATE, SPECIFICCLASS_STARTTIME);
+        client = clientRepository.findByEmail(CLIENT_EMAIL);
+        int reg_id = 0;
+        Registration registration1 = new Registration(reg_id, specificClass, client);
+        registrationRepository.save(registration1);
+
+        String url = "/registrations/getBySpecificClass/" + String.valueOf(SPECIFICCLASS_ID);
+        ResponseEntity<RegistrationListDto> response = restTemplate.getForEntity(url, RegistrationListDto.class);
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        RegistrationListDto registrationList = response.getBody();
+        assertNotNull(registrationList);
+    }
+
+    @Test
+    public void testDeleteRegistrationByRegId2() {
+        Client client = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME, CLIENT_ACCOUNTID);
+        Owner owner = new Owner(OWNER_EMAIL, OWNER_FIRSTNAME, OWNER_PASSWORD, OWNER_LASTNAME, OWNER_ACCOUNTID);
+        ClassType aClassType = new ClassType(CLASS_TYPE_NAME, CLASS_TYPE_DESCRIPTION, CLASS_TYPE_ID, true, owner);
+        SpecificClass specificClass = new SpecificClass(SPECIFICCLASS_DATE, SPECIFICCLASS_STARTTIME,
+                SPECIFICCLASS_ENDTIME, SPECIFICCLASS_ID, aClassType, SPECIFICCLASS_NAME);
+
         clientRepository.save(client);
         ownerRepository.save(owner);
         classTypeRepository.save(aClassType);
@@ -478,30 +515,33 @@ public class RegistrationIntegrationTests {
     }
 
     @Test
-    public void testCreateRegistration(){
+    public void testCreateRegistration() {
         Owner owner = new Owner(OWNER_EMAIL, OWNER_FIRSTNAME, OWNER_PASSWORD, OWNER_LASTNAME, OWNER_ACCOUNTID);
         ownerRepository.save(owner);
         owner = ownerRepository.findByEmail(OWNER_EMAIL);
+
         Client client = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME, CLIENT_ACCOUNTID);
         clientRepository.save(client);
-        
         assertNotNull(owner);
+
         ClassType aClassType = new ClassType(CLASS_TYPE_NAME, CLASS_TYPE_DESCRIPTION, CLASS_TYPE_ID, true, owner);
         classTypeRepository.save(aClassType);
         aClassType = classTypeRepository.findByName(CLASS_TYPE_NAME);
         assertNotNull(aClassType);
-        SpecificClass specificClass = new SpecificClass(SPECIFICCLASS_DATE, SPECIFICCLASS_STARTTIME, SPECIFICCLASS_ENDTIME, SPECIFICCLASS_ID, aClassType, SPECIFICCLASS_NAME);
-        specificClassRepository.save(specificClass);
 
-        //specificClass = specificClassRepository.findByName(CLASS_TYPE_NAME);
+        SpecificClass specificClass = new SpecificClass(SPECIFICCLASS_DATE, SPECIFICCLASS_STARTTIME,
+                SPECIFICCLASS_ENDTIME, SPECIFICCLASS_ID, aClassType, SPECIFICCLASS_NAME);
+        specificClassRepository.save(specificClass);
         assertNotNull(specificClass);
+
         client = clientRepository.findByEmail(CLIENT_EMAIL);
         assertNotNull(client);
+
         RegistrationRequestDto request = new RegistrationRequestDto(specificClass, client);
         assertEquals(CLIENT_EMAIL, request.getClient().getEmail());
-        //assertEquals(SPECIFICCLASS_DATE, request.getSpecificClass().getDate());
 
-        ResponseEntity<RegistrationResponseDto> response = restTemplate.postForEntity("/registrations/create", request, RegistrationResponseDto.class);
+        ResponseEntity<RegistrationResponseDto> response = restTemplate.postForEntity("/registrations/create", request,
+                RegistrationResponseDto.class);
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
 
@@ -511,10 +551,45 @@ public class RegistrationIntegrationTests {
         assertEquals(CLASS_TYPE_NAME, createdRegistration.getSpecificClass().getClassType().getName());
         assertEquals(SPECIFICCLASS_ENDTIME, createdRegistration.getSpecificClass().getEndTime());
         assertEquals(SPECIFICCLASS_STARTTIME, createdRegistration.getSpecificClass().getStartTime());
-        //assertEquals(SPECIFICCLASS_DATE, createdRegistration.getSpecificClass().getDate());
     }
 
+    @Test
+    public void testCreateRegistration2() {
+        Owner owner = new Owner(OWNER_EMAIL, OWNER_FIRSTNAME, OWNER_PASSWORD, OWNER_LASTNAME, OWNER_ACCOUNTID);
+        ownerRepository.save(owner);
+        owner = ownerRepository.findByEmail(OWNER_EMAIL);
 
+        Client client = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME, CLIENT_ACCOUNTID);
+        clientRepository.save(client);
+        assertNotNull(owner);
 
-    
+        ClassType aClassType = new ClassType(CLASS_TYPE_NAME, CLASS_TYPE_DESCRIPTION, CLASS_TYPE_ID, true, owner);
+        classTypeRepository.save(aClassType);
+        aClassType = classTypeRepository.findByName(CLASS_TYPE_NAME);
+        assertNotNull(aClassType);
+
+        SpecificClass specificClass = new SpecificClass(SPECIFICCLASS_DATE, SPECIFICCLASS_STARTTIME,
+                SPECIFICCLASS_ENDTIME, SPECIFICCLASS_ID, aClassType, SPECIFICCLASS_NAME);
+        specificClassRepository.save(specificClass);
+        assertNotNull(specificClass);
+
+        client = clientRepository.findByEmail(CLIENT_EMAIL);
+        assertNotNull(client);
+
+        RegistrationRequestDto request = new RegistrationRequestDto(specificClass, client);
+        assertEquals(CLIENT_EMAIL, request.getClient().getEmail());
+
+        ResponseEntity<RegistrationResponseDto> response = restTemplate.postForEntity("/registrations/create/", request,
+                RegistrationResponseDto.class);
+        assertNotNull(response);
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+
+        RegistrationResponseDto createdRegistration = response.getBody();
+        assertNotNull(createdRegistration);
+        assertEquals(CLIENT_EMAIL, createdRegistration.getClient().getEmail());
+        assertEquals(CLASS_TYPE_NAME, createdRegistration.getSpecificClass().getClassType().getName());
+        assertEquals(SPECIFICCLASS_ENDTIME, createdRegistration.getSpecificClass().getEndTime());
+        assertEquals(SPECIFICCLASS_STARTTIME, createdRegistration.getSpecificClass().getStartTime());
+    }
+
 }

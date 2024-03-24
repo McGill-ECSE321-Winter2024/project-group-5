@@ -3,7 +3,7 @@ package ca.mcgill.ecse321.SportPlus.dto;
 import ca.mcgill.ecse321.SportPlus.model.Owner;
 
 public class OwnerResponseDto {
-    
+
     private int accountId;
     private String email;
     private String firstName;
@@ -51,5 +51,5 @@ public class OwnerResponseDto {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-    
+
 }

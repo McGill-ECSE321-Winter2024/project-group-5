@@ -16,14 +16,14 @@ public class OwnerService {
 
     String ownerEmail = "owner@sportplus.com";
 
-    //-----------Wrappers-----------//
+    // -----------Wrappers-----------//
 
     @Transactional
-	public Owner getOwner() {
+    public Owner getOwner() {
         return ownerRepository.findByEmail(ownerEmail);
-	}
-    
-    //------------EndWrappers----------//
+    }
+
+    // ------------EndWrappers----------//
 
     @Transactional
     public Owner createOwner() {
@@ -107,5 +107,5 @@ public class OwnerService {
         ownerRepository.save(owner);
         return owner;
     }
-    
+
 }

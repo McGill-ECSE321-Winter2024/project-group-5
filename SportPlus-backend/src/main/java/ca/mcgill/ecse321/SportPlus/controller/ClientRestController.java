@@ -24,7 +24,7 @@ import ca.mcgill.ecse321.SportPlus.service.ClientService;
 @CrossOrigin(origins = "*")
 @RestController
 public class ClientRestController {
-    
+
     @Autowired
     private ClientService clientService;
 
@@ -57,28 +57,35 @@ public class ClientRestController {
     @PostMapping(value = { "/clients/create", "/clients/create/" })
     @ResponseStatus(HttpStatus.CREATED)
     public ClientResponseDto createClient(@RequestBody ClientRequestDto client) {
-        Client createdClient = clientService.createClient(client.getEmail(), client.getFirstName(), client.getPassword(), client.getLastName());
+        Client createdClient = clientService.createClient(client.getEmail(), client.getFirstName(),
+                client.getPassword(), client.getLastName());
         return new ClientResponseDto(createdClient);
     }
 
-    @PutMapping(value = { "/clients/updateFirstName/{email}/{newFirstName}", "/clients/updateFirstName/{email}/{newFirstName}/" })
-    public ClientResponseDto updateClientFirstName(@PathVariable("email") String theEmail, @PathVariable("newFirstName") String theFirstName) {
+    @PutMapping(value = { "/clients/updateFirstName/{email}/{newFirstName}",
+            "/clients/updateFirstName/{email}/{newFirstName}/" })
+    public ClientResponseDto updateClientFirstName(@PathVariable("email") String theEmail,
+            @PathVariable("newFirstName") String theFirstName) {
         Client client = clientService.getClient(theEmail);
         clientService.updateClientFirstName(theEmail, theFirstName);
         client = clientService.getClient(theEmail);
         return new ClientResponseDto(client);
     }
 
-    @PutMapping(value = { "/clients/updateLastName/{email}/{newLastName}", "/clients/updateLastName/{email}/{newLastName}/" })
-    public ClientResponseDto updateClientLastName(@PathVariable("email") String theEmail, @PathVariable("newLastName") String theLastName) {
+    @PutMapping(value = { "/clients/updateLastName/{email}/{newLastName}",
+            "/clients/updateLastName/{email}/{newLastName}/" })
+    public ClientResponseDto updateClientLastName(@PathVariable("email") String theEmail,
+            @PathVariable("newLastName") String theLastName) {
         Client client = clientService.getClient(theEmail);
         clientService.updateClientLastName(theEmail, theLastName);
         client = clientService.getClient(theEmail);
         return new ClientResponseDto(client);
     }
 
-    @PutMapping(value = { "/clients/updatePassword/{email}/{oldPassword}/{newPassword}", "/clients/updatePassword/{email}/{oldPassword}/{newPassword}/" })
-    public ClientResponseDto updateClientPassword(@PathVariable("email") String theEmail, @PathVariable("oldPassword") String theOldPassword, @PathVariable("newPassword") String thePassword) {
+    @PutMapping(value = { "/clients/updatePassword/{email}/{oldPassword}/{newPassword}",
+            "/clients/updatePassword/{email}/{oldPassword}/{newPassword}/" })
+    public ClientResponseDto updateClientPassword(@PathVariable("email") String theEmail,
+            @PathVariable("oldPassword") String theOldPassword, @PathVariable("newPassword") String thePassword) {
         Client client = clientService.getClient(theEmail);
         clientService.updateClientPassword(theEmail, theOldPassword, thePassword);
         client = clientService.getClient(theEmail);

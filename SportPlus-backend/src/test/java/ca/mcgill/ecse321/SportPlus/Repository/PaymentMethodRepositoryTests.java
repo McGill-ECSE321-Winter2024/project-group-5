@@ -19,8 +19,10 @@ import ca.mcgill.ecse321.SportPlus.model.PaymentMethod;
 
 @SpringBootTest
 public class PaymentMethodRepositoryTests {
+
     @Autowired
     private PaymentMethodRepository paymentMethodRepository;
+
     @Autowired
     private ClientRepository clientRepository;
 
@@ -41,7 +43,7 @@ public class PaymentMethodRepositoryTests {
         // Given a PaymentMethod entity with a specific card number
         String cardNumber = "1234567890123456";
         PaymentMethod paymentMethod = new PaymentMethod(cardNumber, null, "123", "John Doe", 123, client);
-        
+
         // Use the repository to save the PaymentMethod
         paymentMethodRepository.save(paymentMethod);
 
@@ -69,7 +71,7 @@ public class PaymentMethodRepositoryTests {
         String cardNumber2 = "1234567890123453";
         PaymentMethod paymentMethod1 = new PaymentMethod(cardNumber1, null, "123", "John Doe", 123, client);
         PaymentMethod paymentMethod2 = new PaymentMethod(cardNumber2, null, "321", "John Doe", 321, client);
-        
+
         // Use the repository to save the PaymentMethod
         paymentMethodRepository.save(paymentMethod1);
         paymentMethodRepository.save(paymentMethod2);
@@ -87,13 +89,13 @@ public class PaymentMethodRepositoryTests {
         // Create a client
         Client client = new Client("test@email.com", "John", "123321", "Doe", 0);
         clientRepository.save(client);
-        
+
         // Given a PaymentMethod entity with a specific card number
         String cardNumber = "1234567890123456";
         String cardNumber2 = "1111111111111111";
         PaymentMethod paymentMethod = new PaymentMethod(cardNumber, null, "123", "John Doe", 123, client);
         PaymentMethod paymentMethod2 = new PaymentMethod(cardNumber2, null, "123", "John Doe", 321, client);
-        
+
         // Use the repository to save the PaymentMethod
         paymentMethodRepository.save(paymentMethod);
         paymentMethodRepository.save(paymentMethod2);
@@ -123,7 +125,7 @@ public class PaymentMethodRepositoryTests {
         String cardNumber = "1234567890123456";
         PaymentMethod paymentMethod = new PaymentMethod(cardNumber, null, "123", "John Doe", 123, client);
         PaymentMethod paymentMethodToBeDeleted = new PaymentMethod(cardNumber, null, "123", "Paul Test", 321, client2);
-        
+
         // Use the repository to save the PaymentMethod
         paymentMethodRepository.save(paymentMethod);
         paymentMethodRepository.save(paymentMethodToBeDeleted);

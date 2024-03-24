@@ -78,7 +78,7 @@ public interface SpecificClassRepository extends CrudRepository<SpecificClass, I
     SpecificClass findByName(String name);
 
     /**
-     * Deletes by ClassType 
+     * Deletes by ClassType
      * 
      * @param classType
      */
@@ -99,10 +99,10 @@ public interface SpecificClassRepository extends CrudRepository<SpecificClass, I
     void deleteByDate(Date date);
 
     /**
-    * Deletes by SessionId
-    *
-    * @param sessionId
-    */
+     * Deletes by SessionId
+     *
+     * @param sessionId
+     */
     void deleteBySessionId(int sessionId);
 
     // Find SpecifcClasses between a date range.

@@ -1,12 +1,12 @@
 package ca.mcgill.ecse321.SportPlus.dto;
+
 import java.sql.Date;
 
-public class RecurringSpecificClassRequestDto extends SpecificClassRequestsDto{
+public class RecurringSpecificClassRequestDto extends SpecificClassRequestsDto {
 
-    //Fields not present in the normal SpecificClass
+    // Fields not present in the normal SpecificClass
     private Date endDate;
     private int dayOfWeek; // 1 = Monday, 7 = Sunday
-
 
     public RecurringSpecificClassRequestDto() {
         super();
@@ -27,5 +27,5 @@ public class RecurringSpecificClassRequestDto extends SpecificClassRequestsDto{
     public void setDayOfWeek(int dayOfWeek) {
         this.dayOfWeek = dayOfWeek;
     }
-    
+
 }

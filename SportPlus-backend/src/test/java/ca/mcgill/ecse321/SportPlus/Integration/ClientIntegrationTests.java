@@ -45,13 +45,14 @@ public class ClientIntegrationTests {
 
     @Test
     public void testFindClientByEmail() {
-        Client newClient = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME, CLIENT_VALID_ACCOUNTID);
+        Client newClient = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME,
+                CLIENT_VALID_ACCOUNTID);
         clientRepository.save(newClient);
 
         String url = "/clients/getByEmail/" + String.valueOf(CLIENT_EMAIL);
 
         ResponseEntity<ClientResponseDto> response = client.getForEntity(url, ClientResponseDto.class);
-        
+
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         ClientResponseDto clientResponse = response.getBody();
@@ -64,13 +65,14 @@ public class ClientIntegrationTests {
 
     @Test
     public void testFindClientByEmail2() {
-        Client newClient = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME, CLIENT_VALID_ACCOUNTID);
+        Client newClient = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME,
+                CLIENT_VALID_ACCOUNTID);
         clientRepository.save(newClient);
 
         String url = "/clients/getByEmail/" + String.valueOf(CLIENT_EMAIL) + "/";
 
         ResponseEntity<ClientResponseDto> response = client.getForEntity(url, ClientResponseDto.class);
-        
+
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         ClientResponseDto clientResponse = response.getBody();
@@ -83,14 +85,15 @@ public class ClientIntegrationTests {
 
     @Test
     public void testFindClientByAccountId() {
-        Client newClient = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME, CLIENT_VALID_ACCOUNTID);
+        Client newClient = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME,
+                CLIENT_VALID_ACCOUNTID);
         clientRepository.save(newClient);
         int validId = clientRepository.findByEmail(CLIENT_EMAIL).getAccountId();
 
         String url = "/clients/getById/" + String.valueOf(validId);
 
         ResponseEntity<ClientResponseDto> response = client.getForEntity(url, ClientResponseDto.class);
-        
+
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         ClientResponseDto clientResponse = response.getBody();
@@ -103,14 +106,15 @@ public class ClientIntegrationTests {
 
     @Test
     public void testFindClientByAccountId2() {
-        Client newClient = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME, CLIENT_VALID_ACCOUNTID);
+        Client newClient = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME,
+                CLIENT_VALID_ACCOUNTID);
         clientRepository.save(newClient);
         int validId = clientRepository.findByEmail(CLIENT_EMAIL).getAccountId();
 
         String url = "/clients/getById/" + String.valueOf(validId) + "/";
 
         ResponseEntity<ClientResponseDto> response = client.getForEntity(url, ClientResponseDto.class);
-        
+
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         ClientResponseDto clientResponse = response.getBody();
@@ -123,15 +127,17 @@ public class ClientIntegrationTests {
 
     @Test
     public void testGetAllClients() {
-        Client client1 = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME, CLIENT_VALID_ACCOUNTID);
-        Client client2 = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME, CLIENT_VALID_ACCOUNTID);
+        Client client1 = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME,
+                CLIENT_VALID_ACCOUNTID);
+        Client client2 = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME,
+                CLIENT_VALID_ACCOUNTID);
         clientRepository.save(client1);
         clientRepository.save(client2);
 
         String url = "/clients/all";
 
-        ResponseEntity<ClientListDto> response = client.getForEntity(url,ClientListDto.class);
-        
+        ResponseEntity<ClientListDto> response = client.getForEntity(url, ClientListDto.class);
+
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         ClientListDto clientResponse = response.getBody();
@@ -147,15 +153,17 @@ public class ClientIntegrationTests {
 
     @Test
     public void testGetAllClients2() {
-        Client client1 = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME, CLIENT_VALID_ACCOUNTID);
-        Client client2 = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME, CLIENT_VALID_ACCOUNTID);
+        Client client1 = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME,
+                CLIENT_VALID_ACCOUNTID);
+        Client client2 = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME,
+                CLIENT_VALID_ACCOUNTID);
         clientRepository.save(client1);
         clientRepository.save(client2);
 
         String url = "/clients/all/";
 
-        ResponseEntity<ClientListDto> response = client.getForEntity(url,ClientListDto.class);
-        
+        ResponseEntity<ClientListDto> response = client.getForEntity(url, ClientListDto.class);
+
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         ClientListDto clientResponse = response.getBody();
@@ -171,12 +179,13 @@ public class ClientIntegrationTests {
 
     @Test
     public void testDeleteClientByEmail() {
-        Client newClient = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME, CLIENT_VALID_ACCOUNTID);
+        Client newClient = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME,
+                CLIENT_VALID_ACCOUNTID);
         clientRepository.save(newClient);
 
         String url = "/clients/all";
 
-        ResponseEntity<ClientListDto> response = client.getForEntity(url,ClientListDto.class);
+        ResponseEntity<ClientListDto> response = client.getForEntity(url, ClientListDto.class);
 
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -188,7 +197,7 @@ public class ClientIntegrationTests {
 
         client.delete(urlToDelete);
 
-        response = client.getForEntity(url,ClientListDto.class);
+        response = client.getForEntity(url, ClientListDto.class);
 
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -198,12 +207,13 @@ public class ClientIntegrationTests {
 
     @Test
     public void testDeleteClientByEmail2() {
-        Client newClient = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME, CLIENT_VALID_ACCOUNTID);
+        Client newClient = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME,
+                CLIENT_VALID_ACCOUNTID);
         clientRepository.save(newClient);
 
         String url = "/clients/all";
 
-        ResponseEntity<ClientListDto> response = client.getForEntity(url,ClientListDto.class);
+        ResponseEntity<ClientListDto> response = client.getForEntity(url, ClientListDto.class);
 
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -215,7 +225,7 @@ public class ClientIntegrationTests {
 
         client.delete(urlToDelete);
 
-        response = client.getForEntity(url,ClientListDto.class);
+        response = client.getForEntity(url, ClientListDto.class);
 
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -225,9 +235,11 @@ public class ClientIntegrationTests {
 
     @Test
     public void testCreateClient() {
-        ClientRequestDto request = new ClientRequestDto(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_LASTNAME, CLIENT_PASSWORD);
+        ClientRequestDto request = new ClientRequestDto(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_LASTNAME,
+                CLIENT_PASSWORD);
 
-        ResponseEntity<ClientResponseDto> response = client.postForEntity("/clients/create", request, ClientResponseDto.class);
+        ResponseEntity<ClientResponseDto> response = client.postForEntity("/clients/create", request,
+                ClientResponseDto.class);
 
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
@@ -243,9 +255,11 @@ public class ClientIntegrationTests {
 
     @Test
     public void testCreateClient2() {
-        ClientRequestDto request = new ClientRequestDto(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_LASTNAME, CLIENT_PASSWORD);
+        ClientRequestDto request = new ClientRequestDto(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_LASTNAME,
+                CLIENT_PASSWORD);
 
-        ResponseEntity<ClientResponseDto> response = client.postForEntity("/clients/create/", request, ClientResponseDto.class);
+        ResponseEntity<ClientResponseDto> response = client.postForEntity("/clients/create/", request,
+                ClientResponseDto.class);
 
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
@@ -261,9 +275,11 @@ public class ClientIntegrationTests {
 
     @Test
     public void testUpdateClientFirstName() {
-        ClientRequestDto request = new ClientRequestDto(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_LASTNAME, CLIENT_PASSWORD);
+        ClientRequestDto request = new ClientRequestDto(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_LASTNAME,
+                CLIENT_PASSWORD);
 
-        ResponseEntity<ClientResponseDto> response = client.postForEntity("/clients/create", request, ClientResponseDto.class);
+        ResponseEntity<ClientResponseDto> response = client.postForEntity("/clients/create", request,
+                ClientResponseDto.class);
 
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
@@ -276,7 +292,8 @@ public class ClientIntegrationTests {
 
         String url = "/clients/updateFirstName/" + CLIENT_EMAIL + "/" + newFirstName;
 
-        ResponseEntity<ClientResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null, ClientResponseDto.class);
+        ResponseEntity<ClientResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
+                ClientResponseDto.class);
         assertNotNull(responseAfterUpdate);
         assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
         ClientResponseDto updatedClient = responseAfterUpdate.getBody();
@@ -293,9 +310,11 @@ public class ClientIntegrationTests {
 
     @Test
     public void testUpdateClientFirstName2() {
-        ClientRequestDto request = new ClientRequestDto(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_LASTNAME, CLIENT_PASSWORD);
+        ClientRequestDto request = new ClientRequestDto(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_LASTNAME,
+                CLIENT_PASSWORD);
 
-        ResponseEntity<ClientResponseDto> response = client.postForEntity("/clients/create", request, ClientResponseDto.class);
+        ResponseEntity<ClientResponseDto> response = client.postForEntity("/clients/create", request,
+                ClientResponseDto.class);
 
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
@@ -308,7 +327,8 @@ public class ClientIntegrationTests {
 
         String url = "/clients/updateFirstName/" + CLIENT_EMAIL + "/" + newFirstName + "/";
 
-        ResponseEntity<ClientResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null, ClientResponseDto.class);
+        ResponseEntity<ClientResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
+                ClientResponseDto.class);
         assertNotNull(responseAfterUpdate);
         assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
         ClientResponseDto updatedClient = responseAfterUpdate.getBody();
@@ -325,9 +345,11 @@ public class ClientIntegrationTests {
 
     @Test
     public void testUpdateClientLastName() {
-        ClientRequestDto request = new ClientRequestDto(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_LASTNAME, CLIENT_PASSWORD);
+        ClientRequestDto request = new ClientRequestDto(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_LASTNAME,
+                CLIENT_PASSWORD);
 
-        ResponseEntity<ClientResponseDto> response = client.postForEntity("/clients/create", request, ClientResponseDto.class);
+        ResponseEntity<ClientResponseDto> response = client.postForEntity("/clients/create", request,
+                ClientResponseDto.class);
 
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
@@ -340,7 +362,8 @@ public class ClientIntegrationTests {
 
         String url = "/clients/updateLastName/" + CLIENT_EMAIL + "/" + newLastName;
 
-        ResponseEntity<ClientResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null, ClientResponseDto.class);
+        ResponseEntity<ClientResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
+                ClientResponseDto.class);
         assertNotNull(responseAfterUpdate);
         assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
         ClientResponseDto updatedClient = responseAfterUpdate.getBody();
@@ -357,9 +380,11 @@ public class ClientIntegrationTests {
 
     @Test
     public void testUpdateClientLastName2() {
-        ClientRequestDto request = new ClientRequestDto(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_LASTNAME, CLIENT_PASSWORD);
+        ClientRequestDto request = new ClientRequestDto(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_LASTNAME,
+                CLIENT_PASSWORD);
 
-        ResponseEntity<ClientResponseDto> response = client.postForEntity("/clients/create", request, ClientResponseDto.class);
+        ResponseEntity<ClientResponseDto> response = client.postForEntity("/clients/create", request,
+                ClientResponseDto.class);
 
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
@@ -372,7 +397,8 @@ public class ClientIntegrationTests {
 
         String url = "/clients/updateLastName/" + CLIENT_EMAIL + "/" + newLastName + "/";
 
-        ResponseEntity<ClientResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null, ClientResponseDto.class);
+        ResponseEntity<ClientResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
+                ClientResponseDto.class);
         assertNotNull(responseAfterUpdate);
         assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
         ClientResponseDto updatedClient = responseAfterUpdate.getBody();
@@ -389,9 +415,11 @@ public class ClientIntegrationTests {
 
     @Test
     public void testUpdateClientPassword() {
-        ClientRequestDto request = new ClientRequestDto(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_LASTNAME, CLIENT_PASSWORD);
+        ClientRequestDto request = new ClientRequestDto(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_LASTNAME,
+                CLIENT_PASSWORD);
 
-        ResponseEntity<ClientResponseDto> response = client.postForEntity("/clients/create", request, ClientResponseDto.class);
+        ResponseEntity<ClientResponseDto> response = client.postForEntity("/clients/create", request,
+                ClientResponseDto.class);
 
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
@@ -404,7 +432,8 @@ public class ClientIntegrationTests {
 
         String url = "/clients/updatePassword/" + CLIENT_EMAIL + "/" + CLIENT_PASSWORD + "/" + newPassword;
 
-        ResponseEntity<ClientResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null, ClientResponseDto.class);
+        ResponseEntity<ClientResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
+                ClientResponseDto.class);
         assertNotNull(responseAfterUpdate);
         assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
         ClientResponseDto updatedClient = responseAfterUpdate.getBody();
@@ -421,9 +450,11 @@ public class ClientIntegrationTests {
 
     @Test
     public void testUpdateClientPassword2() {
-        ClientRequestDto request = new ClientRequestDto(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_LASTNAME, CLIENT_PASSWORD);
+        ClientRequestDto request = new ClientRequestDto(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_LASTNAME,
+                CLIENT_PASSWORD);
 
-        ResponseEntity<ClientResponseDto> response = client.postForEntity("/clients/create", request, ClientResponseDto.class);
+        ResponseEntity<ClientResponseDto> response = client.postForEntity("/clients/create", request,
+                ClientResponseDto.class);
 
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
@@ -436,7 +467,8 @@ public class ClientIntegrationTests {
 
         String url = "/clients/updatePassword/" + CLIENT_EMAIL + "/" + CLIENT_PASSWORD + "/" + newPassword + "/";
 
-        ResponseEntity<ClientResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null, ClientResponseDto.class);
+        ResponseEntity<ClientResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
+                ClientResponseDto.class);
         assertNotNull(responseAfterUpdate);
         assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
         ClientResponseDto updatedClient = responseAfterUpdate.getBody();
@@ -450,5 +482,5 @@ public class ClientIntegrationTests {
         assertEquals(clientRepository.findByEmail(CLIENT_EMAIL).getPassword(), newPassword);
         assertTrue(clientRepository.findAll().size() == 1);
     }
-    
+
 }

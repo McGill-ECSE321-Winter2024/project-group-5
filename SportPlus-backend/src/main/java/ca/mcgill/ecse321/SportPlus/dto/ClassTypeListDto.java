@@ -1,4 +1,5 @@
 package ca.mcgill.ecse321.SportPlus.dto;
+
 import java.util.List;
 
 public class ClassTypeListDto {

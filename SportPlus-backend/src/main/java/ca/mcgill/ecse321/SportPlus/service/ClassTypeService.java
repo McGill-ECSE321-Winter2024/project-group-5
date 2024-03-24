@@ -42,7 +42,7 @@ public class ClassTypeService {
         }
         return classTypes;
     }
-    
+
     @Transactional
     public List<ClassType> getAllClassTypes() {
         List<ClassType> classTypes = classTypeRepository.findAll();
@@ -75,7 +75,7 @@ public class ClassTypeService {
 
     @Transactional
     public ClassType approve(int typeId) {
-        ClassType classType = findByTypeId(typeId); 
+        ClassType classType = findByTypeId(typeId);
         classType.setApproved(true);
         return classTypeRepository.save(classType);
     }
@@ -84,7 +84,7 @@ public class ClassTypeService {
     public ClassType updateDescription(int typeId, String description) {
         ClassType classType = findByTypeId(typeId);
 
-        if (description==null||description=="") {
+        if (description == null || description == "") {
             throw new ResourceNotFoundException("Description canno't be empty.");
         }
         classType.setDescription(description);
@@ -94,7 +94,7 @@ public class ClassTypeService {
     @Transactional
     public ClassType updateName(int typeId, String name) {
         ClassType classType = findByTypeId(typeId);
-        if (name==null||name=="") {
+        if (name == null || name == "") {
             throw new ResourceNotFoundException("Name canno't be empty.");
         }
         classType.setName(name);

@@ -53,7 +53,6 @@ public class LoginService {
         return login;
     }
 
-
     @Transactional
     public List<Login> getAllLogins() {
         return HelperMethods.toList(loginRepository.findAll());

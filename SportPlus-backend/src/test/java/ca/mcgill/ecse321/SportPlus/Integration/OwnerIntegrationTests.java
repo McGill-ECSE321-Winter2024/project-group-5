@@ -50,7 +50,7 @@ public class OwnerIntegrationTests {
         String url = "/owner/get";
 
         ResponseEntity<OwnerResponseDto> response = client.getForEntity(url, OwnerResponseDto.class);
-        
+
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         OwnerResponseDto ownerResponse = response.getBody();
@@ -69,7 +69,7 @@ public class OwnerIntegrationTests {
         String url = "/owner/get/";
 
         ResponseEntity<OwnerResponseDto> response = client.getForEntity(url, OwnerResponseDto.class);
-        
+
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         OwnerResponseDto ownerResponse = response.getBody();
@@ -84,7 +84,8 @@ public class OwnerIntegrationTests {
     public void testCreateOwner() {
         OwnerRequestDto request = new OwnerRequestDto(OWNER_FIRSTNAME, OWNER_LASTNAME, OWNER_PASSWORD);
 
-        ResponseEntity<OwnerResponseDto> response = client.postForEntity("/owner/create", request, OwnerResponseDto.class);
+        ResponseEntity<OwnerResponseDto> response = client.postForEntity("/owner/create", request,
+                OwnerResponseDto.class);
 
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
@@ -102,7 +103,8 @@ public class OwnerIntegrationTests {
     public void testCreateOwner2() {
         OwnerRequestDto request = new OwnerRequestDto(OWNER_FIRSTNAME, OWNER_LASTNAME, OWNER_PASSWORD);
 
-        ResponseEntity<OwnerResponseDto> response = client.postForEntity("/owner/create/", request, OwnerResponseDto.class);
+        ResponseEntity<OwnerResponseDto> response = client.postForEntity("/owner/create/", request,
+                OwnerResponseDto.class);
 
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
@@ -120,7 +122,8 @@ public class OwnerIntegrationTests {
     public void testUpdateOwnerFirstName() {
         OwnerRequestDto request = new OwnerRequestDto(OWNER_FIRSTNAME, OWNER_LASTNAME, OWNER_PASSWORD);
 
-        ResponseEntity<OwnerResponseDto> response = client.postForEntity("/owner/create", request, OwnerResponseDto.class);
+        ResponseEntity<OwnerResponseDto> response = client.postForEntity("/owner/create", request,
+                OwnerResponseDto.class);
 
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
@@ -133,7 +136,8 @@ public class OwnerIntegrationTests {
 
         String url = "/owner/updateFirstName/" + newFirstName;
 
-        ResponseEntity<OwnerResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null, OwnerResponseDto.class);
+        ResponseEntity<OwnerResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
+                OwnerResponseDto.class);
         assertNotNull(responseAfterUpdate);
         assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
         OwnerResponseDto updatedOwner = responseAfterUpdate.getBody();
@@ -151,7 +155,8 @@ public class OwnerIntegrationTests {
     public void testUpdateOwnerFirstName2() {
         OwnerRequestDto request = new OwnerRequestDto(OWNER_FIRSTNAME, OWNER_LASTNAME, OWNER_PASSWORD);
 
-        ResponseEntity<OwnerResponseDto> response = client.postForEntity("/owner/create", request, OwnerResponseDto.class);
+        ResponseEntity<OwnerResponseDto> response = client.postForEntity("/owner/create", request,
+                OwnerResponseDto.class);
 
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
@@ -164,7 +169,8 @@ public class OwnerIntegrationTests {
 
         String url = "/owner/updateFirstName/" + newFirstName + "/";
 
-        ResponseEntity<OwnerResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null, OwnerResponseDto.class);
+        ResponseEntity<OwnerResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
+                OwnerResponseDto.class);
         assertNotNull(responseAfterUpdate);
         assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
         OwnerResponseDto updatedOwner = responseAfterUpdate.getBody();
@@ -182,7 +188,8 @@ public class OwnerIntegrationTests {
     public void testUpdateOwnerLastName() {
         OwnerRequestDto request = new OwnerRequestDto(OWNER_FIRSTNAME, OWNER_LASTNAME, OWNER_PASSWORD);
 
-        ResponseEntity<OwnerResponseDto> response = client.postForEntity("/owner/create", request, OwnerResponseDto.class);
+        ResponseEntity<OwnerResponseDto> response = client.postForEntity("/owner/create", request,
+                OwnerResponseDto.class);
 
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
@@ -195,7 +202,8 @@ public class OwnerIntegrationTests {
 
         String url = "/owner/updateLastName/" + newLastName;
 
-        ResponseEntity<OwnerResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null, OwnerResponseDto.class);
+        ResponseEntity<OwnerResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
+                OwnerResponseDto.class);
         assertNotNull(responseAfterUpdate);
         assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
         OwnerResponseDto updatedOwner = responseAfterUpdate.getBody();
@@ -213,7 +221,8 @@ public class OwnerIntegrationTests {
     public void testUpdateOwnerLastName2() {
         OwnerRequestDto request = new OwnerRequestDto(OWNER_FIRSTNAME, OWNER_LASTNAME, OWNER_PASSWORD);
 
-        ResponseEntity<OwnerResponseDto> response = client.postForEntity("/owner/create", request, OwnerResponseDto.class);
+        ResponseEntity<OwnerResponseDto> response = client.postForEntity("/owner/create", request,
+                OwnerResponseDto.class);
 
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
@@ -226,7 +235,8 @@ public class OwnerIntegrationTests {
 
         String url = "/owner/updateLastName/" + newLastName + "/";
 
-        ResponseEntity<OwnerResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null, OwnerResponseDto.class);
+        ResponseEntity<OwnerResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
+                OwnerResponseDto.class);
         assertNotNull(responseAfterUpdate);
         assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
         OwnerResponseDto updatedOwner = responseAfterUpdate.getBody();
@@ -244,7 +254,8 @@ public class OwnerIntegrationTests {
     public void testUpdateOwnerPassword() {
         OwnerRequestDto request = new OwnerRequestDto(OWNER_FIRSTNAME, OWNER_LASTNAME, OWNER_PASSWORD);
 
-        ResponseEntity<OwnerResponseDto> response = client.postForEntity("/owner/create", request, OwnerResponseDto.class);
+        ResponseEntity<OwnerResponseDto> response = client.postForEntity("/owner/create", request,
+                OwnerResponseDto.class);
 
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
@@ -257,7 +268,8 @@ public class OwnerIntegrationTests {
 
         String url = "/owner/updatePassword/" + OWNER_PASSWORD + "/" + newPassword;
 
-        ResponseEntity<OwnerResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null, OwnerResponseDto.class);
+        ResponseEntity<OwnerResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
+                OwnerResponseDto.class);
         assertNotNull(responseAfterUpdate);
         assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
         OwnerResponseDto updatedOwner = responseAfterUpdate.getBody();
@@ -275,7 +287,8 @@ public class OwnerIntegrationTests {
     public void testUpdateOwnerPassword2() {
         OwnerRequestDto request = new OwnerRequestDto(OWNER_FIRSTNAME, OWNER_LASTNAME, OWNER_PASSWORD);
 
-        ResponseEntity<OwnerResponseDto> response = client.postForEntity("/owner/create", request, OwnerResponseDto.class);
+        ResponseEntity<OwnerResponseDto> response = client.postForEntity("/owner/create", request,
+                OwnerResponseDto.class);
 
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
@@ -288,7 +301,8 @@ public class OwnerIntegrationTests {
 
         String url = "/owner/updatePassword/" + OWNER_PASSWORD + "/" + newPassword + "/";
 
-        ResponseEntity<OwnerResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null, OwnerResponseDto.class);
+        ResponseEntity<OwnerResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
+                OwnerResponseDto.class);
         assertNotNull(responseAfterUpdate);
         assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
         OwnerResponseDto updatedOwner = responseAfterUpdate.getBody();
@@ -301,5 +315,5 @@ public class OwnerIntegrationTests {
         assertNotNull(ownerRepository.findByEmail(OWNER_EMAIL));
         assertEquals(ownerRepository.findByEmail(OWNER_EMAIL).getPassword(), newPassword);
     }
-    
+
 }

@@ -51,5 +51,5 @@ public class ClientResponseDto {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-    
+
 }

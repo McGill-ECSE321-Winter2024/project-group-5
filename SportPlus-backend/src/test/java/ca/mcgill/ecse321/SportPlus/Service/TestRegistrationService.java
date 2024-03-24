@@ -1,4 +1,5 @@
 package ca.mcgill.ecse321.SportPlus.Service;
+
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -48,20 +49,20 @@ public class TestRegistrationService {
 
     private static final int REGISTRATION_ID = 0;
 
-
     private static final String CLIENT_EMAIL = "example@email.com";
     private static final String CLIENT_FISTNAME = "John";
     private static final String CLIENT_LASTNAME = "Doe";
     private static final String CLIENT_PASSWORD = "password123";
     private static final int CLIENT_ACCOUNTID = 2;
-    private static Client aClient = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME, CLIENT_ACCOUNTID);
+    private static Client aClient = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME,
+            CLIENT_ACCOUNTID);
 
     private static final int SPECIFICCLASS_ID = 3;
     private static final Date SPECIFICCLASS_DATE = new Date(1805400000L);
     private static final Time SPECIFICCLASS_STARTTIME = new Time(1805400000000L);
     private static final Time SPECIFICCLASS_ENDTIME = new Time(1805403600000L);
 
-    private static final int CLASS_TYPE_ID =6;
+    private static final int CLASS_TYPE_ID = 6;
     private static final String CLASS_TYPE_NAME = "Yoga";
     private static final String CLASS_TYPE_DESCRIPTION = "Description";
 
@@ -71,9 +72,12 @@ public class TestRegistrationService {
     private static final String OWNER_PASSWORD = "password123";
     private static final int OWNER_ACCOUNTID = 3;
 
-    private static Owner owner = new Owner(OWNER_EMAIL, OWNER_FIRSTNAME, OWNER_PASSWORD, OWNER_LASTNAME, OWNER_ACCOUNTID);
-    private static ClassType aClassType = new ClassType(CLASS_TYPE_NAME, CLASS_TYPE_DESCRIPTION, CLASS_TYPE_ID, true, owner);
-    private static SpecificClass aSpecificClass = new SpecificClass(SPECIFICCLASS_DATE, SPECIFICCLASS_STARTTIME, SPECIFICCLASS_ENDTIME, SPECIFICCLASS_ID, aClassType, "NewOne");
+    private static Owner owner = new Owner(OWNER_EMAIL, OWNER_FIRSTNAME, OWNER_PASSWORD, OWNER_LASTNAME,
+            OWNER_ACCOUNTID);
+    private static ClassType aClassType = new ClassType(CLASS_TYPE_NAME, CLASS_TYPE_DESCRIPTION, CLASS_TYPE_ID, true,
+            owner);
+    private static SpecificClass aSpecificClass = new SpecificClass(SPECIFICCLASS_DATE, SPECIFICCLASS_STARTTIME,
+            SPECIFICCLASS_ENDTIME, SPECIFICCLASS_ID, aClassType, "NewOne");
 
     private static Registration REGISTRATION = new Registration(REGISTRATION_ID, aSpecificClass, aClient);
 
@@ -83,21 +87,21 @@ public class TestRegistrationService {
     public void setMockOutput() {
         lenient().when(registrationRepository.findByRegId(REGISTRATION_ID)).thenReturn(REGISTRATION);
         lenient().when(specificClassRepository.findBySessionId(SPECIFICCLASS_ID)).thenReturn(aSpecificClass);
-        lenient().when(specificClassRepository.findByDateAndStartTime(SPECIFICCLASS_DATE,SPECIFICCLASS_STARTTIME)).thenReturn(aSpecificClass);
+        lenient().when(specificClassRepository.findByDateAndStartTime(SPECIFICCLASS_DATE, SPECIFICCLASS_STARTTIME))
+                .thenReturn(aSpecificClass);
         lenient().when(clientRepository.findByEmail(CLIENT_EMAIL)).thenReturn(aClient);
         lenient().when(registrationRepository.findByClient(aClient)).thenReturn(Arrays.asList(REGISTRATION));
-        lenient().when(registrationRepository.findBySpecificClass(aSpecificClass)).thenReturn(Arrays.asList(REGISTRATION));
+        lenient().when(registrationRepository.findBySpecificClass(aSpecificClass))
+                .thenReturn(Arrays.asList(REGISTRATION));
         Answer<?> returnParameterAsAnswer = (InvocationOnMock invocation) -> {
-			return invocation.getArgument(0);
-		};
-		lenient().when(registrationRepository.save(any(Registration.class))).thenAnswer(returnParameterAsAnswer);
+            return invocation.getArgument(0);
+        };
+        lenient().when(registrationRepository.save(any(Registration.class))).thenAnswer(returnParameterAsAnswer);
         lenient().when(specificClassRepository.findByName(SPECIFICCLASS_NAME)).thenReturn(aSpecificClass);
     }
-        
 
-    
     @Test
-    public void testCreateRegistration(){
+    public void testCreateRegistration() {
 
         Registration registration = registrationService.createRegistration(SPECIFICCLASS_NAME, CLIENT_EMAIL);
 
@@ -118,13 +122,13 @@ public class TestRegistrationService {
     }
 
     @Test
-    public void testDeleteRegistrationById(){
+    public void testDeleteRegistrationById() {
         registrationService.deleteByRegistrationId(REGISTRATION.getRegId());
         verify(registrationRepository, times(1)).deleteByRegId(REGISTRATION_ID);
     }
 
     @Test
-    public void testGetByClient(){
+    public void testGetByClient() {
 
         List<Registration> registrations = Arrays.asList(REGISTRATION);
         List<Registration> registrationsFromRepo = registrationService.getByClient(CLIENT_EMAIL);
@@ -134,13 +138,14 @@ public class TestRegistrationService {
     }
 
     @Test
-    public void testDeleteRegistrationByClient(){
+    public void testDeleteRegistrationByClient() {
         registrationService.deleteByClient(aClient.getEmail());
-        verify(registrationRepository, times(1)).deleteByClient(aClient);;
+        verify(registrationRepository, times(1)).deleteByClient(aClient);
+        ;
     }
 
     @Test
-    public void testGetBySpecificClass(){
+    public void testGetBySpecificClass() {
 
         List<Registration> registrations = Arrays.asList(REGISTRATION);
         List<Registration> registrationsFromRepo = registrationService.getBySpecificClass(SPECIFICCLASS_ID);
@@ -148,10 +153,11 @@ public class TestRegistrationService {
         assertEquals(registrations, registrationsFromRepo);
 
     }
+
     @Test
-    public void testDeleteRegistrationBySpecificClass(){
+    public void testDeleteRegistrationBySpecificClass() {
         registrationService.deleteBySpecificClass(aSpecificClass.getSessionId());
         verify(registrationRepository, times(1)).deleteBySpecificClass(aSpecificClass);
     }
-    
+
 }

@@ -21,9 +21,9 @@ import ca.mcgill.ecse321.SportPlus.dto.ClassTypeResponseDto;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class ClassTypeIntegrationTests {
-    public String CLASS_TYPE_NAME="Soccer";
-    public String CLASS_TYPE_DESCRIPTION="description.";
 
+    public String CLASS_TYPE_NAME = "Soccer";
+    public String CLASS_TYPE_DESCRIPTION = "description.";
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -43,7 +43,25 @@ public class ClassTypeIntegrationTests {
         requestDto.setName("Yoga");
         requestDto.setDescription("A relaxing yoga class");
 
-        ResponseEntity<ClassTypeResponseDto> response = restTemplate.postForEntity("/classType/create", requestDto, ClassTypeResponseDto.class);
+        ResponseEntity<ClassTypeResponseDto> response = restTemplate.postForEntity("/classType/create", requestDto,
+                ClassTypeResponseDto.class);
+
+        assertNotNull(response);
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        ClassTypeResponseDto classTypeResponse = response.getBody();
+        assertNotNull(classTypeResponse);
+        assertEquals(requestDto.getName(), classTypeResponse.getName());
+        assertEquals(requestDto.getDescription(), classTypeResponse.getDescription());
+    }
+
+    @Test
+    public void testCreateNewClassType2() {
+        ClassTypeRequestDto requestDto = new ClassTypeRequestDto();
+        requestDto.setName("Yoga");
+        requestDto.setDescription("A relaxing yoga class");
+
+        ResponseEntity<ClassTypeResponseDto> response = restTemplate.postForEntity("/classType/create/", requestDto,
+                ClassTypeResponseDto.class);
 
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
@@ -69,83 +87,199 @@ public class ClassTypeIntegrationTests {
         assertEquals(CLASS_TYPE_NAME, classTypeList.getClassTypes().get(1).getName());
     }
 
-@SuppressWarnings("null")
-@Test
-public void testFindClassTypeByName() {
-    // Setup: Create a class type to find
-    createClassTypeForTesting(CLASS_TYPE_NAME, CLASS_TYPE_DESCRIPTION);    
-    ResponseEntity<ClassTypeResponseDto> response = restTemplate.getForEntity("/classType/get/" + CLASS_TYPE_NAME, ClassTypeResponseDto.class);
-    
-    assertNotNull(response);
-    assertEquals(HttpStatus.OK, response.getStatusCode());
-    assertNotNull(response.getBody());
-    assertEquals(CLASS_TYPE_NAME, response.getBody().getName());
-}
-@SuppressWarnings("null")
-@Test
-public void testDeleteClassTypeByName() {
-    createClassTypeForTesting("Yoga", "A relaxing yoga class");
-    createClassTypeForTesting(CLASS_TYPE_NAME, CLASS_TYPE_DESCRIPTION);
-    restTemplate.delete("/classType/delete/" + CLASS_TYPE_NAME);
-    // Verify the class type is deleted
-    ResponseEntity<ClassTypeListDto> response = restTemplate.getForEntity("/classType/all", ClassTypeListDto.class);
-    assertNotNull(response);
-    assertEquals(HttpStatus.OK, response.getStatusCode());
-    assertTrue(response.getBody().getClassTypes().size()==1);
-}
+    @Test
+    public void testFindAllClassTypes2() {
+        // Pre-populate the database with two classType
+        createClassTypeForTesting("Yoga", "A relaxing yoga class");
+        createClassTypeForTesting(CLASS_TYPE_NAME, CLASS_TYPE_DESCRIPTION);
+        ResponseEntity<ClassTypeListDto> response = restTemplate.getForEntity("/classType/all/",
+                ClassTypeListDto.class);
 
-@SuppressWarnings("null")
-@Test
-public void testApproveClassType() {
-    // Setup: Create a class type to approve
-    ClassTypeResponseDto createdClassType = createClassTypeForTesting(CLASS_TYPE_NAME, CLASS_TYPE_DESCRIPTION);
-    // approve it withe a request
-    ResponseEntity<ClassTypeResponseDto> response = restTemplate.postForEntity("/classType/approve/" + createdClassType.getTypeId(), null, ClassTypeResponseDto.class);
-    
-    assertNotNull(response);
-    assertEquals(HttpStatus.OK, response.getStatusCode());
-    assertNotNull(response.getBody());
-    assertTrue(response.getBody().isApproved());
-}
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        ClassTypeListDto classTypeList = response.getBody();
+        assertNotNull(classTypeList);
+        assertEquals(2, classTypeList.getClassTypes().size());
+        assertEquals("Yoga", classTypeList.getClassTypes().get(0).getName());
+        assertEquals(CLASS_TYPE_NAME, classTypeList.getClassTypes().get(1).getName());
+    }
 
-@SuppressWarnings("null")
-@Test
-public void testUpdateClassTypeName() {
-    // Setup: Create a class type to update
-    ClassTypeResponseDto createdClassType = createClassTypeForTesting(CLASS_TYPE_NAME, CLASS_TYPE_DESCRIPTION);
-    
-    String updatedName = "soccer";
-    restTemplate.put("/classType/updateName/" + createdClassType.getTypeId(), updatedName);
-    
-    // Verify update
-    ResponseEntity<ClassTypeResponseDto> response = restTemplate.getForEntity("/classType/get/" + updatedName, ClassTypeResponseDto.class);
-    assertNotNull(response);
-    assertEquals(HttpStatus.OK, response.getStatusCode());
-    assertEquals(updatedName, response.getBody().getName());
-}
+    @SuppressWarnings("null")
+    @Test
+    public void testFindClassTypeByName() {
+        // Setup: Create a class type to find
+        createClassTypeForTesting(CLASS_TYPE_NAME, CLASS_TYPE_DESCRIPTION);
+        ResponseEntity<ClassTypeResponseDto> response = restTemplate.getForEntity("/classType/get/" + CLASS_TYPE_NAME,
+                ClassTypeResponseDto.class);
 
-@SuppressWarnings("null")           
-@Test
-public void testUpdateClassTypeDescription() {
-    // Setup: Create a class type to update
-    ClassTypeResponseDto createdClassType = createClassTypeForTesting(CLASS_TYPE_NAME, CLASS_TYPE_DESCRIPTION);
-    
-    String updatedDescription = "An intense Yoga class";
-    restTemplate.put("/classType/updateDescription/" + createdClassType.getTypeId(), updatedDescription);
-    
-    // Fetch and verify update
-    ResponseEntity<ClassTypeResponseDto> response = restTemplate.getForEntity("/classType/get/" + CLASS_TYPE_NAME, ClassTypeResponseDto.class);
-    assertNotNull(response);
-    assertEquals(HttpStatus.OK, response.getStatusCode());
-    assertEquals(updatedDescription, response.getBody().getDescription());
-}
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(CLASS_TYPE_NAME, response.getBody().getName());
+    }
 
-private ClassTypeResponseDto createClassTypeForTesting(String name, String description) {
-    ClassTypeRequestDto requestDto = new ClassTypeRequestDto();
-    requestDto.setName(name);
-    requestDto.setDescription(description);
-    
-    ResponseEntity<ClassTypeResponseDto> response = restTemplate.postForEntity("/classType/create", requestDto, ClassTypeResponseDto.class);
-    return response.getBody();
-}
+    @SuppressWarnings("null")
+    @Test
+    public void testFindClassTypeByName2() {
+        // Setup: Create a class type to find
+        createClassTypeForTesting(CLASS_TYPE_NAME, CLASS_TYPE_DESCRIPTION);
+        ResponseEntity<ClassTypeResponseDto> response = restTemplate.getForEntity(
+                "/classType/get/" + CLASS_TYPE_NAME + "/",
+                ClassTypeResponseDto.class);
+
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(CLASS_TYPE_NAME, response.getBody().getName());
+    }
+
+    @SuppressWarnings("null")
+    @Test
+    public void testDeleteClassTypeByName() {
+        createClassTypeForTesting("Yoga", "A relaxing yoga class");
+        createClassTypeForTesting(CLASS_TYPE_NAME, CLASS_TYPE_DESCRIPTION);
+        restTemplate.delete("/classType/delete/" + CLASS_TYPE_NAME);
+        // Verify the class type is deleted
+        ResponseEntity<ClassTypeListDto> response = restTemplate.getForEntity("/classType/all", ClassTypeListDto.class);
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertTrue(response.getBody().getClassTypes().size() == 1);
+    }
+
+    @SuppressWarnings("null")
+    @Test
+    public void testDeleteClassTypeByName2() {
+        createClassTypeForTesting("Yoga", "A relaxing yoga class");
+        createClassTypeForTesting(CLASS_TYPE_NAME, CLASS_TYPE_DESCRIPTION);
+        restTemplate.delete("/classType/delete/" + CLASS_TYPE_NAME + "/");
+        // Verify the class type is deleted
+        ResponseEntity<ClassTypeListDto> response = restTemplate.getForEntity("/classType/all", ClassTypeListDto.class);
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertTrue(response.getBody().getClassTypes().size() == 1);
+    }
+
+    @SuppressWarnings("null")
+    @Test
+    public void testApproveClassType() {
+        // Setup: Create a class type to approve
+        ClassTypeResponseDto createdClassType = createClassTypeForTesting(CLASS_TYPE_NAME, CLASS_TYPE_DESCRIPTION);
+        // approve it withe a request
+        ResponseEntity<ClassTypeResponseDto> response = restTemplate
+                .postForEntity("/classType/approve/" + createdClassType.getTypeId(), null, ClassTypeResponseDto.class);
+
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertTrue(response.getBody().isApproved());
+    }
+
+    @SuppressWarnings("null")
+    @Test
+    public void testApproveClassType2() {
+        // Setup: Create a class type to approve
+        ClassTypeResponseDto createdClassType = createClassTypeForTesting(CLASS_TYPE_NAME, CLASS_TYPE_DESCRIPTION);
+        // approve it withe a request
+        ResponseEntity<ClassTypeResponseDto> response = restTemplate
+                .postForEntity("/classType/approve/" + createdClassType.getTypeId() + "/", null,
+                        ClassTypeResponseDto.class);
+
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertTrue(response.getBody().isApproved());
+    }
+
+    @SuppressWarnings("null")
+    @Test
+    public void testUpdateClassTypeName() {
+        // Setup: Create a class type to update
+        ClassTypeResponseDto createdClassType = createClassTypeForTesting(CLASS_TYPE_NAME, CLASS_TYPE_DESCRIPTION);
+
+        String updatedName = "soccer";
+        restTemplate.put("/classType/updateName/" + createdClassType.getTypeId(), updatedName);
+
+        // Verify update
+        ResponseEntity<ClassTypeResponseDto> response = restTemplate.getForEntity("/classType/get/" + updatedName,
+                ClassTypeResponseDto.class);
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(updatedName, response.getBody().getName());
+    }
+
+    @SuppressWarnings("null")
+    @Test
+    public void testUpdateClassTypeName2() {
+        // Setup: Create a class type to update
+        ClassTypeResponseDto createdClassType = createClassTypeForTesting(CLASS_TYPE_NAME, CLASS_TYPE_DESCRIPTION);
+
+        String updatedName = "soccer";
+        restTemplate.put("/classType/updateName/" + createdClassType.getTypeId() + "/", updatedName);
+
+        // Verify update
+        ResponseEntity<ClassTypeResponseDto> response = restTemplate.getForEntity("/classType/get/" + updatedName,
+                ClassTypeResponseDto.class);
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(updatedName, response.getBody().getName());
+    }
+
+    @SuppressWarnings("null")
+    @Test
+    public void testUpdateClassTypeDescription() {
+        // Setup: Create a class type to update
+        ClassTypeResponseDto createdClassType = createClassTypeForTesting(CLASS_TYPE_NAME, CLASS_TYPE_DESCRIPTION);
+
+        String updatedDescription = "An intense Yoga class";
+        restTemplate.put("/classType/updateDescription/" + createdClassType.getTypeId(), updatedDescription);
+
+        // Fetch and verify update
+        ResponseEntity<ClassTypeResponseDto> response = restTemplate.getForEntity("/classType/get/" + CLASS_TYPE_NAME,
+                ClassTypeResponseDto.class);
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(updatedDescription, response.getBody().getDescription());
+    }
+
+    @SuppressWarnings("null")
+    @Test
+    public void testUpdateClassTypeDescription2() {
+        // Setup: Create a class type to update
+        ClassTypeResponseDto createdClassType = createClassTypeForTesting(CLASS_TYPE_NAME, CLASS_TYPE_DESCRIPTION);
+
+        String updatedDescription = "An intense Yoga class";
+        restTemplate.put("/classType/updateDescription/" + createdClassType.getTypeId() + "/", updatedDescription);
+
+        // Fetch and verify update
+        ResponseEntity<ClassTypeResponseDto> response = restTemplate.getForEntity("/classType/get/" + CLASS_TYPE_NAME,
+                ClassTypeResponseDto.class);
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(updatedDescription, response.getBody().getDescription());
+    }
+
+    @SuppressWarnings("null")
+    @Test
+    private ClassTypeResponseDto createClassTypeForTesting(String name, String description) {
+        ClassTypeRequestDto requestDto = new ClassTypeRequestDto();
+        requestDto.setName(name);
+        requestDto.setDescription(description);
+
+        ResponseEntity<ClassTypeResponseDto> response = restTemplate.postForEntity("/classType/create", requestDto,
+                ClassTypeResponseDto.class);
+        return response.getBody();
+    }
+
+    @SuppressWarnings("null")
+    @Test
+    private ClassTypeResponseDto createClassTypeForTesting2(String name, String description) {
+        ClassTypeRequestDto requestDto = new ClassTypeRequestDto();
+        requestDto.setName(name);
+        requestDto.setDescription(description);
+
+        ResponseEntity<ClassTypeResponseDto> response = restTemplate.postForEntity("/classType/create/", requestDto,
+                ClassTypeResponseDto.class);
+        return response.getBody();
+    }
+
 }

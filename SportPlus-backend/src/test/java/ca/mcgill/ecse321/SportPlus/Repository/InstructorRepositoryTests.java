@@ -17,6 +17,7 @@ import ca.mcgill.ecse321.SportPlus.model.Instructor;
 
 @SpringBootTest
 public class InstructorRepositoryTests {
+
     @Autowired
     private InstructorRepository instructorRepository;
 

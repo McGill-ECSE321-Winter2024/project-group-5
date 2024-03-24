@@ -44,42 +44,46 @@ public class TestInstructorService {
 
     @BeforeEach
     public void setMockOutput() {
-        lenient().when(instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL)).thenReturn(new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD, INSTRUCTOR_LASTNAME, INSTRUCTOR_ACCOUNTID));
-        lenient().when(instructorRepository.findByAccountId(INSTRUCTOR_ACCOUNTID)).thenReturn(new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD, INSTRUCTOR_LASTNAME, INSTRUCTOR_ACCOUNTID));
-        lenient().when(instructorRepository.findAll()).thenReturn(Arrays.asList(new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD, INSTRUCTOR_LASTNAME, INSTRUCTOR_ACCOUNTID)));
+        lenient().when(instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL)).thenReturn(new Instructor(
+                INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD, INSTRUCTOR_LASTNAME, INSTRUCTOR_ACCOUNTID));
+        lenient().when(instructorRepository.findByAccountId(INSTRUCTOR_ACCOUNTID)).thenReturn(new Instructor(
+                INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD, INSTRUCTOR_LASTNAME, INSTRUCTOR_ACCOUNTID));
+        lenient().when(instructorRepository.findAll()).thenReturn(Arrays.asList(new Instructor(INSTRUCTOR_EMAIL,
+                INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD, INSTRUCTOR_LASTNAME, INSTRUCTOR_ACCOUNTID)));
         Answer<?> returnParameterAsAnswer = (InvocationOnMock invocation) -> {
-			return invocation.getArgument(0);
-		};
-		lenient().when(instructorRepository.save(any(Instructor.class))).thenAnswer(returnParameterAsAnswer);
+            return invocation.getArgument(0);
+        };
+        lenient().when(instructorRepository.save(any(Instructor.class))).thenAnswer(returnParameterAsAnswer);
     }
-    
+
     @Test
-	public void testCreateInstructor() {
+    public void testCreateInstructor() {
         String email = "newinstructor@sportplus.com";
         String firstName = "Paul";
         String lastName = "Dmyt";
         String password = "Ro1234";
-        
+
         Instructor instructor = instructorService.createInstructor(email, firstName, password, lastName);
-		
-		assertNotNull(instructor);
-		assertEquals(email, instructor.getEmail());
+
+        assertNotNull(instructor);
+        assertEquals(email, instructor.getEmail());
         assertEquals(firstName, instructor.getFirstName());
         assertEquals(lastName, instructor.getLastName());
         assertEquals(password, instructor.getPassword());
-        
+
         verify(instructorRepository, times(1)).save(instructor);
-	}
+    }
 
     @Test
     public void testUpdateInstructor() {
         String newPassword = "NewPass123";
         String newFirstName = "NewJohn";
         String newLastName = "NewDoe";
-        
-        Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD, INSTRUCTOR_LASTNAME, INSTRUCTOR_ACCOUNTID);
+
+        Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD,
+                INSTRUCTOR_LASTNAME, INSTRUCTOR_ACCOUNTID);
         Instructor updatedInstructor = instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL);
-        
+
         instructorService.updateInstructorFirstName(INSTRUCTOR_EMAIL, newFirstName);
         instructorService.updateInstructorLastName(INSTRUCTOR_EMAIL, newLastName);
         instructorService.updateInstructorPassword(INSTRUCTOR_EMAIL, INSTRUCTOR_PASSWORD, newPassword);
@@ -93,13 +97,14 @@ public class TestInstructorService {
         assertEquals(newPassword, updatedInstructor.getPassword());
         assertEquals(newFirstName, updatedInstructor.getFirstName());
         assertEquals(newLastName, updatedInstructor.getLastName());
-        
+
         verify(instructorRepository, times(3)).save(any(Instructor.class));
     }
 
     @Test
     public void testDeleteInstructor() {
-        Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD, INSTRUCTOR_LASTNAME, INSTRUCTOR_ACCOUNTID);
+        Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD,
+                INSTRUCTOR_LASTNAME, INSTRUCTOR_ACCOUNTID);
 
         instructorService.deleteInstructor(instructor.getEmail());
 
@@ -107,20 +112,21 @@ public class TestInstructorService {
     }
 
     @Test
-	public void testGetExistingInstructor() {
-		assertEquals(INSTRUCTOR_EMAIL, instructorService.getInstructor(INSTRUCTOR_EMAIL).getEmail());
-	}
+    public void testGetExistingInstructor() {
+        assertEquals(INSTRUCTOR_EMAIL, instructorService.getInstructor(INSTRUCTOR_EMAIL).getEmail());
+    }
 
-	@Test
-	public void testGetNonExistingInstructor() {
-		assertNull(instructorService.getInstructor(NOT_INSTRUCTOR_EMAIL));
-	}
+    @Test
+    public void testGetNonExistingInstructor() {
+        assertNull(instructorService.getInstructor(NOT_INSTRUCTOR_EMAIL));
+    }
 
     @Test
     public void testReadInstructorById() {
         int accountId = INSTRUCTOR_ACCOUNTID;
-        
-        Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD, INSTRUCTOR_LASTNAME, accountId);
+
+        Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD,
+                INSTRUCTOR_LASTNAME, accountId);
         Instructor searchInstructor = instructorService.getInstructor(accountId);
 
         assertNotNull(searchInstructor);
@@ -133,12 +139,13 @@ public class TestInstructorService {
 
     @Test
     public void testGetAllInstructors() {
-        Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD, INSTRUCTOR_LASTNAME, INSTRUCTOR_ACCOUNTID);
+        Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD,
+                INSTRUCTOR_LASTNAME, INSTRUCTOR_ACCOUNTID);
         List<Instructor> instructors = Arrays.asList(instructor);
         List<Instructor> instructorsFromRepo = instructorService.getAllInstructors();
 
         assertNotNull(instructorsFromRepo);
         assertEquals(instructors, instructorsFromRepo);
     }
-    
+
 }
