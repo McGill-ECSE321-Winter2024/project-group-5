@@ -7,6 +7,9 @@ public class RegistrationRequestDto {
     private SpecificClass specificClass;
     private Client client;
 
+    public RegistrationRequestDto() {
+    }
+
     public RegistrationRequestDto(SpecificClass specificClass, Client client) {
         this.client = client;
         this.specificClass = specificClass;
