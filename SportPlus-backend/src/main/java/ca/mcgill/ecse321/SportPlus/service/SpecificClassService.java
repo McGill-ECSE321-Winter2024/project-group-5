@@ -49,7 +49,7 @@ public class SpecificClassService {
 
         Instructor instructor = instructorRepository.findByAccountId(instructorId);
         ClassType classType = classTypeRepository.findByTypeId(classTypeId);
-        SpecificClass specificClass = new SpecificClass(date, startTime, endTime, 0, classType);
+        SpecificClass specificClass = new SpecificClass(date, startTime, endTime, 0, classType, null);
         specificClass.setSupervisor(instructor);
 
         // SAve the new SpecificClass
@@ -81,7 +81,7 @@ public class SpecificClassService {
                                                               // with the date to the list
 
                 SpecificClass specificClass = new SpecificClass(java.sql.Date.valueOf(date),
-                        java.sql.Time.valueOf(startTim), java.sql.Time.valueOf(endTim), 0, classType);
+                        java.sql.Time.valueOf(startTim), java.sql.Time.valueOf(endTim), 0, classType, null);
                 specificClass.setSupervisor(instructor); // Set the instructor separately
                 specificClassRepository.save(specificClass); // Save the SpecificClass instance
                 recurringClasses.add(specificClass); // Add to the list

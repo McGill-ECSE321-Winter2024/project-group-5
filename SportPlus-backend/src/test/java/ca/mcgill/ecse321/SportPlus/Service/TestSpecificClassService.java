@@ -136,7 +136,7 @@ class TestSpecificClassService {
         ClassType yoga = new ClassType("yoga", "Fun class", 0, true, owner);
 
         SpecificClass existingClass = new SpecificClass(Date.valueOf("2024-04-10"), Time.valueOf("10:00:00"),
-                Time.valueOf("11:00:00"), 1, yoga);
+                Time.valueOf("11:00:00"), 1, yoga, null);
 
         when(specificClassRepository.findBySessionId(anyInt())).thenReturn(existingClass);
         when(specificClassRepository.save(any(SpecificClass.class))).thenAnswer(i -> i.getArguments()[0]);
@@ -164,7 +164,7 @@ class TestSpecificClassService {
         ClassType yoga = new ClassType("yoga", "Fun class", 0, true, owner);
 
         SpecificClass existingClass = new SpecificClass(Date.valueOf("2024-04-10"), Time.valueOf("10:00:00"),
-                Time.valueOf("11:00:00"), 1, yoga);
+                Time.valueOf("11:00:00"), 1, yoga, null);
 
         when(specificClassRepository.findBySessionId(anyInt())).thenReturn(existingClass);
         when(specificClassRepository.save(any(SpecificClass.class))).thenAnswer(i -> i.getArguments()[0]);
@@ -390,7 +390,7 @@ class TestSpecificClassService {
         ClassType classType = new ClassType("yoga", "Fun class", 0, true, owner);
 
         SpecificClass futureClassWithSpace = new SpecificClass(Date.valueOf("2025-05-18"), Time.valueOf("10:00:00"),
-                Time.valueOf("11:00:00"), 0, classType);
+                Time.valueOf("11:00:00"), 0, classType, null);
         futureClassWithSpace.setSupervisor(supervisor);
 
         // Assuming the method

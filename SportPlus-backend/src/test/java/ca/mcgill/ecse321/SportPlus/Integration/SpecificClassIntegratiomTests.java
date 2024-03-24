@@ -153,7 +153,7 @@ class SpecificClassIntegratiomTests {
 
         // Assume there's a specific class with ID sessionId that you want to update
         ClassType classType = classTypeRepository.findByTypeId(CLASS_TYPE);
-        SpecificClass specifcClass = new SpecificClass(DATE, START_TIME, END_TIME, 0, classType);
+        SpecificClass specifcClass = new SpecificClass(DATE, START_TIME, END_TIME, 0, classType, null);
         Instructor supervisor = instructorRepository.findByAccountId(INSTRUCTOR_ID);
         specifcClass.setSupervisor(supervisor);
         specificClassRepository.save(specifcClass);
@@ -184,7 +184,7 @@ class SpecificClassIntegratiomTests {
 
         // Assume there's a specific class with ID sessionId that you want to update
         ClassType classType = classTypeRepository.findByTypeId(CLASS_TYPE);
-        SpecificClass specifcClass = new SpecificClass(DATE, START_TIME, END_TIME, 0, classType);
+        SpecificClass specifcClass = new SpecificClass(DATE, START_TIME, END_TIME, 0, classType, null);
         Instructor supervisor = instructorRepository.findByAccountId(INSTRUCTOR_ID);
         specifcClass.setSupervisor(supervisor);
         specificClassRepository.save(specifcClass);
@@ -218,7 +218,7 @@ class SpecificClassIntegratiomTests {
 
         // Create a SpecificCLass
         ClassType classType = classTypeRepository.findByTypeId(CLASS_TYPE);
-        SpecificClass specifcClass = new SpecificClass(DATE, START_TIME, END_TIME, 0, classType);
+        SpecificClass specifcClass = new SpecificClass(DATE, START_TIME, END_TIME, 0, classType, null);
         Instructor supervisor = instructorRepository.findByAccountId(INSTRUCTOR_ID);
         specifcClass.setSupervisor(supervisor);
 
@@ -261,7 +261,7 @@ class SpecificClassIntegratiomTests {
 
         // Assume there's a specific class with ID sessionId that you want to update
         ClassType classType = classTypeRepository.findByTypeId(CLASS_TYPE);
-        SpecificClass specifcClass = new SpecificClass(DATE, START_TIME, END_TIME, 0, classType);
+        SpecificClass specifcClass = new SpecificClass(DATE, START_TIME, END_TIME, 0, classType, null);
         specificClassRepository.save(specifcClass);
         SpecificClass foundClass = specificClassRepository.findByDateAndStartTime(DATE, START_TIME);
 
@@ -289,7 +289,7 @@ class SpecificClassIntegratiomTests {
 
         // Assume there's a specific class with ID sessionId that you want to update
         ClassType classType = classTypeRepository.findByTypeId(CLASS_TYPE);
-        SpecificClass specifcClass = new SpecificClass(DATE, START_TIME, END_TIME, 0, classType);
+        SpecificClass specifcClass = new SpecificClass(DATE, START_TIME, END_TIME, 0, classType, null);
         Instructor supervisor = instructorRepository.findByAccountId(INSTRUCTOR_ID);
         specifcClass.setSupervisor(supervisor);
         specificClassRepository.save(specifcClass);
@@ -318,8 +318,8 @@ class SpecificClassIntegratiomTests {
         // Create 2 SpecificCLasses
         Date DATE2 = Date.valueOf("2024-04-18");
         ClassType classType = classTypeRepository.findByTypeId(CLASS_TYPE);
-        SpecificClass specifcClass = new SpecificClass(DATE, START_TIME, END_TIME, 0, classType);
-        SpecificClass specifcClass2 = new SpecificClass(DATE2, START_TIME, END_TIME, 0, classType);
+        SpecificClass specifcClass = new SpecificClass(DATE, START_TIME, END_TIME, 0, classType, null);
+        SpecificClass specifcClass2 = new SpecificClass(DATE2, START_TIME, END_TIME, 0, classType, null);
         Instructor supervisor = instructorRepository.findByAccountId(INSTRUCTOR_ID);
         specifcClass.setSupervisor(supervisor);
         specifcClass2.setSupervisor(supervisor);
@@ -344,8 +344,8 @@ class SpecificClassIntegratiomTests {
         Time START_TIME2 = Time.valueOf("14:00:00");
         Time END_TIME2 = Time.valueOf("15:00:00");
         ClassType classType = classTypeRepository.findByTypeId(CLASS_TYPE);
-        SpecificClass specifcClass = new SpecificClass(DATE, START_TIME, END_TIME, 0, classType);
-        SpecificClass specifcClass2 = new SpecificClass(DATE, START_TIME2, END_TIME2, 0, classType);
+        SpecificClass specifcClass = new SpecificClass(DATE, START_TIME, END_TIME, 0, classType, null);
+        SpecificClass specifcClass2 = new SpecificClass(DATE, START_TIME2, END_TIME2, 0, classType, null);
         Instructor supervisor = instructorRepository.findByAccountId(INSTRUCTOR_ID);
         specifcClass.setSupervisor(supervisor);
         specifcClass2.setSupervisor(supervisor);
@@ -375,9 +375,9 @@ class SpecificClassIntegratiomTests {
         Owner owner = ownerRepository.findByEmail("email@owner.com");
         ClassType classType2 = new ClassType("tennis", "Fun Class Tennis", 0, true, owner);
         classTypeRepository.save(classType2);
-        SpecificClass specifcClass = new SpecificClass(DATE, START_TIME, END_TIME, 0, classType1);
-        SpecificClass specifcClass2 = new SpecificClass(DATE, START_TIME, END_TIME, 0, classType2);
-        SpecificClass specifcClass3 = new SpecificClass(DATE, START_TIME, END_TIME, 0, classType1);
+        SpecificClass specifcClass = new SpecificClass(DATE, START_TIME, END_TIME, 0, classType1, null);
+        SpecificClass specifcClass2 = new SpecificClass(DATE, START_TIME, END_TIME, 0, classType2, null);
+        SpecificClass specifcClass3 = new SpecificClass(DATE, START_TIME, END_TIME, 0, classType1, null);
         Instructor supervisor = instructorRepository.findByAccountId(INSTRUCTOR_ID);
         specifcClass.setSupervisor(supervisor);
         specifcClass2.setSupervisor(supervisor);
@@ -405,9 +405,9 @@ class SpecificClassIntegratiomTests {
         Date endDate = Date.valueOf("2024-04-20"); // April 20th
         ClassType classType = classTypeRepository.findByTypeId(CLASS_TYPE);
         classTypeRepository.save(classType);
-        SpecificClass class1 = new SpecificClass(Date.valueOf("2024-04-11"), START_TIME, END_TIME, 0, classType); // April
+        SpecificClass class1 = new SpecificClass(Date.valueOf("2024-04-11"), START_TIME, END_TIME, 0, classType, null); // April
                                                                                                                   // 11th
-        SpecificClass class2 = new SpecificClass(DATE, START_TIME, END_TIME, 0, classType);// April 16th
+        SpecificClass class2 = new SpecificClass(DATE, START_TIME, END_TIME, 0, classType, null);// April 16th
         specificClassRepository.save(class1);
         specificClassRepository.save(class2);
 
@@ -431,11 +431,11 @@ class SpecificClassIntegratiomTests {
         ClassType classType = classTypeRepository.findByTypeId(CLASS_TYPE);
         Instructor supervisor = instructorRepository.findByAccountId(INSTRUCTOR_ID);
         SpecificClass availableClass = new SpecificClass(Date.valueOf("2024-04-11"), Time.valueOf("14:00:00"),
-                Time.valueOf("15:00:00"), 0, classType); // In the future
+                Time.valueOf("15:00:00"), 0, classType, null); // In the future
         SpecificClass availableClass2 = new SpecificClass(Date.valueOf("2024-04-11"), Time.valueOf("21:00:00"),
-                Time.valueOf("22:00:00"), 0, classType);// Same date, just different time whould still be available
+                Time.valueOf("22:00:00"), 0, classType, null);// Same date, just different time whould still be available
         SpecificClass unavailableClass = new SpecificClass(Date.valueOf("2024-04-12"), Time.valueOf("14:00:00"),
-                Time.valueOf("15:00:00"), 0, classType);// In the future, but without an instructor
+                Time.valueOf("15:00:00"), 0, classType, null);// In the future, but without an instructor
         availableClass.setSupervisor(supervisor);
         availableClass2.setSupervisor(supervisor);
         specificClassRepository.save(availableClass);
@@ -464,7 +464,7 @@ class SpecificClassIntegratiomTests {
         // Create specific classes
         ClassType classType = classTypeRepository.findByTypeId(CLASS_TYPE);
         Instructor supervisor = instructorRepository.findByAccountId(INSTRUCTOR_ID);
-        SpecificClass availableClass = new SpecificClass(DATE, START_TIME, END_TIME, 0, classType);
+        SpecificClass availableClass = new SpecificClass(DATE, START_TIME, END_TIME, 0, classType, null);
         availableClass.setSupervisor(supervisor);
         specificClassRepository.save(availableClass);
 
@@ -496,7 +496,7 @@ class SpecificClassIntegratiomTests {
         // Create specific classes
         ClassType classType = classTypeRepository.findByTypeId(CLASS_TYPE);
         Instructor supervisor = instructorRepository.findByAccountId(INSTRUCTOR_ID);
-        SpecificClass availableClass = new SpecificClass(DATE, START_TIME, END_TIME, 0, classType);
+        SpecificClass availableClass = new SpecificClass(DATE, START_TIME, END_TIME, 0, classType, null);
         availableClass.setSupervisor(supervisor);
         specificClassRepository.save(availableClass);
         // The URL for the endpoint
@@ -523,7 +523,7 @@ class SpecificClassIntegratiomTests {
         // Create specific classes
         ClassType classType = classTypeRepository.findByTypeId(CLASS_TYPE);
         Instructor supervisor = instructorRepository.findByAccountId(INSTRUCTOR_ID);
-        SpecificClass availableClass = new SpecificClass(DATE, START_TIME, END_TIME, 0, classType);
+        SpecificClass availableClass = new SpecificClass(DATE, START_TIME, END_TIME, 0, classType, null);
         availableClass.setSupervisor(supervisor);
         specificClassRepository.save(availableClass);
         SpecificClass class1 = specificClassRepository.findByDateAndStartTime(DATE, START_TIME);
