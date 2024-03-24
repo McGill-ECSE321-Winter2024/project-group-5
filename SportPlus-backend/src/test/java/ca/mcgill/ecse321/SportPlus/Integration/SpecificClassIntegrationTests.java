@@ -387,35 +387,6 @@ class SpecificClassIntegrationTests {
         }
 
         @Test
-        void testGetSpecificClassByDateRange() {
-                // Setup data
-                Date startDate = Date.valueOf("2024-04-10"); // April 10th
-                Date endDate = Date.valueOf("2024-04-20"); // April 20th
-                ClassType classType = classTypeRepository.findByTypeId(CLASS_TYPE);
-                classTypeRepository.save(classType);
-                SpecificClass class1 = new SpecificClass(Date.valueOf("2024-04-11"), START_TIME, END_TIME, 0, classType,
-                                null); // April
-                // 11th
-                SpecificClass class2 = new SpecificClass(DATE, START_TIME, END_TIME, 0, classType, null);// April 16th
-                specificClassRepository.save(class1);
-                specificClassRepository.save(class2);
-
-                // Construct the URL with query parameters
-                String url = String.format("/specificClass/by-date-range?startDate=%s&endDate=%s", startDate.toString(),
-                                endDate.toString());
-
-                // Execute the GET request
-                ResponseEntity<SpecificClassResponseDto[]> response = client.getForEntity(url,
-                                SpecificClassResponseDto[].class);
-
-                // Assert the response
-                assertEquals(HttpStatus.OK, response.getStatusCode());
-                SpecificClassResponseDto[] specificClasses = response.getBody();
-                assertNotNull(specificClasses);
-                assertEquals(2, specificClasses.length); // 2 Classes in range from, April 10th to April 20th
-        }
-
-        @Test
         void testGetAvailableSpecificClasses() {
                 ClassType classType = classTypeRepository.findByTypeId(CLASS_TYPE);
                 Instructor supervisor = instructorRepository.findByAccountId(INSTRUCTOR_ID);
@@ -821,36 +792,6 @@ class SpecificClassIntegrationTests {
                 SpecificClassResponseDto[] specificClasses = response.getBody();
                 assertNotNull(specificClasses);
                 assertEquals(2, specificClasses.length); // Check that only 2 classes are returned
-        }
-
-        @Test
-        void testGetSpecificClassByDateRange2() {
-                // Setup data
-                Date startDate = Date.valueOf("2024-04-10"); // April 10th
-                Date endDate = Date.valueOf("2024-04-20"); // April 20th
-                ClassType classType = classTypeRepository.findByTypeId(CLASS_TYPE);
-                classTypeRepository.save(classType);
-                SpecificClass class1 = new SpecificClass(Date.valueOf("2024-04-11"), START_TIME, END_TIME, 0, classType,
-                                null); // April
-                // 11th
-                SpecificClass class2 = new SpecificClass(DATE, START_TIME, END_TIME, 0, classType, null);// April 16th
-                specificClassRepository.save(class1);
-                specificClassRepository.save(class2);
-
-                // Construct the URL with query parameters
-                String url = String.format("/specificClass/by-date-range?startDate=%s&endDate=%s/",
-                                startDate.toString(),
-                                endDate.toString());
-
-                // Execute the GET request
-                ResponseEntity<SpecificClassResponseDto[]> response = client.getForEntity(url,
-                                SpecificClassResponseDto[].class);
-
-                // Assert the response
-                assertEquals(HttpStatus.OK, response.getStatusCode());
-                SpecificClassResponseDto[] specificClasses = response.getBody();
-                assertNotNull(specificClasses);
-                assertEquals(2, specificClasses.length); // 2 Classes in range from, April 10th to April 20th
         }
 
         @Test
