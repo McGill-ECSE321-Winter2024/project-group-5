@@ -1,8 +1,9 @@
 package ca.mcgill.ecse321.SportPlus.service;
 
 import java.sql.Date;
-import java.util.List;
+import java.sql.Time;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,12 +13,9 @@ import ca.mcgill.ecse321.SportPlus.dao.ClientRepository;
 import ca.mcgill.ecse321.SportPlus.dao.InstructorRepository;
 import ca.mcgill.ecse321.SportPlus.model.SpecificClass;
 import ca.mcgill.ecse321.SportPlus.dao.SpecificClassRepository;
-import ca.mcgill.ecse321.SportPlus.model.Instructor;
-
 import ca.mcgill.ecse321.SportPlus.dao.RegistrationRepository;
 import ca.mcgill.ecse321.SportPlus.model.Registration;
 import ca.mcgill.ecse321.SportPlus.service.utilities.HelperMethods;
-import ca.mcgill.ecse321.SportPlus.service.ClientService;
 
 
 @Service
@@ -101,15 +99,12 @@ public class RegistrationService {
      //------------EndWrappers----------//
 
      @Transactional
-     public Registration createRegistration(Integer specificClassId, String clientEmail){
+     public Registration createRegistration(Date specificClassDate, Time specificClassStartTime, String clientEmail){
         if (clientEmail == null || HelperMethods.ClientEmailCheck(clientEmail).trim().length() != 0) {
             throw new IllegalArgumentException("Invalid email!");
         }
-        if (specificClassId < 0) {
-            throw new IllegalArgumentException("Registration Id cannot be less than 0!");
-        }
-
-        SpecificClass specificClass = specificClassRepository.findBySessionId(specificClassId);
+        
+        SpecificClass specificClass = specificClassRepository.findByDateAndStartTime(specificClassDate, specificClassStartTime);
         Client client = clientRepository.findByEmail(clientEmail);
 
         Registration registration = new Registration(0, specificClass, client);

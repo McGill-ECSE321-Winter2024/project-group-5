@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -72,7 +71,7 @@ public class RegistrationRestController {
     @PostMapping(value = {"/registrations/create", "registrations/create/"})
     @ResponseStatus(HttpStatus.CREATED)
     public RegistrationResponseDto createRegistration(@RequestBody RegistrationRequestDto registration){
-        Registration createRegistration = registrationService.createRegistration(registration.getSpecificClass().getSessionId(), registration.getClient().getEmail());
+        Registration createRegistration = registrationService.createRegistration(registration.getSpecificClass().getDate(), registration.getSpecificClass().getStartTime(), registration.getClient().getEmail());
         return new RegistrationResponseDto(createRegistration);
     }
 }

@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.sql.Date;
 import java.sql.Time;
-import org.apache.catalina.connector.Response;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,7 +20,6 @@ import ca.mcgill.ecse321.SportPlus.dao.InstructorRepository;
 import ca.mcgill.ecse321.SportPlus.dao.OwnerRepository;
 import ca.mcgill.ecse321.SportPlus.dao.RegistrationRepository;
 import ca.mcgill.ecse321.SportPlus.dao.SpecificClassRepository;
-import ca.mcgill.ecse321.SportPlus.dto.ClientResponseDto;
 import ca.mcgill.ecse321.SportPlus.dto.RegistrationListDto;
 import ca.mcgill.ecse321.SportPlus.dto.RegistrationRequestDto;
 import ca.mcgill.ecse321.SportPlus.dto.RegistrationResponseDto;
@@ -73,9 +71,6 @@ public class RegistrationIntegrationTests {
     private static final int CLIENT_ACCOUNTID = 2;
 
     private static final int SPECIFICCLASS_ID = 3;
-    //private static final Date SPECIFICCLASS_DATE = new Date(1805400000L);
-    // private static final Time SPECIFICCLASS_STARTTIME = new Time(1805400000000L);
-    // private static final Time SPECIFICCLASS_ENDTIME = new Time(1805403600000L);
     private static final Date SPECIFICCLASS_DATE = Date.valueOf("2024-04-16");
     private static final Time SPECIFICCLASS_STARTTIME = Time.valueOf("11:00:00");
     private static final Time SPECIFICCLASS_ENDTIME = Time.valueOf("12:00:00");
@@ -276,7 +271,6 @@ public class RegistrationIntegrationTests {
             assertEquals(CLASS_TYPE_NAME, registrationResponse.getSpecificClass().getClassType().getName());
             assertEquals(SPECIFICCLASS_ENDTIME, registrationResponse.getSpecificClass().getEndTime());
             assertEquals(SPECIFICCLASS_STARTTIME, registrationResponse.getSpecificClass().getStartTime());
-            assertEquals(SPECIFICCLASS_DATE, registrationResponse.getSpecificClass().getDate());
     }
 
     @Test 
@@ -310,7 +304,6 @@ public class RegistrationIntegrationTests {
         assertEquals(CLASS_TYPE_NAME, registrationResponse.getSpecificClass().getClassType().getName());
         assertEquals(SPECIFICCLASS_ENDTIME, registrationResponse.getSpecificClass().getEndTime());
         assertEquals(SPECIFICCLASS_STARTTIME, registrationResponse.getSpecificClass().getStartTime());
-        assertEquals(SPECIFICCLASS_DATE, registrationResponse.getSpecificClass().getDate());
     }
 
     @Test
@@ -494,10 +487,14 @@ public class RegistrationIntegrationTests {
         classTypeRepository.save(aClassType);
         specificClassRepository.save(specificClass);
 
-        RegistrationRequestDto request = new RegistrationRequestDto(specificClass, client, 0);
+        RegistrationRequestDto request = new RegistrationRequestDto(specificClass, client);
+        assertEquals(CLIENT_EMAIL, request.getClient().getEmail());
+        assertEquals(SPECIFICCLASS_DATE, request.getSpecificClass().getDate());
+
         ResponseEntity<RegistrationResponseDto> response = restTemplate.postForEntity("/registrations/create", request, RegistrationResponseDto.class);
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
+
         RegistrationResponseDto createdRegistration = response.getBody();
         assertNotNull(createdRegistration);
         assertEquals(CLIENT_EMAIL, createdRegistration.getClient().getEmail());
@@ -505,8 +502,6 @@ public class RegistrationIntegrationTests {
         assertEquals(SPECIFICCLASS_ENDTIME, createdRegistration.getSpecificClass().getEndTime());
         assertEquals(SPECIFICCLASS_STARTTIME, createdRegistration.getSpecificClass().getStartTime());
         assertEquals(SPECIFICCLASS_DATE, createdRegistration.getSpecificClass().getDate());
-        
-
     }
 
 

@@ -81,6 +81,7 @@ public class TestRegistrationService {
     public void setMockOutput() {
         lenient().when(registrationRepository.findByRegId(REGISTRATION_ID)).thenReturn(REGISTRATION);
         lenient().when(specificClassRepository.findBySessionId(SPECIFICCLASS_ID)).thenReturn(aSpecificClass);
+        lenient().when(specificClassRepository.findByDateAndStartTime(SPECIFICCLASS_DATE,SPECIFICCLASS_STARTTIME)).thenReturn(aSpecificClass);
         lenient().when(clientRepository.findByEmail(CLIENT_EMAIL)).thenReturn(aClient);
         lenient().when(registrationRepository.findByClient(aClient)).thenReturn(Arrays.asList(REGISTRATION));
         lenient().when(registrationRepository.findBySpecificClass(aSpecificClass)).thenReturn(Arrays.asList(REGISTRATION));
@@ -95,7 +96,7 @@ public class TestRegistrationService {
     @Test
     public void testCreateRegistration(){
 
-        Registration registration = registrationService.createRegistration(SPECIFICCLASS_ID, CLIENT_EMAIL);
+        Registration registration = registrationService.createRegistration(SPECIFICCLASS_DATE,SPECIFICCLASS_STARTTIME, CLIENT_EMAIL);
 
         assertNotNull(registration);
         assertEquals(REGISTRATION_ID, registration.getRegId());

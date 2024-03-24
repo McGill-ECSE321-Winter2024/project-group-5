@@ -1,8 +1,6 @@
 package ca.mcgill.ecse321.SportPlus.dto;
 
-import ca.mcgill.ecse321.SportPlus.model.Client;
 import ca.mcgill.ecse321.SportPlus.model.Registration;
-import ca.mcgill.ecse321.SportPlus.model.SpecificClass;
 
 
 
@@ -14,7 +12,6 @@ private ClientResponseDto client;
 
     @SuppressWarnings("unused")
     public RegistrationResponseDto(){
-
     }
 
     public RegistrationResponseDto(Registration registration){
