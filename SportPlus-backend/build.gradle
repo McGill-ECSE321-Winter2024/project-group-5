@@ -43,3 +43,19 @@ tasks.named('test') {
 jacocoTestReport {
     dependsOn test
 }
+
+tasks.named('test') {
+	//...other configurations
+	finalizedBy jacocoTestCoverageVerification
+}
+
+tasks.named('jacocoTestCoverageVerification') {
+	violationRules {
+		rule {
+			limit {
+				minimum = 0.75
+			}
+		}
+	}
+	dependsOn test // tests are required to run before checking code coverage.
+}
