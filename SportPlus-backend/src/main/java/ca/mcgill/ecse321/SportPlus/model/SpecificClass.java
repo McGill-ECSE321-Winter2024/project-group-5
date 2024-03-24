@@ -20,6 +20,7 @@ public class SpecificClass {
   @Id
   @GeneratedValue
   private int sessionId;
+  private String name;
   private Date date;
   private Time startTime;
   private Time endTime;
@@ -38,11 +39,12 @@ public class SpecificClass {
   public SpecificClass() {
   }
 
-  public SpecificClass(Date aDate, Time start1, Time aEndTime, int aSessionId, ClassType aClassType) {
+  public SpecificClass(Date aDate, Time start1, Time aEndTime, int aSessionId, ClassType aClassType, String aName) {
     date = aDate;
     startTime = start1;
     endTime = aEndTime;
     sessionId = aSessionId;
+    name = aName;
     if (!setClassType(aClassType)) {
       throw new RuntimeException(
           "Unable to create SpecificClass due to aClassType. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
@@ -56,6 +58,13 @@ public class SpecificClass {
   public boolean setDate(Date aDate) {
     boolean wasSet = false;
     date = aDate;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setName(String aName) {
+    boolean wasSet = false;
+    name = aName;
     wasSet = true;
     return wasSet;
   }
@@ -83,6 +92,10 @@ public class SpecificClass {
 
   public Date getDate() {
     return date;
+  }
+
+  public String getName() {
+    return name;
   }
 
   public Time getStartTime() {

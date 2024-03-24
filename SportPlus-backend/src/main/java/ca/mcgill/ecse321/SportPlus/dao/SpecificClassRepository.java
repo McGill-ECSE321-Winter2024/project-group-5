@@ -8,7 +8,7 @@ import ca.mcgill.ecse321.SportPlus.model.SpecificClass;
 import ca.mcgill.ecse321.SportPlus.model.ClassType;
 import ca.mcgill.ecse321.SportPlus.model.Instructor;
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 import java.sql.Time;
 
@@ -70,7 +70,15 @@ public interface SpecificClassRepository extends CrudRepository<SpecificClass, I
     List<SpecificClass> findAll();
 
     /**
-     * Deletes by ClassType
+     * Find specific classes by name
+     * 
+     * @param name
+     * @return SpecificClass
+     */
+    SpecificClass findByName(String name);
+
+    /**
+     * Deletes by ClassType 
      * 
      * @param classType
      */
@@ -90,11 +98,11 @@ public interface SpecificClassRepository extends CrudRepository<SpecificClass, I
      */
     void deleteByDate(Date date);
 
-    // /**
-    // * Deletes by SessionId
-    // *
-    // * @param sessionId
-    // */
+    /**
+    * Deletes by SessionId
+    *
+    * @param sessionId
+    */
     void deleteBySessionId(int sessionId);
 
     // Find SpecifcClasses between a date range.
