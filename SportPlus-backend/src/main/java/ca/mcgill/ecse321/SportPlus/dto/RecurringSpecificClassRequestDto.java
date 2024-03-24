@@ -8,20 +8,23 @@ public class RecurringSpecificClassRequestDto extends SpecificClassRequestsDto {
     private Date endDate;
     private int dayOfWeek; // 1 = Monday, 7 = Sunday
 
+    // Constructor calling the SpecificClassRequestsDto
     public RecurringSpecificClassRequestDto() {
         super();
     }
 
+    // Getters
     public Date getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
-
     public int getDayOfWeek() {
         return dayOfWeek;
+    }
+
+    // Setters
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 
     public void setDayOfWeek(int dayOfWeek) {

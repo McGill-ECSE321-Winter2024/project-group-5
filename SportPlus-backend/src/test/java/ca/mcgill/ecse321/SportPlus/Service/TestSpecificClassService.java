@@ -188,7 +188,8 @@ class TestSpecificClassService {
 
     @Test
     void testUpdateClassTypeSpecificClass() {
-
+        
+        // Create a classType
         ClassType classtype = new ClassType();
         classtype.setTypeId(1);
 

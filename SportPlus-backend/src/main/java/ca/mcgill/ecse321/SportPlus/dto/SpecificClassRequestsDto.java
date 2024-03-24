@@ -11,9 +11,11 @@ public class SpecificClassRequestsDto {
     private Integer instructorId;
     private Integer classTypeId;
 
+    // Constructor
     public SpecificClassRequestsDto() {
     }
 
+    // Getters
     public Date getDate() {
         return date;
     }
@@ -34,6 +36,7 @@ public class SpecificClassRequestsDto {
         return classTypeId;
     }
 
+    // Setters
     public void setDate(Date date) {
         this.date = date;
     }
