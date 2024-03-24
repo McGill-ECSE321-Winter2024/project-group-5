@@ -147,18 +147,6 @@ public class TestLoginService {
     }
 
     @Test
-    public void testDeleteByLoginId() {
-        Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FIRSTNAME, INSTRUCTOR_PASSWORD,
-                INSTRUCTOR_LASTNAME, INSTRUCTOR_ACCOUNTID);
-        Login login1 = new Login(LOGIN_ID1, START_TIME, END_TIME, instructor);
-        loginRepository.save(login1);
-        verify(loginRepository, times(1)).save(login1);
-
-        loginService.deleteByLoginId(LOGIN_ID1);
-        verify(loginRepository, times(1)).deleteByLoginId(LOGIN_ID1);
-    }
-
-    @Test
     public void testGetAllLogins() {
         Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FIRSTNAME, INSTRUCTOR_PASSWORD,
                 INSTRUCTOR_LASTNAME, INSTRUCTOR_ACCOUNTID);
@@ -186,22 +174,6 @@ public class TestLoginService {
         assertNotNull(found);
         assertEquals(3, found.size());
         assertThat(found).contains(login1, login2, login3);
-    }
-
-    @Test
-    public void testCreateLogin() {
-        Client client = new Client(CLIENT_EMAIL, CLIENT_FIRSTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME, CLIENT_ACCOUNTID);
-        clientRepository.save(client);
-        Login login = loginService.createLogin(LOGIN_ID1, START_TIME, END_TIME, client);
-        clientRepository.save(client);
-        verify(clientRepository, times(2)).save(client);
-        verify(loginRepository, times(1)).save(login);
-
-        assertNotNull(login);
-        assertEquals(login.getAccount(), client);
-        assertEquals(login.getEndTime(), END_TIME);
-        assertEquals(login.getStartTime(), START_TIME);
-        assertEquals(login.getLoginId(), LOGIN_ID1);
     }
 
     @Test

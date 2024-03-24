@@ -53,23 +53,12 @@ public class LoginService {
         return login;
     }
 
-    @Transactional
-    public void deleteByLoginId(int id) {
-        loginRepository.deleteByLoginId(id);
-    }
 
     @Transactional
     public List<Login> getAllLogins() {
         return HelperMethods.toList(loginRepository.findAll());
     }
     // ------------EndWrappers----------//
-
-    @Transactional
-    public Login createLogin(int id, Time startTime, Time endTime, Account account) {
-        Login login = new Login(id, startTime, endTime, account);
-        loginRepository.save(login);
-        return login;
-    }
 
     @Transactional
     public Login logIn(String type, String email, String password, Time currentTime) {
@@ -94,7 +83,7 @@ public class LoginService {
         try {
             found = getLoginFromAccount(account);
             if (found != null) {
-                deleteByLoginId(found.getLoginId());
+                loginRepository.deleteById(found.getLoginId());
             }
         } catch (Exception e) {
         }
@@ -103,12 +92,15 @@ public class LoginService {
         }
         Time endTime = HelperMethods.updateEndTime(currentTime);
 
-        return createLogin(0, currentTime, endTime, account);
+        Login login = new Login(0, currentTime, endTime, account);
+        loginRepository.save(login);
+
+        return login;
     }
 
     @Transactional
     public void logOut(int loginId) {
-        deleteByLoginId(loginId);
+        loginRepository.deleteByLoginId(loginId);
     }
 
     @Transactional
