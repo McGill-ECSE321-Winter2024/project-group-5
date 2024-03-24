@@ -57,7 +57,7 @@ public class SpecificClassRepositoryTests {
         ClassType yoga = new ClassType("yoga", "cool class", 0, true, owner);
         classTypeRepository.save(yoga);
 
-        SpecificClass specificClass = new SpecificClass(null, null, null, 0, yoga);
+        SpecificClass specificClass = new SpecificClass(null, null, null, 0, yoga, null);
         specificClassRepository.save(specificClass);
 
         // gets the specific class's id
@@ -89,9 +89,9 @@ public class SpecificClassRepositoryTests {
         ClassType yoga = new ClassType("yoga", "cool class", 0, true, owner);
         classTypeRepository.save(yoga);
 
-        SpecificClass specificClass = new SpecificClass(date1, null, null, 0, yoga);
-        SpecificClass specificClass2 = new SpecificClass(date2, null, null, 0, yoga);
-        SpecificClass specificClass3 = new SpecificClass(date3, null, null, 0, yoga);
+        SpecificClass specificClass = new SpecificClass(date1, null, null, 0, yoga, null);
+        SpecificClass specificClass2 = new SpecificClass(date2, null, null, 0, yoga, null);
+        SpecificClass specificClass3 = new SpecificClass(date3, null, null, 0, yoga, null);
 
         specificClassRepository.save(specificClass);
         specificClassRepository.save(specificClass2);
@@ -123,10 +123,10 @@ public class SpecificClassRepositoryTests {
         classTypeRepository.save(yoga);
         classTypeRepository.save(tennis);
 
-        SpecificClass specificClass = new SpecificClass(date1, null, null, 0, yoga);
-        SpecificClass specificClass2 = new SpecificClass(date2, null, null, 0, tennis);
-        SpecificClass specificClass3 = new SpecificClass(date3, null, null, 0, yoga);
-        SpecificClass specificClass4 = new SpecificClass(date2, null, null, 0, tennis);
+        SpecificClass specificClass = new SpecificClass(date1, null, null, 0, yoga, null);
+        SpecificClass specificClass2 = new SpecificClass(date2, null, null, 0, tennis, null);
+        SpecificClass specificClass3 = new SpecificClass(date3, null, null, 0, yoga, null);
+        SpecificClass specificClass4 = new SpecificClass(date2, null, null, 0, tennis, null);
 
         specificClassRepository.save(specificClass);
         specificClassRepository.save(specificClass2);
@@ -184,10 +184,10 @@ public class SpecificClassRepositoryTests {
         classTypeRepository.save(yoga);
         classTypeRepository.save(tennis);
 
-        SpecificClass specificClass = new SpecificClass(date1start, start1, end1, 0, yoga);
-        SpecificClass specificClass2 = new SpecificClass(date2start, start2, end2, 0, tennis);
-        SpecificClass specificClass3 = new SpecificClass(date3start, start3, end3, 0, tennis);
-        SpecificClass specificClass4 = new SpecificClass(date4start, start4, end4, 0, yoga);
+        SpecificClass specificClass = new SpecificClass(date1start, start1, end1, 0, yoga, null);
+        SpecificClass specificClass2 = new SpecificClass(date2start, start2, end2, 0, tennis, null);
+        SpecificClass specificClass3 = new SpecificClass(date3start, start3, end3, 0, tennis, null);
+        SpecificClass specificClass4 = new SpecificClass(date4start, start4, end4, 0, yoga, null);
 
         specificClass.setSupervisor(supervisor1);
         specificClass2.setSupervisor(supervisor2);
@@ -249,10 +249,10 @@ public class SpecificClassRepositoryTests {
         classTypeRepository.save(yoga);
         classTypeRepository.save(tennis);
 
-        SpecificClass specificClass = new SpecificClass(date1start, start1, end1, 0, yoga);
-        SpecificClass specificClass2 = new SpecificClass(date2start, start2, end2, 0, tennis);
-        SpecificClass specificClass3 = new SpecificClass(date3start, start3, end3, 0, tennis);
-        SpecificClass specificClass4 = new SpecificClass(date4start, start4, end4, 0, yoga);
+        SpecificClass specificClass = new SpecificClass(date1start, start1, end1, 0, yoga, null);
+        SpecificClass specificClass2 = new SpecificClass(date2start, start2, end2, 0, tennis, null);
+        SpecificClass specificClass3 = new SpecificClass(date3start, start3, end3, 0, tennis, null);
+        SpecificClass specificClass4 = new SpecificClass(date4start, start4, end4, 0, yoga, null);
 
         specificClass.setSupervisor(supervisor1);
         specificClass2.setSupervisor(supervisor2);
@@ -316,10 +316,10 @@ public class SpecificClassRepositoryTests {
         classTypeRepository.save(yoga);
         classTypeRepository.save(tennis);
 
-        SpecificClass specificClass = new SpecificClass(date1start, start1, end1, 0, yoga);
-        SpecificClass specificClass2 = new SpecificClass(date2start, start2, end2, 0, tennis);
-        SpecificClass specificClass3 = new SpecificClass(date3start, start3, end3, 0, tennis);
-        SpecificClass specificClass4 = new SpecificClass(date4start, start4, end4, 0, yoga);
+        SpecificClass specificClass = new SpecificClass(date1start, start1, end1, 0, yoga, null);
+        SpecificClass specificClass2 = new SpecificClass(date2start, start2, end2, 0, tennis, null);
+        SpecificClass specificClass3 = new SpecificClass(date3start, start3, end3, 0, tennis, null);
+        SpecificClass specificClass4 = new SpecificClass(date4start, start4, end4, 0, yoga, null);
 
         specificClass.setSupervisor(supervisor1);
         specificClass3.setSupervisor(supervisor1);
@@ -376,10 +376,10 @@ public class SpecificClassRepositoryTests {
         classTypeRepository.save(yoga);
         classTypeRepository.save(tennis);
 
-        SpecificClass specificClass = new SpecificClass(date1start, start1, end1, 0, yoga);
-        SpecificClass specificClass2 = new SpecificClass(date2start, start2, end2, 0, tennis);
-        SpecificClass specificClass3 = new SpecificClass(date3start, start3, end3, 0, tennis);
-        SpecificClass specificClass4 = new SpecificClass(date4start, start4, end4, 0, yoga);
+        SpecificClass specificClass = new SpecificClass(date1start, start1, end1, 0, yoga, null);
+        SpecificClass specificClass2 = new SpecificClass(date2start, start2, end2, 0, tennis, null);
+        SpecificClass specificClass3 = new SpecificClass(date3start, start3, end3, 0, tennis, null);
+        SpecificClass specificClass4 = new SpecificClass(date4start, start4, end4, 0, yoga, null);
 
         specificClass.setSupervisor(supervisor1);
         specificClass3.setSupervisor(supervisor1);
@@ -416,10 +416,10 @@ public class SpecificClassRepositoryTests {
         classTypeRepository.save(yoga);
         classTypeRepository.save(tennis);
 
-        SpecificClass specificClass = new SpecificClass(date1, null, null, 0, yoga);
-        SpecificClass specificClass2 = new SpecificClass(date2, null, null, 0, tennis);
-        SpecificClass specificClass3 = new SpecificClass(date3, null, null, 0, yoga);
-        SpecificClass specificClass4 = new SpecificClass(date2, null, null, 0, tennis);
+        SpecificClass specificClass = new SpecificClass(date1, null, null, 0, yoga, null);
+        SpecificClass specificClass2 = new SpecificClass(date2, null, null, 0, tennis, null);
+        SpecificClass specificClass3 = new SpecificClass(date3, null, null, 0, yoga, null);
+        SpecificClass specificClass4 = new SpecificClass(date2, null, null, 0, tennis, null);
 
         specificClassRepository.save(specificClass);
         specificClassRepository.save(specificClass2);
@@ -475,10 +475,10 @@ public class SpecificClassRepositoryTests {
         classTypeRepository.save(yoga);
         classTypeRepository.save(tennis);
 
-        SpecificClass specificClass = new SpecificClass(date1start, start1, end1, 0, yoga);
-        SpecificClass specificClass2 = new SpecificClass(date2start, start2, end2, 0, tennis);
-        SpecificClass specificClass3 = new SpecificClass(date3start, start3, end3, 0, tennis);
-        SpecificClass specificClass4 = new SpecificClass(date4start, start4, end4, 0, yoga);
+        SpecificClass specificClass = new SpecificClass(date1start, start1, end1, 0, yoga, null);
+        SpecificClass specificClass2 = new SpecificClass(date2start, start2, end2, 0, tennis, null);
+        SpecificClass specificClass3 = new SpecificClass(date3start, start3, end3, 0, tennis, null);
+        SpecificClass specificClass4 = new SpecificClass(date4start, start4, end4, 0, yoga, null);
 
         specificClass.setSupervisor(supervisor1);
         specificClass2.setSupervisor(supervisor2);
@@ -540,10 +540,10 @@ public class SpecificClassRepositoryTests {
         classTypeRepository.save(yoga);
         classTypeRepository.save(tennis);
 
-        SpecificClass specificClass = new SpecificClass(date1start, start1, end1, 0, yoga);
-        SpecificClass specificClass2 = new SpecificClass(date1start, start2, end2, 0, tennis);
-        SpecificClass specificClass3 = new SpecificClass(date3start, start3, end3, 0, tennis);
-        SpecificClass specificClass4 = new SpecificClass(date4start, start4, end4, 0, yoga);
+        SpecificClass specificClass = new SpecificClass(date1start, start1, end1, 0, yoga, null);
+        SpecificClass specificClass2 = new SpecificClass(date1start, start2, end2, 0, tennis, null);
+        SpecificClass specificClass3 = new SpecificClass(date3start, start3, end3, 0, tennis, null);
+        SpecificClass specificClass4 = new SpecificClass(date4start, start4, end4, 0, yoga, null);
 
         specificClass.setSupervisor(supervisor1);
         specificClass3.setSupervisor(supervisor1);

@@ -59,7 +59,7 @@ public class RegistrationRepositoryTests {
         ClassType yoga = new ClassType("yoga", "cool class", 0, true, owner);
         classTypeRepository.save(yoga);
 
-        SpecificClass specificClass = new SpecificClass(null, null, null, 0, yoga);
+        SpecificClass specificClass = new SpecificClass(null, null, null, 0, yoga, "newName");
         specificClassRepository.save(specificClass);
 
         Registration registration = new Registration(0, specificClass, client);
@@ -95,10 +95,10 @@ public class RegistrationRepositoryTests {
         ClassType tennis = new ClassType("tennis", "tennis class", 0, true, owner);
         classTypeRepository.save(tennis);
 
-        SpecificClass specificClass = new SpecificClass(null, null, null, 0, yoga);
+        SpecificClass specificClass = new SpecificClass(null, null, null, 0, yoga, "hi");
         specificClassRepository.save(specificClass);
 
-        SpecificClass specificClass2 = new SpecificClass(null, null, null, 0, tennis);
+        SpecificClass specificClass2 = new SpecificClass(null, null, null, 0, tennis, null);
         specificClassRepository.save(specificClass2);
 
         Registration registration1 = new Registration(0, specificClass, client);
@@ -144,8 +144,8 @@ public class RegistrationRepositoryTests {
         classTypeRepository.save(yoga);
         classTypeRepository.save(tennis);
 
-        SpecificClass specificClass = new SpecificClass(null, null, null, 0, yoga);
-        SpecificClass specificClass2 = new SpecificClass(null, null, null, 0, tennis);
+        SpecificClass specificClass = new SpecificClass(null, null, null, 0, yoga, null);
+        SpecificClass specificClass2 = new SpecificClass(null, null, null, 0, tennis, null);
         specificClassRepository.save(specificClass);
         specificClassRepository.save(specificClass2);
 
@@ -184,8 +184,8 @@ public class RegistrationRepositoryTests {
         classTypeRepository.save(yoga);
         classTypeRepository.save(tennis);
 
-        SpecificClass specificClass = new SpecificClass(null, null, null, 0, yoga);
-        SpecificClass specificClass2 = new SpecificClass(null, null, null, 0, tennis);
+        SpecificClass specificClass = new SpecificClass(null, null, null, 0, yoga, null);
+        SpecificClass specificClass2 = new SpecificClass(null, null, null, 0, tennis, null);
         specificClassRepository.save(specificClass);
         specificClassRepository.save(specificClass2);
 
@@ -223,8 +223,8 @@ public class RegistrationRepositoryTests {
         classTypeRepository.save(yoga);
         classTypeRepository.save(tennis);
 
-        SpecificClass specificClass = new SpecificClass(null, null, null, 0, yoga);
-        SpecificClass specificClass2 = new SpecificClass(null, null, null, 0, tennis);
+        SpecificClass specificClass = new SpecificClass(null, null, null, 0, yoga, null);
+        SpecificClass specificClass2 = new SpecificClass(null, null, null, 0, tennis, null);
         specificClassRepository.save(specificClass);
         specificClassRepository.save(specificClass2);
 
@@ -263,7 +263,7 @@ public class RegistrationRepositoryTests {
         ClassType yoga = new ClassType("yoga", "cool class", 0, true, owner);
         classTypeRepository.save(yoga);
 
-        SpecificClass specificClass = new SpecificClass(null, null, null, 0, yoga);
+        SpecificClass specificClass = new SpecificClass(null, null, null, 0, yoga, null);
         specificClassRepository.save(specificClass);
 
         Registration registration = new Registration(0, specificClass, client);

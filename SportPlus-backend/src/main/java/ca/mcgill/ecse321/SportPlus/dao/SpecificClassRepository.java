@@ -6,7 +6,7 @@ import ca.mcgill.ecse321.SportPlus.model.SpecificClass;
 import ca.mcgill.ecse321.SportPlus.model.ClassType;
 import ca.mcgill.ecse321.SportPlus.model.Instructor;
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 import java.sql.Time;
 
@@ -65,6 +65,14 @@ public interface SpecificClassRepository extends CrudRepository<SpecificClass, I
      * @return List<SpecificClass>
      */
     List<SpecificClass> findAll();
+
+    /**
+     * Find specific classes by name
+     * 
+     * @param name
+     * @return SpecificClass
+     */
+    SpecificClass findByName(String name);
 
     /**
      * Deletes by ClassType 

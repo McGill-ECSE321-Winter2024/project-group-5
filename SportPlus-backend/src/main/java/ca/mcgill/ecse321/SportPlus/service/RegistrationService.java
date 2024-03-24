@@ -99,12 +99,12 @@ public class RegistrationService {
      //------------EndWrappers----------//
 
      @Transactional
-     public Registration createRegistration(Date specificClassDate, Time specificClassStartTime, String clientEmail){
+     public Registration createRegistration(String specificClassName, String clientEmail){
         if (clientEmail == null || HelperMethods.ClientEmailCheck(clientEmail).trim().length() != 0) {
             throw new IllegalArgumentException("Invalid email!");
         }
         
-        SpecificClass specificClass = specificClassRepository.findByDateAndStartTime(specificClassDate, specificClassStartTime);
+        SpecificClass specificClass = specificClassRepository.findByName(specificClassName);
         Client client = clientRepository.findByEmail(clientEmail);
 
         Registration registration = new Registration(0, specificClass, client);

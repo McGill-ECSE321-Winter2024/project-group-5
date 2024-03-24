@@ -73,9 +73,11 @@ public class TestRegistrationService {
 
     private static Owner owner = new Owner(OWNER_EMAIL, OWNER_FIRSTNAME, OWNER_PASSWORD, OWNER_LASTNAME, OWNER_ACCOUNTID);
     private static ClassType aClassType = new ClassType(CLASS_TYPE_NAME, CLASS_TYPE_DESCRIPTION, CLASS_TYPE_ID, true, owner);
-    private static SpecificClass aSpecificClass = new SpecificClass(SPECIFICCLASS_DATE, SPECIFICCLASS_STARTTIME, SPECIFICCLASS_ENDTIME, SPECIFICCLASS_ID, aClassType);
+    private static SpecificClass aSpecificClass = new SpecificClass(SPECIFICCLASS_DATE, SPECIFICCLASS_STARTTIME, SPECIFICCLASS_ENDTIME, SPECIFICCLASS_ID, aClassType, "NewOne");
 
     private static Registration REGISTRATION = new Registration(REGISTRATION_ID, aSpecificClass, aClient);
+
+    private static String SPECIFICCLASS_NAME = "NewOne";
 
     @BeforeEach
     public void setMockOutput() {
@@ -89,6 +91,7 @@ public class TestRegistrationService {
 			return invocation.getArgument(0);
 		};
 		lenient().when(registrationRepository.save(any(Registration.class))).thenAnswer(returnParameterAsAnswer);
+        lenient().when(specificClassRepository.findByName(SPECIFICCLASS_NAME)).thenReturn(aSpecificClass);
     }
         
 
@@ -96,7 +99,7 @@ public class TestRegistrationService {
     @Test
     public void testCreateRegistration(){
 
-        Registration registration = registrationService.createRegistration(SPECIFICCLASS_DATE,SPECIFICCLASS_STARTTIME, CLIENT_EMAIL);
+        Registration registration = registrationService.createRegistration(SPECIFICCLASS_NAME, CLIENT_EMAIL);
 
         assertNotNull(registration);
         assertEquals(REGISTRATION_ID, registration.getRegId());

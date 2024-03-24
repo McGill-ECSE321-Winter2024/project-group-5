@@ -71,7 +71,7 @@ public class RegistrationRestController {
     @PostMapping(value = {"/registrations/create", "registrations/create/"})
     @ResponseStatus(HttpStatus.CREATED)
     public RegistrationResponseDto createRegistration(@RequestBody RegistrationRequestDto registration){
-        Registration createRegistration = registrationService.createRegistration(registration.getSpecificClass().getDate(), registration.getSpecificClass().getStartTime(), registration.getClient().getEmail());
+        Registration createRegistration = registrationService.createRegistration(registration.getSpecificClass().getName(), registration.getClient().getEmail());
         return new RegistrationResponseDto(createRegistration);
     }
 }
