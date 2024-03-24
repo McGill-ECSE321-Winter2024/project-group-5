@@ -21,7 +21,9 @@ import ca.mcgill.ecse321.SportPlus.dao.InstructorRepository;
 import ca.mcgill.ecse321.SportPlus.dao.OwnerRepository;
 import ca.mcgill.ecse321.SportPlus.dao.RegistrationRepository;
 import ca.mcgill.ecse321.SportPlus.dao.SpecificClassRepository;
+import ca.mcgill.ecse321.SportPlus.dto.ClientResponseDto;
 import ca.mcgill.ecse321.SportPlus.dto.RegistrationListDto;
+import ca.mcgill.ecse321.SportPlus.dto.RegistrationRequestDto;
 import ca.mcgill.ecse321.SportPlus.dto.RegistrationResponseDto;
 import ca.mcgill.ecse321.SportPlus.model.ClassType;
 import ca.mcgill.ecse321.SportPlus.model.Client;
@@ -479,7 +481,33 @@ public class RegistrationIntegrationTests {
         assertNotNull(registrationList);
     }
 
-    
+    @Test
+    public void testCreateRegistration(){
+
+        Client client = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME, CLIENT_ACCOUNTID);
+        Owner owner = new Owner(OWNER_EMAIL, OWNER_FIRSTNAME, OWNER_PASSWORD, OWNER_LASTNAME, OWNER_ACCOUNTID);
+        ClassType aClassType = new ClassType(CLASS_TYPE_NAME, CLASS_TYPE_DESCRIPTION, CLASS_TYPE_ID, true, owner);
+        SpecificClass specificClass = new SpecificClass(SPECIFICCLASS_DATE, SPECIFICCLASS_STARTTIME, SPECIFICCLASS_ENDTIME, SPECIFICCLASS_ID, aClassType);
+        
+        clientRepository.save(client);
+        ownerRepository.save(owner);
+        classTypeRepository.save(aClassType);
+        specificClassRepository.save(specificClass);
+
+        RegistrationRequestDto request = new RegistrationRequestDto(specificClass, client, 0);
+        ResponseEntity<RegistrationResponseDto> response = restTemplate.postForEntity("/registrations/create", request, RegistrationResponseDto.class);
+        assertNotNull(response);
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        RegistrationResponseDto createdRegistration = response.getBody();
+        assertNotNull(createdRegistration);
+        assertEquals(CLIENT_EMAIL, createdRegistration.getClient().getEmail());
+        assertEquals(CLASS_TYPE_NAME, createdRegistration.getSpecificClass().getClassType().getName());
+        assertEquals(SPECIFICCLASS_ENDTIME, createdRegistration.getSpecificClass().getEndTime());
+        assertEquals(SPECIFICCLASS_STARTTIME, createdRegistration.getSpecificClass().getStartTime());
+        assertEquals(SPECIFICCLASS_DATE, createdRegistration.getSpecificClass().getDate());
+        
+
+    }
 
 
 

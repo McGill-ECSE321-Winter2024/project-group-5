@@ -8,7 +8,10 @@ public class RegistrationRequestDto {
     private Client client;
     private int regId;
 
-    public RegistrationRequestDto(){
+    public RegistrationRequestDto(SpecificClass specificClass, Client client,int regId ){
+        this.client = client;
+        this.regId = regId;
+        this.specificClass = specificClass;
 
     }
 
