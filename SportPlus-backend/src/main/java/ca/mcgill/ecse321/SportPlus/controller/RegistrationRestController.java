@@ -54,7 +54,7 @@ public class RegistrationRestController {
 
 
 
-    @DeleteMapping(value = {"/registrations/deleteByClient/{email}", "/registrations/getByClient/{email}/"})
+    @DeleteMapping(value = {"/registrations/deleteByClient/{email}", "/registrations/deleteByClient/{email}/"})
     public void deleteRegistrationByClient(@PathVariable("email") String theEmail) {
         registrationService.deleteByClient(theEmail);
     }
