@@ -40,6 +40,7 @@ public class SpecificClassRestController {
     @ResponseStatus(HttpStatus.CREATED)
     public SpecificClassResponseDto createSpecificClass(@RequestBody SpecificClassRequestsDto specificclass) {
 
+        // Set the attributes of the specificClass
         SpecificClass createdClass = specificClassService.createSpecificClass(
                 specificclass.getDate(),
                 specificclass.getStartTime(),
@@ -83,6 +84,7 @@ public class SpecificClassRestController {
     @ResponseStatus(HttpStatus.OK)
     public SpecificClassResponseDto updateSpecificClassDate(@PathVariable("id") int id,
             @RequestBody SpecificClassRequestsDto requestsDtoSpecifcClass) {
+        // Update the Date with ID
         SpecificClass updatedClass = specificClassService.updateDateSpecificClass(id,
                 requestsDtoSpecifcClass.getDate());
 
@@ -93,10 +95,10 @@ public class SpecificClassRestController {
     @ResponseStatus(HttpStatus.OK)
     public SpecificClassResponseDto updateSpecificClassTime(@PathVariable("id") int id,
             @RequestBody SpecificClassRequestsDto requestsDtoSpecifcClass) {
-
+        // update specificClass time using the id with the srvice method
         SpecificClass updatedClass = specificClassService.updateTimeSpecificClass(id,
                 requestsDtoSpecifcClass.getStartTime(), requestsDtoSpecifcClass.getEndTime());
-
+        // Return SpecificClassResponseDto
         return new SpecificClassResponseDto(updatedClass);
     }
 
@@ -104,10 +106,11 @@ public class SpecificClassRestController {
     @ResponseStatus(HttpStatus.OK)
     public SpecificClassResponseDto updateSpecificClassClassType(@PathVariable("id") int id,
             @RequestBody SpecificClassRequestsDto requestsDtoSpecifcClass) {
-
+        // update specificClass time classType the id with the srvice method
         SpecificClass updatedClass = specificClassService.updateClassTypeSpecificClass(id,
                 requestsDtoSpecifcClass.getClassTypeId());
 
+        // Return SpecificClassResponseDto
         return new SpecificClassResponseDto(updatedClass);
     }
 
@@ -174,9 +177,11 @@ public class SpecificClassRestController {
     @ResponseStatus(HttpStatus.OK)
     public List<SpecificClassResponseDto> getSpecificClassByClassType(@PathVariable("classTypeId") int classTypeId) {
 
+        // Get SpecificClasses by ClassType
         List<SpecificClass> classes = specificClassService.getByClassType(classTypeId);
         List<SpecificClassResponseDto> responseDtos = new ArrayList<>();
 
+        // Convert the SpecifcCLasses list to SpecificClassResponseDto list
         for (SpecificClass specificClass : classes) {
             // Convert each SpecificClass to SpecificClassResponseDto
             SpecificClassResponseDto responseDto = new SpecificClassResponseDto(specificClass);
@@ -194,12 +199,15 @@ public class SpecificClassRestController {
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") java.util.Date startDate,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") java.util.Date endDate) {
 
+        // Convert to SQL time and Date
         java.sql.Date sqlStartDate = new java.sql.Date(startDate.getTime());
         java.sql.Date sqlEndtDate = new java.sql.Date(endDate.getTime());
 
+        // Get a list of SpicificClasses by DateRange
         List<SpecificClass> classes = specificClassService.getByDateRange(sqlStartDate, sqlEndtDate);
         List<SpecificClassResponseDto> responseDtos = new ArrayList<>();
 
+        // Convert the SpecifcCLasses list to SpecificClassResponseDto list
         for (SpecificClass specificClass : classes) {
             // Convert each SpecificClass to SpecificClassResponseDto
             SpecificClassResponseDto responseDto = new SpecificClassResponseDto(specificClass);
@@ -215,6 +223,7 @@ public class SpecificClassRestController {
     @ResponseStatus(HttpStatus.OK)
     public List<SpecificClassResponseDto> getAvailableSpecificClasses() {
 
+        // Get a list of available SpicificClasses
         List<SpecificClass> availableClasses = specificClassService.getAvailable();
         List<SpecificClassResponseDto> responseDtos = new ArrayList<>();
 
@@ -235,9 +244,11 @@ public class SpecificClassRestController {
             @RequestParam(name = "date") @DateTimeFormat(pattern = "yyyy-MM-dd") java.util.Date date,
             @RequestParam(name = "startTime") String startTime) {
 
+        // Convert to SQL time and Date
         java.sql.Date sqlDate = new java.sql.Date(date.getTime());
         Time startTim = Time.valueOf(startTime);
 
+        // Get the specificClass by date and start time
         SpecificClass session = specificClassService.getByDateAndStartTime(sqlDate, startTim);
 
         return new SpecificClassResponseDto(session);
@@ -247,9 +258,11 @@ public class SpecificClassRestController {
     @ResponseStatus(HttpStatus.OK)
     public List<SpecificClassResponseDto> getAllSpecificClasses() {
 
+        // Get all SpecificClasses
         List<SpecificClass> allClasses = specificClassService.getAll();
         List<SpecificClassResponseDto> responseDtos = new ArrayList<>();
 
+        // Convert the SpecifcCLasses list to SpecificClassResponseDto list
         for (SpecificClass specificClass : allClasses) {
             // Convert each SpecificClass to SpecificClassResponseDto
             SpecificClassResponseDto responseDto = new SpecificClassResponseDto(specificClass);
@@ -263,6 +276,8 @@ public class SpecificClassRestController {
 
     @DeleteMapping(value = { "/class-type/{classTypeId}", "/class-type/{classTypeId}/" })
     public ResponseEntity<Void> deleteSpecificClassesByClassType(@PathVariable("classTypeId") int classTypeId) {
+
+        // Delete all specificClasses with a certain ClassType
         specificClassService.deleteByClassType(classTypeId);
         return ResponseEntity.noContent().build();
     }

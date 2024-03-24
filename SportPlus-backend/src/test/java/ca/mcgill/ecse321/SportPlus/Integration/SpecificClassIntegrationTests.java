@@ -55,6 +55,7 @@ class SpecificClassIntegrationTests {
         @Autowired
         private OwnerRepository ownerRepository;
 
+        // Defin some Global variables
         private static int CLASS_TYPE = 1;
         private static int INSTRUCTOR_ID = 1;
         private static final Date DATE = Date.valueOf("2024-04-16");
@@ -64,6 +65,7 @@ class SpecificClassIntegrationTests {
         @BeforeEach
         @AfterEach
         public void init() {
+                // Clear all the tables used in the tests
                 specificClassRepository.deleteAll();
                 instructorRepository.deleteAll();
                 classTypeRepository.deleteAll();
@@ -72,6 +74,7 @@ class SpecificClassIntegrationTests {
 
         @BeforeEach
         public void setup() {
+                // Setup some objects before the tests
                 TimeZone.setDefault(TimeZone.getTimeZone("EDT"));
 
                 Owner owner = new Owner("email@owner.com", "Johm", "password", "theOwner", 0);
@@ -90,6 +93,7 @@ class SpecificClassIntegrationTests {
 
         @Test
         void testCreateSpecificClass() {
+                // Prepare the request
                 SpecificClassRequestsDto requestDto = new SpecificClassRequestsDto();
                 requestDto.setDate(DATE);
                 requestDto.setStartTime(START_TIME);
@@ -97,10 +101,12 @@ class SpecificClassIntegrationTests {
                 requestDto.setInstructorId(INSTRUCTOR_ID);
                 requestDto.setClassTypeId(CLASS_TYPE);
 
+                // Get the reponse with the endpoint
                 ResponseEntity<SpecificClassResponseDto> response = client.postForEntity("/specificClass/create",
                                 requestDto,
                                 SpecificClassResponseDto.class);
 
+                // Validate the reponse
                 assertEquals(HttpStatus.CREATED, response.getStatusCode());
                 SpecificClassResponseDto responseBody = response.getBody();
                 assertNotNull(responseBody);
@@ -137,8 +143,10 @@ class SpecificClassIntegrationTests {
                 assertNotNull(responseBody);
                 List<SpecificClassResponseDto> responseDtos = responseBody.getSpecificClasses();
                 assertNotNull(responseDtos);
-                // 5MondaysinApril
+                // 5 Mondays in April
                 assertEquals(5, responseDtos.size());
+
+                // Validate the response
                 for (SpecificClassResponseDto responseClass : responseDtos) {
                         assertEquals(responseClass.getStartTime(), START_TIME);
                         assertEquals(responseClass.getEndTime(), END_TIME);
@@ -344,11 +352,14 @@ class SpecificClassIntegrationTests {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 String formattedDate = sdf.format(DATE);
 
+                // Set the url
                 String url = "/specificClass/by-date?date=" + formattedDate;
 
+                // Get the reponse
                 ResponseEntity<SpecificClassResponseDto[]> response = client.getForEntity(url,
                                 SpecificClassResponseDto[].class);
 
+                // Validate the reponse
                 assertEquals(HttpStatus.OK, response.getStatusCode());
 
                 SpecificClassResponseDto[] specificClasses = response.getBody();
@@ -374,11 +385,14 @@ class SpecificClassIntegrationTests {
                 specificClassRepository.save(specifcClass2);
                 specificClassRepository.save(specifcClass3);
 
+                // Get the url
                 String url = String.format("/specificClass/class-type/%d", CLASS_TYPE);
 
+                // Get the response
                 ResponseEntity<SpecificClassResponseDto[]> response = client.getForEntity(url,
                                 SpecificClassResponseDto[].class);
 
+                // Validate the reponse
                 assertEquals(HttpStatus.OK, response.getStatusCode());
 
                 SpecificClassResponseDto[] specificClasses = response.getBody();
@@ -388,6 +402,8 @@ class SpecificClassIntegrationTests {
 
         @Test
         void testGetAvailableSpecificClasses() {
+
+                // Create some available classes
                 ClassType classType = classTypeRepository.findByTypeId(CLASS_TYPE);
                 Instructor supervisor = instructorRepository.findByAccountId(INSTRUCTOR_ID);
                 SpecificClass availableClass = new SpecificClass(Date.valueOf("2024-04-11"), Time.valueOf("14:00:00"),
@@ -722,11 +738,13 @@ class SpecificClassIntegrationTests {
                 specificClassRepository.save(specifcClass);
                 specificClassRepository.save(specifcClass2);
 
+                // Set the url
                 String url = "/specificClass/instructor/" + INSTRUCTOR_ID + "/";
 
+                // Get the reponse
                 ResponseEntity<SpecificClassResponseDto[]> response = client.getForEntity(url,
                                 SpecificClassResponseDto[].class);
-
+                // Validate the reponse
                 assertEquals(HttpStatus.OK, response.getStatusCode());
 
                 SpecificClassResponseDto[] specificClasses = response.getBody();
@@ -752,11 +770,14 @@ class SpecificClassIntegrationTests {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 String formattedDate = sdf.format(DATE);
 
+                // Set the url
                 String url = "/specificClass/by-date?date=" + formattedDate + "/";
 
+                // Get the reponse
                 ResponseEntity<SpecificClassResponseDto[]> response = client.getForEntity(url,
                                 SpecificClassResponseDto[].class);
 
+                // Validate the reponse
                 assertEquals(HttpStatus.OK, response.getStatusCode());
 
                 SpecificClassResponseDto[] specificClasses = response.getBody();
@@ -782,11 +803,14 @@ class SpecificClassIntegrationTests {
                 specificClassRepository.save(specifcClass2);
                 specificClassRepository.save(specifcClass3);
 
+                // Set the url
                 String url = String.format("/specificClass/class-type/%d/", CLASS_TYPE);
 
+                // Get the response
                 ResponseEntity<SpecificClassResponseDto[]> response = client.getForEntity(url,
                                 SpecificClassResponseDto[].class);
 
+                // Validate the reponse
                 assertEquals(HttpStatus.OK, response.getStatusCode());
 
                 SpecificClassResponseDto[] specificClasses = response.getBody();
@@ -796,6 +820,8 @@ class SpecificClassIntegrationTests {
 
         @Test
         void testGetAvailableSpecificClasses2() {
+
+                // Create 2 available classes
                 ClassType classType = classTypeRepository.findByTypeId(CLASS_TYPE);
                 Instructor supervisor = instructorRepository.findByAccountId(INSTRUCTOR_ID);
                 SpecificClass availableClass = new SpecificClass(Date.valueOf("2024-04-11"), Time.valueOf("14:00:00"),

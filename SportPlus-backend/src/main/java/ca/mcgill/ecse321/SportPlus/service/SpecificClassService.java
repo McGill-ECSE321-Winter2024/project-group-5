@@ -47,12 +47,13 @@ public class SpecificClassService {
             throw new IllegalArgumentException("The start time should come before the end time");
         }
 
+        // Create the SpecificClass
         Instructor instructor = instructorRepository.findByAccountId(instructorId);
         ClassType classType = classTypeRepository.findByTypeId(classTypeId);
         SpecificClass specificClass = new SpecificClass(date, startTime, endTime, 0, classType, null);
         specificClass.setSupervisor(instructor);
 
-        // SAve the new SpecificClass
+        // Save the new SpecificClass
         specificClassRepository.save(specificClass);
 
         // Return it
@@ -67,11 +68,13 @@ public class SpecificClassService {
 
         List<SpecificClass> recurringClasses = new ArrayList<>();
 
+        // Sets the dates and times
         LocalDate start = startDate.toLocalDate();
         LocalDate end = endDate.toLocalDate();
         LocalTime startTim = startTime.toLocalTime();
         LocalTime endTim = endTime.toLocalTime();
 
+        // Finds the instrucotr and classType for that class
         Instructor instructor = instructorRepository.findByAccountId(instructorId);
         ClassType classType = classTypeRepository.findByTypeId(classTypeId);
 
@@ -88,6 +91,7 @@ public class SpecificClassService {
             }
         }
 
+        // Returns them
         return recurringClasses;
 
     }
@@ -102,22 +106,27 @@ public class SpecificClassService {
         }
         specificClass.setDate(newDate); // Update the date
         specificClassRepository.save(specificClass); // Save to the DB
-        return specificClass; // Return thr obj
+        return specificClass; // Return the obj
 
     }
 
     @Transactional
     public SpecificClass updateTimeSpecificClass(int sessionId, Time newStartTime, Time newEndTime) {
+
+        // Find the SpecificClass
         SpecificClass specificClass = specificClassRepository.findBySessionId(sessionId);
 
+        // Validate the parameter
         if (newStartTime.after(newEndTime)) {
             throw new IllegalArgumentException("Start time must be before end time.");
         }
 
+        // Update the times of the new class
         specificClass.setStartTime(newStartTime);
         specificClass.setEndTime(newEndTime);
         specificClassRepository.save(specificClass);
 
+        // Returns it
         return specificClass;
     }
 
@@ -134,52 +143,73 @@ public class SpecificClassService {
         // Save in the DB
         specificClassRepository.save(specificClass);
 
+        // Return it
         return specificClass;
     }
 
     @Transactional
     public SpecificClass assignInstructorSpecificClass(int sessionId, int instructorId) {
+
+        // Find the SpecifcClass & Instrcutor
         SpecificClass specificClass = specificClassRepository.findBySessionId(sessionId);
         Instructor instructor = instructorRepository.findByAccountId(instructorId);
 
+        // Set the instructor to the Clas & save it
         specificClass.setSupervisor(instructor);
         specificClassRepository.save(specificClass);
+
+        // Return the class
         return specificClass;
     }
 
     @Transactional
     public SpecificClass removeInstructorSpecificClass(int sessionId) {
+
+        // Find the SpecificClass
         SpecificClass specificClass = specificClassRepository.findBySessionId(sessionId);
 
+        // Set supervisor to null & save the class
         specificClass.setSupervisor(null);
         specificClassRepository.save(specificClass);
+
+        // Return it
         return specificClass;
     }
 
     @Transactional
     public List<SpecificClass> getByInstructor(int instructorId) {
+
+        // Find the instructor
         Instructor instructor = instructorRepository.findByAccountId(instructorId);
 
+        // Find classes with that instructor & return them
         List<SpecificClass> classes = specificClassRepository.findBySupervisor(instructor);
         return classes;
     }
 
     @Transactional
     public List<SpecificClass> getByDate(Date date) {
+
+        // Find classes by Date and return them
         List<SpecificClass> classes = specificClassRepository.findByDate(date);
         return classes;
     }
 
     @Transactional
     public List<SpecificClass> getByClassType(int classTypeId) {
+
+        // Find the classType
         ClassType classType = classTypeRepository.findByTypeId(classTypeId);
 
+        // Find all the classes with that classType & return them
         List<SpecificClass> classes = specificClassRepository.findByClassType(classType);
         return classes;
     }
 
     @Transactional
     public List<SpecificClass> getByDateRange(Date startDate, Date endDate) {
+
+        // Find all classes between a certain date range & return them
         List<SpecificClass> classes = specificClassRepository.findClassesBetweenDates(startDate, endDate);
         return classes;
     }
@@ -210,17 +240,23 @@ public class SpecificClassService {
                 availableClasses.add(specificClass);
             }
         }
+
+        // Retunr all available classes
         return availableClasses;
     }
 
     @Transactional
     public SpecificClass getByDateAndStartTime(Date date, Time startTime) {
+
+        // Find the class with the ddate and startime & retunr it
         SpecificClass specificClasses = specificClassRepository.findByDateAndStartTime(date, startTime);
         return specificClasses;
     }
 
     @Transactional
     public List<SpecificClass> getAll() {
+
+        // Find & return all classes
         List<SpecificClass> specificClasses = specificClassRepository.findAll();
         return specificClasses;
 
@@ -228,7 +264,11 @@ public class SpecificClassService {
 
     @Transactional
     public void deleteByClassType(int classTypeId) {
+
+        // Find the classtype
         ClassType classType = classTypeRepository.findByTypeId(classTypeId);
+
+        // Delete all classes with that classType
         specificClassRepository.deleteByClassType(classType);
     }
 

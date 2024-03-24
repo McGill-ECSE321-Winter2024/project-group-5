@@ -9,14 +9,17 @@ public class RecurringSpecificClassesResponseDto {
     public RecurringSpecificClassesResponseDto() {
     }
 
+    // Constructor
     public RecurringSpecificClassesResponseDto(List<SpecificClassResponseDto> specificClasses) {
         this.specificClasses = specificClasses;
     }
 
+    // Getter
     public List<SpecificClassResponseDto> getSpecificClasses() {
         return specificClasses;
     }
 
+    // Setter
     public void setSpecificClasses(List<SpecificClassResponseDto> specificClasses) {
         this.specificClasses = specificClasses;
     }

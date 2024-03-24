@@ -45,6 +45,7 @@ public class SpecificClassRepositoryTests {
     @BeforeEach
     @AfterEach
     public void clearDatabase() {
+        // Clear all the tables used for the tests
         specificClassRepository.deleteAll();
         classTypeRepository.deleteAll();
         ownerRepository.deleteAll();
