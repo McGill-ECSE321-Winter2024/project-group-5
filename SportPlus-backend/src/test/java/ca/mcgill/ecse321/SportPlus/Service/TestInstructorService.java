@@ -35,6 +35,7 @@ public class TestInstructorService {
     @InjectMocks
     private InstructorService instructorService;
 
+    // SAet up gloval variables
     private static final String INSTRUCTOR_EMAIL = "example@sportplus.com";
     private static final String INSTRUCTOR_FISTNAME = "John";
     private static final String INSTRUCTOR_LASTNAME = "Doe";
@@ -44,6 +45,8 @@ public class TestInstructorService {
 
     @BeforeEach
     public void setMockOutput() {
+
+        // Setup MockOutput
         lenient().when(instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL)).thenReturn(new Instructor(
                 INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD, INSTRUCTOR_LASTNAME, INSTRUCTOR_ACCOUNTID));
         lenient().when(instructorRepository.findByAccountId(INSTRUCTOR_ACCOUNTID)).thenReturn(new Instructor(
@@ -58,6 +61,8 @@ public class TestInstructorService {
 
     @Test
     public void testCreateInstructor() {
+
+        // Create an instrcutor
         String email = "newinstructor@sportplus.com";
         String firstName = "Paul";
         String lastName = "Dmyt";
@@ -65,6 +70,7 @@ public class TestInstructorService {
 
         Instructor instructor = instructorService.createInstructor(email, firstName, password, lastName);
 
+        // Vrifiy if the attributes match
         assertNotNull(instructor);
         assertEquals(email, instructor.getEmail());
         assertEquals(firstName, instructor.getFirstName());
@@ -76,6 +82,8 @@ public class TestInstructorService {
 
     @Test
     public void testUpdateInstructor() {
+
+        // Create a new instructor
         String newPassword = "NewPass123";
         String newFirstName = "NewJohn";
         String newLastName = "NewDoe";
@@ -84,10 +92,12 @@ public class TestInstructorService {
                 INSTRUCTOR_LASTNAME, INSTRUCTOR_ACCOUNTID);
         Instructor updatedInstructor = instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL);
 
+        // Update the instrcutorl firstname, lastname, password
         instructorService.updateInstructorFirstName(INSTRUCTOR_EMAIL, newFirstName);
         instructorService.updateInstructorLastName(INSTRUCTOR_EMAIL, newLastName);
         instructorService.updateInstructorPassword(INSTRUCTOR_EMAIL, INSTRUCTOR_PASSWORD, newPassword);
 
+        // Validate the attributes
         assertNotNull(updatedInstructor);
         assertEquals(instructor.getEmail(), updatedInstructor.getEmail());
         assertEquals(instructor.getAccountId(), updatedInstructor.getAccountId());
@@ -103,32 +113,45 @@ public class TestInstructorService {
 
     @Test
     public void testDeleteInstructor() {
+
+        // Create a new instructor
         Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD,
                 INSTRUCTOR_LASTNAME, INSTRUCTOR_ACCOUNTID);
 
+        // Delete the instructor
         instructorService.deleteInstructor(instructor.getEmail());
 
+        // Check if doesnt exist
         verify(instructorRepository, times(1)).deleteInstructorByEmail(INSTRUCTOR_EMAIL);
     }
 
     @Test
     public void testGetExistingInstructor() {
+
+        // Check if an instructor exists with email
         assertEquals(INSTRUCTOR_EMAIL, instructorService.getInstructor(INSTRUCTOR_EMAIL).getEmail());
     }
 
     @Test
     public void testGetNonExistingInstructor() {
+
+        // Check for non existing instructor
         assertNull(instructorService.getInstructor(NOT_INSTRUCTOR_EMAIL));
     }
 
     @Test
     public void testReadInstructorById() {
+
+        // Create an instructor
         int accountId = INSTRUCTOR_ACCOUNTID;
 
         Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD,
                 INSTRUCTOR_LASTNAME, accountId);
+
+        // Get the instructor
         Instructor searchInstructor = instructorService.getInstructor(accountId);
 
+        // Verify the attributes
         assertNotNull(searchInstructor);
         assertEquals(instructor.getAccountId(), searchInstructor.getAccountId());
         assertEquals(instructor.getEmail(), searchInstructor.getEmail());
@@ -139,11 +162,16 @@ public class TestInstructorService {
 
     @Test
     public void testGetAllInstructors() {
+
+        // Create an instructor
         Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD,
                 INSTRUCTOR_LASTNAME, INSTRUCTOR_ACCOUNTID);
         List<Instructor> instructors = Arrays.asList(instructor);
+
+        // Get the instructors
         List<Instructor> instructorsFromRepo = instructorService.getAllInstructors();
 
+        // Validate if found correctly
         assertNotNull(instructorsFromRepo);
         assertEquals(instructors, instructorsFromRepo);
     }

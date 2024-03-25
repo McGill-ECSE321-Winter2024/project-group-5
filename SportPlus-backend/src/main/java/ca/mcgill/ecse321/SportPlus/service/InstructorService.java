@@ -20,32 +20,43 @@ public class InstructorService {
 
     @Transactional
     public Instructor getInstructor(String email) {
+
+        // Validate the input
         if (email == null || email.trim().length() == 0) {
             throw new IllegalArgumentException("Instructor email cannot be empty!");
         }
+        // Find instrcutor by email
         Instructor instructor = instructorRepository.findInstructorByEmail(email);
         return instructor;
     }
 
     @Transactional
     public Instructor getInstructor(Integer accountId) {
+
+        // Validate input
         if (accountId < 0) {
             throw new IllegalArgumentException("Account Id cannot be less than 0!");
         }
+        // Find with account id
         Instructor instructor = instructorRepository.findByAccountId(accountId);
         return instructor;
     }
 
     @Transactional
     public List<Instructor> getAllInstructors() {
+
+        // Get all the instructors to a list
         return HelperMethods.toList(instructorRepository.findAll());
     }
 
     @Transactional
     public void deleteInstructor(String email) {
+
+        // Validate the email
         if (email == null || email.trim().length() == 0) {
             throw new IllegalArgumentException("Person name cannot be empty!");
         }
+        // delte the instructor
         instructorRepository.deleteInstructorByEmail(email);
     }
 
@@ -53,6 +64,8 @@ public class InstructorService {
 
     @Transactional
     public Instructor createInstructor(String email, String firstName, String password, String lastName) {
+
+        // Validate the input
         if (email == null || HelperMethods.InstructorEmailCheck(email).trim().length() != 0) {
             throw new IllegalArgumentException("Invalid email!");
         }
@@ -65,6 +78,7 @@ public class InstructorService {
         if (lastName == null || lastName.trim().length() == 0) {
             throw new IllegalArgumentException("Instructor last name cannot be empty!");
         }
+        // Create an instructor
         Instructor instructor = new Instructor();
         instructor.setEmail(email);
         instructor.setFirstName(firstName);
@@ -93,6 +107,8 @@ public class InstructorService {
 
     @Transactional
     public Instructor updateInstructorLastName(String email, String lastName) {
+
+        // Validate the input
         if (email == null || HelperMethods.InstructorEmailCheck(email).trim().length() != 0) {
             throw new IllegalArgumentException("Invalid email!");
         }
@@ -103,6 +119,8 @@ public class InstructorService {
         if (lastName == null || lastName.trim().length() == 0) {
             throw new IllegalArgumentException("Instructor last name cannot be empty!");
         }
+
+        // Set the last name & save the instructor
         instructor.setLastName(lastName);
         instructorRepository.save(instructor);
         return instructor;
@@ -110,6 +128,8 @@ public class InstructorService {
 
     @Transactional
     public Instructor updateInstructorPassword(String email, String oldPassword, String password) {
+
+        // Validate the input
         if (email == null || HelperMethods.InstructorEmailCheck(email).trim().length() != 0) {
             throw new IllegalArgumentException("Invalid email!");
         }
@@ -123,6 +143,8 @@ public class InstructorService {
         if (password == null || HelperMethods.PasswordCheck(password).trim().length() != 0) {
             throw new IllegalArgumentException("Invalid new password!");
         }
+
+        // Set the password & save the instructor
         instructor.setPassword(password);
         instructorRepository.save(instructor);
         return instructor;

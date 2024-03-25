@@ -24,464 +24,578 @@ import ca.mcgill.ecse321.SportPlus.model.Instructor;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class InstructorIntegrationTests {
 
-    @Autowired
-    private TestRestTemplate client;
+        @Autowired
+        private TestRestTemplate client;
 
-    @Autowired
-    private InstructorRepository instructorRepository;
+        @Autowired
+        private InstructorRepository instructorRepository;
 
-    @BeforeEach
-    @AfterEach
-    public void clearDatabase() {
-        instructorRepository.deleteAll();
-    }
-
-    private static final String INSTRUCTOR_EMAIL = "example@sportplus.com";
-    private static final String INSTRUCTOR_FISTNAME = "John";
-    private static final String INSTRUCTOR_LASTNAME = "Doe";
-    private static final String INSTRUCTOR_PASSWORD = "Password123";
-
-    private int INSTRUCTOR_VALID_ACCOUNTID;
-
-    @Test
-    public void testFindInstructorByEmail() {
-        Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD,
-                INSTRUCTOR_LASTNAME, INSTRUCTOR_VALID_ACCOUNTID);
-        instructorRepository.save(instructor);
-
-        String url = "/instructors/getByEmail/" + String.valueOf(INSTRUCTOR_EMAIL);
-
-        ResponseEntity<InstructorResponseDto> response = client.getForEntity(url, InstructorResponseDto.class);
-
-        assertNotNull(response);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        InstructorResponseDto instructorResponse = response.getBody();
-        assertNotNull(instructorResponse);
-        assertTrue(instructorResponse.getAccountId() > 0);
-        assertEquals(INSTRUCTOR_EMAIL, instructorResponse.getEmail());
-        assertEquals(INSTRUCTOR_FISTNAME, instructorResponse.getFirstName());
-        assertEquals(INSTRUCTOR_LASTNAME, instructorResponse.getLastName());
-    }
-
-    @Test
-    public void testFindInstructorByEmail2() {
-        Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD,
-                INSTRUCTOR_LASTNAME, INSTRUCTOR_VALID_ACCOUNTID);
-        instructorRepository.save(instructor);
-
-        String url = "/instructors/getByEmail/" + String.valueOf(INSTRUCTOR_EMAIL) + "/";
-
-        ResponseEntity<InstructorResponseDto> response = client.getForEntity(url, InstructorResponseDto.class);
-
-        assertNotNull(response);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        InstructorResponseDto instructorResponse = response.getBody();
-        assertNotNull(instructorResponse);
-        assertTrue(instructorResponse.getAccountId() > 0);
-        assertEquals(INSTRUCTOR_EMAIL, instructorResponse.getEmail());
-        assertEquals(INSTRUCTOR_FISTNAME, instructorResponse.getFirstName());
-        assertEquals(INSTRUCTOR_LASTNAME, instructorResponse.getLastName());
-    }
-
-    @Test
-    public void testFindInstructorByAccountId() {
-        Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD,
-                INSTRUCTOR_LASTNAME, INSTRUCTOR_VALID_ACCOUNTID);
-        instructorRepository.save(instructor);
-        int validId = instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL).getAccountId();
-
-        String url = "/instructors/getById/" + String.valueOf(validId);
-
-        ResponseEntity<InstructorResponseDto> response = client.getForEntity(url, InstructorResponseDto.class);
-
-        assertNotNull(response);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        InstructorResponseDto instructorResponse = response.getBody();
-        assertNotNull(instructorResponse);
-        assertEquals(validId, instructorResponse.getAccountId());
-        assertEquals(INSTRUCTOR_EMAIL, instructorResponse.getEmail());
-        assertEquals(INSTRUCTOR_FISTNAME, instructorResponse.getFirstName());
-        assertEquals(INSTRUCTOR_LASTNAME, instructorResponse.getLastName());
-    }
-
-    @Test
-    public void testFindInstructorByAccountId2() {
-        Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD,
-                INSTRUCTOR_LASTNAME, INSTRUCTOR_VALID_ACCOUNTID);
-        instructorRepository.save(instructor);
-        int validId = instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL).getAccountId();
-
-        String url = "/instructors/getById/" + String.valueOf(validId) + "/";
-
-        ResponseEntity<InstructorResponseDto> response = client.getForEntity(url, InstructorResponseDto.class);
-
-        assertNotNull(response);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        InstructorResponseDto instructorResponse = response.getBody();
-        assertNotNull(instructorResponse);
-        assertEquals(validId, instructorResponse.getAccountId());
-        assertEquals(INSTRUCTOR_EMAIL, instructorResponse.getEmail());
-        assertEquals(INSTRUCTOR_FISTNAME, instructorResponse.getFirstName());
-        assertEquals(INSTRUCTOR_LASTNAME, instructorResponse.getLastName());
-    }
-
-    @Test
-    public void testGetAllInstructors() {
-        Instructor instructor1 = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD,
-                INSTRUCTOR_LASTNAME, INSTRUCTOR_VALID_ACCOUNTID);
-        Instructor instructor2 = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD,
-                INSTRUCTOR_LASTNAME, INSTRUCTOR_VALID_ACCOUNTID);
-        instructorRepository.save(instructor1);
-        instructorRepository.save(instructor2);
-
-        String url = "/instructors/all";
-
-        ResponseEntity<InstructorListDto> response = client.getForEntity(url, InstructorListDto.class);
-
-        assertNotNull(response);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        InstructorListDto instructorResponse = response.getBody();
-        assertNotNull(instructorResponse);
-        for (InstructorResponseDto instructor : instructorResponse.getInstructors()) {
-            assertNotNull(instructor);
-            assertTrue(instructor.getAccountId() > 0);
-            assertEquals(INSTRUCTOR_EMAIL, instructor.getEmail());
-            assertEquals(INSTRUCTOR_FISTNAME, instructor.getFirstName());
-            assertEquals(INSTRUCTOR_LASTNAME, instructor.getLastName());
+        @BeforeEach
+        @AfterEach
+        public void clearDatabase() {
+                // Clear database
+                instructorRepository.deleteAll();
         }
-    }
 
-    @Test
-    public void testGetAllInstructors2() {
-        Instructor instructor1 = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD,
-                INSTRUCTOR_LASTNAME, INSTRUCTOR_VALID_ACCOUNTID);
-        Instructor instructor2 = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD,
-                INSTRUCTOR_LASTNAME, INSTRUCTOR_VALID_ACCOUNTID);
-        instructorRepository.save(instructor1);
-        instructorRepository.save(instructor2);
+        // Create some global variables
+        private static final String INSTRUCTOR_EMAIL = "example@sportplus.com";
+        private static final String INSTRUCTOR_FISTNAME = "John";
+        private static final String INSTRUCTOR_LASTNAME = "Doe";
+        private static final String INSTRUCTOR_PASSWORD = "Password123";
 
-        String url = "/instructors/all/";
+        private int INSTRUCTOR_VALID_ACCOUNTID;
 
-        ResponseEntity<InstructorListDto> response = client.getForEntity(url, InstructorListDto.class);
+        @Test
+        public void testFindInstructorByEmail() {
 
-        assertNotNull(response);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        InstructorListDto instructorResponse = response.getBody();
-        assertNotNull(instructorResponse);
-        for (InstructorResponseDto instructor : instructorResponse.getInstructors()) {
-            assertNotNull(instructor);
-            assertTrue(instructor.getAccountId() > 0);
-            assertEquals(INSTRUCTOR_EMAIL, instructor.getEmail());
-            assertEquals(INSTRUCTOR_FISTNAME, instructor.getFirstName());
-            assertEquals(INSTRUCTOR_LASTNAME, instructor.getLastName());
+                // Create new instructor
+                Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD,
+                                INSTRUCTOR_LASTNAME, INSTRUCTOR_VALID_ACCOUNTID);
+                instructorRepository.save(instructor);
+
+                // Set the url
+                String url = "/instructors/getByEmail/" + String.valueOf(INSTRUCTOR_EMAIL);
+
+                // Get the response
+                ResponseEntity<InstructorResponseDto> response = client.getForEntity(url, InstructorResponseDto.class);
+
+                // Validate the response
+                assertNotNull(response);
+                assertEquals(HttpStatus.OK, response.getStatusCode());
+                InstructorResponseDto instructorResponse = response.getBody();
+                assertNotNull(instructorResponse);
+                assertTrue(instructorResponse.getAccountId() > 0);
+                assertEquals(INSTRUCTOR_EMAIL, instructorResponse.getEmail());
+                assertEquals(INSTRUCTOR_FISTNAME, instructorResponse.getFirstName());
+                assertEquals(INSTRUCTOR_LASTNAME, instructorResponse.getLastName());
         }
-    }
 
-    @Test
-    public void testDeleteInstructorByEmail() {
-        Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD,
-                INSTRUCTOR_LASTNAME, INSTRUCTOR_VALID_ACCOUNTID);
-        instructorRepository.save(instructor);
+        @Test
+        public void testFindInstructorByEmail2() {
 
-        String url = "/instructors/all";
+                // Create new instructor
+                Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD,
+                                INSTRUCTOR_LASTNAME, INSTRUCTOR_VALID_ACCOUNTID);
+                instructorRepository.save(instructor);
 
-        ResponseEntity<InstructorListDto> response = client.getForEntity(url, InstructorListDto.class);
+                // Set the url
+                String url = "/instructors/getByEmail/" + String.valueOf(INSTRUCTOR_EMAIL) + "/";
 
-        assertNotNull(response);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        InstructorListDto instructorResponse = response.getBody();
-        assertTrue(instructorResponse.getInstructors().size() == 1);
-        assertTrue(instructorResponse.getInstructors().get(0).getEmail().equals(INSTRUCTOR_EMAIL));
+                // Get the response
+                ResponseEntity<InstructorResponseDto> response = client.getForEntity(url, InstructorResponseDto.class);
 
-        String urlToDelete = "/instructors/delete/" + INSTRUCTOR_EMAIL;
+                // Validate the response
+                assertNotNull(response);
+                assertEquals(HttpStatus.OK, response.getStatusCode());
+                InstructorResponseDto instructorResponse = response.getBody();
+                assertNotNull(instructorResponse);
+                assertTrue(instructorResponse.getAccountId() > 0);
+                assertEquals(INSTRUCTOR_EMAIL, instructorResponse.getEmail());
+                assertEquals(INSTRUCTOR_FISTNAME, instructorResponse.getFirstName());
+                assertEquals(INSTRUCTOR_LASTNAME, instructorResponse.getLastName());
+        }
 
-        client.delete(urlToDelete);
+        @Test
+        public void testFindInstructorByAccountId() {
+                // Create new instructor
+                Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD,
+                                INSTRUCTOR_LASTNAME, INSTRUCTOR_VALID_ACCOUNTID);
+                instructorRepository.save(instructor);
 
-        response = client.getForEntity(url, InstructorListDto.class);
+                // Get the id for the url
+                int validId = instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL).getAccountId();
 
-        assertNotNull(response);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        instructorResponse = response.getBody();
-        assertTrue(instructorResponse.getInstructors().size() == 0);
-    }
+                // Set the url
+                String url = "/instructors/getById/" + String.valueOf(validId);
 
-    @Test
-    public void testDeleteInstructorByEmail2() {
-        Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD,
-                INSTRUCTOR_LASTNAME, INSTRUCTOR_VALID_ACCOUNTID);
-        instructorRepository.save(instructor);
+                // Get the response
+                ResponseEntity<InstructorResponseDto> response = client.getForEntity(url, InstructorResponseDto.class);
 
-        String url = "/instructors/all";
+                // Validate the response
+                assertNotNull(response);
+                assertEquals(HttpStatus.OK, response.getStatusCode());
+                InstructorResponseDto instructorResponse = response.getBody();
+                assertNotNull(instructorResponse);
+                assertEquals(validId, instructorResponse.getAccountId());
+                assertEquals(INSTRUCTOR_EMAIL, instructorResponse.getEmail());
+                assertEquals(INSTRUCTOR_FISTNAME, instructorResponse.getFirstName());
+                assertEquals(INSTRUCTOR_LASTNAME, instructorResponse.getLastName());
+        }
 
-        ResponseEntity<InstructorListDto> response = client.getForEntity(url, InstructorListDto.class);
+        @Test
+        public void testFindInstructorByAccountId2() {
+                // Create new instructor
+                Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD,
+                                INSTRUCTOR_LASTNAME, INSTRUCTOR_VALID_ACCOUNTID);
+                instructorRepository.save(instructor);
 
-        assertNotNull(response);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        InstructorListDto instructorResponse = response.getBody();
-        assertTrue(instructorResponse.getInstructors().size() == 1);
-        assertTrue(instructorResponse.getInstructors().get(0).getEmail().equals(INSTRUCTOR_EMAIL));
+                // Get the id for the url
+                int validId = instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL).getAccountId();
 
-        String urlToDelete = "/instructors/delete/" + INSTRUCTOR_EMAIL + "/";
+                // Set the url
+                String url = "/instructors/getById/" + String.valueOf(validId) + "/";
 
-        client.delete(urlToDelete);
+                // Get the response
+                ResponseEntity<InstructorResponseDto> response = client.getForEntity(url, InstructorResponseDto.class);
 
-        response = client.getForEntity(url, InstructorListDto.class);
+                // Validate the response
+                assertNotNull(response);
+                assertEquals(HttpStatus.OK, response.getStatusCode());
+                InstructorResponseDto instructorResponse = response.getBody();
+                assertNotNull(instructorResponse);
+                assertEquals(validId, instructorResponse.getAccountId());
+                assertEquals(INSTRUCTOR_EMAIL, instructorResponse.getEmail());
+                assertEquals(INSTRUCTOR_FISTNAME, instructorResponse.getFirstName());
+                assertEquals(INSTRUCTOR_LASTNAME, instructorResponse.getLastName());
+        }
 
-        assertNotNull(response);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        instructorResponse = response.getBody();
-        assertTrue(instructorResponse.getInstructors().size() == 0);
-    }
+        @Test
+        public void testGetAllInstructors() {
 
-    @Test
-    public void testCreateInstructor() {
-        InstructorRequestDto request = new InstructorRequestDto(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME,
-                INSTRUCTOR_LASTNAME, INSTRUCTOR_PASSWORD);
+                // Create 2 instructors
+                Instructor instructor1 = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD,
+                                INSTRUCTOR_LASTNAME, INSTRUCTOR_VALID_ACCOUNTID);
+                Instructor instructor2 = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD,
+                                INSTRUCTOR_LASTNAME, INSTRUCTOR_VALID_ACCOUNTID);
+                instructorRepository.save(instructor1);
+                instructorRepository.save(instructor2);
 
-        ResponseEntity<InstructorResponseDto> response = client.postForEntity("/instructors/create", request,
-                InstructorResponseDto.class);
+                // Set the url
+                String url = "/instructors/all";
 
-        assertNotNull(response);
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        InstructorResponseDto createdInstructor = response.getBody();
-        assertNotNull(createdInstructor);
-        assertEquals(createdInstructor.getEmail(), INSTRUCTOR_EMAIL);
-        assertEquals(createdInstructor.getFirstName(), INSTRUCTOR_FISTNAME);
-        assertEquals(createdInstructor.getLastName(), INSTRUCTOR_LASTNAME);
-        assertNotNull(createdInstructor.getAccountId());
-        assertTrue(createdInstructor.getAccountId() > 0, "Response should have a positive ID.");
-        assertNotNull(instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL));
-    }
+                // Get the response
+                ResponseEntity<InstructorListDto> response = client.getForEntity(url, InstructorListDto.class);
 
-    @Test
-    public void testCreateInstructor2() {
-        InstructorRequestDto request = new InstructorRequestDto(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME,
-                INSTRUCTOR_LASTNAME, INSTRUCTOR_PASSWORD);
+                // Validate the response
+                assertNotNull(response);
+                assertEquals(HttpStatus.OK, response.getStatusCode());
+                InstructorListDto instructorResponse = response.getBody();
+                assertNotNull(instructorResponse);
+                for (InstructorResponseDto instructor : instructorResponse.getInstructors()) {
+                        assertNotNull(instructor);
+                        assertTrue(instructor.getAccountId() > 0);
+                        assertEquals(INSTRUCTOR_EMAIL, instructor.getEmail());
+                        assertEquals(INSTRUCTOR_FISTNAME, instructor.getFirstName());
+                        assertEquals(INSTRUCTOR_LASTNAME, instructor.getLastName());
+                }
+        }
 
-        ResponseEntity<InstructorResponseDto> response = client.postForEntity("/instructors/create/", request,
-                InstructorResponseDto.class);
+        @Test
+        public void testGetAllInstructors2() {
 
-        assertNotNull(response);
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        InstructorResponseDto createdInstructor = response.getBody();
-        assertNotNull(createdInstructor);
-        assertEquals(createdInstructor.getEmail(), INSTRUCTOR_EMAIL);
-        assertEquals(createdInstructor.getFirstName(), INSTRUCTOR_FISTNAME);
-        assertEquals(createdInstructor.getLastName(), INSTRUCTOR_LASTNAME);
-        assertNotNull(createdInstructor.getAccountId());
-        assertTrue(createdInstructor.getAccountId() > 0, "Response should have a positive ID.");
-        assertNotNull(instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL));
-    }
+                // Create 2 instructors
+                Instructor instructor1 = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD,
+                                INSTRUCTOR_LASTNAME, INSTRUCTOR_VALID_ACCOUNTID);
+                Instructor instructor2 = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD,
+                                INSTRUCTOR_LASTNAME, INSTRUCTOR_VALID_ACCOUNTID);
+                instructorRepository.save(instructor1);
+                instructorRepository.save(instructor2);
 
-    @Test
-    public void testUpdateInstructorFirstName() {
-        InstructorRequestDto request = new InstructorRequestDto(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME,
-                INSTRUCTOR_LASTNAME, INSTRUCTOR_PASSWORD);
+                // Set the url
+                String url = "/instructors/all/";
 
-        ResponseEntity<InstructorResponseDto> response = client.postForEntity("/instructors/create", request,
-                InstructorResponseDto.class);
+                // Get the response
+                ResponseEntity<InstructorListDto> response = client.getForEntity(url, InstructorListDto.class);
 
-        assertNotNull(response);
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        InstructorResponseDto createdInstructor = response.getBody();
-        assertNotNull(createdInstructor);
-        assertTrue(createdInstructor.getAccountId() > 0, "Response should have a positive ID.");
-        INSTRUCTOR_VALID_ACCOUNTID = createdInstructor.getAccountId();
+                // Validate the response
+                assertNotNull(response);
+                assertEquals(HttpStatus.OK, response.getStatusCode());
+                InstructorListDto instructorResponse = response.getBody();
+                assertNotNull(instructorResponse);
+                for (InstructorResponseDto instructor : instructorResponse.getInstructors()) {
+                        assertNotNull(instructor);
+                        assertTrue(instructor.getAccountId() > 0);
+                        assertEquals(INSTRUCTOR_EMAIL, instructor.getEmail());
+                        assertEquals(INSTRUCTOR_FISTNAME, instructor.getFirstName());
+                        assertEquals(INSTRUCTOR_LASTNAME, instructor.getLastName());
+                }
+        }
 
-        String newFirstName = "JohnTheNew";
+        @Test
+        public void testDeleteInstructorByEmail() {
 
-        String url = "/instructors/updateFirstName/" + INSTRUCTOR_EMAIL + "/" + newFirstName;
+                // Create a new instructor
+                Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD,
+                                INSTRUCTOR_LASTNAME, INSTRUCTOR_VALID_ACCOUNTID);
+                instructorRepository.save(instructor);
 
-        ResponseEntity<InstructorResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
-                InstructorResponseDto.class);
-        assertNotNull(responseAfterUpdate);
-        assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
-        InstructorResponseDto updatedInstructor = responseAfterUpdate.getBody();
-        assertNotNull(updatedInstructor);
-        assertEquals(updatedInstructor.getEmail(), INSTRUCTOR_EMAIL);
-        assertEquals(updatedInstructor.getFirstName(), newFirstName);
-        assertEquals(updatedInstructor.getLastName(), INSTRUCTOR_LASTNAME);
-        assertNotNull(updatedInstructor.getAccountId());
-        assertTrue(updatedInstructor.getAccountId() > 0, "Response should have a positive ID.");
-        assertNotNull(instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL));
-        assertEquals(instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL).getFirstName(), newFirstName);
-        assertTrue(instructorRepository.findAll().size() == 1);
-    }
+                // Set the url
+                String url = "/instructors/all";
 
-    @Test
-    public void testUpdateInstructorFirstName2() {
-        InstructorRequestDto request = new InstructorRequestDto(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME,
-                INSTRUCTOR_LASTNAME, INSTRUCTOR_PASSWORD);
+                // Get the response
+                ResponseEntity<InstructorListDto> response = client.getForEntity(url, InstructorListDto.class);
 
-        ResponseEntity<InstructorResponseDto> response = client.postForEntity("/instructors/create", request,
-                InstructorResponseDto.class);
+                // Validate the response
+                assertNotNull(response);
+                assertEquals(HttpStatus.OK, response.getStatusCode());
+                InstructorListDto instructorResponse = response.getBody();
+                assertTrue(instructorResponse.getInstructors().size() == 1);
+                assertTrue(instructorResponse.getInstructors().get(0).getEmail().equals(INSTRUCTOR_EMAIL));
 
-        assertNotNull(response);
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        InstructorResponseDto createdInstructor = response.getBody();
-        assertNotNull(createdInstructor);
-        assertTrue(createdInstructor.getAccountId() > 0, "Response should have a positive ID.");
-        INSTRUCTOR_VALID_ACCOUNTID = createdInstructor.getAccountId();
+                // Set the delte url
+                String urlToDelete = "/instructors/delete/" + INSTRUCTOR_EMAIL;
 
-        String newFirstName = "JohnTheNew";
+                // Delete the instructor
+                client.delete(urlToDelete);
 
-        String url = "/instructors/updateFirstName/" + INSTRUCTOR_EMAIL + "/" + newFirstName + "/";
+                // Get the response
+                response = client.getForEntity(url, InstructorListDto.class);
 
-        ResponseEntity<InstructorResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
-                InstructorResponseDto.class);
-        assertNotNull(responseAfterUpdate);
-        assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
-        InstructorResponseDto updatedInstructor = responseAfterUpdate.getBody();
-        assertNotNull(updatedInstructor);
-        assertEquals(updatedInstructor.getEmail(), INSTRUCTOR_EMAIL);
-        assertEquals(updatedInstructor.getFirstName(), newFirstName);
-        assertEquals(updatedInstructor.getLastName(), INSTRUCTOR_LASTNAME);
-        assertNotNull(updatedInstructor.getAccountId());
-        assertTrue(updatedInstructor.getAccountId() > 0, "Response should have a positive ID.");
-        assertNotNull(instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL));
-        assertEquals(instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL).getFirstName(), newFirstName);
-        assertTrue(instructorRepository.findAll().size() == 1);
-    }
+                // Validate the response
+                assertNotNull(response);
+                assertEquals(HttpStatus.OK, response.getStatusCode());
+                instructorResponse = response.getBody();
+                assertTrue(instructorResponse.getInstructors().size() == 0);
+        }
 
-    @Test
-    public void testUpdateInstructorLastName() {
-        InstructorRequestDto request = new InstructorRequestDto(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME,
-                INSTRUCTOR_LASTNAME, INSTRUCTOR_PASSWORD);
+        @Test
+        public void testDeleteInstructorByEmail2() {
 
-        ResponseEntity<InstructorResponseDto> response = client.postForEntity("/instructors/create", request,
-                InstructorResponseDto.class);
+                // Create a new instructor
+                Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD,
+                                INSTRUCTOR_LASTNAME, INSTRUCTOR_VALID_ACCOUNTID);
+                instructorRepository.save(instructor);
 
-        assertNotNull(response);
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        InstructorResponseDto createdInstructor = response.getBody();
-        assertNotNull(createdInstructor);
-        assertTrue(createdInstructor.getAccountId() > 0, "Response should have a positive ID.");
-        INSTRUCTOR_VALID_ACCOUNTID = createdInstructor.getAccountId();
+                // Set the url
+                String url = "/instructors/all";
 
-        String newLastName = "DoeTheNew";
+                // Get the response
+                ResponseEntity<InstructorListDto> response = client.getForEntity(url, InstructorListDto.class);
 
-        String url = "/instructors/updateLastName/" + INSTRUCTOR_EMAIL + "/" + newLastName;
+                // Validate the response
+                assertNotNull(response);
+                assertEquals(HttpStatus.OK, response.getStatusCode());
+                InstructorListDto instructorResponse = response.getBody();
+                assertTrue(instructorResponse.getInstructors().size() == 1);
+                assertTrue(instructorResponse.getInstructors().get(0).getEmail().equals(INSTRUCTOR_EMAIL));
 
-        ResponseEntity<InstructorResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
-                InstructorResponseDto.class);
-        assertNotNull(responseAfterUpdate);
-        assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
-        InstructorResponseDto updatedInstructor = responseAfterUpdate.getBody();
-        assertNotNull(updatedInstructor);
-        assertEquals(updatedInstructor.getEmail(), INSTRUCTOR_EMAIL);
-        assertEquals(updatedInstructor.getFirstName(), INSTRUCTOR_FISTNAME);
-        assertEquals(updatedInstructor.getLastName(), newLastName);
-        assertNotNull(updatedInstructor.getAccountId());
-        assertTrue(updatedInstructor.getAccountId() > 0, "Response should have a positive ID.");
-        assertNotNull(instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL));
-        assertEquals(instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL).getLastName(), newLastName);
-        assertTrue(instructorRepository.findAll().size() == 1);
-    }
+                // Set the delete url
+                String urlToDelete = "/instructors/delete/" + INSTRUCTOR_EMAIL + "/";
 
-    @Test
-    public void testUpdateInstructorLastName2() {
-        InstructorRequestDto request = new InstructorRequestDto(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME,
-                INSTRUCTOR_LASTNAME, INSTRUCTOR_PASSWORD);
+                // Delete the client
+                client.delete(urlToDelete);
 
-        ResponseEntity<InstructorResponseDto> response = client.postForEntity("/instructors/create", request,
-                InstructorResponseDto.class);
+                // Get the response
+                response = client.getForEntity(url, InstructorListDto.class);
 
-        assertNotNull(response);
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        InstructorResponseDto createdInstructor = response.getBody();
-        assertNotNull(createdInstructor);
-        assertTrue(createdInstructor.getAccountId() > 0, "Response should have a positive ID.");
-        INSTRUCTOR_VALID_ACCOUNTID = createdInstructor.getAccountId();
+                // Validate the response
+                assertNotNull(response);
+                assertEquals(HttpStatus.OK, response.getStatusCode());
+                instructorResponse = response.getBody();
+                assertTrue(instructorResponse.getInstructors().size() == 0);
+        }
 
-        String newLastName = "DoeTheNew";
+        @Test
+        public void testCreateInstructor() {
 
-        String url = "/instructors/updateLastName/" + INSTRUCTOR_EMAIL + "/" + newLastName + "/";
+                // Create a request Instructor
+                InstructorRequestDto request = new InstructorRequestDto(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME,
+                                INSTRUCTOR_LASTNAME, INSTRUCTOR_PASSWORD);
 
-        ResponseEntity<InstructorResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
-                InstructorResponseDto.class);
-        assertNotNull(responseAfterUpdate);
-        assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
-        InstructorResponseDto updatedInstructor = responseAfterUpdate.getBody();
-        assertNotNull(updatedInstructor);
-        assertEquals(updatedInstructor.getEmail(), INSTRUCTOR_EMAIL);
-        assertEquals(updatedInstructor.getFirstName(), INSTRUCTOR_FISTNAME);
-        assertEquals(updatedInstructor.getLastName(), newLastName);
-        assertNotNull(updatedInstructor.getAccountId());
-        assertTrue(updatedInstructor.getAccountId() > 0, "Response should have a positive ID.");
-        assertNotNull(instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL));
-        assertEquals(instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL).getLastName(), newLastName);
-        assertTrue(instructorRepository.findAll().size() == 1);
-    }
+                // Get the response
+                ResponseEntity<InstructorResponseDto> response = client.postForEntity("/instructors/create", request,
+                                InstructorResponseDto.class);
 
-    @Test
-    public void testUpdateInstructorPassword() {
-        InstructorRequestDto request = new InstructorRequestDto(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME,
-                INSTRUCTOR_LASTNAME, INSTRUCTOR_PASSWORD);
+                // Validate the response
+                assertNotNull(response);
+                assertEquals(HttpStatus.CREATED, response.getStatusCode());
+                InstructorResponseDto createdInstructor = response.getBody();
+                assertNotNull(createdInstructor);
+                assertEquals(createdInstructor.getEmail(), INSTRUCTOR_EMAIL);
+                assertEquals(createdInstructor.getFirstName(), INSTRUCTOR_FISTNAME);
+                assertEquals(createdInstructor.getLastName(), INSTRUCTOR_LASTNAME);
+                assertNotNull(createdInstructor.getAccountId());
+                assertTrue(createdInstructor.getAccountId() > 0, "Response should have a positive ID.");
+                assertNotNull(instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL));
+        }
 
-        ResponseEntity<InstructorResponseDto> response = client.postForEntity("/instructors/create", request,
-                InstructorResponseDto.class);
+        @Test
+        public void testCreateInstructor2() {
 
-        assertNotNull(response);
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        InstructorResponseDto createdInstructor = response.getBody();
-        assertNotNull(createdInstructor);
-        assertTrue(createdInstructor.getAccountId() > 0, "Response should have a positive ID.");
-        INSTRUCTOR_VALID_ACCOUNTID = createdInstructor.getAccountId();
+                // Create a request Instructor
+                InstructorRequestDto request = new InstructorRequestDto(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME,
+                                INSTRUCTOR_LASTNAME, INSTRUCTOR_PASSWORD);
 
-        String newPassword = "TheNewPass456";
+                // Get the response
+                ResponseEntity<InstructorResponseDto> response = client.postForEntity("/instructors/create/", request,
+                                InstructorResponseDto.class);
 
-        String url = "/instructors/updatePassword/" + INSTRUCTOR_EMAIL + "/" + INSTRUCTOR_PASSWORD + "/" + newPassword;
+                // Validate the response
+                assertNotNull(response);
+                assertEquals(HttpStatus.CREATED, response.getStatusCode());
+                InstructorResponseDto createdInstructor = response.getBody();
+                assertNotNull(createdInstructor);
+                assertEquals(createdInstructor.getEmail(), INSTRUCTOR_EMAIL);
+                assertEquals(createdInstructor.getFirstName(), INSTRUCTOR_FISTNAME);
+                assertEquals(createdInstructor.getLastName(), INSTRUCTOR_LASTNAME);
+                assertNotNull(createdInstructor.getAccountId());
+                assertTrue(createdInstructor.getAccountId() > 0, "Response should have a positive ID.");
+                assertNotNull(instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL));
+        }
 
-        ResponseEntity<InstructorResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
-                InstructorResponseDto.class);
-        assertNotNull(responseAfterUpdate);
-        assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
-        InstructorResponseDto updatedInstructor = responseAfterUpdate.getBody();
-        assertNotNull(updatedInstructor);
-        assertEquals(updatedInstructor.getEmail(), INSTRUCTOR_EMAIL);
-        assertEquals(updatedInstructor.getFirstName(), INSTRUCTOR_FISTNAME);
-        assertEquals(updatedInstructor.getLastName(), INSTRUCTOR_LASTNAME);
-        assertNotNull(updatedInstructor.getAccountId());
-        assertTrue(updatedInstructor.getAccountId() > 0, "Response should have a positive ID.");
-        assertNotNull(instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL));
-        assertEquals(instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL).getPassword(), newPassword);
-        assertTrue(instructorRepository.findAll().size() == 1);
-    }
+        @Test
+        public void testUpdateInstructorFirstName() {
+                // Create a request Instructor
+                InstructorRequestDto request = new InstructorRequestDto(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME,
+                                INSTRUCTOR_LASTNAME, INSTRUCTOR_PASSWORD);
 
-    @Test
-    public void testUpdateInstructorPassword2() {
-        InstructorRequestDto request = new InstructorRequestDto(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME,
-                INSTRUCTOR_LASTNAME, INSTRUCTOR_PASSWORD);
+                // Get the response
+                ResponseEntity<InstructorResponseDto> response = client.postForEntity("/instructors/create", request,
+                                InstructorResponseDto.class);
 
-        ResponseEntity<InstructorResponseDto> response = client.postForEntity("/instructors/create", request,
-                InstructorResponseDto.class);
+                // Validate the response
+                assertNotNull(response);
+                assertEquals(HttpStatus.CREATED, response.getStatusCode());
+                InstructorResponseDto createdInstructor = response.getBody();
+                assertNotNull(createdInstructor);
+                assertTrue(createdInstructor.getAccountId() > 0, "Response should have a positive ID.");
+                INSTRUCTOR_VALID_ACCOUNTID = createdInstructor.getAccountId();
 
-        assertNotNull(response);
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        InstructorResponseDto createdInstructor = response.getBody();
-        assertNotNull(createdInstructor);
-        assertTrue(createdInstructor.getAccountId() > 0, "Response should have a positive ID.");
-        INSTRUCTOR_VALID_ACCOUNTID = createdInstructor.getAccountId();
+                // Create a new first name
+                String newFirstName = "JohnTheNew";
 
-        String newPassword = "TheNewPass456";
+                // set the url to update the name
+                String url = "/instructors/updateFirstName/" + INSTRUCTOR_EMAIL + "/" + newFirstName;
 
-        String url = "/instructors/updatePassword/" + INSTRUCTOR_EMAIL + "/" + INSTRUCTOR_PASSWORD + "/" + newPassword
-                + "/";
+                // Get the response
+                ResponseEntity<InstructorResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
+                                InstructorResponseDto.class);
 
-        ResponseEntity<InstructorResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
-                InstructorResponseDto.class);
-        assertNotNull(responseAfterUpdate);
-        assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
-        InstructorResponseDto updatedInstructor = responseAfterUpdate.getBody();
-        assertNotNull(updatedInstructor);
-        assertEquals(updatedInstructor.getEmail(), INSTRUCTOR_EMAIL);
-        assertEquals(updatedInstructor.getFirstName(), INSTRUCTOR_FISTNAME);
-        assertEquals(updatedInstructor.getLastName(), INSTRUCTOR_LASTNAME);
-        assertNotNull(updatedInstructor.getAccountId());
-        assertTrue(updatedInstructor.getAccountId() > 0, "Response should have a positive ID.");
-        assertNotNull(instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL));
-        assertEquals(instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL).getPassword(), newPassword);
-        assertTrue(instructorRepository.findAll().size() == 1);
-    }
+                // Validate the response
+                assertNotNull(responseAfterUpdate);
+                assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
+                InstructorResponseDto updatedInstructor = responseAfterUpdate.getBody();
+                assertNotNull(updatedInstructor);
+                assertEquals(updatedInstructor.getEmail(), INSTRUCTOR_EMAIL);
+                assertEquals(updatedInstructor.getFirstName(), newFirstName);
+                assertEquals(updatedInstructor.getLastName(), INSTRUCTOR_LASTNAME);
+                assertNotNull(updatedInstructor.getAccountId());
+                assertTrue(updatedInstructor.getAccountId() > 0, "Response should have a positive ID.");
+                assertNotNull(instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL));
+                assertEquals(instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL).getFirstName(), newFirstName);
+                assertTrue(instructorRepository.findAll().size() == 1);
+        }
+
+        @Test
+        public void testUpdateInstructorFirstName2() {
+
+                // Create a request Instructor
+                InstructorRequestDto request = new InstructorRequestDto(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME,
+                                INSTRUCTOR_LASTNAME, INSTRUCTOR_PASSWORD);
+
+                // Get the response
+                ResponseEntity<InstructorResponseDto> response = client.postForEntity("/instructors/create", request,
+                                InstructorResponseDto.class);
+
+                // Validate the response
+                assertNotNull(response);
+                assertEquals(HttpStatus.CREATED, response.getStatusCode());
+                InstructorResponseDto createdInstructor = response.getBody();
+                assertNotNull(createdInstructor);
+                assertTrue(createdInstructor.getAccountId() > 0, "Response should have a positive ID.");
+                INSTRUCTOR_VALID_ACCOUNTID = createdInstructor.getAccountId();
+
+                // Create a new first name
+                String newFirstName = "JohnTheNew";
+
+                // set the url to update the name
+                String url = "/instructors/updateFirstName/" + INSTRUCTOR_EMAIL + "/" + newFirstName + "/";
+
+                // Get the response
+                ResponseEntity<InstructorResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
+                                InstructorResponseDto.class);
+
+                // Validate the response
+                assertNotNull(responseAfterUpdate);
+                assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
+                InstructorResponseDto updatedInstructor = responseAfterUpdate.getBody();
+                assertNotNull(updatedInstructor);
+                assertEquals(updatedInstructor.getEmail(), INSTRUCTOR_EMAIL);
+                assertEquals(updatedInstructor.getFirstName(), newFirstName);
+                assertEquals(updatedInstructor.getLastName(), INSTRUCTOR_LASTNAME);
+                assertNotNull(updatedInstructor.getAccountId());
+                assertTrue(updatedInstructor.getAccountId() > 0, "Response should have a positive ID.");
+                assertNotNull(instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL));
+                assertEquals(instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL).getFirstName(), newFirstName);
+                assertTrue(instructorRepository.findAll().size() == 1);
+        }
+
+        @Test
+        public void testUpdateInstructorLastName() {
+
+                // Create new request instructor
+                InstructorRequestDto request = new InstructorRequestDto(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME,
+                                INSTRUCTOR_LASTNAME, INSTRUCTOR_PASSWORD);
+
+                // Get the response
+                ResponseEntity<InstructorResponseDto> response = client.postForEntity("/instructors/create", request,
+                                InstructorResponseDto.class);
+
+                // Validate the response
+                assertNotNull(response);
+                assertEquals(HttpStatus.CREATED, response.getStatusCode());
+                InstructorResponseDto createdInstructor = response.getBody();
+                assertNotNull(createdInstructor);
+                assertTrue(createdInstructor.getAccountId() > 0, "Response should have a positive ID.");
+                INSTRUCTOR_VALID_ACCOUNTID = createdInstructor.getAccountId();
+
+                // Create new last name
+                String newLastName = "DoeTheNew";
+
+                // Set the url to update last name
+                String url = "/instructors/updateLastName/" + INSTRUCTOR_EMAIL + "/" + newLastName;
+
+                // Get the response
+                ResponseEntity<InstructorResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
+                                InstructorResponseDto.class);
+
+                // Validate the response
+                assertNotNull(responseAfterUpdate);
+                assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
+                InstructorResponseDto updatedInstructor = responseAfterUpdate.getBody();
+                assertNotNull(updatedInstructor);
+                assertEquals(updatedInstructor.getEmail(), INSTRUCTOR_EMAIL);
+                assertEquals(updatedInstructor.getFirstName(), INSTRUCTOR_FISTNAME);
+                assertEquals(updatedInstructor.getLastName(), newLastName);
+                assertNotNull(updatedInstructor.getAccountId());
+                assertTrue(updatedInstructor.getAccountId() > 0, "Response should have a positive ID.");
+                assertNotNull(instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL));
+                assertEquals(instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL).getLastName(), newLastName);
+                assertTrue(instructorRepository.findAll().size() == 1);
+        }
+
+        @Test
+        public void testUpdateInstructorLastName2() {
+
+                // Create new request instructor
+                InstructorRequestDto request = new InstructorRequestDto(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME,
+                                INSTRUCTOR_LASTNAME, INSTRUCTOR_PASSWORD);
+
+                // Get the response
+                ResponseEntity<InstructorResponseDto> response = client.postForEntity("/instructors/create", request,
+                                InstructorResponseDto.class);
+
+                // Validate the response
+                assertNotNull(response);
+                assertEquals(HttpStatus.CREATED, response.getStatusCode());
+                InstructorResponseDto createdInstructor = response.getBody();
+                assertNotNull(createdInstructor);
+                assertTrue(createdInstructor.getAccountId() > 0, "Response should have a positive ID.");
+                INSTRUCTOR_VALID_ACCOUNTID = createdInstructor.getAccountId();
+
+                // Create new last name
+                String newLastName = "DoeTheNew";
+
+                // Set the url to update last name
+                String url = "/instructors/updateLastName/" + INSTRUCTOR_EMAIL + "/" + newLastName + "/";
+
+                // Get the response
+                ResponseEntity<InstructorResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
+                                InstructorResponseDto.class);
+
+                // Validate the response
+                assertNotNull(responseAfterUpdate);
+                assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
+                InstructorResponseDto updatedInstructor = responseAfterUpdate.getBody();
+                assertNotNull(updatedInstructor);
+                assertEquals(updatedInstructor.getEmail(), INSTRUCTOR_EMAIL);
+                assertEquals(updatedInstructor.getFirstName(), INSTRUCTOR_FISTNAME);
+                assertEquals(updatedInstructor.getLastName(), newLastName);
+                assertNotNull(updatedInstructor.getAccountId());
+                assertTrue(updatedInstructor.getAccountId() > 0, "Response should have a positive ID.");
+                assertNotNull(instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL));
+                assertEquals(instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL).getLastName(), newLastName);
+                assertTrue(instructorRepository.findAll().size() == 1);
+        }
+
+        @Test
+        public void testUpdateInstructorPassword() {
+
+                // Create new request instructor
+                InstructorRequestDto request = new InstructorRequestDto(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME,
+                                INSTRUCTOR_LASTNAME, INSTRUCTOR_PASSWORD);
+
+                // Get the response
+                ResponseEntity<InstructorResponseDto> response = client.postForEntity("/instructors/create", request,
+                                InstructorResponseDto.class);
+
+                // Validate the response
+                assertNotNull(response);
+                assertEquals(HttpStatus.CREATED, response.getStatusCode());
+                InstructorResponseDto createdInstructor = response.getBody();
+                assertNotNull(createdInstructor);
+                assertTrue(createdInstructor.getAccountId() > 0, "Response should have a positive ID.");
+                INSTRUCTOR_VALID_ACCOUNTID = createdInstructor.getAccountId();
+
+                // Create new password
+                String newPassword = "TheNewPass456";
+
+                // Set the url to update password
+                String url = "/instructors/updatePassword/" + INSTRUCTOR_EMAIL + "/" + INSTRUCTOR_PASSWORD + "/"
+                                + newPassword;
+
+                // Get the response
+                ResponseEntity<InstructorResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
+                                InstructorResponseDto.class);
+
+                // Validate the response
+                assertNotNull(responseAfterUpdate);
+                assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
+                InstructorResponseDto updatedInstructor = responseAfterUpdate.getBody();
+                assertNotNull(updatedInstructor);
+                assertEquals(updatedInstructor.getEmail(), INSTRUCTOR_EMAIL);
+                assertEquals(updatedInstructor.getFirstName(), INSTRUCTOR_FISTNAME);
+                assertEquals(updatedInstructor.getLastName(), INSTRUCTOR_LASTNAME);
+                assertNotNull(updatedInstructor.getAccountId());
+                assertTrue(updatedInstructor.getAccountId() > 0, "Response should have a positive ID.");
+                assertNotNull(instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL));
+                assertEquals(instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL).getPassword(), newPassword);
+                assertTrue(instructorRepository.findAll().size() == 1);
+        }
+
+        @Test
+        public void testUpdateInstructorPassword2() {
+                // Create new request instructor
+                InstructorRequestDto request = new InstructorRequestDto(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME,
+                                INSTRUCTOR_LASTNAME, INSTRUCTOR_PASSWORD);
+
+                // Get the response
+                ResponseEntity<InstructorResponseDto> response = client.postForEntity("/instructors/create", request,
+                                InstructorResponseDto.class);
+
+                // Validate the response
+                assertNotNull(response);
+                assertEquals(HttpStatus.CREATED, response.getStatusCode());
+                InstructorResponseDto createdInstructor = response.getBody();
+                assertNotNull(createdInstructor);
+                assertTrue(createdInstructor.getAccountId() > 0, "Response should have a positive ID.");
+                INSTRUCTOR_VALID_ACCOUNTID = createdInstructor.getAccountId();
+
+                // Create new password
+                String newPassword = "TheNewPass456";
+
+                // Set the url to update password
+                String url = "/instructors/updatePassword/" + INSTRUCTOR_EMAIL + "/" + INSTRUCTOR_PASSWORD + "/"
+                                + newPassword
+                                + "/";
+
+                // Get the response
+                ResponseEntity<InstructorResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
+                                InstructorResponseDto.class);
+
+                // Validate the response
+                assertNotNull(responseAfterUpdate);
+                assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
+                InstructorResponseDto updatedInstructor = responseAfterUpdate.getBody();
+                assertNotNull(updatedInstructor);
+                assertEquals(updatedInstructor.getEmail(), INSTRUCTOR_EMAIL);
+                assertEquals(updatedInstructor.getFirstName(), INSTRUCTOR_FISTNAME);
+                assertEquals(updatedInstructor.getLastName(), INSTRUCTOR_LASTNAME);
+                assertNotNull(updatedInstructor.getAccountId());
+                assertTrue(updatedInstructor.getAccountId() > 0, "Response should have a positive ID.");
+                assertNotNull(instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL));
+                assertEquals(instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL).getPassword(), newPassword);
+                assertTrue(instructorRepository.findAll().size() == 1);
+        }
 
 }
