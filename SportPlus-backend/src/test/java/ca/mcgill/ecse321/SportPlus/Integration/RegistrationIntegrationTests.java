@@ -2,6 +2,7 @@ package ca.mcgill.ecse321.SportPlus.Integration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.sql.Date;
 import java.sql.Time;
@@ -576,7 +577,7 @@ public class RegistrationIntegrationTests {
         ownerRepository.save(owner);
         classTypeRepository.save(aClassType);
         specificClassRepository.save(specificClass);
-        
+
         // Retrieving saved entities from repositories
         specificClass = specificClassRepository.findByDateAndStartTime(SPECIFICCLASS_DATE, SPECIFICCLASS_STARTTIME);
         client = clientRepository.findByEmail(CLIENT_EMAIL);
@@ -585,18 +586,33 @@ public class RegistrationIntegrationTests {
         Registration registration1 = new Registration(reg_id, specificClass, client);
         // Saving registration to the repository
         registrationRepository.save(registration1);
+        reg_id = registration1.getRegId();
 
         // Test execution
         // Building the URL for the GET request
-        String url = "/registrations/getBySpecificClass/" + String.valueOf(SPECIFICCLASS_ID);
-        ResponseEntity<RegistrationListDto> response = restTemplate.getForEntity(url, RegistrationListDto.class);
+        String url = "/registrations/getByRegistrationId/" + String.valueOf(reg_id);
+        ResponseEntity<RegistrationResponseDto> response = restTemplate.getForEntity(url, RegistrationResponseDto.class);
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        // Extracting the registration list from the response body
-        RegistrationListDto registrationList = response.getBody();
-        assertNotNull(registrationList);
+        // Extracting the registration from the response body
+        RegistrationResponseDto registrationResponse = response.getBody();
+
+        // Assertions
+        assertNotNull(registrationResponse);
+
+        reg_id = registrationResponse.getRegId();
+        String urlToDelete = "/registrations/deleteByRegistrationId/" +  String.valueOf(reg_id);
+        restTemplate.delete(urlToDelete);
+
+        response = restTemplate.getForEntity(url, RegistrationResponseDto.class);
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        registrationResponse = response.getBody();
+        assertNull(registrationResponse);
+        
     }
 
+    
     @Test
     public void testDeleteRegistrationByRegId2() {
         // Test data setup
@@ -621,16 +637,29 @@ public class RegistrationIntegrationTests {
         Registration registration1 = new Registration(reg_id, specificClass, client);
         // Saving registration to the repository
         registrationRepository.save(registration1);
+        reg_id = registration1.getRegId();
 
         // Test execution
         // Building the URL for the GET request
-        String url = "/registrations/getBySpecificClass/" + String.valueOf(SPECIFICCLASS_ID) + "/";
-        ResponseEntity<RegistrationListDto> response = restTemplate.getForEntity(url, RegistrationListDto.class);
+        String url = "/registrations/getByRegistrationId/" + String.valueOf(reg_id) + "/";
+        ResponseEntity<RegistrationResponseDto> response = restTemplate.getForEntity(url, RegistrationResponseDto.class);
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         // Extracting the registration from the response body
-        RegistrationListDto registration = response.getBody();
-        assertNotNull(registration);
+        RegistrationResponseDto registrationResponse = response.getBody();
+
+        // Assertions
+        assertNotNull(registrationResponse);
+
+        reg_id = registrationResponse.getRegId();
+        String urlToDelete = "/registrations/deleteByRegistrationId/" +  String.valueOf(reg_id) + "/";
+        restTemplate.delete(urlToDelete);
+
+        response = restTemplate.getForEntity(url, RegistrationResponseDto.class);
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        registrationResponse = response.getBody();
+        assertNull(registrationResponse);
     }
 
     // Test method to create a registration

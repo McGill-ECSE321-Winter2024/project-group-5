@@ -70,6 +70,7 @@ public class RegistrationService {
         }
         // Find the registration by ID
         Registration registration = registrationRepository.findByRegId(regId);
+        
         return registration;
     }
 

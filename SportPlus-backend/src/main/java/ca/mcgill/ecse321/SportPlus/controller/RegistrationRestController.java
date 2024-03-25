@@ -58,6 +58,9 @@ public class RegistrationRestController {
     @GetMapping(value = { "/registrations/getByRegistrationId/{regId}", "/registrations/getByRegistrationId/{regId}/" })
     public RegistrationResponseDto findRegistrationByRegId(@PathVariable("regId") int theRegId) {
         Registration registration = registrationService.getByRegistrationId(theRegId);
+        if(registration == null){
+            return null;
+        }
         // Convert registration to DTO and return
         return new RegistrationResponseDto(registration);
     }
@@ -70,14 +73,14 @@ public class RegistrationRestController {
 
     // Endpoint to delete registrations by specific class session ID
     @DeleteMapping(value = { "/registrations/deleteBySpecificClass/{sessionId}",
-            "/registrations/getBySpecificClass/{sessionId}/" })
+            "/registrations/deleteBySpecificClass/{sessionId}/" })
     public void deleteRegistrationBySpecificClass(@PathVariable("sessionId") int theSessionId) {
         registrationService.deleteBySpecificClass(theSessionId);
     }
 
     // Endpoint to delete registrations by registration ID
     @DeleteMapping(value = { "/registrations/deleteByRegistrationId/{regId}",
-            "/registrations/getByRegistrationId/{regId}/" })
+            "/registrations/deleteByRegistrationId/{regId}/" })
     public void deleteRegistrationByRegId(@PathVariable("regId") int theRegId) {
         registrationService.deleteByRegistrationId(theRegId);
     }
