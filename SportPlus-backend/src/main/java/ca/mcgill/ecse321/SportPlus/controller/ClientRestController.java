@@ -30,35 +30,53 @@ public class ClientRestController {
 
     @GetMapping(value = { "/clients/getByEmail/{email}", "/clients/getByEmail/{email}/" })
     public ClientResponseDto findClientByEmail(@PathVariable("email") String theEmail) {
+
+        // Create the client with the service class
         Client client = clientService.getClient(theEmail);
+
+        // return the reponse
         return new ClientResponseDto(client);
     }
 
     @GetMapping(value = { "/clients/getById/{accountId}", "/clients/getById/{accountId}/" })
     public ClientResponseDto findClientByAccountId(@PathVariable("accountId") int theId) {
+
+        // Get the client with the service class
         Client client = clientService.getClient(theId);
+
+        // return the reponse
         return new ClientResponseDto(client);
     }
 
     @GetMapping(value = { "/clients/all", "/clients/all/" })
     public ClientListDto getAllClients() {
+
+        // Get all clients
         List<ClientResponseDto> clients = new ArrayList<>();
         for (Client client : clientService.getAllClients()) {
             clients.add(new ClientResponseDto(client));
         }
+
+        // return the reponse
         return new ClientListDto(clients);
     }
 
     @DeleteMapping(value = { "/clients/delete/{email}", "/clients/delete/{email}/" })
     public void deleteClientByEmail(@PathVariable("email") String theEmail) {
+
+        // Delte the client
         clientService.deleteClient(theEmail);
     }
 
     @PostMapping(value = { "/clients/create", "/clients/create/" })
     @ResponseStatus(HttpStatus.CREATED)
     public ClientResponseDto createClient(@RequestBody ClientRequestDto client) {
+
+        // Create a client
         Client createdClient = clientService.createClient(client.getEmail(), client.getFirstName(),
                 client.getPassword(), client.getLastName());
+
+        // Return the reponse
         return new ClientResponseDto(createdClient);
     }
 
@@ -66,9 +84,15 @@ public class ClientRestController {
             "/clients/updateFirstName/{email}/{newFirstName}/" })
     public ClientResponseDto updateClientFirstName(@PathVariable("email") String theEmail,
             @PathVariable("newFirstName") String theFirstName) {
+
+        // Find the client
         Client client = clientService.getClient(theEmail);
+
+        // Update the first name
         clientService.updateClientFirstName(theEmail, theFirstName);
         client = clientService.getClient(theEmail);
+
+        // return the response
         return new ClientResponseDto(client);
     }
 
@@ -76,9 +100,15 @@ public class ClientRestController {
             "/clients/updateLastName/{email}/{newLastName}/" })
     public ClientResponseDto updateClientLastName(@PathVariable("email") String theEmail,
             @PathVariable("newLastName") String theLastName) {
+
+        // Create a client
         Client client = clientService.getClient(theEmail);
+
+        // Update the client last name
         clientService.updateClientLastName(theEmail, theLastName);
         client = clientService.getClient(theEmail);
+
+        // Return the reponse
         return new ClientResponseDto(client);
     }
 
@@ -86,9 +116,15 @@ public class ClientRestController {
             "/clients/updatePassword/{email}/{oldPassword}/{newPassword}/" })
     public ClientResponseDto updateClientPassword(@PathVariable("email") String theEmail,
             @PathVariable("oldPassword") String theOldPassword, @PathVariable("newPassword") String thePassword) {
+
+        // Get the client with the email
         Client client = clientService.getClient(theEmail);
+
+        // Update the password
         clientService.updateClientPassword(theEmail, theOldPassword, thePassword);
         client = clientService.getClient(theEmail);
+
+        // Return the reponse
         return new ClientResponseDto(client);
     }
 

@@ -24,463 +24,582 @@ import ca.mcgill.ecse321.SportPlus.model.Client;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class ClientIntegrationTests {
 
-    @Autowired
-    private TestRestTemplate client;
+        @Autowired
+        private TestRestTemplate client;
 
-    @Autowired
-    private ClientRepository clientRepository;
+        @Autowired
+        private ClientRepository clientRepository;
 
-    @BeforeEach
-    @AfterEach
-    public void clearDatabase() {
-        clientRepository.deleteAll();
-    }
-
-    private static final String CLIENT_EMAIL = "example@email.com";
-    private static final String CLIENT_FISTNAME = "John";
-    private static final String CLIENT_LASTNAME = "Doe";
-    private static final String CLIENT_PASSWORD = "Password123";
-
-    private int CLIENT_VALID_ACCOUNTID;
-
-    @Test
-    public void testFindClientByEmail() {
-        Client newClient = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME,
-                CLIENT_VALID_ACCOUNTID);
-        clientRepository.save(newClient);
-
-        String url = "/clients/getByEmail/" + String.valueOf(CLIENT_EMAIL);
-
-        ResponseEntity<ClientResponseDto> response = client.getForEntity(url, ClientResponseDto.class);
-
-        assertNotNull(response);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        ClientResponseDto clientResponse = response.getBody();
-        assertNotNull(clientResponse);
-        assertTrue(clientResponse.getAccountId() > 0);
-        assertEquals(CLIENT_EMAIL, clientResponse.getEmail());
-        assertEquals(CLIENT_FISTNAME, clientResponse.getFirstName());
-        assertEquals(CLIENT_LASTNAME, clientResponse.getLastName());
-    }
-
-    @Test
-    public void testFindClientByEmail2() {
-        Client newClient = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME,
-                CLIENT_VALID_ACCOUNTID);
-        clientRepository.save(newClient);
-
-        String url = "/clients/getByEmail/" + String.valueOf(CLIENT_EMAIL) + "/";
-
-        ResponseEntity<ClientResponseDto> response = client.getForEntity(url, ClientResponseDto.class);
-
-        assertNotNull(response);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        ClientResponseDto clientResponse = response.getBody();
-        assertNotNull(clientResponse);
-        assertTrue(clientResponse.getAccountId() > 0);
-        assertEquals(CLIENT_EMAIL, clientResponse.getEmail());
-        assertEquals(CLIENT_FISTNAME, clientResponse.getFirstName());
-        assertEquals(CLIENT_LASTNAME, clientResponse.getLastName());
-    }
-
-    @Test
-    public void testFindClientByAccountId() {
-        Client newClient = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME,
-                CLIENT_VALID_ACCOUNTID);
-        clientRepository.save(newClient);
-        int validId = clientRepository.findByEmail(CLIENT_EMAIL).getAccountId();
-
-        String url = "/clients/getById/" + String.valueOf(validId);
-
-        ResponseEntity<ClientResponseDto> response = client.getForEntity(url, ClientResponseDto.class);
-
-        assertNotNull(response);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        ClientResponseDto clientResponse = response.getBody();
-        assertNotNull(clientResponse);
-        assertEquals(validId, clientResponse.getAccountId());
-        assertEquals(CLIENT_EMAIL, clientResponse.getEmail());
-        assertEquals(CLIENT_FISTNAME, clientResponse.getFirstName());
-        assertEquals(CLIENT_LASTNAME, clientResponse.getLastName());
-    }
-
-    @Test
-    public void testFindClientByAccountId2() {
-        Client newClient = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME,
-                CLIENT_VALID_ACCOUNTID);
-        clientRepository.save(newClient);
-        int validId = clientRepository.findByEmail(CLIENT_EMAIL).getAccountId();
-
-        String url = "/clients/getById/" + String.valueOf(validId) + "/";
-
-        ResponseEntity<ClientResponseDto> response = client.getForEntity(url, ClientResponseDto.class);
-
-        assertNotNull(response);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        ClientResponseDto clientResponse = response.getBody();
-        assertNotNull(clientResponse);
-        assertEquals(validId, clientResponse.getAccountId());
-        assertEquals(CLIENT_EMAIL, clientResponse.getEmail());
-        assertEquals(CLIENT_FISTNAME, clientResponse.getFirstName());
-        assertEquals(CLIENT_LASTNAME, clientResponse.getLastName());
-    }
-
-    @Test
-    public void testGetAllClients() {
-        Client client1 = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME,
-                CLIENT_VALID_ACCOUNTID);
-        Client client2 = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME,
-                CLIENT_VALID_ACCOUNTID);
-        clientRepository.save(client1);
-        clientRepository.save(client2);
-
-        String url = "/clients/all";
-
-        ResponseEntity<ClientListDto> response = client.getForEntity(url, ClientListDto.class);
-
-        assertNotNull(response);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        ClientListDto clientResponse = response.getBody();
-        assertNotNull(clientResponse);
-        for (ClientResponseDto client : clientResponse.getClients()) {
-            assertNotNull(client);
-            assertTrue(client.getAccountId() > 0);
-            assertEquals(CLIENT_EMAIL, client.getEmail());
-            assertEquals(CLIENT_FISTNAME, client.getFirstName());
-            assertEquals(CLIENT_LASTNAME, client.getLastName());
+        @BeforeEach
+        @AfterEach
+        public void clearDatabase() {
+                // Clear the DB
+                clientRepository.deleteAll();
         }
-    }
 
-    @Test
-    public void testGetAllClients2() {
-        Client client1 = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME,
-                CLIENT_VALID_ACCOUNTID);
-        Client client2 = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME,
-                CLIENT_VALID_ACCOUNTID);
-        clientRepository.save(client1);
-        clientRepository.save(client2);
+        // Initialize variables
+        private static final String CLIENT_EMAIL = "example@email.com";
+        private static final String CLIENT_FISTNAME = "John";
+        private static final String CLIENT_LASTNAME = "Doe";
+        private static final String CLIENT_PASSWORD = "Password123";
 
-        String url = "/clients/all/";
+        private int CLIENT_VALID_ACCOUNTID;
 
-        ResponseEntity<ClientListDto> response = client.getForEntity(url, ClientListDto.class);
+        @Test
+        public void testFindClientByEmail() {
 
-        assertNotNull(response);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        ClientListDto clientResponse = response.getBody();
-        assertNotNull(clientResponse);
-        for (ClientResponseDto client : clientResponse.getClients()) {
-            assertNotNull(client);
-            assertTrue(client.getAccountId() > 0);
-            assertEquals(CLIENT_EMAIL, client.getEmail());
-            assertEquals(CLIENT_FISTNAME, client.getFirstName());
-            assertEquals(CLIENT_LASTNAME, client.getLastName());
+                // Create a new client
+                Client newClient = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME,
+                                CLIENT_VALID_ACCOUNTID);
+
+                // Save to the DB
+                clientRepository.save(newClient);
+
+                // Set the url
+                String url = "/clients/getByEmail/" + String.valueOf(CLIENT_EMAIL);
+
+                // Get the response
+                ResponseEntity<ClientResponseDto> response = client.getForEntity(url, ClientResponseDto.class);
+
+                // Validate the response
+                assertNotNull(response);
+                assertEquals(HttpStatus.OK, response.getStatusCode());
+                ClientResponseDto clientResponse = response.getBody();
+                assertNotNull(clientResponse);
+                assertTrue(clientResponse.getAccountId() > 0);
+                assertEquals(CLIENT_EMAIL, clientResponse.getEmail());
+                assertEquals(CLIENT_FISTNAME, clientResponse.getFirstName());
+                assertEquals(CLIENT_LASTNAME, clientResponse.getLastName());
         }
-    }
 
-    @Test
-    public void testDeleteClientByEmail() {
-        Client newClient = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME,
-                CLIENT_VALID_ACCOUNTID);
-        clientRepository.save(newClient);
+        @Test
+        public void testFindClientByEmail2() {
+                // Create a new client
+                Client newClient = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME,
+                                CLIENT_VALID_ACCOUNTID);
 
-        String url = "/clients/all";
+                // Save to the DB
+                clientRepository.save(newClient);
 
-        ResponseEntity<ClientListDto> response = client.getForEntity(url, ClientListDto.class);
+                // Set the url
+                String url = "/clients/getByEmail/" + String.valueOf(CLIENT_EMAIL) + "/";
 
-        assertNotNull(response);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        ClientListDto clientResponse = response.getBody();
-        assertTrue(clientResponse.getClients().size() == 1);
-        assertTrue(clientResponse.getClients().get(0).getEmail().equals(CLIENT_EMAIL));
+                // Get the response
+                ResponseEntity<ClientResponseDto> response = client.getForEntity(url, ClientResponseDto.class);
 
-        String urlToDelete = "/clients/delete/" + CLIENT_EMAIL;
+                // Validate the response
+                assertNotNull(response);
+                assertEquals(HttpStatus.OK, response.getStatusCode());
+                ClientResponseDto clientResponse = response.getBody();
+                assertNotNull(clientResponse);
+                assertTrue(clientResponse.getAccountId() > 0);
+                assertEquals(CLIENT_EMAIL, clientResponse.getEmail());
+                assertEquals(CLIENT_FISTNAME, clientResponse.getFirstName());
+                assertEquals(CLIENT_LASTNAME, clientResponse.getLastName());
+        }
 
-        client.delete(urlToDelete);
+        @Test
+        public void testFindClientByAccountId() {
+                // Create & save a new client
+                Client newClient = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME,
+                                CLIENT_VALID_ACCOUNTID);
+                clientRepository.save(newClient);
 
-        response = client.getForEntity(url, ClientListDto.class);
+                // Find the client with ID
+                int validId = clientRepository.findByEmail(CLIENT_EMAIL).getAccountId();
 
-        assertNotNull(response);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        clientResponse = response.getBody();
-        assertTrue(clientResponse.getClients().size() == 0);
-    }
+                // Set the URL
+                String url = "/clients/getById/" + String.valueOf(validId);
 
-    @Test
-    public void testDeleteClientByEmail2() {
-        Client newClient = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME,
-                CLIENT_VALID_ACCOUNTID);
-        clientRepository.save(newClient);
+                // Get the reponse
+                ResponseEntity<ClientResponseDto> response = client.getForEntity(url, ClientResponseDto.class);
 
-        String url = "/clients/all";
+                // Validate the reponse
+                assertNotNull(response);
+                assertEquals(HttpStatus.OK, response.getStatusCode());
+                ClientResponseDto clientResponse = response.getBody();
+                assertNotNull(clientResponse);
+                assertEquals(validId, clientResponse.getAccountId());
+                assertEquals(CLIENT_EMAIL, clientResponse.getEmail());
+                assertEquals(CLIENT_FISTNAME, clientResponse.getFirstName());
+                assertEquals(CLIENT_LASTNAME, clientResponse.getLastName());
+        }
 
-        ResponseEntity<ClientListDto> response = client.getForEntity(url, ClientListDto.class);
+        @Test
+        public void testFindClientByAccountId2() {
 
-        assertNotNull(response);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        ClientListDto clientResponse = response.getBody();
-        assertTrue(clientResponse.getClients().size() == 1);
-        assertTrue(clientResponse.getClients().get(0).getEmail().equals(CLIENT_EMAIL));
+                // Create & save a new client
+                Client newClient = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME,
+                                CLIENT_VALID_ACCOUNTID);
+                clientRepository.save(newClient);
 
-        String urlToDelete = "/clients/delete/" + CLIENT_EMAIL + "/";
+                // Fint the client from the db with ID
+                int validId = clientRepository.findByEmail(CLIENT_EMAIL).getAccountId();
 
-        client.delete(urlToDelete);
+                // Set the url
+                String url = "/clients/getById/" + String.valueOf(validId) + "/";
 
-        response = client.getForEntity(url, ClientListDto.class);
+                // Get the reponse
+                ResponseEntity<ClientResponseDto> response = client.getForEntity(url, ClientResponseDto.class);
 
-        assertNotNull(response);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        clientResponse = response.getBody();
-        assertTrue(clientResponse.getClients().size() == 0);
-    }
+                // Validate the reponse
+                assertNotNull(response);
+                assertEquals(HttpStatus.OK, response.getStatusCode());
+                ClientResponseDto clientResponse = response.getBody();
+                assertNotNull(clientResponse);
+                assertEquals(validId, clientResponse.getAccountId());
+                assertEquals(CLIENT_EMAIL, clientResponse.getEmail());
+                assertEquals(CLIENT_FISTNAME, clientResponse.getFirstName());
+                assertEquals(CLIENT_LASTNAME, clientResponse.getLastName());
+        }
 
-    @Test
-    public void testCreateClient() {
-        ClientRequestDto request = new ClientRequestDto(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_LASTNAME,
-                CLIENT_PASSWORD);
+        @Test
+        public void testGetAllClients() {
 
-        ResponseEntity<ClientResponseDto> response = client.postForEntity("/clients/create", request,
-                ClientResponseDto.class);
+                // Create 2 new clients & save to the db
+                Client client1 = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME,
+                                CLIENT_VALID_ACCOUNTID);
+                Client client2 = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME,
+                                CLIENT_VALID_ACCOUNTID);
+                clientRepository.save(client1);
+                clientRepository.save(client2);
 
-        assertNotNull(response);
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        ClientResponseDto createdClient = response.getBody();
-        assertNotNull(createdClient);
-        assertEquals(createdClient.getEmail(), CLIENT_EMAIL);
-        assertEquals(createdClient.getFirstName(), CLIENT_FISTNAME);
-        assertEquals(createdClient.getLastName(), CLIENT_LASTNAME);
-        assertNotNull(createdClient.getAccountId());
-        assertTrue(createdClient.getAccountId() > 0, "Response should have a positive ID.");
-        assertNotNull(clientRepository.findByEmail(CLIENT_EMAIL));
-    }
+                // Set the url
+                String url = "/clients/all";
 
-    @Test
-    public void testCreateClient2() {
-        ClientRequestDto request = new ClientRequestDto(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_LASTNAME,
-                CLIENT_PASSWORD);
+                // Get the response
+                ResponseEntity<ClientListDto> response = client.getForEntity(url, ClientListDto.class);
 
-        ResponseEntity<ClientResponseDto> response = client.postForEntity("/clients/create/", request,
-                ClientResponseDto.class);
+                // Validate the reponse
+                assertNotNull(response);
+                assertEquals(HttpStatus.OK, response.getStatusCode());
+                ClientListDto clientResponse = response.getBody();
+                assertNotNull(clientResponse);
+                for (ClientResponseDto client : clientResponse.getClients()) {
+                        assertNotNull(client);
+                        assertTrue(client.getAccountId() > 0);
+                        assertEquals(CLIENT_EMAIL, client.getEmail());
+                        assertEquals(CLIENT_FISTNAME, client.getFirstName());
+                        assertEquals(CLIENT_LASTNAME, client.getLastName());
+                }
+        }
 
-        assertNotNull(response);
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        ClientResponseDto createdClient = response.getBody();
-        assertNotNull(createdClient);
-        assertEquals(createdClient.getEmail(), CLIENT_EMAIL);
-        assertEquals(createdClient.getFirstName(), CLIENT_FISTNAME);
-        assertEquals(createdClient.getLastName(), CLIENT_LASTNAME);
-        assertNotNull(createdClient.getAccountId());
-        assertTrue(createdClient.getAccountId() > 0, "Response should have a positive ID.");
-        assertNotNull(clientRepository.findByEmail(CLIENT_EMAIL));
-    }
+        @Test
+        public void testGetAllClients2() {
 
-    @Test
-    public void testUpdateClientFirstName() {
-        ClientRequestDto request = new ClientRequestDto(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_LASTNAME,
-                CLIENT_PASSWORD);
+                // Create 2 new clients & save to the db
+                Client client1 = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME,
+                                CLIENT_VALID_ACCOUNTID);
+                Client client2 = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME,
+                                CLIENT_VALID_ACCOUNTID);
+                clientRepository.save(client1);
+                clientRepository.save(client2);
 
-        ResponseEntity<ClientResponseDto> response = client.postForEntity("/clients/create", request,
-                ClientResponseDto.class);
+                // Set the url
+                String url = "/clients/all/";
 
-        assertNotNull(response);
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        ClientResponseDto createdClient = response.getBody();
-        assertNotNull(createdClient);
-        assertTrue(createdClient.getAccountId() > 0, "Response should have a positive ID.");
-        CLIENT_VALID_ACCOUNTID = createdClient.getAccountId();
+                // Get the response
+                ResponseEntity<ClientListDto> response = client.getForEntity(url, ClientListDto.class);
 
-        String newFirstName = "JohnTheNew";
+                // Validate the reponse
+                assertNotNull(response);
+                assertEquals(HttpStatus.OK, response.getStatusCode());
+                ClientListDto clientResponse = response.getBody();
+                assertNotNull(clientResponse);
+                for (ClientResponseDto client : clientResponse.getClients()) {
+                        assertNotNull(client);
+                        assertTrue(client.getAccountId() > 0);
+                        assertEquals(CLIENT_EMAIL, client.getEmail());
+                        assertEquals(CLIENT_FISTNAME, client.getFirstName());
+                        assertEquals(CLIENT_LASTNAME, client.getLastName());
+                }
+        }
 
-        String url = "/clients/updateFirstName/" + CLIENT_EMAIL + "/" + newFirstName;
+        @Test
+        public void testDeleteClientByEmail() {
 
-        ResponseEntity<ClientResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
-                ClientResponseDto.class);
-        assertNotNull(responseAfterUpdate);
-        assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
-        ClientResponseDto updatedClient = responseAfterUpdate.getBody();
-        assertNotNull(updatedClient);
-        assertEquals(updatedClient.getEmail(), CLIENT_EMAIL);
-        assertEquals(updatedClient.getFirstName(), newFirstName);
-        assertEquals(updatedClient.getLastName(), CLIENT_LASTNAME);
-        assertNotNull(updatedClient.getAccountId());
-        assertTrue(updatedClient.getAccountId() > 0, "Response should have a positive ID.");
-        assertNotNull(clientRepository.findByEmail(CLIENT_EMAIL));
-        assertEquals(clientRepository.findByEmail(CLIENT_EMAIL).getFirstName(), newFirstName);
-        assertTrue(clientRepository.findAll().size() == 1);
-    }
+                // Create & save a new client
+                Client newClient = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME,
+                                CLIENT_VALID_ACCOUNTID);
+                clientRepository.save(newClient);
 
-    @Test
-    public void testUpdateClientFirstName2() {
-        ClientRequestDto request = new ClientRequestDto(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_LASTNAME,
-                CLIENT_PASSWORD);
+                // Set the url
+                String url = "/clients/all";
 
-        ResponseEntity<ClientResponseDto> response = client.postForEntity("/clients/create", request,
-                ClientResponseDto.class);
+                // Get the response
+                ResponseEntity<ClientListDto> response = client.getForEntity(url, ClientListDto.class);
 
-        assertNotNull(response);
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        ClientResponseDto createdClient = response.getBody();
-        assertNotNull(createdClient);
-        assertTrue(createdClient.getAccountId() > 0, "Response should have a positive ID.");
-        CLIENT_VALID_ACCOUNTID = createdClient.getAccountId();
+                // Validate the response
+                assertNotNull(response);
+                assertEquals(HttpStatus.OK, response.getStatusCode());
+                ClientListDto clientResponse = response.getBody();
+                assertTrue(clientResponse.getClients().size() == 1);
+                assertTrue(clientResponse.getClients().get(0).getEmail().equals(CLIENT_EMAIL));
 
-        String newFirstName = "JohnTheNew";
+                // Set the url
+                String urlToDelete = "/clients/delete/" + CLIENT_EMAIL;
 
-        String url = "/clients/updateFirstName/" + CLIENT_EMAIL + "/" + newFirstName + "/";
+                // Delete the client
+                client.delete(urlToDelete);
 
-        ResponseEntity<ClientResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
-                ClientResponseDto.class);
-        assertNotNull(responseAfterUpdate);
-        assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
-        ClientResponseDto updatedClient = responseAfterUpdate.getBody();
-        assertNotNull(updatedClient);
-        assertEquals(updatedClient.getEmail(), CLIENT_EMAIL);
-        assertEquals(updatedClient.getFirstName(), newFirstName);
-        assertEquals(updatedClient.getLastName(), CLIENT_LASTNAME);
-        assertNotNull(updatedClient.getAccountId());
-        assertTrue(updatedClient.getAccountId() > 0, "Response should have a positive ID.");
-        assertNotNull(clientRepository.findByEmail(CLIENT_EMAIL));
-        assertEquals(clientRepository.findByEmail(CLIENT_EMAIL).getFirstName(), newFirstName);
-        assertTrue(clientRepository.findAll().size() == 1);
-    }
+                // Get the response
+                response = client.getForEntity(url, ClientListDto.class);
 
-    @Test
-    public void testUpdateClientLastName() {
-        ClientRequestDto request = new ClientRequestDto(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_LASTNAME,
-                CLIENT_PASSWORD);
+                // Validate the response
+                assertNotNull(response);
+                assertEquals(HttpStatus.OK, response.getStatusCode());
+                clientResponse = response.getBody();
+                assertTrue(clientResponse.getClients().size() == 0);
+        }
 
-        ResponseEntity<ClientResponseDto> response = client.postForEntity("/clients/create", request,
-                ClientResponseDto.class);
+        @Test
+        public void testDeleteClientByEmail2() {
 
-        assertNotNull(response);
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        ClientResponseDto createdClient = response.getBody();
-        assertNotNull(createdClient);
-        assertTrue(createdClient.getAccountId() > 0, "Response should have a positive ID.");
-        CLIENT_VALID_ACCOUNTID = createdClient.getAccountId();
+                // Create & save a new client
+                Client newClient = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME,
+                                CLIENT_VALID_ACCOUNTID);
+                clientRepository.save(newClient);
 
-        String newLastName = "DoeTheNew";
+                // Set the url
+                String url = "/clients/all";
 
-        String url = "/clients/updateLastName/" + CLIENT_EMAIL + "/" + newLastName;
+                // Get the reponse
+                ResponseEntity<ClientListDto> response = client.getForEntity(url, ClientListDto.class);
 
-        ResponseEntity<ClientResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
-                ClientResponseDto.class);
-        assertNotNull(responseAfterUpdate);
-        assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
-        ClientResponseDto updatedClient = responseAfterUpdate.getBody();
-        assertNotNull(updatedClient);
-        assertEquals(updatedClient.getEmail(), CLIENT_EMAIL);
-        assertEquals(updatedClient.getFirstName(), CLIENT_FISTNAME);
-        assertEquals(updatedClient.getLastName(), newLastName);
-        assertNotNull(updatedClient.getAccountId());
-        assertTrue(updatedClient.getAccountId() > 0, "Response should have a positive ID.");
-        assertNotNull(clientRepository.findByEmail(CLIENT_EMAIL));
-        assertEquals(clientRepository.findByEmail(CLIENT_EMAIL).getLastName(), newLastName);
-        assertTrue(clientRepository.findAll().size() == 1);
-    }
+                // Validate the reponse
+                assertNotNull(response);
+                assertEquals(HttpStatus.OK, response.getStatusCode());
+                ClientListDto clientResponse = response.getBody();
+                assertTrue(clientResponse.getClients().size() == 1);
+                assertTrue(clientResponse.getClients().get(0).getEmail().equals(CLIENT_EMAIL));
 
-    @Test
-    public void testUpdateClientLastName2() {
-        ClientRequestDto request = new ClientRequestDto(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_LASTNAME,
-                CLIENT_PASSWORD);
+                // Set the url
+                String urlToDelete = "/clients/delete/" + CLIENT_EMAIL + "/";
 
-        ResponseEntity<ClientResponseDto> response = client.postForEntity("/clients/create", request,
-                ClientResponseDto.class);
+                // Delete the client
+                client.delete(urlToDelete);
 
-        assertNotNull(response);
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        ClientResponseDto createdClient = response.getBody();
-        assertNotNull(createdClient);
-        assertTrue(createdClient.getAccountId() > 0, "Response should have a positive ID.");
-        CLIENT_VALID_ACCOUNTID = createdClient.getAccountId();
+                // Get the reponse
+                response = client.getForEntity(url, ClientListDto.class);
 
-        String newLastName = "DoeTheNew";
+                // Validate the reponse
+                assertNotNull(response);
+                assertEquals(HttpStatus.OK, response.getStatusCode());
+                clientResponse = response.getBody();
+                assertTrue(clientResponse.getClients().size() == 0);
+        }
 
-        String url = "/clients/updateLastName/" + CLIENT_EMAIL + "/" + newLastName + "/";
+        @Test
+        public void testCreateClient() {
 
-        ResponseEntity<ClientResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
-                ClientResponseDto.class);
-        assertNotNull(responseAfterUpdate);
-        assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
-        ClientResponseDto updatedClient = responseAfterUpdate.getBody();
-        assertNotNull(updatedClient);
-        assertEquals(updatedClient.getEmail(), CLIENT_EMAIL);
-        assertEquals(updatedClient.getFirstName(), CLIENT_FISTNAME);
-        assertEquals(updatedClient.getLastName(), newLastName);
-        assertNotNull(updatedClient.getAccountId());
-        assertTrue(updatedClient.getAccountId() > 0, "Response should have a positive ID.");
-        assertNotNull(clientRepository.findByEmail(CLIENT_EMAIL));
-        assertEquals(clientRepository.findByEmail(CLIENT_EMAIL).getLastName(), newLastName);
-        assertTrue(clientRepository.findAll().size() == 1);
-    }
+                // Create a request
+                ClientRequestDto request = new ClientRequestDto(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_LASTNAME,
+                                CLIENT_PASSWORD);
 
-    @Test
-    public void testUpdateClientPassword() {
-        ClientRequestDto request = new ClientRequestDto(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_LASTNAME,
-                CLIENT_PASSWORD);
+                // Get the response
+                ResponseEntity<ClientResponseDto> response = client.postForEntity("/clients/create", request,
+                                ClientResponseDto.class);
 
-        ResponseEntity<ClientResponseDto> response = client.postForEntity("/clients/create", request,
-                ClientResponseDto.class);
+                // Validate the response
+                assertNotNull(response);
+                assertEquals(HttpStatus.CREATED, response.getStatusCode());
+                ClientResponseDto createdClient = response.getBody();
+                assertNotNull(createdClient);
+                assertEquals(createdClient.getEmail(), CLIENT_EMAIL);
+                assertEquals(createdClient.getFirstName(), CLIENT_FISTNAME);
+                assertEquals(createdClient.getLastName(), CLIENT_LASTNAME);
+                assertNotNull(createdClient.getAccountId());
+                assertTrue(createdClient.getAccountId() > 0, "Response should have a positive ID.");
+                assertNotNull(clientRepository.findByEmail(CLIENT_EMAIL));
+        }
 
-        assertNotNull(response);
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        ClientResponseDto createdClient = response.getBody();
-        assertNotNull(createdClient);
-        assertTrue(createdClient.getAccountId() > 0, "Response should have a positive ID.");
-        CLIENT_VALID_ACCOUNTID = createdClient.getAccountId();
+        @Test
+        public void testCreateClient2() {
 
-        String newPassword = "TheNewPass456";
+                // Create a request
+                ClientRequestDto request = new ClientRequestDto(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_LASTNAME,
+                                CLIENT_PASSWORD);
 
-        String url = "/clients/updatePassword/" + CLIENT_EMAIL + "/" + CLIENT_PASSWORD + "/" + newPassword;
+                // Get the response
+                ResponseEntity<ClientResponseDto> response = client.postForEntity("/clients/create/", request,
+                                ClientResponseDto.class);
 
-        ResponseEntity<ClientResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
-                ClientResponseDto.class);
-        assertNotNull(responseAfterUpdate);
-        assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
-        ClientResponseDto updatedClient = responseAfterUpdate.getBody();
-        assertNotNull(updatedClient);
-        assertEquals(updatedClient.getEmail(), CLIENT_EMAIL);
-        assertEquals(updatedClient.getFirstName(), CLIENT_FISTNAME);
-        assertEquals(updatedClient.getLastName(), CLIENT_LASTNAME);
-        assertNotNull(updatedClient.getAccountId());
-        assertTrue(updatedClient.getAccountId() > 0, "Response should have a positive ID.");
-        assertNotNull(clientRepository.findByEmail(CLIENT_EMAIL));
-        assertEquals(clientRepository.findByEmail(CLIENT_EMAIL).getPassword(), newPassword);
-        assertTrue(clientRepository.findAll().size() == 1);
-    }
+                // Validate the response
+                assertNotNull(response);
+                assertEquals(HttpStatus.CREATED, response.getStatusCode());
+                ClientResponseDto createdClient = response.getBody();
+                assertNotNull(createdClient);
+                assertEquals(createdClient.getEmail(), CLIENT_EMAIL);
+                assertEquals(createdClient.getFirstName(), CLIENT_FISTNAME);
+                assertEquals(createdClient.getLastName(), CLIENT_LASTNAME);
+                assertNotNull(createdClient.getAccountId());
+                assertTrue(createdClient.getAccountId() > 0, "Response should have a positive ID.");
+                assertNotNull(clientRepository.findByEmail(CLIENT_EMAIL));
+        }
 
-    @Test
-    public void testUpdateClientPassword2() {
-        ClientRequestDto request = new ClientRequestDto(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_LASTNAME,
-                CLIENT_PASSWORD);
+        @Test
+        public void testUpdateClientFirstName() {
 
-        ResponseEntity<ClientResponseDto> response = client.postForEntity("/clients/create", request,
-                ClientResponseDto.class);
+                // get the request
+                ClientRequestDto request = new ClientRequestDto(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_LASTNAME,
+                                CLIENT_PASSWORD);
 
-        assertNotNull(response);
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        ClientResponseDto createdClient = response.getBody();
-        assertNotNull(createdClient);
-        assertTrue(createdClient.getAccountId() > 0, "Response should have a positive ID.");
-        CLIENT_VALID_ACCOUNTID = createdClient.getAccountId();
+                // get the response
+                ResponseEntity<ClientResponseDto> response = client.postForEntity("/clients/create", request,
+                                ClientResponseDto.class);
 
-        String newPassword = "TheNewPass456";
+                // Validate the response
+                assertNotNull(response);
+                assertEquals(HttpStatus.CREATED, response.getStatusCode());
+                ClientResponseDto createdClient = response.getBody();
+                assertNotNull(createdClient);
+                assertTrue(createdClient.getAccountId() > 0, "Response should have a positive ID.");
+                CLIENT_VALID_ACCOUNTID = createdClient.getAccountId();
 
-        String url = "/clients/updatePassword/" + CLIENT_EMAIL + "/" + CLIENT_PASSWORD + "/" + newPassword + "/";
+                // Creata new Name
+                String newFirstName = "JohnTheNew";
 
-        ResponseEntity<ClientResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
-                ClientResponseDto.class);
-        assertNotNull(responseAfterUpdate);
-        assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
-        ClientResponseDto updatedClient = responseAfterUpdate.getBody();
-        assertNotNull(updatedClient);
-        assertEquals(updatedClient.getEmail(), CLIENT_EMAIL);
-        assertEquals(updatedClient.getFirstName(), CLIENT_FISTNAME);
-        assertEquals(updatedClient.getLastName(), CLIENT_LASTNAME);
-        assertNotNull(updatedClient.getAccountId());
-        assertTrue(updatedClient.getAccountId() > 0, "Response should have a positive ID.");
-        assertNotNull(clientRepository.findByEmail(CLIENT_EMAIL));
-        assertEquals(clientRepository.findByEmail(CLIENT_EMAIL).getPassword(), newPassword);
-        assertTrue(clientRepository.findAll().size() == 1);
-    }
+                // Set the url
+                String url = "/clients/updateFirstName/" + CLIENT_EMAIL + "/" + newFirstName;
+
+                // Get the response
+                ResponseEntity<ClientResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
+                                ClientResponseDto.class);
+
+                // Validate the response
+                assertNotNull(responseAfterUpdate);
+                assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
+                ClientResponseDto updatedClient = responseAfterUpdate.getBody();
+                assertNotNull(updatedClient);
+                assertEquals(updatedClient.getEmail(), CLIENT_EMAIL);
+                assertEquals(updatedClient.getFirstName(), newFirstName);
+                assertEquals(updatedClient.getLastName(), CLIENT_LASTNAME);
+                assertNotNull(updatedClient.getAccountId());
+                assertTrue(updatedClient.getAccountId() > 0, "Response should have a positive ID.");
+                assertNotNull(clientRepository.findByEmail(CLIENT_EMAIL));
+                assertEquals(clientRepository.findByEmail(CLIENT_EMAIL).getFirstName(), newFirstName);
+                assertTrue(clientRepository.findAll().size() == 1);
+        }
+
+        @Test
+        public void testUpdateClientFirstName2() {
+
+                // Create a request
+                ClientRequestDto request = new ClientRequestDto(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_LASTNAME,
+                                CLIENT_PASSWORD);
+
+                // Get the reponse
+                ResponseEntity<ClientResponseDto> response = client.postForEntity("/clients/create", request,
+                                ClientResponseDto.class);
+
+                // Validate the response
+                assertNotNull(response);
+                assertEquals(HttpStatus.CREATED, response.getStatusCode());
+                ClientResponseDto createdClient = response.getBody();
+                assertNotNull(createdClient);
+                assertTrue(createdClient.getAccountId() > 0, "Response should have a positive ID.");
+                CLIENT_VALID_ACCOUNTID = createdClient.getAccountId();
+
+                // Create new name
+                String newFirstName = "JohnTheNew";
+
+                // Set the url
+                String url = "/clients/updateFirstName/" + CLIENT_EMAIL + "/" + newFirstName + "/";
+
+                // Get the response
+                ResponseEntity<ClientResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
+                                ClientResponseDto.class);
+
+                // Validate the response
+                assertNotNull(responseAfterUpdate);
+                assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
+                ClientResponseDto updatedClient = responseAfterUpdate.getBody();
+                assertNotNull(updatedClient);
+                assertEquals(updatedClient.getEmail(), CLIENT_EMAIL);
+                assertEquals(updatedClient.getFirstName(), newFirstName);
+                assertEquals(updatedClient.getLastName(), CLIENT_LASTNAME);
+                assertNotNull(updatedClient.getAccountId());
+                assertTrue(updatedClient.getAccountId() > 0, "Response should have a positive ID.");
+                assertNotNull(clientRepository.findByEmail(CLIENT_EMAIL));
+                assertEquals(clientRepository.findByEmail(CLIENT_EMAIL).getFirstName(), newFirstName);
+                assertTrue(clientRepository.findAll().size() == 1);
+        }
+
+        @Test
+        public void testUpdateClientLastName() {
+
+                // Create a request
+                ClientRequestDto request = new ClientRequestDto(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_LASTNAME,
+                                CLIENT_PASSWORD);
+
+                // Get the response
+                ResponseEntity<ClientResponseDto> response = client.postForEntity("/clients/create", request,
+                                ClientResponseDto.class);
+
+                // Validate the response
+                assertNotNull(response);
+                assertEquals(HttpStatus.CREATED, response.getStatusCode());
+                ClientResponseDto createdClient = response.getBody();
+                assertNotNull(createdClient);
+                assertTrue(createdClient.getAccountId() > 0, "Response should have a positive ID.");
+                CLIENT_VALID_ACCOUNTID = createdClient.getAccountId();
+
+                // Set a new last name
+                String newLastName = "DoeTheNew";
+
+                // Set the url
+                String url = "/clients/updateLastName/" + CLIENT_EMAIL + "/" + newLastName;
+
+                // Get the response
+                ResponseEntity<ClientResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
+                                ClientResponseDto.class);
+
+                // Validate the response
+                assertNotNull(responseAfterUpdate);
+                assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
+                ClientResponseDto updatedClient = responseAfterUpdate.getBody();
+                assertNotNull(updatedClient);
+                assertEquals(updatedClient.getEmail(), CLIENT_EMAIL);
+                assertEquals(updatedClient.getFirstName(), CLIENT_FISTNAME);
+                assertEquals(updatedClient.getLastName(), newLastName);
+                assertNotNull(updatedClient.getAccountId());
+                assertTrue(updatedClient.getAccountId() > 0, "Response should have a positive ID.");
+                assertNotNull(clientRepository.findByEmail(CLIENT_EMAIL));
+                assertEquals(clientRepository.findByEmail(CLIENT_EMAIL).getLastName(), newLastName);
+                assertTrue(clientRepository.findAll().size() == 1);
+        }
+
+        @Test
+        public void testUpdateClientLastName2() {
+
+                // Create a request
+                ClientRequestDto request = new ClientRequestDto(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_LASTNAME,
+                                CLIENT_PASSWORD);
+
+                // Get the response
+                ResponseEntity<ClientResponseDto> response = client.postForEntity("/clients/create", request,
+                                ClientResponseDto.class);
+
+                // Validate the response
+                assertNotNull(response);
+                assertEquals(HttpStatus.CREATED, response.getStatusCode());
+                ClientResponseDto createdClient = response.getBody();
+                assertNotNull(createdClient);
+                assertTrue(createdClient.getAccountId() > 0, "Response should have a positive ID.");
+                CLIENT_VALID_ACCOUNTID = createdClient.getAccountId();
+
+                // Create a new last name
+                String newLastName = "DoeTheNew";
+
+                // Set the url
+                String url = "/clients/updateLastName/" + CLIENT_EMAIL + "/" + newLastName + "/";
+
+                // Get the response
+                ResponseEntity<ClientResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
+                                ClientResponseDto.class);
+
+                // Validate the response
+                assertNotNull(responseAfterUpdate);
+                assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
+                ClientResponseDto updatedClient = responseAfterUpdate.getBody();
+                assertNotNull(updatedClient);
+                assertEquals(updatedClient.getEmail(), CLIENT_EMAIL);
+                assertEquals(updatedClient.getFirstName(), CLIENT_FISTNAME);
+                assertEquals(updatedClient.getLastName(), newLastName);
+                assertNotNull(updatedClient.getAccountId());
+                assertTrue(updatedClient.getAccountId() > 0, "Response should have a positive ID.");
+                assertNotNull(clientRepository.findByEmail(CLIENT_EMAIL));
+                assertEquals(clientRepository.findByEmail(CLIENT_EMAIL).getLastName(), newLastName);
+                assertTrue(clientRepository.findAll().size() == 1);
+        }
+
+        @Test
+        public void testUpdateClientPassword() {
+
+                // Create a request
+                ClientRequestDto request = new ClientRequestDto(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_LASTNAME,
+                                CLIENT_PASSWORD);
+
+                // get the response
+                ResponseEntity<ClientResponseDto> response = client.postForEntity("/clients/create", request,
+                                ClientResponseDto.class);
+
+                // Validate the response
+                assertNotNull(response);
+                assertEquals(HttpStatus.CREATED, response.getStatusCode());
+                ClientResponseDto createdClient = response.getBody();
+                assertNotNull(createdClient);
+                assertTrue(createdClient.getAccountId() > 0, "Response should have a positive ID.");
+                CLIENT_VALID_ACCOUNTID = createdClient.getAccountId();
+
+                // Set a new password
+                String newPassword = "TheNewPass456";
+
+                // Set the url
+                String url = "/clients/updatePassword/" + CLIENT_EMAIL + "/" + CLIENT_PASSWORD + "/" + newPassword;
+
+                // Get the response
+                ResponseEntity<ClientResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
+                                ClientResponseDto.class);
+
+                // Validate the response
+                assertNotNull(responseAfterUpdate);
+                assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
+                ClientResponseDto updatedClient = responseAfterUpdate.getBody();
+                assertNotNull(updatedClient);
+                assertEquals(updatedClient.getEmail(), CLIENT_EMAIL);
+                assertEquals(updatedClient.getFirstName(), CLIENT_FISTNAME);
+                assertEquals(updatedClient.getLastName(), CLIENT_LASTNAME);
+                assertNotNull(updatedClient.getAccountId());
+                assertTrue(updatedClient.getAccountId() > 0, "Response should have a positive ID.");
+                assertNotNull(clientRepository.findByEmail(CLIENT_EMAIL));
+                assertEquals(clientRepository.findByEmail(CLIENT_EMAIL).getPassword(), newPassword);
+                assertTrue(clientRepository.findAll().size() == 1);
+        }
+
+        @Test
+        public void testUpdateClientPassword2() {
+
+                // Create a request
+                ClientRequestDto request = new ClientRequestDto(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_LASTNAME,
+                                CLIENT_PASSWORD);
+
+                // Get the response
+                ResponseEntity<ClientResponseDto> response = client.postForEntity("/clients/create", request,
+                                ClientResponseDto.class);
+
+                // Validate the response
+                assertNotNull(response);
+                assertEquals(HttpStatus.CREATED, response.getStatusCode());
+                ClientResponseDto createdClient = response.getBody();
+                assertNotNull(createdClient);
+                assertTrue(createdClient.getAccountId() > 0, "Response should have a positive ID.");
+                CLIENT_VALID_ACCOUNTID = createdClient.getAccountId();
+
+                // Create a new password
+                String newPassword = "TheNewPass456";
+
+                // Set the url
+                String url = "/clients/updatePassword/" + CLIENT_EMAIL + "/" + CLIENT_PASSWORD + "/" + newPassword
+                                + "/";
+
+                // Get the response
+                ResponseEntity<ClientResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
+                                ClientResponseDto.class);
+
+                // Validate the reponse
+                assertNotNull(responseAfterUpdate);
+                assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
+                ClientResponseDto updatedClient = responseAfterUpdate.getBody();
+                assertNotNull(updatedClient);
+                assertEquals(updatedClient.getEmail(), CLIENT_EMAIL);
+                assertEquals(updatedClient.getFirstName(), CLIENT_FISTNAME);
+                assertEquals(updatedClient.getLastName(), CLIENT_LASTNAME);
+                assertNotNull(updatedClient.getAccountId());
+                assertTrue(updatedClient.getAccountId() > 0, "Response should have a positive ID.");
+                assertNotNull(clientRepository.findByEmail(CLIENT_EMAIL));
+                assertEquals(clientRepository.findByEmail(CLIENT_EMAIL).getPassword(), newPassword);
+                assertTrue(clientRepository.findAll().size() == 1);
+        }
 
 }

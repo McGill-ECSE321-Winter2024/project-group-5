@@ -6,6 +6,7 @@ public class ClientListDto {
 
     private List<ClientResponseDto> clients;
 
+    // Constructors
     public ClientListDto() {
     }
 
@@ -13,10 +14,12 @@ public class ClientListDto {
         this.clients = clients;
     }
 
+    // Getter
     public List<ClientResponseDto> getClients() {
         return clients;
     }
 
+    // Setter
     public void setClients(List<ClientResponseDto> clients) {
         this.clients = clients;
     }
