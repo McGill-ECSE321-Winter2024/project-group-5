@@ -6,6 +6,7 @@ public class OwnerRequestDto {
     private String lastName;
     private String password;
 
+    // Constructors
     public OwnerRequestDto() {
     }
 
@@ -15,6 +16,8 @@ public class OwnerRequestDto {
         this.password = password;
     }
 
+
+    // Getters and settes first & last name 
     public String getFirstName() {
         return firstName;
     }
@@ -31,6 +34,7 @@ public class OwnerRequestDto {
         this.lastName = lastName;
     }
 
+    // Getter and setter password
     public String getPassword() {
         return password;
     }

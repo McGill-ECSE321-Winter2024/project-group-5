@@ -39,6 +39,8 @@ public class TestOwnerService {
 
     @BeforeEach
     public void setMockOutput() {
+
+        // SetUp mockOutput 
         lenient().when(ownerRepository.findByEmail(OWNER_EMAIL))
                 .thenReturn(new Owner(OWNER_EMAIL, OWNER_FIRSTNAME, OWNER_PASSWORD, OWNER_LASTNAME, OWNER_ACCOUNTID));
         Answer<?> returnParameterAsAnswer = (InvocationOnMock invocation) -> {
@@ -54,8 +56,10 @@ public class TestOwnerService {
         String lastName = "Dmyt";
         String password = "Ro1234";
 
+        // Create an woner
         Owner owner = ownerService.createOwner(firstName, password, lastName);
 
+        // Validate the attributes
         assertNotNull(owner);
         assertEquals(email, owner.getEmail());
         assertEquals(firstName, owner.getFirstName());
@@ -71,14 +75,19 @@ public class TestOwnerService {
         String newFirstName = "NewJohn";
         String newLastName = "NewDoe";
 
+        // Create an owner
         Owner owner = ownerService.createOwner();
 
+        // Find the owner with the email
         Owner updatedOwner = ownerRepository.findByEmail(OWNER_EMAIL);
 
+
+        // UIpdate the owner's first name, last name and pasword
         ownerService.updateOwnerFirstName(newFirstName);
         ownerService.updateOwnerLastName(newLastName);
         ownerService.updateOwnerPassword(OWNER_PASSWORD, newPassword);
 
+        // Validate the attributes
         assertNotNull(updatedOwner);
         assertEquals(owner.getEmail(), updatedOwner.getEmail());
         assertNotNull(updatedOwner.getAccountId());

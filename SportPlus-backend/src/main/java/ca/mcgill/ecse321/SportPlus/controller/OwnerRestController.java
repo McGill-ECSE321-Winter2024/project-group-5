@@ -25,6 +25,8 @@ public class OwnerRestController {
 
     @GetMapping(value = { "/owner/get", "/owner/get/" })
     public OwnerResponseDto findOwnerByEmail() {
+
+        // Get & return the owner
         Owner owner = ownerService.getOwner();
         return new OwnerResponseDto(owner);
     }
@@ -32,13 +34,19 @@ public class OwnerRestController {
     @PostMapping(value = { "/owner/create", "/owner/create/" })
     @ResponseStatus(HttpStatus.CREATED)
     public OwnerResponseDto createOwner(@RequestBody OwnerRequestDto owner) {
+
+        // Create an owner
         Owner createdOwner = ownerService.createOwner(owner.getFirstName(), owner.getPassword(), owner.getLastName());
         return new OwnerResponseDto(createdOwner);
     }
 
     @PutMapping(value = { "/owner/updateFirstName/{newFirstName}", "/owner/updateFirstName/{newFirstName}/" })
     public OwnerResponseDto updateOwnerFirstName(@PathVariable("newFirstName") String theFirstName) {
+
+        // Get the owner
         Owner owner = ownerService.getOwner();
+
+        // Update theowner's first name
         ownerService.updateOwnerFirstName(theFirstName);
         owner = ownerService.getOwner();
         return new OwnerResponseDto(owner);
@@ -46,7 +54,11 @@ public class OwnerRestController {
 
     @PutMapping(value = { "/owner/updateLastName/{newLastName}", "/owner/updateLastName/{newLastName}/" })
     public OwnerResponseDto updateOwnerLastName(@PathVariable("newLastName") String theLastName) {
+
+        // get the owner
         Owner owner = ownerService.getOwner();
+
+        // Update the owner's last name
         ownerService.updateOwnerLastName(theLastName);
         owner = ownerService.getOwner();
         return new OwnerResponseDto(owner);
@@ -56,7 +68,11 @@ public class OwnerRestController {
             "/owner/updatePassword/{oldPassword}/{newPassword}/" })
     public OwnerResponseDto updateOwnerPassword(@PathVariable("oldPassword") String theOldPassword,
             @PathVariable("newPassword") String thePassword) {
+
+        // Get the owner
         Owner owner = ownerService.getOwner();
+
+        // Update the owner's passowrd
         ownerService.updateOwnerPassword(theOldPassword, thePassword);
         owner = ownerService.getOwner();
         return new OwnerResponseDto(owner);

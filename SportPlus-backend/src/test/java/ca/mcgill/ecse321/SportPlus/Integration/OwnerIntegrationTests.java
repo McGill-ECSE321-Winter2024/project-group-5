@@ -23,297 +23,371 @@ import ca.mcgill.ecse321.SportPlus.model.Owner;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class OwnerIntegrationTests {
 
-    @Autowired
-    private TestRestTemplate client;
+        @Autowired
+        private TestRestTemplate client;
 
-    @Autowired
-    private OwnerRepository ownerRepository;
+        @Autowired
+        private OwnerRepository ownerRepository;
 
-    @BeforeEach
-    @AfterEach
-    public void clearDatabase() {
-        ownerRepository.deleteAll();
-    }
+        @BeforeEach
+        @AfterEach
+        public void clearDatabase() {
 
-    private static final String OWNER_EMAIL = "owner@sportplus.com";
-    private static final String OWNER_FIRSTNAME = "John";
-    private static final String OWNER_LASTNAME = "Doe";
-    private static final String OWNER_PASSWORD = "Password123";
+                // Clear database
+                ownerRepository.deleteAll();
+        }
 
-    private int OWNER_VALID_ACCOUNTID;
+        // Set global variables
+        private static final String OWNER_EMAIL = "owner@sportplus.com";
+        private static final String OWNER_FIRSTNAME = "John";
+        private static final String OWNER_LASTNAME = "Doe";
+        private static final String OWNER_PASSWORD = "Password123";
 
-    @Test
-    public void testFindOwner() {
-        Owner owner = new Owner(OWNER_EMAIL, OWNER_FIRSTNAME, OWNER_PASSWORD, OWNER_LASTNAME, OWNER_VALID_ACCOUNTID);
-        ownerRepository.save(owner);
+        private int OWNER_VALID_ACCOUNTID;
 
-        String url = "/owner/get";
+        @Test
+        public void testFindOwner() {
 
-        ResponseEntity<OwnerResponseDto> response = client.getForEntity(url, OwnerResponseDto.class);
+                // Create an ownner
+                Owner owner = new Owner(OWNER_EMAIL, OWNER_FIRSTNAME, OWNER_PASSWORD, OWNER_LASTNAME,
+                                OWNER_VALID_ACCOUNTID);
+                ownerRepository.save(owner);
 
-        assertNotNull(response);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        OwnerResponseDto ownerResponse = response.getBody();
-        assertNotNull(ownerResponse);
-        assertTrue(ownerResponse.getAccountId() > 0);
-        assertEquals(OWNER_EMAIL, ownerResponse.getEmail());
-        assertEquals(OWNER_FIRSTNAME, ownerResponse.getFirstName());
-        assertEquals(OWNER_LASTNAME, ownerResponse.getLastName());
-    }
+                // Set the url
+                String url = "/owner/get";
 
-    @Test
-    public void testFindOwner2() {
-        Owner owner = new Owner(OWNER_EMAIL, OWNER_FIRSTNAME, OWNER_PASSWORD, OWNER_LASTNAME, OWNER_VALID_ACCOUNTID);
-        ownerRepository.save(owner);
+                // Get the response
+                ResponseEntity<OwnerResponseDto> response = client.getForEntity(url, OwnerResponseDto.class);
 
-        String url = "/owner/get/";
+                // Validate the response
+                assertNotNull(response);
+                assertEquals(HttpStatus.OK, response.getStatusCode());
+                OwnerResponseDto ownerResponse = response.getBody();
+                assertNotNull(ownerResponse);
+                assertTrue(ownerResponse.getAccountId() > 0);
+                assertEquals(OWNER_EMAIL, ownerResponse.getEmail());
+                assertEquals(OWNER_FIRSTNAME, ownerResponse.getFirstName());
+                assertEquals(OWNER_LASTNAME, ownerResponse.getLastName());
+        }
 
-        ResponseEntity<OwnerResponseDto> response = client.getForEntity(url, OwnerResponseDto.class);
+        @Test
+        public void testFindOwner2() {
+                // Create an ownner
+                Owner owner = new Owner(OWNER_EMAIL, OWNER_FIRSTNAME, OWNER_PASSWORD, OWNER_LASTNAME,
+                                OWNER_VALID_ACCOUNTID);
+                ownerRepository.save(owner);
 
-        assertNotNull(response);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        OwnerResponseDto ownerResponse = response.getBody();
-        assertNotNull(ownerResponse);
-        assertTrue(ownerResponse.getAccountId() > 0);
-        assertEquals(OWNER_EMAIL, ownerResponse.getEmail());
-        assertEquals(OWNER_FIRSTNAME, ownerResponse.getFirstName());
-        assertEquals(OWNER_LASTNAME, ownerResponse.getLastName());
-    }
+                // Set the url
+                String url = "/owner/get/";
 
-    @Test
-    public void testCreateOwner() {
-        OwnerRequestDto request = new OwnerRequestDto(OWNER_FIRSTNAME, OWNER_LASTNAME, OWNER_PASSWORD);
+                // Get the response
+                ResponseEntity<OwnerResponseDto> response = client.getForEntity(url, OwnerResponseDto.class);
 
-        ResponseEntity<OwnerResponseDto> response = client.postForEntity("/owner/create", request,
-                OwnerResponseDto.class);
+                // Validate the response
+                assertNotNull(response);
+                assertEquals(HttpStatus.OK, response.getStatusCode());
+                OwnerResponseDto ownerResponse = response.getBody();
+                assertNotNull(ownerResponse);
+                assertTrue(ownerResponse.getAccountId() > 0);
+                assertEquals(OWNER_EMAIL, ownerResponse.getEmail());
+                assertEquals(OWNER_FIRSTNAME, ownerResponse.getFirstName());
+                assertEquals(OWNER_LASTNAME, ownerResponse.getLastName());
+        }
 
-        assertNotNull(response);
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        OwnerResponseDto createdOwner = response.getBody();
-        assertNotNull(createdOwner);
-        assertEquals(createdOwner.getEmail(), OWNER_EMAIL);
-        assertEquals(createdOwner.getFirstName(), OWNER_FIRSTNAME);
-        assertEquals(createdOwner.getLastName(), OWNER_LASTNAME);
-        assertNotNull(createdOwner.getAccountId());
-        assertTrue(createdOwner.getAccountId() > 0, "Response should have a positive ID.");
-        assertNotNull(ownerRepository.findByEmail(OWNER_EMAIL));
-    }
+        @Test
+        public void testCreateOwner() {
+                // Create an ownner request
+                OwnerRequestDto request = new OwnerRequestDto(OWNER_FIRSTNAME, OWNER_LASTNAME, OWNER_PASSWORD);
 
-    @Test
-    public void testCreateOwner2() {
-        OwnerRequestDto request = new OwnerRequestDto(OWNER_FIRSTNAME, OWNER_LASTNAME, OWNER_PASSWORD);
+                // Get the response
+                ResponseEntity<OwnerResponseDto> response = client.postForEntity("/owner/create", request,
+                                OwnerResponseDto.class);
 
-        ResponseEntity<OwnerResponseDto> response = client.postForEntity("/owner/create/", request,
-                OwnerResponseDto.class);
+                // Validate the response
+                assertNotNull(response);
+                assertEquals(HttpStatus.CREATED, response.getStatusCode());
+                OwnerResponseDto createdOwner = response.getBody();
+                assertNotNull(createdOwner);
+                assertEquals(createdOwner.getEmail(), OWNER_EMAIL);
+                assertEquals(createdOwner.getFirstName(), OWNER_FIRSTNAME);
+                assertEquals(createdOwner.getLastName(), OWNER_LASTNAME);
+                assertNotNull(createdOwner.getAccountId());
+                assertTrue(createdOwner.getAccountId() > 0, "Response should have a positive ID.");
+                assertNotNull(ownerRepository.findByEmail(OWNER_EMAIL));
+        }
 
-        assertNotNull(response);
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        OwnerResponseDto createdOwner = response.getBody();
-        assertNotNull(createdOwner);
-        assertEquals(createdOwner.getEmail(), OWNER_EMAIL);
-        assertEquals(createdOwner.getFirstName(), OWNER_FIRSTNAME);
-        assertEquals(createdOwner.getLastName(), OWNER_LASTNAME);
-        assertNotNull(createdOwner.getAccountId());
-        assertTrue(createdOwner.getAccountId() > 0, "Response should have a positive ID.");
-        assertNotNull(ownerRepository.findByEmail(OWNER_EMAIL));
-    }
+        @Test
+        public void testCreateOwner2() {
 
-    @Test
-    public void testUpdateOwnerFirstName() {
-        OwnerRequestDto request = new OwnerRequestDto(OWNER_FIRSTNAME, OWNER_LASTNAME, OWNER_PASSWORD);
+                // Create an ownner request
+                OwnerRequestDto request = new OwnerRequestDto(OWNER_FIRSTNAME, OWNER_LASTNAME, OWNER_PASSWORD);
 
-        ResponseEntity<OwnerResponseDto> response = client.postForEntity("/owner/create", request,
-                OwnerResponseDto.class);
+                // Get the response
+                ResponseEntity<OwnerResponseDto> response = client.postForEntity("/owner/create/", request,
+                                OwnerResponseDto.class);
 
-        assertNotNull(response);
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        OwnerResponseDto createdOwner = response.getBody();
-        assertNotNull(createdOwner);
-        assertTrue(createdOwner.getAccountId() > 0, "Response should have a positive ID.");
-        OWNER_VALID_ACCOUNTID = createdOwner.getAccountId();
+                // Validate the response
+                assertNotNull(response);
+                assertEquals(HttpStatus.CREATED, response.getStatusCode());
+                OwnerResponseDto createdOwner = response.getBody();
+                assertNotNull(createdOwner);
+                assertEquals(createdOwner.getEmail(), OWNER_EMAIL);
+                assertEquals(createdOwner.getFirstName(), OWNER_FIRSTNAME);
+                assertEquals(createdOwner.getLastName(), OWNER_LASTNAME);
+                assertNotNull(createdOwner.getAccountId());
+                assertTrue(createdOwner.getAccountId() > 0, "Response should have a positive ID.");
+                assertNotNull(ownerRepository.findByEmail(OWNER_EMAIL));
+        }
 
-        String newFirstName = "JohnTheNew";
+        @Test
+        public void testUpdateOwnerFirstName() {
 
-        String url = "/owner/updateFirstName/" + newFirstName;
+                // Create an ownner request
+                OwnerRequestDto request = new OwnerRequestDto(OWNER_FIRSTNAME, OWNER_LASTNAME, OWNER_PASSWORD);
 
-        ResponseEntity<OwnerResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
-                OwnerResponseDto.class);
-        assertNotNull(responseAfterUpdate);
-        assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
-        OwnerResponseDto updatedOwner = responseAfterUpdate.getBody();
-        assertNotNull(updatedOwner);
-        assertEquals(updatedOwner.getEmail(), OWNER_EMAIL);
-        assertEquals(updatedOwner.getFirstName(), newFirstName);
-        assertEquals(updatedOwner.getLastName(), OWNER_LASTNAME);
-        assertNotNull(updatedOwner.getAccountId());
-        assertTrue(updatedOwner.getAccountId() > 0, "Response should have a positive ID.");
-        assertNotNull(ownerRepository.findByEmail(OWNER_EMAIL));
-        assertEquals(ownerRepository.findByEmail(OWNER_EMAIL).getFirstName(), newFirstName);
-    }
+                // Get the response
+                ResponseEntity<OwnerResponseDto> response = client.postForEntity("/owner/create", request,
+                                OwnerResponseDto.class);
 
-    @Test
-    public void testUpdateOwnerFirstName2() {
-        OwnerRequestDto request = new OwnerRequestDto(OWNER_FIRSTNAME, OWNER_LASTNAME, OWNER_PASSWORD);
+                // Validate the response
+                assertNotNull(response);
+                assertEquals(HttpStatus.CREATED, response.getStatusCode());
+                OwnerResponseDto createdOwner = response.getBody();
+                assertNotNull(createdOwner);
+                assertTrue(createdOwner.getAccountId() > 0, "Response should have a positive ID.");
+                OWNER_VALID_ACCOUNTID = createdOwner.getAccountId();
 
-        ResponseEntity<OwnerResponseDto> response = client.postForEntity("/owner/create", request,
-                OwnerResponseDto.class);
+                // Set a new name
+                String newFirstName = "JohnTheNew";
 
-        assertNotNull(response);
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        OwnerResponseDto createdOwner = response.getBody();
-        assertNotNull(createdOwner);
-        assertTrue(createdOwner.getAccountId() > 0, "Response should have a positive ID.");
-        OWNER_VALID_ACCOUNTID = createdOwner.getAccountId();
+                // Set the url
+                String url = "/owner/updateFirstName/" + newFirstName;
 
-        String newFirstName = "JohnTheNew";
+                // Get the response
+                ResponseEntity<OwnerResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
+                                OwnerResponseDto.class);
 
-        String url = "/owner/updateFirstName/" + newFirstName + "/";
+                // Validate the response
+                assertNotNull(responseAfterUpdate);
+                assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
+                OwnerResponseDto updatedOwner = responseAfterUpdate.getBody();
+                assertNotNull(updatedOwner);
+                assertEquals(updatedOwner.getEmail(), OWNER_EMAIL);
+                assertEquals(updatedOwner.getFirstName(), newFirstName);
+                assertEquals(updatedOwner.getLastName(), OWNER_LASTNAME);
+                assertNotNull(updatedOwner.getAccountId());
+                assertTrue(updatedOwner.getAccountId() > 0, "Response should have a positive ID.");
+                assertNotNull(ownerRepository.findByEmail(OWNER_EMAIL));
+                assertEquals(ownerRepository.findByEmail(OWNER_EMAIL).getFirstName(), newFirstName);
+        }
 
-        ResponseEntity<OwnerResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
-                OwnerResponseDto.class);
-        assertNotNull(responseAfterUpdate);
-        assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
-        OwnerResponseDto updatedOwner = responseAfterUpdate.getBody();
-        assertNotNull(updatedOwner);
-        assertEquals(updatedOwner.getEmail(), OWNER_EMAIL);
-        assertEquals(updatedOwner.getFirstName(), newFirstName);
-        assertEquals(updatedOwner.getLastName(), OWNER_LASTNAME);
-        assertNotNull(updatedOwner.getAccountId());
-        assertTrue(updatedOwner.getAccountId() > 0, "Response should have a positive ID.");
-        assertNotNull(ownerRepository.findByEmail(OWNER_EMAIL));
-        assertEquals(ownerRepository.findByEmail(OWNER_EMAIL).getFirstName(), newFirstName);
-    }
+        @Test
+        public void testUpdateOwnerFirstName2() {
 
-    @Test
-    public void testUpdateOwnerLastName() {
-        OwnerRequestDto request = new OwnerRequestDto(OWNER_FIRSTNAME, OWNER_LASTNAME, OWNER_PASSWORD);
+                // Create an ownner request
+                OwnerRequestDto request = new OwnerRequestDto(OWNER_FIRSTNAME, OWNER_LASTNAME, OWNER_PASSWORD);
 
-        ResponseEntity<OwnerResponseDto> response = client.postForEntity("/owner/create", request,
-                OwnerResponseDto.class);
+                // Get the response
+                ResponseEntity<OwnerResponseDto> response = client.postForEntity("/owner/create", request,
+                                OwnerResponseDto.class);
 
-        assertNotNull(response);
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        OwnerResponseDto createdOwner = response.getBody();
-        assertNotNull(createdOwner);
-        assertTrue(createdOwner.getAccountId() > 0, "Response should have a positive ID.");
-        OWNER_VALID_ACCOUNTID = createdOwner.getAccountId();
+                // Validate the response
+                assertNotNull(response);
+                assertEquals(HttpStatus.CREATED, response.getStatusCode());
+                OwnerResponseDto createdOwner = response.getBody();
+                assertNotNull(createdOwner);
+                assertTrue(createdOwner.getAccountId() > 0, "Response should have a positive ID.");
+                OWNER_VALID_ACCOUNTID = createdOwner.getAccountId();
 
-        String newLastName = "DoeTheNew";
+                // Set a new name
+                String newFirstName = "JohnTheNew";
 
-        String url = "/owner/updateLastName/" + newLastName;
+                // Set the url
+                String url = "/owner/updateFirstName/" + newFirstName + "/";
 
-        ResponseEntity<OwnerResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
-                OwnerResponseDto.class);
-        assertNotNull(responseAfterUpdate);
-        assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
-        OwnerResponseDto updatedOwner = responseAfterUpdate.getBody();
-        assertNotNull(updatedOwner);
-        assertEquals(updatedOwner.getEmail(), OWNER_EMAIL);
-        assertEquals(updatedOwner.getFirstName(), OWNER_FIRSTNAME);
-        assertEquals(updatedOwner.getLastName(), newLastName);
-        assertNotNull(updatedOwner.getAccountId());
-        assertTrue(updatedOwner.getAccountId() > 0, "Response should have a positive ID.");
-        assertNotNull(ownerRepository.findByEmail(OWNER_EMAIL));
-        assertEquals(ownerRepository.findByEmail(OWNER_EMAIL).getLastName(), newLastName);
-    }
+                // Get the response
+                ResponseEntity<OwnerResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
+                                OwnerResponseDto.class);
 
-    @Test
-    public void testUpdateOwnerLastName2() {
-        OwnerRequestDto request = new OwnerRequestDto(OWNER_FIRSTNAME, OWNER_LASTNAME, OWNER_PASSWORD);
+                // Validate the response
+                assertNotNull(responseAfterUpdate);
+                assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
+                OwnerResponseDto updatedOwner = responseAfterUpdate.getBody();
+                assertNotNull(updatedOwner);
+                assertEquals(updatedOwner.getEmail(), OWNER_EMAIL);
+                assertEquals(updatedOwner.getFirstName(), newFirstName);
+                assertEquals(updatedOwner.getLastName(), OWNER_LASTNAME);
+                assertNotNull(updatedOwner.getAccountId());
+                assertTrue(updatedOwner.getAccountId() > 0, "Response should have a positive ID.");
+                assertNotNull(ownerRepository.findByEmail(OWNER_EMAIL));
+                assertEquals(ownerRepository.findByEmail(OWNER_EMAIL).getFirstName(), newFirstName);
+        }
 
-        ResponseEntity<OwnerResponseDto> response = client.postForEntity("/owner/create", request,
-                OwnerResponseDto.class);
+        @Test
+        public void testUpdateOwnerLastName() {
 
-        assertNotNull(response);
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        OwnerResponseDto createdOwner = response.getBody();
-        assertNotNull(createdOwner);
-        assertTrue(createdOwner.getAccountId() > 0, "Response should have a positive ID.");
-        OWNER_VALID_ACCOUNTID = createdOwner.getAccountId();
+                // Create an ownner request
+                OwnerRequestDto request = new OwnerRequestDto(OWNER_FIRSTNAME, OWNER_LASTNAME, OWNER_PASSWORD);
 
-        String newLastName = "DoeTheNew";
+                // Get the response
+                ResponseEntity<OwnerResponseDto> response = client.postForEntity("/owner/create", request,
+                                OwnerResponseDto.class);
 
-        String url = "/owner/updateLastName/" + newLastName + "/";
+                // Validate the response
+                assertNotNull(response);
+                assertEquals(HttpStatus.CREATED, response.getStatusCode());
+                OwnerResponseDto createdOwner = response.getBody();
+                assertNotNull(createdOwner);
+                assertTrue(createdOwner.getAccountId() > 0, "Response should have a positive ID.");
+                OWNER_VALID_ACCOUNTID = createdOwner.getAccountId();
 
-        ResponseEntity<OwnerResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
-                OwnerResponseDto.class);
-        assertNotNull(responseAfterUpdate);
-        assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
-        OwnerResponseDto updatedOwner = responseAfterUpdate.getBody();
-        assertNotNull(updatedOwner);
-        assertEquals(updatedOwner.getEmail(), OWNER_EMAIL);
-        assertEquals(updatedOwner.getFirstName(), OWNER_FIRSTNAME);
-        assertEquals(updatedOwner.getLastName(), newLastName);
-        assertNotNull(updatedOwner.getAccountId());
-        assertTrue(updatedOwner.getAccountId() > 0, "Response should have a positive ID.");
-        assertNotNull(ownerRepository.findByEmail(OWNER_EMAIL));
-        assertEquals(ownerRepository.findByEmail(OWNER_EMAIL).getLastName(), newLastName);
-    }
+                // Create a new last name
+                String newLastName = "DoeTheNew";
 
-    @Test
-    public void testUpdateOwnerPassword() {
-        OwnerRequestDto request = new OwnerRequestDto(OWNER_FIRSTNAME, OWNER_LASTNAME, OWNER_PASSWORD);
+                // Set the url
+                String url = "/owner/updateLastName/" + newLastName;
 
-        ResponseEntity<OwnerResponseDto> response = client.postForEntity("/owner/create", request,
-                OwnerResponseDto.class);
+                // Get the response
+                ResponseEntity<OwnerResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
+                                OwnerResponseDto.class);
 
-        assertNotNull(response);
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        OwnerResponseDto createdOwner = response.getBody();
-        assertNotNull(createdOwner);
-        assertTrue(createdOwner.getAccountId() > 0, "Response should have a positive ID.");
-        OWNER_VALID_ACCOUNTID = createdOwner.getAccountId();
+                // Validate the response
+                assertNotNull(responseAfterUpdate);
+                assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
+                OwnerResponseDto updatedOwner = responseAfterUpdate.getBody();
+                assertNotNull(updatedOwner);
+                assertEquals(updatedOwner.getEmail(), OWNER_EMAIL);
+                assertEquals(updatedOwner.getFirstName(), OWNER_FIRSTNAME);
+                assertEquals(updatedOwner.getLastName(), newLastName);
+                assertNotNull(updatedOwner.getAccountId());
+                assertTrue(updatedOwner.getAccountId() > 0, "Response should have a positive ID.");
+                assertNotNull(ownerRepository.findByEmail(OWNER_EMAIL));
+                assertEquals(ownerRepository.findByEmail(OWNER_EMAIL).getLastName(), newLastName);
+        }
 
-        String newPassword = "TheNewPass456";
+        @Test
+        public void testUpdateOwnerLastName2() {
+                // Create an ownner request
+                OwnerRequestDto request = new OwnerRequestDto(OWNER_FIRSTNAME, OWNER_LASTNAME, OWNER_PASSWORD);
 
-        String url = "/owner/updatePassword/" + OWNER_PASSWORD + "/" + newPassword;
+                // Get the response
+                ResponseEntity<OwnerResponseDto> response = client.postForEntity("/owner/create", request,
+                                OwnerResponseDto.class);
 
-        ResponseEntity<OwnerResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
-                OwnerResponseDto.class);
-        assertNotNull(responseAfterUpdate);
-        assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
-        OwnerResponseDto updatedOwner = responseAfterUpdate.getBody();
-        assertNotNull(updatedOwner);
-        assertEquals(updatedOwner.getEmail(), OWNER_EMAIL);
-        assertEquals(updatedOwner.getFirstName(), OWNER_FIRSTNAME);
-        assertEquals(updatedOwner.getLastName(), OWNER_LASTNAME);
-        assertNotNull(updatedOwner.getAccountId());
-        assertTrue(updatedOwner.getAccountId() > 0, "Response should have a positive ID.");
-        assertNotNull(ownerRepository.findByEmail(OWNER_EMAIL));
-        assertEquals(ownerRepository.findByEmail(OWNER_EMAIL).getPassword(), newPassword);
-    }
+                // Validate the response
+                assertNotNull(response);
+                assertEquals(HttpStatus.CREATED, response.getStatusCode());
+                OwnerResponseDto createdOwner = response.getBody();
+                assertNotNull(createdOwner);
+                assertTrue(createdOwner.getAccountId() > 0, "Response should have a positive ID.");
+                OWNER_VALID_ACCOUNTID = createdOwner.getAccountId();
 
-    @Test
-    public void testUpdateOwnerPassword2() {
-        OwnerRequestDto request = new OwnerRequestDto(OWNER_FIRSTNAME, OWNER_LASTNAME, OWNER_PASSWORD);
+                // Create a new last name
+                String newLastName = "DoeTheNew";
 
-        ResponseEntity<OwnerResponseDto> response = client.postForEntity("/owner/create", request,
-                OwnerResponseDto.class);
+                // Set the url
+                String url = "/owner/updateLastName/" + newLastName + "/";
 
-        assertNotNull(response);
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        OwnerResponseDto createdOwner = response.getBody();
-        assertNotNull(createdOwner);
-        assertTrue(createdOwner.getAccountId() > 0, "Response should have a positive ID.");
-        OWNER_VALID_ACCOUNTID = createdOwner.getAccountId();
+                // Get the response
+                ResponseEntity<OwnerResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
+                                OwnerResponseDto.class);
 
-        String newPassword = "TheNewPass456";
+                // Validate the response
+                assertNotNull(responseAfterUpdate);
+                assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
+                OwnerResponseDto updatedOwner = responseAfterUpdate.getBody();
+                assertNotNull(updatedOwner);
+                assertEquals(updatedOwner.getEmail(), OWNER_EMAIL);
+                assertEquals(updatedOwner.getFirstName(), OWNER_FIRSTNAME);
+                assertEquals(updatedOwner.getLastName(), newLastName);
+                assertNotNull(updatedOwner.getAccountId());
+                assertTrue(updatedOwner.getAccountId() > 0, "Response should have a positive ID.");
+                assertNotNull(ownerRepository.findByEmail(OWNER_EMAIL));
+                assertEquals(ownerRepository.findByEmail(OWNER_EMAIL).getLastName(), newLastName);
+        }
 
-        String url = "/owner/updatePassword/" + OWNER_PASSWORD + "/" + newPassword + "/";
+        @Test
+        public void testUpdateOwnerPassword() {
 
-        ResponseEntity<OwnerResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
-                OwnerResponseDto.class);
-        assertNotNull(responseAfterUpdate);
-        assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
-        OwnerResponseDto updatedOwner = responseAfterUpdate.getBody();
-        assertNotNull(updatedOwner);
-        assertEquals(updatedOwner.getEmail(), OWNER_EMAIL);
-        assertEquals(updatedOwner.getFirstName(), OWNER_FIRSTNAME);
-        assertEquals(updatedOwner.getLastName(), OWNER_LASTNAME);
-        assertNotNull(updatedOwner.getAccountId());
-        assertTrue(updatedOwner.getAccountId() > 0, "Response should have a positive ID.");
-        assertNotNull(ownerRepository.findByEmail(OWNER_EMAIL));
-        assertEquals(ownerRepository.findByEmail(OWNER_EMAIL).getPassword(), newPassword);
-    }
+                // Create an ownner request
+                OwnerRequestDto request = new OwnerRequestDto(OWNER_FIRSTNAME, OWNER_LASTNAME, OWNER_PASSWORD);
+
+                // Get the response
+                ResponseEntity<OwnerResponseDto> response = client.postForEntity("/owner/create", request,
+                                OwnerResponseDto.class);
+
+                // Validate the response
+                assertNotNull(response);
+                assertEquals(HttpStatus.CREATED, response.getStatusCode());
+                OwnerResponseDto createdOwner = response.getBody();
+                assertNotNull(createdOwner);
+                assertTrue(createdOwner.getAccountId() > 0, "Response should have a positive ID.");
+                OWNER_VALID_ACCOUNTID = createdOwner.getAccountId();
+
+                // Create a new password
+                String newPassword = "TheNewPass456";
+
+                // Set the url
+                String url = "/owner/updatePassword/" + OWNER_PASSWORD + "/" + newPassword;
+
+                // Get the response
+                ResponseEntity<OwnerResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
+                                OwnerResponseDto.class);
+
+                // Validate the response
+                assertNotNull(responseAfterUpdate);
+                assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
+                OwnerResponseDto updatedOwner = responseAfterUpdate.getBody();
+                assertNotNull(updatedOwner);
+                assertEquals(updatedOwner.getEmail(), OWNER_EMAIL);
+                assertEquals(updatedOwner.getFirstName(), OWNER_FIRSTNAME);
+                assertEquals(updatedOwner.getLastName(), OWNER_LASTNAME);
+                assertNotNull(updatedOwner.getAccountId());
+                assertTrue(updatedOwner.getAccountId() > 0, "Response should have a positive ID.");
+                assertNotNull(ownerRepository.findByEmail(OWNER_EMAIL));
+                assertEquals(ownerRepository.findByEmail(OWNER_EMAIL).getPassword(), newPassword);
+        }
+
+        @Test
+        public void testUpdateOwnerPassword2() {
+
+                // Create an ownner request
+                OwnerRequestDto request = new OwnerRequestDto(OWNER_FIRSTNAME, OWNER_LASTNAME, OWNER_PASSWORD);
+
+                // Get the response
+                ResponseEntity<OwnerResponseDto> response = client.postForEntity("/owner/create", request,
+                                OwnerResponseDto.class);
+
+                // validate the response
+                assertNotNull(response);
+                assertEquals(HttpStatus.CREATED, response.getStatusCode());
+                OwnerResponseDto createdOwner = response.getBody();
+                assertNotNull(createdOwner);
+                assertTrue(createdOwner.getAccountId() > 0, "Response should have a positive ID.");
+                OWNER_VALID_ACCOUNTID = createdOwner.getAccountId();
+
+                // Create a new password
+                String newPassword = "TheNewPass456";
+
+                // Set the url
+                String url = "/owner/updatePassword/" + OWNER_PASSWORD + "/" + newPassword + "/";
+
+                // Get the response
+                ResponseEntity<OwnerResponseDto> responseAfterUpdate = client.exchange(url, HttpMethod.PUT, null,
+                                OwnerResponseDto.class);
+
+                // Validate the response
+                assertNotNull(responseAfterUpdate);
+                assertEquals(HttpStatus.OK, responseAfterUpdate.getStatusCode());
+                OwnerResponseDto updatedOwner = responseAfterUpdate.getBody();
+                assertNotNull(updatedOwner);
+                assertEquals(updatedOwner.getEmail(), OWNER_EMAIL);
+                assertEquals(updatedOwner.getFirstName(), OWNER_FIRSTNAME);
+                assertEquals(updatedOwner.getLastName(), OWNER_LASTNAME);
+                assertNotNull(updatedOwner.getAccountId());
+                assertTrue(updatedOwner.getAccountId() > 0, "Response should have a positive ID.");
+                assertNotNull(ownerRepository.findByEmail(OWNER_EMAIL));
+                assertEquals(ownerRepository.findByEmail(OWNER_EMAIL).getPassword(), newPassword);
+        }
 
 }
