@@ -32,6 +32,13 @@ public class LoginService {
 
     // -----------Wrappers-----------//
 
+     /**
+     * Retrieves login information based on ID. 
+     * 
+     * @param id The ID of the login.
+     * @return The Login object.
+     * @throws IllegalArgumentException If no login exists with the given ID.
+     */
     @Transactional
     public Login getLoginFromId(int id) {
         Login login = loginRepository.findByLoginId(id);
@@ -41,6 +48,13 @@ public class LoginService {
         return login;
     }
 
+     /**
+     * Retrieves login information based on account. 
+     * 
+     * @param account The account associated with the login.
+     * @return The Login object.
+     * @throws IllegalArgumentException If the account is null or no login exists for the account.
+     */
     @Transactional
     public Login getLoginFromAccount(Account account) {
         if (account == null) {
@@ -53,12 +67,28 @@ public class LoginService {
         return login;
     }
 
+     /**
+     * Retrieves all login information.
+     * 
+     * @return List of all Login objects.
+     */
     @Transactional
     public List<Login> getAllLogins() {
         return HelperMethods.toList(loginRepository.findAll());
     }
     // ------------EndWrappers----------//
 
+     /**
+     * Logs in a user.
+     * 
+     * @param type        The type of the account (OWNER, INSTRUCTOR, CLIENT).
+     * @param email       The email associated with the account.
+     * @param password    The password of the account.
+     * @param currentTime The current time.
+     * @return The Login object representing the logged-in session.
+     * @throws IllegalArgumentException If the account type is invalid, the email does not exist,
+     *                                  the password is incorrect, or the login fails for any reason.
+     */
     @Transactional
     public Login logIn(String type, String email, String password, Time currentTime) {
         Account account = null;
@@ -97,16 +127,35 @@ public class LoginService {
         return login;
     }
 
+     /**
+     * Logs out a user.
+     * 
+     * @param loginId The ID of the login session to be logged out.
+     */
     @Transactional
     public void logOut(int loginId) {
         loginRepository.deleteByLoginId(loginId);
     }
 
+     /**
+     * Checks if a user is still logged in.
+     * 
+     * @param loginId    The ID of the login session.
+     * @param currentTime The current time.
+     * @return True if the user is still logged in, otherwise false.
+     */
     @Transactional
     public boolean isStillLoggedIn(int loginId, Time currentTime) {
         return HelperMethods.isLoginTimeStillValid(getLoginFromId(loginId).getEndTime(), currentTime);
     }
 
+     /**
+     * Updates the end time of a login session.
+     * 
+     * @param loginId    The ID of the login session.
+     * @param currentTime The current time.
+     * @return The updated Login object.
+     */
     @Transactional
     public Login updateEndTime(int loginId, Time currentTime) {
         Login login = getLoginFromId(loginId);
