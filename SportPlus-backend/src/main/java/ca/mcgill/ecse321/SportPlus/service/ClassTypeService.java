@@ -16,6 +16,7 @@ public class ClassTypeService {
     @Autowired
     private ClassTypeRepository classTypeRepository;
 
+    // Finds a class type by its name, throwing an exception if not found.
     @Transactional
     public ClassType findByName(String name) {
         ClassType classType = classTypeRepository.findByName(name);
@@ -25,6 +26,7 @@ public class ClassTypeService {
         return classType;
     }
 
+    // Finds a class type by its unique ID, throwing an exception if not found.
     @Transactional
     public ClassType findByTypeId(Integer typeId) {
         ClassType classType = classTypeRepository.findByTypeId(typeId);
@@ -34,6 +36,7 @@ public class ClassTypeService {
         return classType;
     }
 
+    // Finds class types based on their approval status, throwing an exception if no matches are found.
     @Transactional
     public List<ClassType> findByApproval(Boolean approved) {
         List<ClassType> classTypes = classTypeRepository.findByApproved(approved);
@@ -43,6 +46,7 @@ public class ClassTypeService {
         return classTypes;
     }
 
+    // Retrieves all class types, throwing an exception if none are found.
     @Transactional
     public List<ClassType> getAllClassTypes() {
         List<ClassType> classTypes = classTypeRepository.findAll();
@@ -52,6 +56,7 @@ public class ClassTypeService {
         return classTypes;
     }
 
+    // Deletes a class type by name, throwing an exception if it does not exist.
     @Transactional
     public void deleteByName(String name) {
         try {
@@ -61,18 +66,21 @@ public class ClassTypeService {
         }
     }
 
+    // Creates a new class type with instructor privileges, setting approval to false by default.
     @Transactional
     public ClassType instructorCreate(String name, String description, Owner approver) {
         ClassType classType = new ClassType(name, description, 0, false, approver);
         return classTypeRepository.save(classType);
     }
 
+    // Creates a new class type with owner privileges, automatically setting approval to true.
     @Transactional
     public ClassType ownerCreate(String name, String description, Owner approver) {
         ClassType classType = new ClassType(name, description, 0, true, approver);
         return classTypeRepository.save(classType);
     }
 
+    // Approves a class type by its ID, ensuring it is marked as approved in the database.
     @Transactional
     public ClassType approve(int typeId) {
         ClassType classType = findByTypeId(typeId);
@@ -80,24 +88,27 @@ public class ClassTypeService {
         return classTypeRepository.save(classType);
     }
 
+    // Updates the description of a class type, throwing an exception if the new description is null or empty.
     @Transactional
     public ClassType updateDescription(int typeId, String description) {
         ClassType classType = findByTypeId(typeId);
 
-        if (description == null || description == "") {
-            throw new ResourceNotFoundException("Description canno't be empty.");
+        if (description == null || description.isEmpty()) {
+            throw new ResourceNotFoundException("Description cannot be empty.");
         }
         classType.setDescription(description);
         return classTypeRepository.save(classType);
     }
 
+    // Updates the name of a class type, throwing an exception if the new name is null or empty.
     @Transactional
     public ClassType updateName(int typeId, String name) {
         ClassType classType = findByTypeId(typeId);
-        if (name == null || name == "") {
-            throw new ResourceNotFoundException("Name canno't be empty.");
+        if (name == null || name.isEmpty()) {
+            throw new ResourceNotFoundException("Name cannot be empty.");
         }
         classType.setName(name);
         return classTypeRepository.save(classType);
     }
 }
+

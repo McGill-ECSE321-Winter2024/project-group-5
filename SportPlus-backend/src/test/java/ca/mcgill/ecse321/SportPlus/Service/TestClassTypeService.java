@@ -42,10 +42,14 @@ public class TestClassTypeService {
     private static final int OWNER_ACCOUNTID = 2;
 
     @SuppressWarnings("null")
+    // Sets up common mock responses before each test method is executed.
     @BeforeEach
     public void setMockOutput() {
+        // Preparing a mock Owner and ClassType object for the mock repository methods.
         Owner owner = new Owner(OWNER_EMAIL, OWNER_FIRSTNAME, OWNER_PASSWORD, OWNER_LASTNAME, OWNER_ACCOUNTID);
         ClassType classType = new ClassType(CLASS_TYPE_NAME, CLASS_TYPE_DESCRIPTION, CLASS_TYPE_ID, false, owner);
+
+        // Configuring the mock repository to return predefined objects for certain method calls.
         Mockito.lenient().when(classTypeRepository.findByName(CLASS_TYPE_NAME)).thenReturn(classType);
         Mockito.lenient().when(classTypeRepository.findByTypeId(CLASS_TYPE_ID)).thenReturn(classType);
         Mockito.lenient().when(classTypeRepository.findAll()).thenReturn(Arrays.asList(classType));
@@ -53,97 +57,135 @@ public class TestClassTypeService {
         Mockito.lenient().when(classTypeRepository.save(any(ClassType.class))).thenAnswer(i -> i.getArguments()[0]);
     }
 
+    // Tests the service's ability to find a ClassType by its name.
     @Test
     public void testFindByName() {
         String name = CLASS_TYPE_NAME;
         ClassType foundClassType = classTypeService.findByName(name);
-        assertNotNull(foundClassType);
-        assertEquals(name, foundClassType.getName());
+        assertNotNull(foundClassType); // Verifies that the result is not null.
+        assertEquals(name, foundClassType.getName()); // Checks if the returned ClassType has the expected name.
     }
 
+    // Tests the service's ability to find a ClassType by its type ID.
     @Test
     public void testFindByTypeId() {
         int typeId = CLASS_TYPE_ID;
         ClassType foundClassType = classTypeService.findByTypeId(typeId);
-        assertNotNull(foundClassType);
-        assertEquals(CLASS_TYPE_NAME, foundClassType.getName());
-        assertEquals(typeId, foundClassType.getTypeId());
+        assertNotNull(foundClassType); // Verifies that the result is not null.
+        assertEquals(CLASS_TYPE_NAME, foundClassType.getName()); // Checks if the returned ClassType has the expected name.
+        assertEquals(typeId, foundClassType.getTypeId()); // Verifies the ClassType has the correct ID.
     }
 
+    // Tests retrieving all ClassTypes from the service.
     @Test
     public void testFindAll() {
         List<ClassType> classTypes = classTypeService.getAllClassTypes();
-        assertNotNull(classTypes);
-        assertEquals(1, classTypes.size());
+        assertNotNull(classTypes); // Ensures the returned list is not null.
+        assertEquals(1, classTypes.size()); // Assumes the setup includes only one ClassType for testing.
     }
 
+    // Tests creating a ClassType via instructor role.
     @SuppressWarnings("null")
     @Test
     public void testCreateInstructorClassType() {
-        ClassType newClassType = classTypeService.instructorCreate("Pilates", "A class for core strength", null); // Replace
-                                                                                                                  // null
-                                                                                                                  // with
-                                                                                                                  // actual
-                                                                                                                  // logic
-                                                                                                                  // if
-                                                                                                                  // needed
-        assertNotNull(newClassType);
-        assertEquals("Pilates", newClassType.getName());
-        verify(classTypeRepository, times(1)).save(any(ClassType.class));
+        ClassType newClassType = classTypeService.instructorCreate("Pilates", "A class for core strength", null);
+        assertNotNull(newClassType); // Verifies the ClassType creation was successful.
+        assertEquals("Pilates", newClassType.getName()); // Checks if the created ClassType has the correct name.
+        verify(classTypeRepository, times(1)).save(any(ClassType.class)); // Ensures the save method was called once.
     }
 
+    // Tests finding ClassTypes based on approval status.
     @Test
     public void testFindByApproval() {
-        boolean approved = false; // Assuming false to match your setup
+        boolean approved = false;
         List<ClassType> foundClassTypes = classTypeService.findByApproval(approved);
-        assertNotNull(foundClassTypes);
-        assertEquals(1, foundClassTypes.size()); // Assuming the setup only includes one classType
-        assertEquals(approved, foundClassTypes.get(0).getApproved());
+        assertNotNull(foundClassTypes); // Ensures the list is not null.
+        assertEquals(1, foundClassTypes.size()); // Checks if one ClassType is returned as set up.
+        assertEquals(approved, foundClassTypes.get(0).getApproved()); // Verifies the approval status matches.
     }
 
+    // Tests the deletion of a ClassType by its name.
     @Test
     public void testDeleteByName() {
         classTypeService.deleteByName(CLASS_TYPE_NAME);
-        verify(classTypeRepository, times(1)).deleteByName(CLASS_TYPE_NAME);
+        verify(classTypeRepository, times(1)).deleteByName(CLASS_TYPE_NAME); // Checks if the delete operation was called once
     }
 
-    @SuppressWarnings("null")
-    @Test
-    public void testOwnerCreate() {
-        Owner owner = new Owner(OWNER_EMAIL, OWNER_FIRSTNAME, OWNER_PASSWORD, OWNER_LASTNAME, OWNER_ACCOUNTID);
-        ClassType createdClassType = classTypeService.ownerCreate("Spinning", "High intensity bike class", owner);
-        assertNotNull(createdClassType);
-        assertEquals("Spinning", createdClassType.getName());
-        assertTrue(createdClassType.getApproved()); // Assuming ownerCreate sets approved to true
-        verify(classTypeRepository, times(1)).save(any(ClassType.class));
-    }
+    // Test case for verifying the functionality of creating a ClassType by an owner.
+@SuppressWarnings("null")
+@Test
+public void testOwnerCreate() {
+    // Setup: Create a mock owner instance with predefined values.
+    Owner owner = new Owner(OWNER_EMAIL, OWNER_FIRSTNAME, OWNER_PASSWORD, OWNER_LASTNAME, OWNER_ACCOUNTID);
+    
+    // Action: Invoke the ownerCreate method to create a new ClassType with given attributes and the mock owner.
+    ClassType createdClassType = classTypeService.ownerCreate("Spinning", "High intensity bike class", owner);
+    
+    // Assertion: Verify that the created ClassType is not null, ensuring it was created successfully.
+    assertNotNull(createdClassType);
+    
+    // Assertion: Check that the name of the created ClassType matches the expected name, verifying correct data handling.
+    assertEquals("Spinning", createdClassType.getName());
+    
+    // Assertion: Ensure the created ClassType is marked as approved, as expected when created by an owner.
+    assertTrue(createdClassType.getApproved());
+    
+    // Verification: Confirm that the save method on the repository was called exactly once, ensuring the ClassType was persisted.
+    verify(classTypeRepository, times(1)).save(any(ClassType.class));
+}
 
-    @Test
-    public void testApprove() {
-        int typeId = CLASS_TYPE_ID;
-        classTypeService.approve(typeId);
-        ClassType approvedClassType = classTypeService.findByTypeId(typeId);
-        assertNotNull(approvedClassType);
-        assertTrue(approvedClassType.getApproved());
-    }
+// Test case for the approval process of a ClassType.
+@Test
+public void testApprove() {
+    // Setup: Define a class type ID for testing.
+    int typeId = CLASS_TYPE_ID;
+    
+    // Action: Call the approve method on the service with the test type ID to approve the ClassType.
+    classTypeService.approve(typeId);
+    
+    // Action & Assertion: Retrieve the ClassType by its ID and verify it is not null and indeed marked as approved.
+    ClassType approvedClassType = classTypeService.findByTypeId(typeId);
+    assertNotNull(approvedClassType); // Check the object is not null, indicating it was found.
+    assertTrue(approvedClassType.getApproved()); // Check that the class type is marked as approved, as expected after the operation.
+}
 
-    @SuppressWarnings("null")
-    @Test
-    public void testUpdateDescription() {
-        String newDescription = "Updated Description";
-        ClassType updatedClassType = classTypeService.updateDescription(CLASS_TYPE_ID, newDescription);
-        assertNotNull(updatedClassType);
-        assertEquals(newDescription, updatedClassType.getDescription());
-        verify(classTypeRepository, times(1)).save(any(ClassType.class));
-    }
+// Test case for updating the description of an existing ClassType.
+@SuppressWarnings("null")
+@Test
+public void testUpdateDescription() {
+    // Setup: Define a new description for the ClassType.
+    String newDescription = "Updated Description";
+    
+    // Action: Update the description of a ClassType identified by CLASS_TYPE_ID with the new description.
+    ClassType updatedClassType = classTypeService.updateDescription(CLASS_TYPE_ID, newDescription);
+    
+    // Assertion: Verify the returned ClassType object is not null, indicating the operation was successful.
+    assertNotNull(updatedClassType);
+    
+    // Assertion: Confirm that the description of the ClassType matches the new description provided.
+    assertEquals(newDescription, updatedClassType.getDescription());
+    
+    // Verification: Ensure the save method on the repository was invoked once, confirming changes were persisted.
+    verify(classTypeRepository, times(1)).save(any(ClassType.class));
+}
 
-    @SuppressWarnings("null")
-    @Test
-    public void testUpdateName() {
-        String newName = "Updated Name";
-        ClassType updatedClassType = classTypeService.updateName(CLASS_TYPE_ID, newName);
-        assertNotNull(updatedClassType);
-        assertEquals(newName, updatedClassType.getName());
-        verify(classTypeRepository, times(1)).save(any(ClassType.class));
-    }
+// Test case for updating the name of an existing ClassType.
+@SuppressWarnings("null")
+@Test
+public void testUpdateName() {
+    // Setup: Define a new name for the ClassType.
+    String newName = "Updated Name";
+    
+    // Action: Update the name of a ClassType identified by CLASS_TYPE_ID with the new name.
+    ClassType updatedClassType = classTypeService.updateName(CLASS_TYPE_ID, newName);
+    
+    // Assertion: Verify the returned ClassType object is not null, indicating the operation was successful.
+    assertNotNull(updatedClassType);
+    
+    // Assertion: Confirm that the name of the ClassType matches the new name provided.
+    assertEquals(newName, updatedClassType.getName());
+    
+    // Verification: Ensure the save method on the repository was invoked once, confirming changes were persisted.
+    verify(classTypeRepository, times(1)).save(any(ClassType.class));
+}
 }
