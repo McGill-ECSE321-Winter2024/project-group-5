@@ -71,19 +71,23 @@ public class LoginIntegrationTests {
 
         @Test
         public void testLogIn() {
+                // create Instructor and save to repo
                 Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD,
                                 INSTRUCTOR_LASTNAME, INSTRUCTOR_VALID_ACCOUNTID);
                 instructorRepository.save(instructor);
-                assertNotNull(instructor);
+                //verify that instructor indeed exists in repo
                 instructor = instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL);
                 assertNotNull(instructor);
 
+                //create loggin request
                 LoginRequestDto request = new LoginRequestDto(LOGIN_TYPE, LOGIN_EMAIL, LOGIN_PASSWORD,
                                 LOGIN_CURRENTTIME);
 
+                //attempt login thorugh rest controller  
                 ResponseEntity<LoginResponseDto> response = client.postForEntity("/login", request,
                                 LoginResponseDto.class);
 
+                //veirfy that response is expected response
                 assertNotNull(response);
                 assertEquals(HttpStatus.CREATED, response.getStatusCode());
                 LoginResponseDto createdLogin = response.getBody();
@@ -101,15 +105,17 @@ public class LoginIntegrationTests {
                 Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD,
                                 INSTRUCTOR_LASTNAME, INSTRUCTOR_VALID_ACCOUNTID);
                 instructorRepository.save(instructor);
-                assertNotNull(instructor);
+                //verify that instructor indeed exists in repo
                 instructor = instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL);
                 assertNotNull(instructor);
 
-                // create login for instructor through rest controller
+                //create login request
                 LoginRequestDto request = new LoginRequestDto(LOGIN_TYPE, LOGIN_EMAIL, LOGIN_PASSWORD,
                                 LOGIN_CURRENTTIME);
+                //login through rest controller
                 ResponseEntity<LoginResponseDto> response = client.postForEntity("/login", request,
                                 LoginResponseDto.class);
+                //confirm succesfull login
                 assertNotNull(response);
                 assertNotNull(loginRepository.findByAccount(instructor));
                 assertTrue(loginRepository.findAll().size() == 1);
@@ -129,21 +135,25 @@ public class LoginIntegrationTests {
                 Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD,
                                 INSTRUCTOR_LASTNAME, INSTRUCTOR_VALID_ACCOUNTID);
                 instructorRepository.save(instructor);
+                //verify that instructor indeed exists in repo
                 instructor = instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL);
                 assertNotNull(instructor);
 
-                // create login for instructor through rest controller
+                //create login request
                 LoginRequestDto request = new LoginRequestDto(LOGIN_TYPE, LOGIN_EMAIL, LOGIN_PASSWORD,
                                 LOGIN_CURRENTTIME);
+                //login thoruhg rest controller
                 ResponseEntity<LoginResponseDto> response = client.postForEntity("/login", request,
                                 LoginResponseDto.class);
+                //confirm successfull login
                 assertNotNull(response);
                 assertNotNull(loginRepository.findByAccount(instructor));
                 assertTrue(loginRepository.findAll().size() == 1);
 
+                //retrieve login by account through rest controller
                 String url = "/login/getByAccount/" + INSTRUCTOR_EMAIL + "/INSTRUCTOR";
                 ResponseEntity<LoginResponseDto> response2 = client.getForEntity(url, LoginResponseDto.class);
-
+                //verify that response is ok & retrieved login is expected login
                 assertNotNull(response2);
                 assertEquals(HttpStatus.OK, response2.getStatusCode());
                 LoginResponseDto response2Body = response2.getBody();
@@ -159,22 +169,26 @@ public class LoginIntegrationTests {
                 Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD,
                                 INSTRUCTOR_LASTNAME, INSTRUCTOR_VALID_ACCOUNTID);
                 instructorRepository.save(instructor);
+                //verify that instructor indeed exists in repo
                 instructor = instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL);
                 assertNotNull(instructor);
 
-                // create login for instructor through rest controller
+                //create login request
                 LoginRequestDto request = new LoginRequestDto(LOGIN_TYPE, LOGIN_EMAIL, LOGIN_PASSWORD,
                                 LOGIN_CURRENTTIME);
+                //login through rest controller                
                 ResponseEntity<LoginResponseDto> response = client.postForEntity("/login", request,
                                 LoginResponseDto.class);
+                //confrim successfull login
                 assertNotNull(response);
                 assertNotNull(loginRepository.findByAccount(instructor));
                 assertTrue(loginRepository.findAll().size() == 1);
                 int id = loginRepository.findByAccount(instructor).getLoginId();
 
+                //retrieve login by id through rest controller
                 String url = "/login/getById/" + id;
                 ResponseEntity<LoginResponseDto> response2 = client.getForEntity(url, LoginResponseDto.class);
-
+                //verify that response is ok & retrieved login is expected login
                 assertNotNull(response2);
                 assertEquals(HttpStatus.OK, response2.getStatusCode());
                 LoginResponseDto response2Body = response2.getBody();
@@ -186,42 +200,45 @@ public class LoginIntegrationTests {
 
         @Test
         public void testGetAllLogins() {
-                // create Instructor and save to repo
+                // create instructor, save to repo and confirm instructor indeed exists in repo
                 Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD,
                                 INSTRUCTOR_LASTNAME, INSTRUCTOR_VALID_ACCOUNTID);
                 instructorRepository.save(instructor);
                 instructor = instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL);
                 assertNotNull(instructor);
 
-                // create client and save to repo
+                // create client, save to repo and confirm client indeed exists in repo
                 Client user = new Client("example@mail.com", "firstname", "passWord4", "lastname", 0);
                 clientRepository.save(user);
                 user = clientRepository.findByEmail("example@mail.com");
                 assertNotNull(user);
 
-                // create login for instructor & client through rest controller
+                // create login request for both client and instructor
                 LoginRequestDto requestInstructor = new LoginRequestDto(LOGIN_TYPE, LOGIN_EMAIL, LOGIN_PASSWORD,
                                 LOGIN_CURRENTTIME);
                 LoginRequestDto requestClient = new LoginRequestDto("CLIENT", "example@mail.com", "passWord4",
                                 LOGIN_CURRENTTIME);
+                //login client and instrucotr through rest controller
                 ResponseEntity<LoginResponseDto> responseInstructor = client.postForEntity("/login", requestInstructor,
                                 LoginResponseDto.class);
                 ResponseEntity<LoginResponseDto> responseClient = client.postForEntity("/login/", requestClient,
                                 LoginResponseDto.class);
-
+                //confirm successfull login of both client and login
                 assertNotNull(responseInstructor);
                 assertNotNull(responseClient);
                 assertNotNull(loginRepository.findByAccount(instructor));
                 assertNotNull(loginRepository.findByAccount(user));
                 assertTrue(loginRepository.findAll().size() == 2);
 
+                //retrieve all logins through rest controller
                 ResponseEntity<LoginListDto> responseList = client.getForEntity("/login/getAll", LoginListDto.class);
+                //verify response is ok & list ok
                 assertNotNull(responseList);
                 assertEquals(HttpStatus.OK, responseList.getStatusCode());
                 LoginListDto list = responseList.getBody();
                 assertNotNull(list);
                 assertEquals(2, list.getLogins().size());
-
+                //verify list contains expected logins
                 for (LoginResponseDto dto : list.getLogins()) {
                         if (dto.getAccountEmail().equals("example@mail.com")) {
                                 assertEquals(dto.getAccountType(), "CLIENT");
@@ -236,29 +253,35 @@ public class LoginIntegrationTests {
 
         @Test
         public void testIsStillLoggedIn() {
-                // create Instructor and save to repo
+                // create Instructor, save to repo and confirm indeed exists in repo
                 Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD,
                                 INSTRUCTOR_LASTNAME, INSTRUCTOR_VALID_ACCOUNTID);
                 instructorRepository.save(instructor);
                 instructor = instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL);
                 assertNotNull(instructor);
+                //create goodTime (time before login expires) and bad time ( time after login expires)
                 Time goodTime = Time.valueOf("10:30:00");
                 Time badTime = Time.valueOf("16:30:00");
 
-                // create login for instructor through rest controller
+                // create login request
                 LoginRequestDto createRequest = new LoginRequestDto(LOGIN_TYPE, INSTRUCTOR_EMAIL, INSTRUCTOR_PASSWORD,
                                 LOGIN_CURRENTTIME);
+                //login through rest controller
                 ResponseEntity<LoginResponseDto> createResponse = client.postForEntity("/login", createRequest,
                                 LoginResponseDto.class);
+                //confirm successfull login
                 assertNotNull(createResponse);
                 assertNotNull(loginRepository.findByAccount(instructor));
                 assertTrue(loginRepository.findAll().size() == 1);
                 int id = loginRepository.findByAccount(instructor).getLoginId();
-
+                
+                //build urls for both goodTime and badtime
                 String urlGood = "/login/isStillLoggedIn/" + id + "/" + goodTime;
                 String urlBad = "/login/isStillLoggedIn/" + id + "/" + badTime;
+                //verify if isStillLoggedIn through rest controller
                 ResponseEntity<Boolean> goodResponse = client.getForEntity(urlGood, Boolean.class);
                 ResponseEntity<Boolean> badResponse = client.getForEntity(urlBad, Boolean.class);
+                //verify if response is expected response
                 assertNotNull(goodResponse);
                 assertNotNull(badResponse);
                 Boolean good = goodResponse.getBody();
@@ -276,20 +299,24 @@ public class LoginIntegrationTests {
                 instructor = instructorRepository.findInstructorByEmail(INSTRUCTOR_EMAIL);
                 assertNotNull(instructor);
 
-                // create login for instructor through rest controller
+                // create login request
                 LoginRequestDto createRequest = new LoginRequestDto(LOGIN_TYPE, INSTRUCTOR_EMAIL, INSTRUCTOR_PASSWORD,
                                 LOGIN_CURRENTTIME);
+                //login through rest controller
                 ResponseEntity<LoginResponseDto> createResponse = client.postForEntity("/login", createRequest,
                                 LoginResponseDto.class);
+                //confirm successfull login
                 assertNotNull(createResponse);
                 assertNotNull(loginRepository.findByAccount(instructor));
                 assertTrue(loginRepository.findAll().size() == 1);
                 int id = loginRepository.findByAccount(instructor).getLoginId();
-
+                
+                //create current time, and expected new_end_time once rest is called
                 Time currentTime = Time.valueOf("12:30:00");
                 Time new_endTime = Time.valueOf("15:30:00");
+                //build url for updateEndTime request
                 String url = "/login/updateEndtime/" + id + "/" + currentTime;
-
+                //update endTime thorugh rest controller
                 ResponseEntity<LoginResponseDto> response = client.exchange(url, HttpMethod.PUT, null,
                                 LoginResponseDto.class);
 
@@ -302,7 +329,8 @@ public class LoginIntegrationTests {
                 Login login = loginRepository.findByLoginId(id);
                 assertEquals(login.getEndTime(), new_endTime);
         }
-
+//all of the following tests are testing to ensure that our alternat endpoints function as well. 
+//They have the same logic as the previous of the same name
         @Test
         public void testLogIn2() {
                 Instructor instructor = new Instructor(INSTRUCTOR_EMAIL, INSTRUCTOR_FISTNAME, INSTRUCTOR_PASSWORD,

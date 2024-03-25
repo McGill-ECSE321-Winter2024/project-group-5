@@ -42,6 +42,12 @@ public class LoginController {
     @Autowired
     private ClientService clientService;
 
+     /**
+     * Logs in a user.
+     * 
+     * @param newLogin The LoginRequestDto containing login information.
+     * @return The LoginResponseDto with created login information.
+     */
     @PostMapping(value = { "/login", "/login/" })
     @ResponseStatus(HttpStatus.CREATED)
     public LoginResponseDto logIn(@RequestBody LoginRequestDto newLogin) {
@@ -50,11 +56,23 @@ public class LoginController {
         return new LoginResponseDto(createdLogin, newLogin.getType());
     }
 
+    /**
+     * Logs out a user.
+     * 
+     * @param theId The ID of the login to be logged out.
+     */
     @DeleteMapping(value = { "/logout/{loginId}", "/logout/{loginId}/" })
     public void logOut(@PathVariable("loginId") String theId) {
         loginService.logOut(Integer.parseInt(theId));
     }
 
+     /**
+     * Retrieves login information based on account email and type.
+     * 
+     * @param email The email associated with the account.
+     * @param type  The type of the account (OWNER, INSTRUCTOR, CLIENT).
+     * @return The LoginResponseDto containing login information.
+     */
     @GetMapping(value = { "/login/getByAccount/{email}/{accountType}", "/login/getByAccount/{email}/{accountType}/" })
     public LoginResponseDto getLoginByAccount(@PathVariable("email") String email,
             @PathVariable("accountType") String type) {
@@ -78,6 +96,12 @@ public class LoginController {
         return new LoginResponseDto(login, type);
     }
 
+     /**
+     * Retrieves login information based on login ID.
+     * 
+     * @param id The id of the login.
+     * @return The LoginResponseDto containing login information.
+     */
     @GetMapping(value = { "/login/getById/{id}", "/login/getById/{id}/" })
     public LoginResponseDto getLoginFromId(@PathVariable("id") int id) {
         Login login = loginService.getLoginFromId(id);
@@ -95,6 +119,11 @@ public class LoginController {
         return new LoginResponseDto(login, type);
     }
 
+     /**
+     * Retrieves all login information.
+     * 
+     * @return The LoginListDto containing a list of login information.
+     */
     @GetMapping(value = { "/login/getAll", "/login/getAll/" })
     public LoginListDto getAllLogins() {
         List<LoginResponseDto> logins = new ArrayList<>();
@@ -115,12 +144,26 @@ public class LoginController {
         return new LoginListDto(logins);
     }
 
+     /**
+     * Checks if a user is still logged in.
+     * 
+     * @param id    The ID of the login.
+     * @param time  The current time.
+     * @return True if the user is still logged in, otherwise false.
+     */
     @GetMapping(value = { "login/isStillLoggedIn/{id}/{currentTime}", "login/isStillLoggedIn/{id}/{currentTime}/" })
     public boolean isStillLoggedIn(@PathVariable("id") int id, @PathVariable("currentTime") Time time) {
 
         return loginService.isStillLoggedIn(id, time);
     }
 
+    /**
+     * Updates the end time of a login session.
+     * 
+     * @param id    The ID of the login.
+     * @param time  The current time.
+     * @return The updated LoginResponseDto.
+     */
     @PutMapping(value = { "/login/updateEndtime/{id}/{currentTime}", "/login/updateEndtime/{id}/{currentTime}/" })
     public LoginResponseDto updateEndTime(@PathVariable("id") int id, @PathVariable("currentTime") Time time) {
         Login login = loginService.updateEndTime(id, time);
