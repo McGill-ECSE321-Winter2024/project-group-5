@@ -42,6 +42,7 @@ public class TestPaymentMethodService {
     @InjectMocks
     private PaymentMethodService paymentMethodService;
 
+    // Set some global variables
     private static final String PAYMENTMETHOD_CARDNUMBER = "1234567812345678";
     private static final Date PAYMENTMETHOD_EXPDATE = new Date(1830297600000L);
     private static final String PAYMENTMETHOD_CVC = "111";
@@ -55,6 +56,8 @@ public class TestPaymentMethodService {
 
     @BeforeEach
     public void setMockOutput() {
+
+        // Creatre a MockOutput
         PaymentMethod paymentMethod = new PaymentMethod(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE,
                 PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CARDID, PAYMENTMETHOD_CLIENT);
         List<PaymentMethod> paymentMethods = new ArrayList<>();
@@ -72,9 +75,12 @@ public class TestPaymentMethodService {
 
     @Test
     public void testCreatePaymentMethod() {
+
+        // Create a payment method
         PaymentMethod paymentMethod = paymentMethodService.createPaymentMethod(PAYMENTMETHOD_CARDNUMBER,
                 PAYMENTMETHOD_EXPDATE, PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CLIENT);
 
+        // Validate the attributes
         assertNotNull(paymentMethod);
         assertEquals(paymentMethod.getCardHolderName(), PAYMENTMETHOD_CARDHOLDERNAME);
         assertEquals(paymentMethod.getCardNumber(), PAYMENTMETHOD_CARDNUMBER);
@@ -87,28 +93,39 @@ public class TestPaymentMethodService {
 
     @Test
     public void testDeletePaymentMethod() {
+
+        // Create a payment method
         PaymentMethod paymentMethod = new PaymentMethod(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE,
                 PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CARDID, PAYMENTMETHOD_CLIENT);
 
+        // Delete the payment method
         paymentMethodService.deletePaymentMethod(paymentMethod.getCardNumber());
 
+        // Validate if delted successfully
         verify(paymentMethodRepository, times(1)).deleteByCardNumber(PAYMENTMETHOD_CARDNUMBER);
     }
 
     @Test
     public void testDeletePaymentMethodsByClient() {
+
+        // Create a new Payment method
         PaymentMethod paymentMethod = new PaymentMethod(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE,
                 PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CARDID, PAYMENTMETHOD_CLIENT);
 
+        // delete teh paymenty methodn
         paymentMethodService.deletePaymentMethods(paymentMethod.getClient());
 
+        // Validate if delted successfully
         verify(paymentMethodRepository, times(1)).deleteByClient(PAYMENTMETHOD_CLIENT);
     }
 
     @Test
     public void tetGetPaymentMethod() {
+
+        // Get a peyment method
         PaymentMethod paymentMethod = paymentMethodService.getPaymentMethod(PAYMENTMETHOD_CARDNUMBER);
 
+        // Validate the attributes
         assertNotNull(paymentMethod);
         assertEquals(paymentMethod.getCardHolderName(), PAYMENTMETHOD_CARDHOLDERNAME);
         assertEquals(paymentMethod.getCardId(), PAYMENTMETHOD_CARDID);
@@ -120,6 +137,8 @@ public class TestPaymentMethodService {
 
     @Test
     public void testGetInvalidPaymentMethod() {
+
+        // Check if correctly thorws an exception with invlaid cardNumbher
         assertThrows(IllegalArgumentException.class, () -> {
             paymentMethodService.getPaymentMethod("0987654321098765");
         });
@@ -127,7 +146,11 @@ public class TestPaymentMethodService {
 
     @Test
     public void tetGetPaymentMethodsByClient() {
+
+        // Get the payment methods
         List<PaymentMethod> paymentMethods = paymentMethodService.getPaymentMethods(PAYMENTMETHOD_CLIENT);
+
+        // Validate each payment method's attributes
         for (PaymentMethod paymentMethod : paymentMethods) {
             assertNotNull(paymentMethod);
             assertEquals(paymentMethod.getCardHolderName(), PAYMENTMETHOD_CARDHOLDERNAME);
@@ -141,11 +164,14 @@ public class TestPaymentMethodService {
 
     @Test
     public void testHasPaymentMethod() {
+
+        // Validate if coprrectly checks if a client has a peyment method
         assertTrue(paymentMethodService.hasPaymentMethod(PAYMENTMETHOD_CLIENT));
     }
 
     @Test
     public void testDoesNotHavePaymentMethod() {
+        // Validate if coprrectly checks if a client does not have a peyment method
         assertFalse(paymentMethodService.hasPaymentMethod(WITHOUTPAYMENTMETHOD_CLIENT));
     }
 

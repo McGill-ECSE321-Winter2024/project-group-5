@@ -10,6 +10,7 @@ public class PaymentMethodResponseDto {
     private String cardHolderName;
     private Client client;
 
+    // Constructors
     @SuppressWarnings("unused")
     public PaymentMethodResponseDto() {
     }
@@ -21,6 +22,7 @@ public class PaymentMethodResponseDto {
         this.client = paymentMethod.getClient();
     }
 
+    // Getter and setter cardID
     public int getCardId() {
         return cardId;
     }
@@ -29,14 +31,16 @@ public class PaymentMethodResponseDto {
         this.cardId = cardId;
     }
 
+    // Getter and Setter Card number
     public String getCardNumber() {
         return cardNumber;
     }
 
     public void setCardNumber(String cardNumber) {
         this.cardNumber = cardNumber;
-    }
+    }   
 
+    // Getter and setter name
     public String getCardHolderName() {
         return cardHolderName;
     }
@@ -45,6 +49,7 @@ public class PaymentMethodResponseDto {
         this.cardHolderName = cardHolderName;
     }
 
+    // Getter and setter client 
     public Client getClient() {
         return this.client;
     }

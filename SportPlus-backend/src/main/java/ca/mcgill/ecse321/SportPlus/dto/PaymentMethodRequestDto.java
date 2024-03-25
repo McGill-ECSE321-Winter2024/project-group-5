@@ -11,6 +11,8 @@ public class PaymentMethodRequestDto {
     private String cardHolderName;
     private Client client;
 
+
+    // Constructors
     public PaymentMethodRequestDto() {
     }
 
@@ -22,6 +24,7 @@ public class PaymentMethodRequestDto {
         this.client = client;
     }
 
+    // Getter and Setter cardNumber
     public String getCardNumber() {
         return cardNumber;
     }
@@ -30,6 +33,7 @@ public class PaymentMethodRequestDto {
         this.cardNumber = cardNumber;
     }
 
+    // Getter and setter expiry date
     public Date getExpDate() {
         return expDate;
     }
@@ -38,6 +42,7 @@ public class PaymentMethodRequestDto {
         this.expDate = expDate;
     }
 
+    // Getter and setter cvc 
     public String getCvc() {
         return cvc;
     }
@@ -46,6 +51,7 @@ public class PaymentMethodRequestDto {
         this.cvc = cvc;
     }
 
+    // Getter and setter name
     public String getCardHolderName() {
         return cardHolderName;
     }
@@ -54,6 +60,7 @@ public class PaymentMethodRequestDto {
         this.cardHolderName = cardHolderName;
     }
 
+    // Getter and setter client 
     public Client getClient() {
         return this.client;
     }

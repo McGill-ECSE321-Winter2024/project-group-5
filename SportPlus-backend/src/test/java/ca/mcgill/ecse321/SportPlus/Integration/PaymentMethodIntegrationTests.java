@@ -43,10 +43,13 @@ public class PaymentMethodIntegrationTests {
     @BeforeEach
     @AfterEach
     public void clearDatabase() {
+
+        // Clear the databse before and after each test
         paymentMethodRepository.deleteAll();
         clientRepository.deleteAll();
     }
 
+    // Set some global variables
     private static final String PAYMENTMETHOD_CARDNUMBER = "1234567812345678";
     private static final Date PAYMENTMETHOD_EXPDATE = new Date(1830297600000L);
     private static final String PAYMENTMETHOD_CVC = "111";
@@ -57,16 +60,22 @@ public class PaymentMethodIntegrationTests {
 
     @Test
     public void testFindPaymentMethodByCardNumber() {
+
+        // Set up the paymment method
+        // Save in the db
         Client PAYMENTMETHOD_CLIENT = new Client(CLIENT_EMAIL, "John", "Pass123", "Doe", 2);
         clientRepository.save(PAYMENTMETHOD_CLIENT);
         PaymentMethod paymentMethod = new PaymentMethod(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE,
                 PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CARDID, PAYMENTMETHOD_CLIENT);
         paymentMethodRepository.save(paymentMethod);
 
+        // Set the url
         String url = "/paymentMethod/getByCardNumber/" + PAYMENTMETHOD_CARDNUMBER;
 
+        // Get the response
         ResponseEntity<PaymentMethodResponseDto> response = client.getForEntity(url, PaymentMethodResponseDto.class);
 
+        // Validate the response
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         PaymentMethodResponseDto paymentMethodResponse = response.getBody();
@@ -79,16 +88,21 @@ public class PaymentMethodIntegrationTests {
 
     @Test
     public void testFindPaymentMethodByCardNumber2() {
+
+        // Set up the test
         Client PAYMENTMETHOD_CLIENT = new Client(CLIENT_EMAIL, "John", "Pass123", "Doe", 2);
         clientRepository.save(PAYMENTMETHOD_CLIENT);
         PaymentMethod paymentMethod = new PaymentMethod(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE,
                 PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CARDID, PAYMENTMETHOD_CLIENT);
         paymentMethodRepository.save(paymentMethod);
 
+        // Set the url
         String url = "/paymentMethod/getByCardNumber/" + PAYMENTMETHOD_CARDNUMBER + "/";
 
+        // get the response
         ResponseEntity<PaymentMethodResponseDto> response = client.getForEntity(url, PaymentMethodResponseDto.class);
 
+        // Validate the response
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         PaymentMethodResponseDto paymentMethodResponse = response.getBody();
@@ -101,18 +115,24 @@ public class PaymentMethodIntegrationTests {
 
     @Test
     public void testFindPaymentMethodByClient() {
+
+        // Set up a peyment Method
         Client PAYMENTMETHOD_CLIENT = new Client(CLIENT_EMAIL, "John", "Pass123", "Doe", 2);
         clientRepository.save(PAYMENTMETHOD_CLIENT);
         PaymentMethod paymentMethod = new PaymentMethod(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE,
                 PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CARDID, PAYMENTMETHOD_CLIENT);
         paymentMethodRepository.save(paymentMethod);
 
+        // get the clientId for the url
         int clientId = clientRepository.findByEmail(CLIENT_EMAIL).getAccountId();
 
+        // Set the url
         String url = "/paymentMethod/getByClient/" + clientId;
 
+        // get the response
         ResponseEntity<PaymentMethodListDto> response = client.getForEntity(url, PaymentMethodListDto.class);
 
+        // validate the response
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         PaymentMethodListDto paymentMethodResponse = response.getBody();
@@ -129,18 +149,24 @@ public class PaymentMethodIntegrationTests {
 
     @Test
     public void testFindPaymentMethodByClient2() {
+
+        // Set up a peyment Method
         Client PAYMENTMETHOD_CLIENT = new Client(CLIENT_EMAIL, "John", "Pass123", "Doe", 2);
         clientRepository.save(PAYMENTMETHOD_CLIENT);
         PaymentMethod paymentMethod = new PaymentMethod(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE,
                 PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CARDID, PAYMENTMETHOD_CLIENT);
         paymentMethodRepository.save(paymentMethod);
 
+        // get the clientId for the url
         int clientId = clientRepository.findByEmail(CLIENT_EMAIL).getAccountId();
 
+        // Set the url
         String url = "/paymentMethod/getByClient/" + clientId + "/";
 
+        // get the response
         ResponseEntity<PaymentMethodListDto> response = client.getForEntity(url, PaymentMethodListDto.class);
 
+        // validate the response
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         PaymentMethodListDto paymentMethodResponse = response.getBody();
@@ -157,6 +183,8 @@ public class PaymentMethodIntegrationTests {
 
     @Test
     public void testDeletePaymentMethodByCardNumber() {
+
+        // Create a payment method
         Client PAYMENTMETHOD_CLIENT = new Client(CLIENT_EMAIL, "John", "Pass123", "Doe", 2);
         clientRepository.save(PAYMENTMETHOD_CLIENT);
         PaymentMethod paymentMethod = new PaymentMethod(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE,
@@ -165,78 +193,105 @@ public class PaymentMethodIntegrationTests {
 
         assertNotNull(paymentMethodRepository.findByCardNumber(PAYMENTMETHOD_CARDNUMBER));
 
+        // Set the url
         String urlToDelete = "/paymentMethod/deleteByCardNumber/" + PAYMENTMETHOD_CARDNUMBER;
 
+        // Delete the payment mathod
         client.delete(urlToDelete);
 
+        // Validate that it is now null
         assertNull(paymentMethodRepository.findByCardNumber(PAYMENTMETHOD_CARDNUMBER));
     }
 
     @Test
     public void testDeletePaymentMethodByCardNumber2() {
+
+        // Create a poyment method
         Client PAYMENTMETHOD_CLIENT = new Client(CLIENT_EMAIL, "John", "Pass123", "Doe", 2);
         clientRepository.save(PAYMENTMETHOD_CLIENT);
         PaymentMethod paymentMethod = new PaymentMethod(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE,
                 PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CARDID, PAYMENTMETHOD_CLIENT);
         paymentMethodRepository.save(paymentMethod);
 
+        // Checks if exists
         assertNotNull(paymentMethodRepository.findByCardNumber(PAYMENTMETHOD_CARDNUMBER));
 
+        // Set the url
         String urlToDelete = "/paymentMethod/deleteByCardNumber/" + PAYMENTMETHOD_CARDNUMBER + "/";
 
+        // Delete the payment method
         client.delete(urlToDelete);
 
+        // Checks if delted succesfully
         assertNull(paymentMethodRepository.findByCardNumber(PAYMENTMETHOD_CARDNUMBER));
     }
 
     @Test
     public void testDeletePaymentMethodsByClient() {
+
+        // Create a peyment method
         Client PAYMENTMETHOD_CLIENT = new Client(CLIENT_EMAIL, "John", "Pass123", "Doe", 2);
         clientRepository.save(PAYMENTMETHOD_CLIENT);
         PaymentMethod paymentMethod = new PaymentMethod(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE,
                 PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CARDID, PAYMENTMETHOD_CLIENT);
         paymentMethodRepository.save(paymentMethod);
 
+        // Checks if exists
         assertNotNull(paymentMethodRepository.findByCardNumber(PAYMENTMETHOD_CARDNUMBER));
 
+        // Get the id for the url
         int CLIENT_ID = clientRepository.findByEmail(CLIENT_EMAIL).getAccountId();
 
+        // set the url.
         String urlToDelete = "/paymentMethod/deleteByClient/" + CLIENT_ID;
 
+        // Delte the payment method
         client.delete(urlToDelete);
 
+        // Checks if delted succesfully
         assertNull(paymentMethodRepository.findByCardNumber(PAYMENTMETHOD_CARDNUMBER));
     }
 
     @Test
     public void testDeletePaymentMethodsByClient2() {
+
+        // Create a payment method
         Client PAYMENTMETHOD_CLIENT = new Client(CLIENT_EMAIL, "John", "Pass123", "Doe", 2);
         clientRepository.save(PAYMENTMETHOD_CLIENT);
         PaymentMethod paymentMethod = new PaymentMethod(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE,
                 PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CARDID, PAYMENTMETHOD_CLIENT);
         paymentMethodRepository.save(paymentMethod);
 
+        // Checks if exists
         assertNotNull(paymentMethodRepository.findByCardNumber(PAYMENTMETHOD_CARDNUMBER));
 
+        // Find the id for the url
         int CLIENT_ID = clientRepository.findByEmail(CLIENT_EMAIL).getAccountId();
 
+        // Set the url
         String urlToDelete = "/paymentMethod/deleteByClient/" + CLIENT_ID + "/";
 
+        // Delete the payment method
         client.delete(urlToDelete);
 
+        // Validate if deleted succesfully
         assertNull(paymentMethodRepository.findByCardNumber(PAYMENTMETHOD_CARDNUMBER));
     }
 
     @Test
     public void testCreatePaymentMethod() {
+
+        // Create a payment method request
         Client PAYMENTMETHOD_CLIENT = new Client(CLIENT_EMAIL, "John", "Pass123", "Doe", 2);
         clientRepository.save(PAYMENTMETHOD_CLIENT);
         PaymentMethodRequestDto request = new PaymentMethodRequestDto(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE,
                 PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CLIENT);
 
+        // get the response
         ResponseEntity<PaymentMethodResponseDto> response = client.postForEntity("/paymentMethod/create", request,
                 PaymentMethodResponseDto.class);
 
+        // validate the response
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         PaymentMethodResponseDto createdPaymentMethod = response.getBody();
@@ -250,14 +305,18 @@ public class PaymentMethodIntegrationTests {
 
     @Test
     public void testCreatePaymentMethod2() {
+
+        // Create a payment method request
         Client PAYMENTMETHOD_CLIENT = new Client(CLIENT_EMAIL, "John", "Pass123", "Doe", 2);
         clientRepository.save(PAYMENTMETHOD_CLIENT);
         PaymentMethodRequestDto request = new PaymentMethodRequestDto(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE,
                 PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CLIENT);
 
+        // Get the response
         ResponseEntity<PaymentMethodResponseDto> response = client.postForEntity("/paymentMethod/create/", request,
                 PaymentMethodResponseDto.class);
 
+        // Validate the response
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         PaymentMethodResponseDto createdPaymentMethod = response.getBody();
@@ -271,16 +330,21 @@ public class PaymentMethodIntegrationTests {
 
     @Test
     public void testHasPaymentMethod() {
+
+        // Create a payment method
         Client PAYMENTMETHOD_CLIENT = new Client(CLIENT_EMAIL, "John", "Pass123", "Doe", 2);
         clientRepository.save(PAYMENTMETHOD_CLIENT);
         PaymentMethod paymentMethod = new PaymentMethod(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE,
                 PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CARDID, PAYMENTMETHOD_CLIENT);
         paymentMethodRepository.save(paymentMethod);
 
+        // Set the url;
         String url = "/clients/hasPaymentMethod/" + CLIENT_EMAIL;
 
+        // Get the response
         ResponseEntity<ClientPaymentResponseDto> response = client.getForEntity(url, ClientPaymentResponseDto.class);
 
+        // Validate the response
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         ClientPaymentResponseDto clientPayment = response.getBody();
@@ -290,16 +354,21 @@ public class PaymentMethodIntegrationTests {
 
     @Test
     public void testHasPaymentMethod2() {
+
+        // Create a payment method
         Client PAYMENTMETHOD_CLIENT = new Client(CLIENT_EMAIL, "John", "Pass123", "Doe", 2);
         clientRepository.save(PAYMENTMETHOD_CLIENT);
         PaymentMethod paymentMethod = new PaymentMethod(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE,
                 PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CARDID, PAYMENTMETHOD_CLIENT);
         paymentMethodRepository.save(paymentMethod);
 
+        // Set the url;
         String url = "/clients/hasPaymentMethod/" + CLIENT_EMAIL + "/";
 
+        // Get the response
         ResponseEntity<ClientPaymentResponseDto> response = client.getForEntity(url, ClientPaymentResponseDto.class);
 
+        // Validate the response
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         ClientPaymentResponseDto clientPayment = response.getBody();
@@ -309,6 +378,8 @@ public class PaymentMethodIntegrationTests {
 
     @Test
     public void testDoesNotHavePaymentMethod() {
+
+        // Create a payment method
         Client PAYMENTMETHOD_CLIENT = new Client(CLIENT_EMAIL, "John", "Pass123", "Doe", 2);
         clientRepository.save(PAYMENTMETHOD_CLIENT);
         PaymentMethod paymentMethod = new PaymentMethod(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE,
@@ -317,10 +388,13 @@ public class PaymentMethodIntegrationTests {
         Client OTHER_CLIENT = new Client("notme@email.com", "John", "Pass123", "Doe", 2);
         clientRepository.save(OTHER_CLIENT);
 
+        // Set the url
         String url = "/clients/hasPaymentMethod/" + "notme@email.com";
 
+        // Get the response
         ResponseEntity<ClientPaymentResponseDto> response = client.getForEntity(url, ClientPaymentResponseDto.class);
 
+        // Validate the response
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         ClientPaymentResponseDto clientPayment = response.getBody();
@@ -330,6 +404,8 @@ public class PaymentMethodIntegrationTests {
 
     @Test
     public void testDoesNotHavePaymentMethod2() {
+
+        // Create a new payment method
         Client PAYMENTMETHOD_CLIENT = new Client(CLIENT_EMAIL, "John", "Pass123", "Doe", 2);
         clientRepository.save(PAYMENTMETHOD_CLIENT);
         PaymentMethod paymentMethod = new PaymentMethod(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE,
@@ -338,10 +414,13 @@ public class PaymentMethodIntegrationTests {
         Client OTHER_CLIENT = new Client("notme@email.com", "John", "Pass123", "Doe", 2);
         clientRepository.save(OTHER_CLIENT);
 
+        // Set the url
         String url = "/clients/hasPaymentMethod/" + "notme@email.com" + "/";
 
+        // Get the response
         ResponseEntity<ClientPaymentResponseDto> response = client.getForEntity(url, ClientPaymentResponseDto.class);
 
+        // Validate the response
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         ClientPaymentResponseDto clientPayment = response.getBody();

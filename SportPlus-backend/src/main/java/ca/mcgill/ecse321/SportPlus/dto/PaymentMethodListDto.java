@@ -6,6 +6,7 @@ public class PaymentMethodListDto {
 
     List<PaymentMethodResponseDto> paymentMethods;
 
+    // Constructors
     public PaymentMethodListDto() {
     }
 
@@ -13,10 +14,12 @@ public class PaymentMethodListDto {
         this.paymentMethods = paymentMethods;
     }
 
+    // Getter
     public List<PaymentMethodResponseDto> getPaymentMethods() {
         return paymentMethods;
     }
 
+    // Setter
     public void setPaymentMethods(List<PaymentMethodResponseDto> paymentMethods) {
         this.paymentMethods = paymentMethods;
     }
