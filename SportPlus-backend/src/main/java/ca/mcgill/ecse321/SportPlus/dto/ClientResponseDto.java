@@ -9,6 +9,7 @@ public class ClientResponseDto {
     private String firstName;
     private String lastName;
 
+    // Constructors
     @SuppressWarnings("unused")
     public ClientResponseDto() {
     }
@@ -20,6 +21,7 @@ public class ClientResponseDto {
         this.lastName = client.getLastName();
     }
 
+    // Getter & Setter AccountId
     public int getAccountId() {
         return accountId;
     }
@@ -28,6 +30,7 @@ public class ClientResponseDto {
         this.accountId = accountId;
     }
 
+    // Getter & Setter Email
     public String getEmail() {
         return email;
     }
@@ -36,6 +39,7 @@ public class ClientResponseDto {
         this.email = email;
     }
 
+    // Getter & Setter first and last name
     public String getFirstName() {
         return firstName;
     }

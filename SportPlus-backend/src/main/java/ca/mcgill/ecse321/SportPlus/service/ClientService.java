@@ -53,6 +53,8 @@ public class ClientService {
 
     @Transactional
     public Client createClient(String email, String firstName, String password, String lastName) {
+
+        // Input Validation
         if (email == null || HelperMethods.ClientEmailCheck(email).trim().length() != 0) {
             throw new IllegalArgumentException("Invalid email!");
         }
@@ -65,17 +67,24 @@ public class ClientService {
         if (lastName == null || lastName.trim().length() == 0) {
             throw new IllegalArgumentException("Client last name cannot be empty!");
         }
+        // Creation of client
         Client client = new Client();
         client.setEmail(email);
         client.setFirstName(firstName);
         client.setPassword(password);
         client.setLastName(lastName);
+
+        // Save the client to the database
         clientRepository.save(client);
+
+        // Return the client
         return client;
     }
 
     @Transactional
     public Client updateClientFirstName(String email, String firstName) {
+
+        // Input validation
         if (email == null || HelperMethods.ClientEmailCheck(email).trim().length() != 0) {
             throw new IllegalArgumentException("Invalid email!");
         }
@@ -86,16 +95,26 @@ public class ClientService {
         if (firstName == null || firstName.trim().length() == 0) {
             throw new IllegalArgumentException("Client first name cannot be empty!");
         }
+
+        // Creation of client
         client.setFirstName(firstName);
+
+        // Save to teh database
         clientRepository.save(client);
+
+        // Return the client
         return client;
     }
 
     @Transactional
     public Client updateClientLastName(String email, String lastName) {
+
+        // Input validation
         if (email == null || HelperMethods.ClientEmailCheck(email).trim().length() != 0) {
             throw new IllegalArgumentException("Invalid email!");
         }
+
+        // Create a client
         Client client = getClient(email);
         if (client == null) {
             throw new IllegalArgumentException("Client with email does not exist!");
@@ -103,6 +122,8 @@ public class ClientService {
         if (lastName == null || lastName.trim().length() == 0) {
             throw new IllegalArgumentException("Client last name cannot be empty!");
         }
+
+        // Set to the name & save & return
         client.setLastName(lastName);
         clientRepository.save(client);
         return client;
@@ -110,9 +131,13 @@ public class ClientService {
 
     @Transactional
     public Client updateClientPassword(String email, String oldPassword, String password) {
+
+        // Input validation
         if (email == null || HelperMethods.ClientEmailCheck(email).trim().length() != 0) {
             throw new IllegalArgumentException("Invalid email!");
         }
+
+        // Creation of the client
         Client client = getClient(email);
         if (client == null) {
             throw new IllegalArgumentException("Client with email does not exist!");
@@ -123,6 +148,8 @@ public class ClientService {
         if (password == null || HelperMethods.PasswordCheck(password).trim().length() != 0) {
             throw new IllegalArgumentException("Invalid new password!");
         }
+
+        // Set the password & save to DB & return the obj
         client.setPassword(password);
         clientRepository.save(client);
         return client;

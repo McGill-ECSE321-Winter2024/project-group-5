@@ -45,6 +45,8 @@ public class TestClientService {
     @SuppressWarnings("null")
     @BeforeEach
     public void setMockOutput() {
+
+        // Create Create a mockoutput
         lenient().when(clientRepository.findByEmail(CLIENT_EMAIL)).thenReturn(
                 new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME, CLIENT_ACCOUNTID));
         lenient().when(clientRepository.findByAccountId(CLIENT_ACCOUNTID)).thenReturn(
@@ -59,13 +61,17 @@ public class TestClientService {
 
     @Test
     public void testCreateClient() {
+
+        // Create the fields
         String email = "newclient@email.com";
         String firstName = "Paul";
         String lastName = "Dmyt";
         String password = "Ro1234";
 
+        // Get the client
         Client client = clientService.createClient(email, firstName, password, lastName);
 
+        // Validate the client
         assertNotNull(client);
         assertEquals(email, client.getEmail());
         assertEquals(firstName, client.getFirstName());
@@ -78,10 +84,13 @@ public class TestClientService {
     @SuppressWarnings("null")
     @Test
     public void testUpdateClient() {
+
+        // Create the attributes
         String newPassword = "NewPass123";
         String newFirstName = "NewJohn";
         String newLastName = "NewDoe";
 
+        // Create & Update the client
         Client client = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME, CLIENT_ACCOUNTID);
         Client updatedClient = clientRepository.findByEmail(CLIENT_EMAIL);
 
@@ -89,6 +98,7 @@ public class TestClientService {
         clientService.updateClientLastName(CLIENT_EMAIL, newLastName);
         clientService.updateClientPassword(CLIENT_EMAIL, CLIENT_PASSWORD, newPassword);
 
+        // Validate the updated client
         assertNotNull(updatedClient);
         assertEquals(client.getEmail(), updatedClient.getEmail());
         assertEquals(client.getAccountId(), updatedClient.getAccountId());
@@ -104,30 +114,43 @@ public class TestClientService {
 
     @Test
     public void testDeleteClient() {
+
+        // Create a new Client
         Client client = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME, CLIENT_ACCOUNTID);
 
+        // Delete the client
         clientService.deleteClient(client.getEmail());
 
+        // Verify if worked
         verify(clientRepository, times(1)).deleteByEmail(CLIENT_EMAIL);
     }
 
     @Test
     public void testGetExistingClient() {
+
+        // Verfiy if the service gets the client
         assertEquals(CLIENT_EMAIL, clientService.getClient(CLIENT_EMAIL).getEmail());
     }
 
     @Test
     public void testGetNonExistingClient() {
+
+        // Verify if the service correctly doesnt get the client
         assertNull(clientService.getClient(NOT_CLIENT_EMAIL));
     }
 
     @Test
     public void testReadClientById() {
+
+        // Create the client
         int accountId = CLIENT_ACCOUNTID;
 
         Client client = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME, accountId);
+
+        // Get the client with ID
         Client searchClient = clientService.getClient(accountId);
 
+        // Verify the attributes
         assertNotNull(searchClient);
         assertEquals(client.getAccountId(), searchClient.getAccountId());
         assertEquals(client.getEmail(), searchClient.getEmail());
@@ -138,10 +161,13 @@ public class TestClientService {
 
     @Test
     public void testGetAllClients() {
+
+        // Get all clients
         Client client = new Client(CLIENT_EMAIL, CLIENT_FISTNAME, CLIENT_PASSWORD, CLIENT_LASTNAME, CLIENT_ACCOUNTID);
         List<Client> clients = Arrays.asList(client);
         List<Client> clientsFromRepo = clientService.getAllClients();
 
+        // Verify the result
         assertNotNull(clientsFromRepo);
         assertEquals(clients, clientsFromRepo);
     }

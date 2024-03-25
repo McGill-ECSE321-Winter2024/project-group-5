@@ -7,6 +7,7 @@ public class ClientRequestDto {
     private String lastName;
     private String password;
 
+    // Constructors
     public ClientRequestDto() {
     }
 
@@ -17,6 +18,7 @@ public class ClientRequestDto {
         this.password = password;
     }
 
+    // Getter & Setter email
     public String getEmail() {
         return email;
     }
@@ -25,6 +27,7 @@ public class ClientRequestDto {
         this.email = email;
     }
 
+    // Getter && Setter First & Last Name
     public String getFirstName() {
         return firstName;
     }
@@ -41,6 +44,7 @@ public class ClientRequestDto {
         this.lastName = lastName;
     }
 
+    // Getter & Setter password
     public String getPassword() {
         return password;
     }
