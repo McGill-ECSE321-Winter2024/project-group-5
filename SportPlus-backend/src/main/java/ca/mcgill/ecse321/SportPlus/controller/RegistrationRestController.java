@@ -27,53 +27,68 @@ public class RegistrationRestController {
     @Autowired
     private RegistrationService registrationService;
 
+    // Endpoint to retrieve registrations by client email
     @GetMapping(value = { "/registrations/getByClient/{email}", "/registrations/getByClient/{email}/" })
     public RegistrationListDto findRegistrationByClient(@PathVariable("email") String theEmail) {
         List<RegistrationResponseDto> registrations = new ArrayList<>();
+        // Iterate through registrations obtained from the service layer
         for (Registration registration : registrationService.getByClient(theEmail)) {
+            // Convert each registration to DTO
             registrations.add(new RegistrationResponseDto(registration));
         }
+        // Return DTO list
         return new RegistrationListDto(registrations);
     }
 
+    // Endpoint to retrieve registrations by specific class session ID 
     @GetMapping(value = { "/registrations/getBySpecificClass/{sessionId}",
             "/registrations/getBySpecificClass/{sessionId}/" })
     public RegistrationListDto findRegistrationBySpecificClass(@PathVariable("sessionId") int theSessionId) {
         List<RegistrationResponseDto> registrations = new ArrayList<>();
+        // Iterate through registrations obtained from the service layer
         for (Registration registration : registrationService.getBySpecificClass(theSessionId)) {
+            // Convert each registration to DTO
             registrations.add(new RegistrationResponseDto(registration));
         }
+        // Return DTO list
         return new RegistrationListDto(registrations);
     }
 
+    // Endpoint to retrieve registration by registration ID
     @GetMapping(value = { "/registrations/getByRegistrationId/{regId}", "/registrations/getByRegistrationId/{regId}/" })
     public RegistrationResponseDto findRegistrationByRegId(@PathVariable("regId") int theRegId) {
         Registration registration = registrationService.getByRegistrationId(theRegId);
+        // Convert registration to DTO and return
         return new RegistrationResponseDto(registration);
     }
 
+    // Endpoint to delete registrations by client email
     @DeleteMapping(value = { "/registrations/deleteByClient/{email}", "/registrations/deleteByClient/{email}/" })
     public void deleteRegistrationByClient(@PathVariable("email") String theEmail) {
         registrationService.deleteByClient(theEmail);
     }
 
+    // Endpoint to delete registrations by specific class session ID
     @DeleteMapping(value = { "/registrations/deleteBySpecificClass/{sessionId}",
             "/registrations/getBySpecificClass/{sessionId}/" })
     public void deleteRegistrationBySpecificClass(@PathVariable("sessionId") int theSessionId) {
         registrationService.deleteBySpecificClass(theSessionId);
     }
 
+    // Endpoint to delete registrations by registration ID
     @DeleteMapping(value = { "/registrations/deleteByRegistrationId/{regId}",
             "/registrations/getByRegistrationId/{regId}/" })
     public void deleteRegistrationByRegId(@PathVariable("regId") int theRegId) {
         registrationService.deleteByRegistrationId(theRegId);
     }
 
+    // Endpoint to create a new registration
     @PostMapping(value = { "/registrations/create", "registrations/create/" })
     @ResponseStatus(HttpStatus.CREATED)
     public RegistrationResponseDto createRegistration(@RequestBody RegistrationRequestDto registration) {
-        Registration createRegistration = registrationService
-                .createRegistration(registration.getSpecificClass().getName(), registration.getClient().getEmail());
+        // Create registration using service layer
+        Registration createRegistration = registrationService.createRegistration(registration.getSpecificClass().getName(), registration.getClient().getEmail());
+        // Convert created registration to DTO and return
         return new RegistrationResponseDto(createRegistration);
     }
 

@@ -35,6 +35,7 @@ import ca.mcgill.ecse321.SportPlus.model.Owner;
 @ExtendWith(MockitoExtension.class)
 public class TestRegistrationService {
 
+    // Mocked repositories and service under test
     @Mock
     private RegistrationRepository registrationRepository;
     @Mock
@@ -47,6 +48,7 @@ public class TestRegistrationService {
     @InjectMocks
     private RegistrationService registrationService;
 
+    // Constants and entities for test data
     private static final int REGISTRATION_ID = 0;
 
     private static final String CLIENT_EMAIL = "example@email.com";
@@ -83,8 +85,10 @@ public class TestRegistrationService {
 
     private static String SPECIFICCLASS_NAME = "NewOne";
 
+    // Method executed before each test to configure mock behavior
     @BeforeEach
     public void setMockOutput() {
+        // Configure lenient behavior for mocked repository methods
         lenient().when(registrationRepository.findByRegId(REGISTRATION_ID)).thenReturn(REGISTRATION);
         lenient().when(specificClassRepository.findBySessionId(SPECIFICCLASS_ID)).thenReturn(aSpecificClass);
         lenient().when(specificClassRepository.findByDateAndStartTime(SPECIFICCLASS_DATE, SPECIFICCLASS_STARTTIME))
@@ -93,6 +97,7 @@ public class TestRegistrationService {
         lenient().when(registrationRepository.findByClient(aClient)).thenReturn(Arrays.asList(REGISTRATION));
         lenient().when(registrationRepository.findBySpecificClass(aSpecificClass))
                 .thenReturn(Arrays.asList(REGISTRATION));
+        // Configure behavior for saving a registration to return the same object
         Answer<?> returnParameterAsAnswer = (InvocationOnMock invocation) -> {
             return invocation.getArgument(0);
         };
@@ -100,63 +105,81 @@ public class TestRegistrationService {
         lenient().when(specificClassRepository.findByName(SPECIFICCLASS_NAME)).thenReturn(aSpecificClass);
     }
 
+    // Test method for creating a registration
     @Test
     public void testCreateRegistration() {
 
+        // Invoke the service method to create a registration
         Registration registration = registrationService.createRegistration(SPECIFICCLASS_NAME, CLIENT_EMAIL);
-
+        // Perform assertions on the created registration
         assertNotNull(registration);
         assertEquals(REGISTRATION_ID, registration.getRegId());
         assertEquals(SPECIFICCLASS_ID, registration.getSpecificClass().getSessionId());
         assertEquals(CLIENT_EMAIL, registration.getClient().getEmail());
     }
 
+    // Test method for getting a registration by its ID
     @Test
     public void testGetRegistrationById() {
+        // Invoke the service method to get a registration by its ID
         Registration registration = registrationService.getByRegistrationId(REGISTRATION_ID);
-
+        // Perform assertions on the retrieved registration
         assertNotNull(registration);
         assertEquals(registration.getClient(), aClient);
         assertEquals(registration.getRegId(), REGISTRATION_ID);
         assertEquals(registration.getSpecificClass(), aSpecificClass);
     }
 
+    // Test method for deleting a registration by its ID
     @Test
     public void testDeleteRegistrationById() {
+        // Invoke the service method to delete a registration by its ID
         registrationService.deleteByRegistrationId(REGISTRATION.getRegId());
+        // Verify that the delete method of the repository is called once with the correct ID
         verify(registrationRepository, times(1)).deleteByRegId(REGISTRATION_ID);
     }
 
+    // Test method for getting registrations by client email
     @Test
     public void testGetByClient() {
-
+        // Prepare test data
         List<Registration> registrations = Arrays.asList(REGISTRATION);
+        // Invoke the service method to get registrations by client email
         List<Registration> registrationsFromRepo = registrationService.getByClient(CLIENT_EMAIL);
+         // Perform assertions on the retrieved registrations
         assertNotNull(registrationsFromRepo);
         assertEquals(registrations, registrationsFromRepo);
 
     }
 
+    // Test method for deleting registrations by client email
     @Test
     public void testDeleteRegistrationByClient() {
+        // Invoke the service method to delete registrations by client
         registrationService.deleteByClient(aClient.getEmail());
+        // Verify that the delete method of the repository is called once with the correct client
         verify(registrationRepository, times(1)).deleteByClient(aClient);
-        ;
     }
 
+    // Test method for getting registrations by specific class ID
     @Test
     public void testGetBySpecificClass() {
-
+         // Prepare test data
         List<Registration> registrations = Arrays.asList(REGISTRATION);
+        // Invoke the service method to get registrations by specific class ID
         List<Registration> registrationsFromRepo = registrationService.getBySpecificClass(SPECIFICCLASS_ID);
+        // Perform assertions on the retrieved registrations
         assertNotNull(registrationsFromRepo);
         assertEquals(registrations, registrationsFromRepo);
 
     }
 
+    // Test method for deleting registrations by specific class ID
     @Test
     public void testDeleteRegistrationBySpecificClass() {
+        // Invoke the service method to delete registrations by specific class ID
         registrationService.deleteBySpecificClass(aSpecificClass.getSessionId());
+        // Verify that the delete method of the repository is called once with the correct specific class
         verify(registrationRepository, times(1)).deleteBySpecificClass(aSpecificClass);
     }
 
