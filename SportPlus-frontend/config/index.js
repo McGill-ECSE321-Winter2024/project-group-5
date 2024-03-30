@@ -5,16 +5,19 @@
 const path = require('path')
 
 module.exports = {
+  
   dev: {
-
+    env: require('./dev.env'),
+    host: '127.0.0.1',
+    port: 8087,
+    backendHost: '127.0.0.1',
+    backendPort: 8080,
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {},
 
     // Various Dev Server settings
-    host: 'localhost', // can be overwritten by process.env.HOST
-    port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,
     notifyOnErrors: true,
@@ -38,6 +41,11 @@ module.exports = {
 
   build: {
     // Template for index.html
+    env: require('./prod.env'),
+    host: '127.0.0.1',
+    port: 8087,
+    backendHost: '127.0.0.1',
+    backendPort: 8080,
     index: path.resolve(__dirname, '../dist/index.html'),
 
     // Paths
