@@ -90,7 +90,7 @@ public class RegistrationRestController {
     @ResponseStatus(HttpStatus.CREATED)
     public RegistrationResponseDto createRegistration(@RequestBody RegistrationRequestDto registration) {
         // Create registration using service layer
-        Registration createRegistration = registrationService.createRegistration(registration.getSpecificClass().getName(), registration.getClient().getEmail());
+        Registration createRegistration = registrationService.createRegistration("send", registration.getSpecificClass().getName(), registration.getClient().getEmail());
         // Convert created registration to DTO and return
         return new RegistrationResponseDto(createRegistration);
     }

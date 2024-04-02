@@ -10,6 +10,7 @@ import ca.mcgill.ecse321.SportPlus.dao.ClientRepository;
 import ca.mcgill.ecse321.SportPlus.dao.InstructorRepository;
 import ca.mcgill.ecse321.SportPlus.model.SpecificClass;
 import ca.mcgill.ecse321.SportPlus.dao.SpecificClassRepository;
+import ca.mcgill.ecse321.SportPlus.email.Email;
 import ca.mcgill.ecse321.SportPlus.dao.RegistrationRepository;
 import ca.mcgill.ecse321.SportPlus.model.Registration;
 import ca.mcgill.ecse321.SportPlus.service.utilities.HelperMethods;
@@ -42,7 +43,7 @@ public class RegistrationService {
         }
         // Find the client by email
         Client client = clientRepository.findByEmail(email);
-         // Retrieve registrations associated with the client
+        // Retrieve registrations associated with the client
         List<Registration> registration = registrationRepository.findByClient(client);
         return registration;
     }
@@ -70,7 +71,7 @@ public class RegistrationService {
         }
         // Find the registration by ID
         Registration registration = registrationRepository.findByRegId(regId);
-        
+
         return registration;
     }
 
@@ -115,7 +116,7 @@ public class RegistrationService {
 
     // Method to create a new registration
     @Transactional
-    public Registration createRegistration(String specificClassName, String clientEmail) {
+    public Registration createRegistration(String sendEmail, String specificClassName, String clientEmail) {
         // Check if the client email is valid
         if (clientEmail == null || HelperMethods.ClientEmailCheck(clientEmail).trim().length() != 0) {
             throw new IllegalArgumentException("Invalid email!");
@@ -130,6 +131,12 @@ public class RegistrationService {
         Registration registration = new Registration(0, specificClass, client);
         // Save the registration
         registrationRepository.save(registration);
+
+        // send verification email to client
+        Email.sendEmail(sendEmail, clientEmail, "Registration Confirmed", "Dear " + client.getFirstName()
+                + ",\nYou are registered to " + specificClass.getClassType().getName() + "!");
+
+        // return the registration
         return registration;
     }
 

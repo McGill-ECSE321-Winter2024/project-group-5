@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ca.mcgill.ecse321.SportPlus.dao.ClientRepository;
+import ca.mcgill.ecse321.SportPlus.email.Email;
 import ca.mcgill.ecse321.SportPlus.model.Client;
 import ca.mcgill.ecse321.SportPlus.service.utilities.HelperMethods;
 
@@ -52,7 +53,7 @@ public class ClientService {
     // ------------EndWrappers----------//
 
     @Transactional
-    public Client createClient(String email, String firstName, String password, String lastName) {
+    public Client createClient(String sendEmail, String email, String firstName, String password, String lastName) {
 
         // Input Validation
         if (email == null || HelperMethods.ClientEmailCheck(email).trim().length() != 0) {
@@ -76,6 +77,10 @@ public class ClientService {
 
         // Save the client to the database
         clientRepository.save(client);
+
+        // send verification email to client
+        Email.sendEmail(sendEmail, email, "Welcome to SportPlus",
+                "Dear " + firstName + ",\nYour account has been created!");
 
         // Return the client
         return client;

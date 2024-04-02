@@ -110,7 +110,7 @@ public class TestRegistrationService {
     public void testCreateRegistration() {
 
         // Invoke the service method to create a registration
-        Registration registration = registrationService.createRegistration(SPECIFICCLASS_NAME, CLIENT_EMAIL);
+        Registration registration = registrationService.createRegistration("Don't send", SPECIFICCLASS_NAME, CLIENT_EMAIL);
         // Perform assertions on the created registration
         assertNotNull(registration);
         assertEquals(REGISTRATION_ID, registration.getRegId());

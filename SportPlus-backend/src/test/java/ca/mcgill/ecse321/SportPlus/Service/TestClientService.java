@@ -69,7 +69,7 @@ public class TestClientService {
         String password = "Ro1234";
 
         // Get the client
-        Client client = clientService.createClient(email, firstName, password, lastName);
+        Client client = clientService.createClient("Don't Send", email, firstName, password, lastName);
 
         // Validate the client
         assertNotNull(client);

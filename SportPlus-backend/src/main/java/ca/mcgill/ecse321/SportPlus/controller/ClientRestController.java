@@ -73,7 +73,7 @@ public class ClientRestController {
     public ClientResponseDto createClient(@RequestBody ClientRequestDto client) {
 
         // Create a client
-        Client createdClient = clientService.createClient(client.getEmail(), client.getFirstName(),
+        Client createdClient = clientService.createClient("send", client.getEmail(), client.getFirstName(),
                 client.getPassword(), client.getLastName());
 
         // Return the reponse
