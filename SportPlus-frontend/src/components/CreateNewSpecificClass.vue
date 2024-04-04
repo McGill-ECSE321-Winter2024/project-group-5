@@ -1,9 +1,7 @@
 <template>
   <div id="events">
-      <h1>Event Registration</h1>
-      <h2>Schedule New In-Person Event</h2>
       <div>
-          <b-form-select v-model="selectedDate" :options="options"></b-form-select>
+          <b-form-select v-model="selectedClassType" :options="options" placeholder="Select ClassType"></b-form-select>
           <input type="date" placeholder="Date" v-model="newEventDate" />
           <b-form-select v-model="selectedTime" :options="options"></b-form-select>
           <b-form-select v-model="selectedInstructor" :options="options"></b-form-select>
@@ -12,7 +10,7 @@
           <button @click="createEvent()" v-bind:disabled="isCreateBtnDisabled">Create Event</button>
           <button class="danger-btn" @click="clearInputs()">Clear</button>
       </div>
-      <h2>Events</h2>
+      <h2>New Specific Class</h2>
       <table>
           <tbody id="events-tbody">
               <tr>
