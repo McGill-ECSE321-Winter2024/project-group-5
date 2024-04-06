@@ -5,7 +5,7 @@
             <div class="ScheduleTable">
                 <b-table hover
                 :items="items"
-                :fields="fields"
+                :fields="filteredFields"
                 :sticky-header="true"
                 :outlined="true"
                 :row-variant="rowVariant"
@@ -17,7 +17,7 @@
                 >
                     <template v-slot:cell(startTime)="data">
                         <b-table-simple-cell :class="{ 'bold-row-separator': isDateSeparator(data.item) }">
-                            {{ isDateSeparator(data.item) ? data.item.dateSeparator : formatDate(data.value) }}
+                            {{ isDateSeparator(data.item) ? data.item.dateSeparator : (data.value) }}
                         </b-table-simple-cell>
                     </template>
                 </b-table>
@@ -83,13 +83,18 @@ import config from "../../config";
             items: [],
             fields: [
                 { key: 'startTime', label: 'Start Time',show:true },
-                { key: 'date', label: 'Date',show:true },
+                { key: 'date', label: 'Date',show: false },
                 { key: 'classType', label: 'Class Type',show:true },
                 { key: 'supervisor', label: 'Instructor', show:true },
                 { key: 'duration', label: 'Duration', show: true },
                 { key: 'description', show: false}
                 ]
             };
+        },
+        computed: {
+        filteredFields() {
+            return this.fields.filter(field => field.show);
+        }
         },
         mounted() {
             this.fetchData();
@@ -118,7 +123,7 @@ import config from "../../config";
                 if (item.date !== currentDate) {
                     // Insert row with day, month, and year
                     const dateObj = new Date(item.date);
-                    const formattedDate = dateObj.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+                    const formattedDate = dateObj.toLocaleDateString('en-US', { weekday: 'short', month: 'long', day: 'numeric', year: 'numeric' }).replace(',', '');;
                     formattedItems.push({ dateSeparator: formattedDate });
                     currentDate = item.date;
                 }
@@ -141,6 +146,7 @@ import config from "../../config";
                     console.error('Error fetching data:', error);
                     });
             },
+            
             onRowSelected(item) {
                 this.selectedItem = item;
             },
