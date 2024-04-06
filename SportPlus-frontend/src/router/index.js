@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Hello from '@/components/Hello'
 import SchedulePage from '@/components/SchedulePage'
+import LoginPage from '@/components/LoginPage'
+import RegistrationPage from '@/components/RegistrationPage'
 import CreateNewSpecificClass from '@/components/CreateNewSpecificClass'
 
 Vue.use(Router)
@@ -10,13 +11,18 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'Hello',
-      component: Hello
+      name: 'LoginPage',
+      component: LoginPage
     },
     {
       path: '/SchedulePage',
       name: 'SchedulePage',
       component: SchedulePage
+    },
+    {
+      path: '/register',
+      name: 'RegistrationPage',
+      component: RegistrationPage
     },
     {
       path: '/tmp',//CreateNewSpecificClass
