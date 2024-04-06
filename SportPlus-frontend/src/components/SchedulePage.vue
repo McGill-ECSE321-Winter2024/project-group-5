@@ -15,6 +15,11 @@
                 selectable
                 @row-selected="onRowSelected"
                 >
+                    <template v-slot:cell(startTime)="data">
+                        <b-table-simple-cell :class="{ 'bold-row-separator': isDateSeparator(data.item) }">
+                            {{ isDateSeparator(data.item) ? data.item.dateSeparator : formatDate(data.value) }}
+                        </b-table-simple-cell>
+                    </template>
                 </b-table>
             </div>
         </b-container>
@@ -94,16 +99,44 @@ import config from "../../config";
             CLIENT.get('/specificClass/all')
             .then(response => {
                 console.log('Response:', response.data); 
-                this.items = response.data.map(item => ({
-                    
+                const sortedItems = response.data.sort((a, b) => {
+                    // Compare dates
+                    if (a.date < b.date) return -1;
+                    if (a.date > b.date) return 1;
+
+                    // If dates are equal, compare start times
+                    if (a.startTime < b.startTime) return -1;
+                    if (a.startTime > b.startTime) return 1;
+
+                    // If both dates and start times are equal, maintain current order
+                    return 0;
+                });
+                const formattedItems = [];
+                let currentDate = null;
+                sortedItems.forEach(item => {
+                // Check if the date has changed
+                if (item.date !== currentDate) {
+                    // Insert row with day, month, and year
+                    const dateObj = new Date(item.date);
+                    const formattedDate = dateObj.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+                    formattedItems.push({ dateSeparator: formattedDate });
+                    currentDate = item.date;
+                }
+
+                // Insert the regular item
+                    formattedItems.push({
                     startTime: item.startTime,
                     date: item.date,
                     supervisor: item.instructor ? `${item.instructor.lastName}, ${item.instructor.firstName}` : '', 
                     classType: item.classType.name, 
                     duration: '60 min',
                     description: item.classType.description
-                    }));
-                })
+                });
+            });
+
+                // Assign the formatted items
+                this.items = formattedItems;
+            })
                 .catch(error => {
                     console.error('Error fetching data:', error);
                     });
@@ -113,14 +146,29 @@ import config from "../../config";
             },
             rowVariant(index) {
                 return this.selectedItem === index ? 'info' : null;
+            },
+            formatDate(dateString) {
+            const date = new Date(dateString);
+            const options = { weekday: 'short', month: 'long', day: 'numeric', year: 'numeric' };
+            return date.toLocaleDateString('en-US', options);
+            },
+            isDateSeparator(item) {
+                // Check if the item is a separator row
+                return item.dateSeparator !== undefined;
             }
-    }
+        }
 }
 </script>
 
 <style scoped>
 .tableTitle th {
   text-align: left;
+}
+
+.bold-row-separator {
+font-weight: bold;
+font-size: larger;
+text-align: left;
 }
 
 .custom-modal .modal-dialog {
