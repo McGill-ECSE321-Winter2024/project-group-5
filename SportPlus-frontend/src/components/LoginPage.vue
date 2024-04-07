@@ -54,6 +54,18 @@
 </template>
 
   <script>
+  
+  import axios from "axios";
+  import config from "../../config";
+
+  const frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
+  const backendUrl = 'http://' + config.dev.backendHost + ':' + config.dev.backendPort
+
+  const AXIOS = axios.create({
+    baseURL: backendUrl,
+    headers: { 'Access-Control-Allow-Origin': frontendUrl }
+  })
+
   export default {
     name: 'LoginPage',
     data() {
@@ -66,7 +78,35 @@
       };
     },
     methods: {
-      onLoginSubmit() {
+
+      async onLoginSubmit() {
+
+         // Create a new Date object
+        const now = new Date();
+
+        // Format the current time to match java.sql.Time format (HH:mm:ss)
+        const currentTime = now.toTimeString().split(' ')[0];
+
+        const backendBaseUrl = `http://${config.dev.backendHost}:${config.dev.backendPort}`;
+        const fullUrl = backendBaseUrl + '/login';
+        console.log(fullUrl);
+        console.log(this.loginForm.email);
+        console.log(this.loginForm.password);
+        console.log(this.userType);
+        try {
+        const response = await AXIOS.post(fullUrl, {
+          email: this.loginForm.email,
+          password: this.loginForm.password,
+          type: this.userType.toUpperCase(), // or the type of the user (OWNER, INSTRUCTOR, CLIENT)
+          currentTime: currentTime // or the format your backend expects
+        });
+        //getAccountId by email
+        this.$router.push('/SchedulePage'); 
+      } catch (error) {
+        console.error(error);
+        alert('Login failed!');
+      }
+
         // TODO: Implement your login logic here
         console.log('Login form submitted', this.loginForm, this.userType);
       }

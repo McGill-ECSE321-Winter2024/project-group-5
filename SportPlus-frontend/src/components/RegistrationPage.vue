@@ -18,12 +18,21 @@
                 <b-button variant="outline-primary" class="user-type-btn" :pressed="userType === 'Client'" @click="userType = 'Client'">Client</b-button>
             </b-button-group>
               
-              <b-form-group label="Full Name:" label-for="input-name">
+              <b-form-group label="First Name:" label-for="input-first-name">
                 <b-form-input
-                  id="input-name"
-                  v-model="registerForm.name"
+                  id="input-first-name"
+                  v-model="registerForm.firstName"
                   required
-                  placeholder="Enter full name"
+                  placeholder="Enter your first name"
+                ></b-form-input>
+              </b-form-group>
+
+              <b-form-group label="Last name:" label-for="input-last-name">
+                <b-form-input
+                  id="input-last-name"
+                  v-model="registerForm.lastName"
+                  required
+                  placeholder="Enter your last name"
                 ></b-form-input>
               </b-form-group>
   
@@ -71,12 +80,26 @@
   </template>
   
   <script>
+
+  import axios from "axios";
+  import config from "../../config";
+
+  const frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
+  const backendUrl = 'http://' + config.dev.backendHost + ':' + config.dev.backendPort
+
+  const AXIOS = axios.create({
+    baseURL: backendUrl,
+    headers: { 'Access-Control-Allow-Origin': frontendUrl }
+  })
+
+
   export default {
     name: 'RegisterPage',
     data() {
       return {
         registerForm: {
-          name: '',
+          firstName: '',
+          lastName: '',
           email: '',
           password: '',
           confirmPassword: ''
@@ -85,14 +108,56 @@
       };
     },
     methods: {
-      onRegisterSubmit() {
+      async onRegisterSubmit() {
         if (this.registerForm.password !== this.registerForm.confirmPassword) {
           // Handle password mismatch
           alert("Passwords do not match.");
           return;
         }
         // TODO: Implement your registration logic here
-        console.log('Registration form submitted', this.registerForm);
+
+        const userData = {
+          email: this.registerForm.email,
+          firstName: this.registerForm.firstName,
+          lastName: this.registerForm.lastName,
+          password: this.registerForm.password,
+        };
+
+        const backendBaseUrl = `http://${config.dev.backendHost}:${config.dev.backendPort}`;
+
+        console.log(backendBaseUrl)
+
+        // // Determine the specific endpoint based on accountType
+        let endpointPath = '';
+        switch (this.userType) {
+          case 'Client':
+            endpointPath = '/clients/create';
+            break;
+          case 'Instructor':
+            endpointPath = '/instructors/create';
+            break;
+          case 'Owner':
+            endpointPath = '/owner/create';
+            break;
+          default:
+            this.errorMessage = 'Invalid account type selected.';
+            return;
+        }
+        // Construct the full URL with the base and endpoint path
+        const fullUrl = backendBaseUrl + endpointPath;
+
+        try {
+          // Replace with your backend endpoint URL
+          const response = await axios.post(fullUrl, userData);
+
+          // Handle the response, such as redirecting the user to the SchedulePage page for now 
+          this.$router.push('/SchedulePage');
+          console.log('Registration form submitted', this.registerForm);
+        } catch (error) {
+          // Handle errors, such as displaying a message to the user
+          this.errorMessage = "Registration failed: " + (error.response.data.message || error.message);
+        }
+        
       }
     }
   };
