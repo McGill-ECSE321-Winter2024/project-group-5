@@ -57,6 +57,7 @@
   
   import axios from "axios";
   import config from "../../config";
+  import { globalState } from '@/global';
 
   const frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
   const backendUrl = 'http://' + config.dev.backendHost + ':' + config.dev.backendPort
@@ -83,28 +84,81 @@
 
          // Create a new Date object
         const now = new Date();
-
         // Format the current time to match java.sql.Time format (HH:mm:ss)
         const currentTime = now.toTimeString().split(' ')[0];
 
+
+        try {
+
+          let userExists = false;
+          // Determine the correct endpoint based on userType
+          let endpointPath = '';
+          if (this.userType === 'Client') {
+            endpointPath = `/clients/getByEmail/${this.loginForm.email}`;
+          } else if (this.userType === 'Inctructor') {
+            // Update this path according to your actual instructor endpoint
+            endpointPath = `/instructors/getByEmail/${this.loginForm.email}`;
+          }
+
+          const fullUrlGet = `http://${config.dev.backendHost}:${config.dev.backendPort}${endpointPath}`;
+
+          // Attempt to fetch the user by email
+          const userResponse = await AXIOS.get(fullUrlGet);
+
+          console.log(userResponse)
+          // Check if the user exists (based on how your backend responds)
+          userExists = userResponse && userResponse.data;
+
+          if (!userExists) {
+            alert('No account found with this email.');
+            return;
+          }
+
+        // If user exists but the password is wrong, throw an error or alert the user
+        if (userResponse.data.password !== this.loginForm.password) {
+          alert('Password is incorrect');
+          return;
+        }
+
         const backendBaseUrl = `http://${config.dev.backendHost}:${config.dev.backendPort}`;
-        const fullUrl = backendBaseUrl + '/login';
-        console.log(fullUrl);
+        const fullUrlLogin = backendBaseUrl + '/login';
+        console.log(fullUrlLogin);
         console.log(this.loginForm.email);
         console.log(this.loginForm.password);
         console.log(this.userType);
-        try {
-        const response = await AXIOS.post(fullUrl, {
+
+        // Create a login
+        const response = await AXIOS.post(fullUrlLogin, {
           email: this.loginForm.email,
           password: this.loginForm.password,
           type: this.userType.toUpperCase(), // or the type of the user (OWNER, INSTRUCTOR, CLIENT)
           currentTime: currentTime // or the format your backend expects
         });
-        //getAccountId by email
+        
+
+        // Set the global account ID 
+        let endpointPathAccountId = '';
+        if (this.userType === 'Client') {
+          endpointPathAccountId = `/clients/getByEmail/${this.loginForm.email}`;
+        } else if (this.userType === 'Instructor') {
+          endpointPathAccountId = `/instructors/getByEmail/${this.loginForm.email}`;
+        } else {
+          console.log('Invalid user type');
+          return false; // Invalid user type
+        }
+
+        const fullUrl = `http://${config.dev.backendHost}:${config.dev.backendPort}${endpointPathAccountId}`;
+        const userResponseAccountID = await AXIOS.get(fullUrl);
+
+        const accountId = userResponseAccountID.data.accountId;
+        console.log(accountId);
+        globalState.accountId = accountId;
+
+        // Go to schedule Page
         this.$router.push('/SchedulePage'); 
       } catch (error) {
         console.error(error);
-        alert('Login failed!');
+        alert('Login failed! No Account Found with this email !');
       }
 
         // TODO: Implement your login logic here

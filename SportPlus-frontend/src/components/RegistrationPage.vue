@@ -43,7 +43,13 @@
                   v-model="registerForm.email"
                   required
                   placeholder="Enter email"
+                  @input="validateEmail"
+                  :state="emailState"
+                  aria-describedby="input-email-live-feedback"
                 ></b-form-input>
+                <b-form-invalid-feedback id="input-email-live-feedback">
+                  {{ emailFeedback }}
+                </b-form-invalid-feedback>
               </b-form-group>
   
               <b-form-group label="Password:" label-for="input-password">
@@ -53,18 +59,30 @@
                   v-model="registerForm.password"
                   required
                   placeholder="Enter password"
+                  @input="validatePassword"
+                  :state="passwordState"
+                  aria-describedby="input-password-live-feedback"
                 ></b-form-input>
+                <b-form-invalid-feedback id="input-password-live-feedback">
+                  {{ passwordFeedback }}
+                </b-form-invalid-feedback>
               </b-form-group>
   
-              <b-form-group label="Confirm Password:" label-for="input-password-confirm">
-                <b-form-input
-                  id="input-password-confirm"
-                  type="password"
-                  v-model="registerForm.confirmPassword"
-                  required
-                  placeholder="Confirm password"
-                ></b-form-input>
-              </b-form-group>
+              <b-form-group label="Confirm Password:" label-for="input-password-confirm" :state="confirmPasswordState">
+              <b-form-input
+                id="input-password-confirm"
+                type="password"
+                v-model="registerForm.confirmPassword"
+                required
+                placeholder="Confirm password"
+                @input="validateConfirmPassword"
+                :state="confirmPasswordState"
+                aria-describedby="input-confirm-password-live-feedback"
+              ></b-form-input>
+              <b-form-invalid-feedback id="input-confirm-password-live-feedback">
+                {{ confirmPasswordFeedback }}
+              </b-form-invalid-feedback>
+            </b-form-group>
   
               <b-button type="submit" variant="primary" block class="register-button">Sign Up</b-button>
             
@@ -83,6 +101,7 @@
 
   import axios from "axios";
   import config from "../../config";
+  import { globalState } from '@/global';
 
   const frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
   const backendUrl = 'http://' + config.dev.backendHost + ':' + config.dev.backendPort
@@ -97,6 +116,8 @@
     name: 'RegisterPage',
     data() {
       return {
+        confirmPasswordState: null,
+        confirmPasswordFeedback: '',
         registerForm: {
           firstName: '',
           lastName: '',
@@ -108,13 +129,111 @@
       };
     },
     methods: {
+      validatePassword() {
+      const password = this.registerForm.password;
+      if (!password) {
+        this.passwordState = false;
+        this.passwordFeedback = "Password cannot be empty.";
+       } else if (password.length < 5) {
+        this.passwordState = false;
+        this.passwordFeedback = "Password must contain at least five characters.";
+       } else if (!password.match(/[A-Z]/)) {
+        this.passwordState = false;
+        this.passwordFeedback = "Password must contain an uppercase letter.";
+       } else {
+        this.passwordState = true;
+        this.passwordFeedback = "";
+       }
+     },
+
+     validateConfirmPassword() {
+      if (this.registerForm.confirmPassword !== this.registerForm.password) {
+        this.confirmPasswordState = false;
+        this.confirmPasswordFeedback = "Passwords must match.";
+      } else {
+        this.confirmPasswordState = true;
+        this.confirmPasswordFeedback = "";
+      }
+    },
+
+      validateEmail() {
+      const email = this.registerForm.email;
+      const allowedCharacters = 'abcdefghijklmnopqrstuvwxyz._-@1234567890';
+      const hasSpace = /\s/.test(email);
+      const atSymbolCount = (email.match(/@/g) || []).length;
+      const startsWithAt = email.startsWith('@');
+      const hasDotAt = email.includes('.@') || email.includes('@.');
+      const endsWithValidDomain = email.endsWith('.com') || email.endsWith('.ca');
+      const hasInvalidChars = !email.split('').every(char => allowedCharacters.includes(char.toLowerCase()));
+      const isClientWithSportPlusEmail = this.userType === 'Client' && email.endsWith('@sportplus.com');
+      const isInstructorNotWithSportPlusEmail = this.userType === 'Instructor' && !email.endsWith('@sportplus.com');
+
+      if (!email || hasSpace || atSymbolCount !== 1 || startsWithAt || hasDotAt || !endsWithValidDomain || hasInvalidChars || isClientWithSportPlusEmail || isInstructorNotWithSportPlusEmail) {
+        this.emailFeedback = 'Please enter a valid email address.';
+        if (!email) this.emailFeedback = 'Email cannot be empty.';
+        else if (hasSpace) this.emailFeedback = 'Email cannot contain spaces.';
+        else if (atSymbolCount !== 1) this.emailFeedback = 'Email can only have 1 "@" symbol.';
+        else if (!endsWithValidDomain) this.emailFeedback = 'Email can only end with .com or .ca.';
+        else if (startsWithAt) this.emailFeedback = 'Email cannot start with "@".';
+        else if (hasDotAt) this.emailFeedback = 'Email cannot contain ".@" or "@.".';
+        else if (hasInvalidChars) this.emailFeedback = 'Email contains invalid characters.';
+        else if (isClientWithSportPlusEmail) this.emailFeedback = 'Clients cannot have an email ending with "@sportplus.com".';
+        else if (isInstructorNotWithSportPlusEmail) this.emailFeedback = 'Instrcutors can only have an email ending with "@sportplus.com".';
+        this.emailState = false;
+      } else {
+        this.emailFeedback = '';
+        this.emailState = true;
+      }
+    },
+
+    async checkEmailExists(email) {
+    try {
+      let endpointPath = '';
+      if (this.userType === 'Client') {
+        endpointPath = `/clients/getByEmail/${email}`;
+      } else if (this.userType === 'Instructor') {
+        endpointPath = `/instructors/getByEmail/${email}`;
+      } else {
+        console.log('Invalid user type');
+        return false; // Invalid user type
+      }
+
+      const fullUrl = `http://${config.dev.backendHost}:${config.dev.backendPort}${endpointPath}`;
+      const userResponse = await axios.get(fullUrl);
+      console.log("HELLO");
+      console.log(userResponse);
+      return true; // If the request succeeds, the email exists
+    } catch (error) {
+       return false; // An error occurred, means an account with that email does not exist
+    }
+  },
+
       async onRegisterSubmit() {
+        // Create a new Date object
+        const now = new Date();
+        // Format the current time to match java.sql.Time format (HH:mm:ss)
+        const currentTime = now.toTimeString().split(' ')[0];
+
+        this.validateEmail();
+        this.validatePassword();
+        this.validateConfirmPassword();
+
+        const emailExists = await this.checkEmailExists(this.registerForm.email);
+
+        if (!this.emailState || !this.passwordState || !this.confirmPasswordState) {
+          alert(this.emailFeedback || this.passwordFeedback || this.confirmPasswordFeedback);
+          return;
+        }
         if (this.registerForm.password !== this.registerForm.confirmPassword) {
           // Handle password mismatch
           alert("Passwords do not match.");
           return;
         }
-        // TODO: Implement your registration logic here
+
+        if (emailExists){
+          alert("Email already in use")
+          return
+        }
 
         const userData = {
           email: this.registerForm.email,
@@ -123,9 +242,8 @@
           password: this.registerForm.password,
         };
 
-        const backendBaseUrl = `http://${config.dev.backendHost}:${config.dev.backendPort}`;
 
-        console.log(backendBaseUrl)
+        const backendBaseUrl = `http://${config.dev.backendHost}:${config.dev.backendPort}`;
 
         // // Determine the specific endpoint based on accountType
         let endpointPath = '';
@@ -144,11 +262,39 @@
             return;
         }
         // Construct the full URL with the base and endpoint path
-        const fullUrl = backendBaseUrl + endpointPath;
+        const fullUrlCreate = backendBaseUrl + endpointPath;
+        const fullUrlLogin = backendBaseUrl + '/login'
 
         try {
           // Replace with your backend endpoint URL
-          const response = await axios.post(fullUrl, userData);
+          //Creates an account
+          const responseCreate = await axios.post(fullUrlCreate, userData);
+
+          // Creates a login
+        const responseLogin = await AXIOS.post(fullUrlLogin, {
+          email: this.registerForm.email,
+          password: this.registerForm.password,
+          type: this.userType.toUpperCase(), // or the type of the user (OWNER, INSTRUCTOR, CLIENT)
+          currentTime: currentTime // or the format your backend expects
+        });
+
+
+        let endpointPathAccountId = '';
+        if (this.userType === 'Client') {
+          endpointPathAccountId = `/clients/getByEmail/${this.registerForm.email}`;
+        } else if (this.userType === 'Instructor') {
+          endpointPathAccountId = `/instructors/getByEmail/${this.registerForm.email}`;
+        } else {
+          console.log('Invalid user type');
+          return false; // Invalid user type
+        }
+
+        const fullUrl = `http://${config.dev.backendHost}:${config.dev.backendPort}${endpointPathAccountId}`;
+        const userResponseAccountID = await AXIOS.get(fullUrl);
+
+        const accountId = userResponseAccountID.data.accountId;
+        console.log(accountId);
+        globalState.accountId = accountId;
 
           // Handle the response, such as redirecting the user to the SchedulePage page for now 
           this.$router.push('/SchedulePage');

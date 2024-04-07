@@ -8,6 +8,7 @@ public class ClientResponseDto {
     private String email;
     private String firstName;
     private String lastName;
+    private String password;
 
     // Constructors
     @SuppressWarnings("unused")
@@ -19,6 +20,7 @@ public class ClientResponseDto {
         this.email = client.getEmail();
         this.firstName = client.getFirstName();
         this.lastName = client.getLastName();
+        this.password = client.getPassword();
     }
 
     // Getter & Setter AccountId
@@ -54,6 +56,10 @@ public class ClientResponseDto {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
 }
