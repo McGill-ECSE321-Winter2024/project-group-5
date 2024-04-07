@@ -95,7 +95,7 @@
           let endpointPath = '';
           if (this.userType === 'Client') {
             endpointPath = `/clients/getByEmail/${this.loginForm.email}`;
-          } else if (this.userType === 'Inctructor') {
+          } else if (this.userType === 'Instructor') {
             // Update this path according to your actual instructor endpoint
             endpointPath = `/instructors/getByEmail/${this.loginForm.email}`;
           }
