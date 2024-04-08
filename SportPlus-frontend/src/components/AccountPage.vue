@@ -95,8 +95,7 @@
 
 <script>
 import axios from "axios";
-import globals from "@/globals.js"; // Import the globals.js file
-import { BIcon } from 'bootstrap-vue';
+import { globalState } from "@/global.js"; // Import the globalState variable
 
 const CLIENT = axios.create({
     baseURL: 'http://localhost:8080'
@@ -124,17 +123,18 @@ export default {
             registrationFields: [],
             paymentMethods: [],
             paymentMethodFields: [],
-            selectedItem: null
+            selectedItem: null,
+            accountId: globalState.accountId
         };
     },
     mounted() {
-        this.fetchAccountDetails(globals.accountId);
+        this.fetchAccountDetails();
         this.fetchRegistrations();
         this.fetchPaymentMethods();
     },
     methods: {
-        fetchAccountDetails(accountId) {
-            CLIENT.get(`/clients/getById/${accountId}`)
+        fetchAccountDetails() {
+            CLIENT.get(`/clients/getById/${this.accountId}`)
                 .then(response => {
                     const { firstName, lastName, email } = response.data;
                     this.firstName = firstName;
