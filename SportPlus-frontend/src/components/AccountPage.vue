@@ -88,6 +88,36 @@
                 <div class="mb-3">
                     <b-button variant="success" @click="addPaymentMethod">Add Payment Method</b-button>
                 </div>
+                <!-- Input fields for adding a new payment method -->
+                <div class="mb-3">
+                    <label for="cardNumber">Card Number:</label>
+                    <input type="text" id="cardNumber" v-model="newCardNumber">
+                </div>
+                <div class="mb-3">
+                    <label for="expDate">Expiry Date (YYYY-MM-DD):</label>
+                    <input type="text" id="expDate" v-model="newExpDate">
+                </div>
+                <div class="mb-3">
+                    <label for="cvc">CVC:</label>
+                    <input type="text" id="cvc" v-model="newCvc">
+                </div>
+                <div class="mb-3">
+                    <label for="cardHolderName">Cardholder Name:</label>
+                    <input type="text" id="cardHolderName" v-model="newCardHolderName">
+                </div>
+                <!-- End of input fields -->
+                <div v-if="paymentMethods.length > 0">
+                    <b-card v-for="method in paymentMethods" :key="method.cardNumber">
+                        <p><strong>Card Number:</strong> {{ method.cardNumber }}</p>
+                        <!-- Add more fields of payment method as required -->
+                        <div>
+                            <b-button @click="deletePaymentMethod(method.cardNumber)" variant="danger">Delete</b-button>
+                        </div>
+                    </b-card>
+                </div>
+                <div v-else>
+                    <p>No payment methods found.</p>
+                </div>
             </b-container>
         </div>
     </div>
@@ -122,9 +152,16 @@ export default {
             registrations: [],
             registrationFields: [],
             paymentMethods: [],
-            paymentMethodFields: [],
+            paymentMethodFields: [
+                // Define fields for payment methods table
+                { key: 'cardNumber', label: 'Card Number' }
+            ],
             selectedItem: null,
-            accountId: globalState.accountId
+            accountId: globalState.accountId,
+            newCardNumber: '',
+            newExpDate: '',
+            newCvc: '',
+            newCardHolderName: ''
         };
     },
     mounted() {
@@ -155,13 +192,60 @@ export default {
                 });
         },
         fetchPaymentMethods() {
-            CLIENT.get('/payment/methods')
+            CLIENT.get(`/paymentMethod/getByClient/${this.accountId}`)
+
                 .then(response => {
-                    this.paymentMethods = response.data;
+                    this.paymentMethods = response.data.paymentMethods;
                 })
                 .catch(error => {
                     console.error('Error fetching payment methods:', error);
                 });
+        },
+        deletePaymentMethod(cardNumber) {
+            CLIENT.delete(`/paymentMethod/deleteByCardNumber/${cardNumber}`)
+                .then(() => {
+                    // Remove the deleted payment method from the list
+                    this.paymentMethods = this.paymentMethods.filter(method => method.cardNumber !== cardNumber);
+                })
+                .catch(error => {
+                    console.error('Error deleting payment method:', error);
+                });
+        },
+        addPaymentMethod() {
+            // Collect payment method details from input fields
+            const cardNumber = this.newCardNumber;
+            const expDate = this.newExpDate;
+            const cvc = this.newCvc;
+            const cardHolderName = this.newCardHolderName;
+
+            // You might need to fetch the client ID from somewhere in your application
+            const clientId = this.accountId; // Replace this with the actual client ID
+
+            // Prepare the payment method object
+            const paymentMethod = {
+                cardNumber: cardNumber,
+                expDate: expDate,
+                cvc: cvc,
+                cardHolderName: cardHolderName,
+                clientId: clientId // Assuming client ID is required and you have it available
+            };
+
+            // Send the payment method object to the backend
+            CLIENT.post('/paymentMethod/create', paymentMethod)
+                .then(response => {
+                    // Handle success response if needed
+                    // For example, you might want to refresh the payment methods list
+                    this.fetchPaymentMethods();
+                })
+                .catch(error => {
+                    console.error('Error adding payment method:', error);
+                });
+        },
+        onRowSelected(item) {
+            // Handle row selection if needed
+        },
+        rowVariant(index) {
+            // Define row variant if needed
         },
         editFirstName() {
             this.isEditingFirstName = true;
@@ -213,19 +297,9 @@ export default {
                 .catch(error => {
                     console.error('Error updating password:', error);
                 });
-        },
-        addPaymentMethod() {
-            // Functionality to add a new payment method
-        },
-        onRowSelected(item) {
-            this.selectedItem = item;
-        },
-        rowVariant(index) {
-            return this.selectedItem === index ? 'info' : null;
         }
     }
 }
-
 </script>
 
 <style scoped>

@@ -84,7 +84,7 @@ public class PaymentMethodRestController {
         // Create a new Payment Method
         PaymentMethod createdPaymentMethod = paymentMethodService.createPaymentMethod(paymentMethod.getCardNumber(),
                 paymentMethod.getExpDate(), paymentMethod.getCvc(), paymentMethod.getCardHolderName(),
-                paymentMethod.getClient());
+                clientService.getClient(paymentMethod.getClientId()));
 
         // return the response
         return new PaymentMethodResponseDto(createdPaymentMethod);
