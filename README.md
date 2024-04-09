@@ -14,8 +14,8 @@ This project is an app to manage different classes and schedules within SportPlu
 ## Team Members
                                                
                                                   
-| Name          | GitHub username |   Team Roles    | Deliverable 1 contribution hours| Deliverable 2 contribution hours|
-| ------------- | --------------- | --------------- |---------------------------------|---------------------------------|
+| Name          | GitHub username |   Team Roles    | Deliverable 1 contribution hours| Deliverable 2 contribution hours| Deliverable 3 contribution hours|
+| ------------- | --------------- | --------------- |---------------------------------|---------------------------------|---------------------------------|
 | John-Paul Chouery | JPGC04    | Tester | 30 | 40 |
 | Sophia Carbone | ezlilcoconut       | Project manager | 31 | 33 |
 | Lynn Haddad | haddadlynn             | Documentation | 31 | 24 |
