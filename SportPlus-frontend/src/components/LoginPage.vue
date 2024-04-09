@@ -13,9 +13,9 @@
             <b-form @submit.prevent="onLoginSubmit" class="login-form">
 
             <b-button-group class="btn-group">
-                <b-button variant="outline-primary" class="user-type-btn" :pressed="userType === 'Instructor'" @click="userType = 'Instructor'">Instructor </b-button>
-                <b-button variant="outline-primary" class="user-type-btn" :pressed="userType === 'Owner'" @click="userType = 'Owner'">Owner</b-button>
-                <b-button variant="outline-primary" class="user-type-btn" :pressed="userType === 'Client'" @click="userType = 'Client'">Client</b-button>
+                <b-button variant="outline-primary" class="user-type-btn" :pressed="userType === 'Instructor'" @click="setUserType('Instructor')">Instructor </b-button>
+                <b-button variant="outline-primary" class="user-type-btn" :pressed="userType === 'Owner'" @click="setUserType('Owner')">Owner</b-button>
+                <b-button variant="outline-primary" class="user-type-btn" :pressed="userType === 'Client'" @click="setUserType('Client')">Client</b-button>
             </b-button-group>
 
 
@@ -26,6 +26,7 @@
                   v-model="loginForm.email"
                   required
                   placeholder="Enter email"
+                  :disabled="emailFieldDisabled"
                 ></b-form-input>
               </b-form-group>
   
@@ -75,10 +76,22 @@
           email: '',
           password: ''
         },
-        userType: 'Client' // Default selection
+        userType: 'Client', // Default selection
+        emailFieldDisabled: false // New data property
       };
     },
     methods: {
+      setUserType(type) {
+            this.userType = type;
+            // Automatically set the email for 'Owner' and disable the field
+            if (type === 'Owner') {
+                this.loginForm.email = 'owner@sportplus.com';
+                this.emailFieldDisabled = true;
+            } else {
+                this.loginForm.email = '';
+                this.emailFieldDisabled = false; // Enable the field for other user types
+            }
+        },
 
       async onLoginSubmit() {
 
@@ -98,6 +111,8 @@
           } else if (this.userType === 'Instructor') {
             // Update this path according to your actual instructor endpoint
             endpointPath = `/instructors/getByEmail/${this.loginForm.email}`;
+          } else if (this.userType === 'Owner') {
+            endpointPath = '/owner/get';
           }
 
           const fullUrlGet = `http://${config.dev.backendHost}:${config.dev.backendPort}${endpointPath}`;
@@ -142,7 +157,10 @@
           endpointPathAccountId = `/clients/getByEmail/${this.loginForm.email}`;
         } else if (this.userType === 'Instructor') {
           endpointPathAccountId = `/instructors/getByEmail/${this.loginForm.email}`;
-        } else {
+        } else if (this.userType === 'Owner') {
+          endpointPathAccountId = `/owner/get`;
+        }
+        else {
           console.log('Invalid user type');
           return false; // Invalid user type
         }
@@ -152,7 +170,11 @@
 
         const accountId = userResponseAccountID.data.accountId;
         console.log(accountId);
+
+        //Setting up global variables 
         globalState.accountId = accountId;
+        globalState.type = this.userType
+        console.log(globalState.type)
 
         // Go to schedule Page
         this.$router.push('/SchedulePage'); 

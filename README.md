@@ -14,8 +14,8 @@ This project is an app to manage different classes and schedules within SportPlu
 ## Team Members
                                                
                                                   
-| Name          | GitHub username |   Team Roles    | Deliverable 1 contribution hours| Deliverable 2 contribution hours|
-| ------------- | --------------- | --------------- |---------------------------------|---------------------------------|
+| Name          | GitHub username |   Team Roles    | Deliverable 1 contribution hours| Deliverable 2 contribution hours| Deliverable 3 contribution hours|
+| ------------- | --------------- | --------------- |---------------------------------|---------------------------------|---------------------------------|
 | John-Paul Chouery | JPGC04    | Tester | 30 | 40 |
 | Sophia Carbone | ezlilcoconut       | Project manager | 31 | 33 |
 | Lynn Haddad | haddadlynn             | Documentation | 31 | 24 |
@@ -36,5 +36,6 @@ This project is an app to manage different classes and schedules within SportPlu
 
 [Team report 2](https://github.com/McGill-ECSE321-Winter2024/project-group-5/wiki/Project-Reports#project-report-2) includes the division of hours between the team members, the key design decisions and [meeting minutes](https://github.com/McGill-ECSE321-Winter2024/project-group-5/wiki/Minutes) for deliverable 2.
 
+[Team report 3](https://github.com/McGill-ECSE321-Winter2024/project-group-5/wiki/Project-Reports#project-report-3) includes the division of hours between the team members, the key design decisions and [meeting minutes](https://github.com/McGill-ECSE321-Winter2024/project-group-5/wiki/Minutes#deliverable-3) for deliverable 3.
 
 For more information about the SportPlus application, please consult the [wiki](../../wiki).
