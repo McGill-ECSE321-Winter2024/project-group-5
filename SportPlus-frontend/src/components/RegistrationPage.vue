@@ -313,7 +313,10 @@
 
         const accountId = userResponseAccountID.data.accountId;
         console.log(accountId);
+         //Setting up global variables
         globalState.accountId = accountId;
+        globalState.type = this.userType;
+        console.log(globalState.type)
 
           // Handle the response, such as redirecting the user to the SchedulePage page for now 
           this.$router.push('/SchedulePage');
