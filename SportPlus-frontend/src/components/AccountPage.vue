@@ -137,6 +137,25 @@
                 </div>
             </b-container>
         </div>
+
+        <!-- Fourth column: Specific Classes By Instructor -->
+        <div class="column">
+            <b-container>
+                <h2 class="tableTitle">Classes Taught By Instructor</h2>
+                <div v-if="specificClasses.length > 0">
+                    <div v-for="specificClass in specificClasses" :key="specificClass.id">
+                        <p><strong>Date:</strong> {{ specificClass.date }}</p>
+                        <p><strong>Start Time:</strong> {{ specificClass.startTime }}</p>
+                        <p><strong>End Time:</strong> {{ specificClass.endTime }}</p>
+                        <!-- Add more details as needed -->
+                    </div>
+                </div>
+                <div v-else>
+                    <p>No classes found for this instructor.</p>
+                </div>
+            </b-container>
+        </div>
+
     </div>
 </template>
 
@@ -179,7 +198,8 @@ export default {
             newExpDate: '',
             newCvc: '',
             newCardHolderName: '',
-            classTypes: []
+            classTypes: [],
+            specificClasses: []
         };
     },
     computed: {
@@ -192,8 +212,20 @@ export default {
         this.fetchRegistrations();
         this.fetchPaymentMethods();
         this.fetchClassTypes();
+        this.fetchClassesByInstructor();
     },
     methods: {
+        fetchClassesByInstructor() {
+            // Make a HTTP GET request to fetch specific classes by instructor ID
+            axios.get(`/specificClass/instructor/${this.accountId}`)
+                .then(response => {
+                    // Update your component's data with the fetched specific classes
+                    this.classTypes = response.data;
+                })
+                .catch(error => {
+                    console.error('Error fetching classes by instructor:', error);
+                });
+        },
         fetchClassTypes() {
             CLIENT.get('/classType/all')
                 .then(response => {
