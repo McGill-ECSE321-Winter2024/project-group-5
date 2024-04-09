@@ -8,7 +8,6 @@ public class InstructorResponseDto {
     private String email;
     private String firstName;
     private String lastName;
-    private String password;
 
     @SuppressWarnings("unused")
     public InstructorResponseDto() {
@@ -19,7 +18,6 @@ public class InstructorResponseDto {
         this.email = instructor.getEmail();
         this.firstName = instructor.getFirstName();
         this.lastName = instructor.getLastName();
-        this.password = instructor.getPassword();
     }
 
     public int getAccountId() {
@@ -52,10 +50,6 @@ public class InstructorResponseDto {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
 }
