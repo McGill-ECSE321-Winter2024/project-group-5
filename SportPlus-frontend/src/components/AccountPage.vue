@@ -80,30 +80,25 @@
         <div class="column">
             <b-container>
                 <h2 class="tableTitle">Payment Method</h2>
-                <div class="ScheduleTable">
-                    <b-table hover :items="paymentMethods" :fields="paymentMethodFields" :sticky-header="true"
-                        :outlined="true" :row-variant="rowVariant" select-mode="single" responsive="sm"
-                        ref="paymentMethodTable" selectable @row-selected="onRowSelected"></b-table>
-                </div>
-                <div class="mb-3">
-                    <b-button variant="success" @click="addPaymentMethod">Add Payment Method</b-button>
-                </div>
                 <!-- Input fields for adding a new payment method -->
                 <div class="mb-3">
-                    <label for="cardNumber">Card Number:</label>
-                    <input type="text" id="cardNumber" v-model="newCardNumber">
+                    <label for="cardNumber">Card Number:</label></br>
+                    <input type="text" id="cardNumber" v-model="newCardNumber"></br>
                 </div>
                 <div class="mb-3">
-                    <label for="expDate">Expiry Date (YYYY-MM-DD):</label>
-                    <input type="text" id="expDate" v-model="newExpDate">
+                    <label for="expDate">Expiry Date (YYYY-MM-DD):</label></br>
+                    <input type="text" id="expDate" v-model="newExpDate"></br>
                 </div>
                 <div class="mb-3">
-                    <label for="cvc">CVC:</label>
-                    <input type="text" id="cvc" v-model="newCvc">
+                    <label for="cvc">CVC:</label></br>
+                    <input type="text" id="cvc" v-model="newCvc"></br>
                 </div>
                 <div class="mb-3">
-                    <label for="cardHolderName">Cardholder Name:</label>
-                    <input type="text" id="cardHolderName" v-model="newCardHolderName">
+                    <label for="cardHolderName">Cardholder Name:</label></br>
+                    <input type="text" id="cardHolderName" v-model="newCardHolderName"></br>
+                </div>
+                <div class="mb-3">
+                    <b-button variant="success" @click="addPaymentMethod">Add Payment Method</b-button></br>
                 </div>
                 <!-- End of input fields -->
                 <div v-if="paymentMethods.length > 0">
