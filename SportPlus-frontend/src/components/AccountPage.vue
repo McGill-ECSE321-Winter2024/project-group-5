@@ -123,18 +123,17 @@
             <b-container>
                 <h2 class="tableTitle">Class Types</h2>
                 <!-- Display class types and approve button -->
-                <div v-if="classTypes.length > 0">
-                    <b-card v-for="classType in classTypes" :key="classType.typeId">
+                <div v-if="unapprovedClassTypes.length > 0">
+                    <b-card v-for="classType in unapprovedClassTypes" :key="classType.typeId">
                         <p><strong>Name:</strong> {{ classType.name }}</p>
                         <p><strong>Description:</strong> {{ classType.description }}</p>
-                        <p><strong>Approved:</strong> {{ classType.approved ? 'Yes' : 'No' }}</p>
                         <div>
                             <b-button @click="approveClassType(classType.typeId)" variant="success">Approve</b-button>
                         </div>
                     </b-card>
                 </div>
                 <div v-else>
-                    <p>No class types found.</p>
+                    <p>No unapproved class types found.</p>
                 </div>
             </b-container>
         </div>
@@ -182,6 +181,11 @@ export default {
             newCardHolderName: '',
             classTypes: []
         };
+    },
+    computed: {
+        unapprovedClassTypes() {
+            return this.classTypes.filter(classType => !classType.approved);
+        }
     },
     mounted() {
         this.fetchAccountDetails();
