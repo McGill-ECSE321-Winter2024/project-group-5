@@ -220,10 +220,10 @@ export default {
             axios.get(`/specificClass/instructor/${this.accountId}`)
                 .then(response => {
                     // Update your component's data with the fetched specific classes
-                    this.classTypes = response.data;
+                    this.specificClasses = response.data.specificClasses;
                 })
                 .catch(error => {
-                    console.error('Error fetching classes by instructor:', error);
+                    console.error('Error fetching specific classes by instructor:', error);
                 });
         },
         fetchClassTypes() {
@@ -248,7 +248,7 @@ export default {
                 });
         },
         fetchAccountDetails() {
-            CLIENT.get(`/clients/getById/${this.accountId}`)
+            CLIENT.get(`/instructors/getById/${this.accountId}`)
                 .then(response => {
                     const { firstName, lastName, email } = response.data;
                     this.firstName = firstName;
