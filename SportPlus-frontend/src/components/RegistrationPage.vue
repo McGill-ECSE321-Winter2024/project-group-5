@@ -13,9 +13,9 @@
 
               
             <b-button-group class="btn-group">
-                <b-button variant="outline-primary" class="user-type-btn" :pressed="userType === 'Instructor'" @click="userType = 'Instructor'">Instructor </b-button>
-                <b-button variant="outline-primary" class="user-type-btn" :pressed="userType === 'Owner'" @click="userType = 'Owner'">Owner</b-button>
-                <b-button variant="outline-primary" class="user-type-btn" :pressed="userType === 'Client'" @click="userType = 'Client'">Client</b-button>
+              <b-button variant="outline-primary" class="user-type-btn" :pressed="userType === 'Instructor'" @click="setUserType('Instructor')">Instructor</b-button>
+              <b-button variant="outline-primary" class="user-type-btn" :pressed="userType === 'Owner'" @click="setUserType('Owner')">Owner</b-button>
+              <b-button variant="outline-primary" class="user-type-btn" :pressed="userType === 'Client'" @click="setUserType('Client')">Client</b-button>
             </b-button-group>
               
               <b-form-group label="First Name:" label-for="input-first-name">
@@ -41,6 +41,7 @@
                   id="input-email"
                   type="email"
                   v-model="registerForm.email"
+                  :disabled="emailDisabled"
                   required
                   placeholder="Enter email"
                   @input="validateEmail"
@@ -116,6 +117,7 @@
     name: 'RegisterPage',
     data() {
       return {
+        emailDisabled: false,
         confirmPasswordState: null,
         confirmPasswordFeedback: '',
         registerForm: {
@@ -129,6 +131,17 @@
       };
     },
     methods: {
+      setUserType(type) {
+        this.userType = type;
+        if (type === 'Owner') {
+            this.registerForm.email = 'owner@sportplus.com';
+            this.emailDisabled = true; // Disable the email input
+        } else {
+            this.registerForm.email = ''; // Clear the email input
+            this.emailDisabled = false; // Enable the email input
+        }
+        },
+
       validatePassword() {
       const password = this.registerForm.password;
       if (!password) {
@@ -193,7 +206,10 @@
         endpointPath = `/clients/getByEmail/${email}`;
       } else if (this.userType === 'Instructor') {
         endpointPath = `/instructors/getByEmail/${email}`;
-      } else {
+      } else if (this.userType === 'Owner') {
+        endpointPath = `/owner/get`;
+      }
+       else {
         console.log('Invalid user type');
         return false; // Invalid user type
       }
@@ -284,7 +300,10 @@
           endpointPathAccountId = `/clients/getByEmail/${this.registerForm.email}`;
         } else if (this.userType === 'Instructor') {
           endpointPathAccountId = `/instructors/getByEmail/${this.registerForm.email}`;
-        } else {
+        } else if (this.userType === 'Owner') {
+          endpointPathAccountId = '/owner/get/';
+        }
+         else {
           console.log('Invalid user type');
           return false; // Invalid user type
         }
