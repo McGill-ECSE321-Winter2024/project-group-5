@@ -115,6 +115,29 @@
                 </div>
             </b-container>
         </div>
+
+
+        <!-- Fourth column: Class Types -->
+        <div class="column">
+            <!-- Class Types -->
+            <b-container>
+                <h2 class="tableTitle">Class Types</h2>
+                <!-- Display class types and approve button -->
+                <div v-if="classTypes.length > 0">
+                    <b-card v-for="classType in classTypes" :key="classType.typeId">
+                        <p><strong>Name:</strong> {{ classType.name }}</p>
+                        <p><strong>Description:</strong> {{ classType.description }}</p>
+                        <p><strong>Approved:</strong> {{ classType.approved ? 'Yes' : 'No' }}</p>
+                        <div>
+                            <b-button @click="approveClassType(classType.typeId)" variant="success">Approve</b-button>
+                        </div>
+                    </b-card>
+                </div>
+                <div v-else>
+                    <p>No class types found.</p>
+                </div>
+            </b-container>
+        </div>
     </div>
 </template>
 
@@ -156,15 +179,38 @@ export default {
             newCardNumber: '',
             newExpDate: '',
             newCvc: '',
-            newCardHolderName: ''
+            newCardHolderName: '',
+            classTypes: []
         };
     },
     mounted() {
         this.fetchAccountDetails();
         this.fetchRegistrations();
         this.fetchPaymentMethods();
+        this.fetchClassTypes();
     },
     methods: {
+        fetchClassTypes() {
+            CLIENT.get('/classType/all')
+                .then(response => {
+                    this.classTypes = response.data.classTypes;
+                })
+                .catch(error => {
+                    console.error('Error fetching class types:', error);
+                });
+        },
+        // Method to approve a class type
+        approveClassType(typeId) {
+            CLIENT.post(`/classType/approve/${typeId}`)
+                .then(response => {
+                    // Optionally, update the UI to reflect the approved class type
+                    // For example, remove it from the list
+                    this.classTypes = this.classTypes.filter(classType => classType.typeId !== typeId);
+                })
+                .catch(error => {
+                    console.error('Error approving class type:', error);
+                });
+        },
         fetchAccountDetails() {
             CLIENT.get(`/clients/getById/${this.accountId}`)
                 .then(response => {
