@@ -78,7 +78,7 @@
           password: ''
         },
         userType: 'Client', // Default selection
-        emailFieldDisabled: false, // New data property
+        emailFieldDisabled: false, 
         emailState: null,
         passwordState: null,
       };
