@@ -66,20 +66,21 @@
 
         <!-- Second column: Specific Classes By Instructor -->
         <div class="column">
-            <b-container>
-                <h2 class="tableTitle">Classes Taught By Instructor</h2>
-                <div v-if="specificClasses.length > 0">
-                    <div v-for="specificClass in specificClasses" :key="specificClass.id">
-                        <p><strong>Date:</strong> {{ specificClass.date }}</p>
-                        <p><strong>Start Time:</strong> {{ specificClass.startTime }}</p>
-                        <p><strong>End Time:</strong> {{ specificClass.endTime }}</p>
-                        <!-- Add more details as needed -->
-                    </div>
+            <b-col lg="10">
+                <div class="empty-divider-table"></div>
+                <h2 class="tableTitle">Class Schedule</h2>
+                <div class="ScheduleTable">
+                    <b-table hover id="schedule-tb" small :items="classes" :fields="filteredFields"
+                        :sticky-header="true" :outlined="true" select-mode="single" responsive="sm"
+                        ref="selectableTable" selectable @row-selected="onClassSelected">
+                        <template v-slot:cell(startTime)="data">
+                            <b-table-simple :class="{ 'bold-row-separator': isDateSeparator(data.item) }">
+                                {{ isDateSeparator(data.item) ? data.item.dateSeparator : (data.value) }}
+                            </b-table-simple>
+                        </template>
+                    </b-table>
                 </div>
-                <div v-else>
-                    <p>No classes found for this instructor.</p>
-                </div>
-            </b-container>
+            </b-col>
         </div>
 
     </div>
@@ -88,14 +89,24 @@
 <script>
 import axios from "axios";
 import { globalState } from "@/global.js"; // Import the globalState variable
+import config from "../../config";
+
+const backendUrl = 'http://' + config.dev.backendHost + ':' + config.dev.backendPort
+const frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
 
 const CLIENT = axios.create({
-    baseURL: 'http://localhost:8080'
+    baseURL: backendUrl,
+    headers: { 'Access-Control-Allow-Origin': frontendUrl }
+
 });
 
 export default {
     name: 'AccountPageInstructor',
+
     data() {
+        const now = new Date();
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
         return {
             firstName: '',
             lastName: '',
@@ -125,19 +136,226 @@ export default {
             newCvc: '',
             newCardHolderName: '',
             classTypes: [],
-            specificClasses: []
+            specificClasses: [],
+            min: today,
+            displayError_I: false,
+            displayError_T: false,
+            teachError: null,
+            teachOK: null,
+            startDate: null,
+            endDate: null,
+            option: 'no-filter',
+            searchDate: false,
+            createNewSpecificClass: false,
+            createNewClassType: false,
+            modifySelected: false,
+            showSelected: false,
+            selectedClass: null,
+            selectedInstructor: null,
+            selectedType: null,
+            classes: [],
+            instructors: [],
+            types: [],
+            fields_C: [
+                { key: 'startTime', label: 'Start Time', show: true },
+                { key: 'date', label: 'Date', show: false },
+                { key: 'classType', label: 'Class Type', show: true },
+                { key: 'supervisor', label: 'Instructor', show: false },
+                { key: 'duration', label: 'Duration', show: true },
+                { key: 'description', show: false },
+                { key: 'id', show: false }
+            ],
+            fields_I: [
+                { key: 'firstName', label: 'Instructor', show: true },
+                { key: 'accountId', label: 'Id', show: false }
+            ],
+            fields_T: [
+                { key: 'name', label: 'Class Type', show: true },
+                { key: 'typeId', label: 'Id', show: false }
+            ]
         };
     },
     computed: {
         unapprovedClassTypes() {
             return this.classTypes.filter(classType => !classType.approved);
+        },
+        filteredFields() {
+            return this.fields_C.filter(field => field.show);
+        },
+        filteredInstructors() {
+            return this.fields_I.filter(field => field.show);
+        },
+        filteredClassTypes() {
+            return this.fields_T.filter(field => field.show);
         }
     },
     mounted() {
         this.fetchAccountDetails();
         this.fetchClassesByInstructor();
+        this.fetchData();
+        this.fetchData_Instructors();
+        this.fetchData_ClassTypes();
     },
     methods: {
+        fetchEndpoint() {
+        // Always fetch data filtered by accountId
+        return `/specificClass/instructor/${this.accountId}`;
+    },
+
+        fetchData() {
+            const endpoint = this.fetchEndpoint(this.option);
+            CLIENT.get(endpoint)
+                .then(response => {
+                    console.log('Response:', response.data);
+                    const filteredClasses = response.data.filter(item => {
+                        const classDate = new Date(item.date);
+                        const today = new Date();
+                        return classDate >= today;
+                    });
+                    const sortedClasses = filteredClasses.sort((a, b) => {
+                        // Compare dates
+                        if (a.date < b.date) return -1;
+                        if (a.date > b.date) return 1;
+
+                        // If dates are equal, compare start times
+                        if (a.startTime < b.startTime) return -1;
+                        if (a.startTime > b.startTime) return 1;
+
+                        // If both dates and start times are equal, maintain current order
+                        return 0;
+                    });
+                    const formattedClasses = [];
+                    let currentDate = null;
+                    sortedClasses.forEach(item => {
+                        // Check if the date has changed
+                        if (item.date !== currentDate) {
+                            // Insert row with day, month, and year
+                            const dateObj = new Date(item.date);
+                            dateObj.setDate(dateObj.getDate() + 1);
+                            const formattedDate = dateObj.toLocaleDateString('en-US', { weekday: 'short', month: 'long', day: 'numeric', year: 'numeric' }).replace(',', '');;
+                            formattedClasses.push({ dateSeparator: formattedDate });
+                            currentDate = item.date;
+                        }
+
+                        // Insert the regular item
+                        formattedClasses.push({
+                            startTime: item.startTime,
+                            date: item.date,
+                            supervisor: item.instructor ? `${item.instructor.lastName}, ${item.instructor.firstName}` : '',
+                            classType: item.classType.name,
+                            duration: '60 min',
+                            description: item.classType.description,
+                            id: item.id
+                        });
+                    });
+
+                    // Assign the formatted classes
+                    this.classes = formattedClasses;
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+        },
+        fetchData_Instructors() {
+            // Make an HTTP GET request to fetch instructors
+            CLIENT.get('/instructors/all')
+                .then(response => {
+                    const resp = response.data.instructors;
+                    console.log("responseInstructors", resp);
+                    const instructorsData = resp.map(supervisor => ({
+                        firstName: `${supervisor.lastName}, ${supervisor.firstName}`,
+                        accountId: supervisor.accountId,
+                    }));
+                    // Assign the retrieved instructors to the instructors array
+                    this.instructors = instructorsData;
+                })
+                .catch(error => {
+                    console.error('Error fetching instructors:', error);
+                });
+        },
+        fetchData_ClassTypes() {
+            // Make an HTTP GET request to fetch classTypes
+            CLIENT.get('/classType/all')
+                .then(response => {
+                    const resp = response.data.classTypes;
+                    console.log("responseClassTypes", resp);
+                    const approvedClassTypes = resp.filter(type => type.approved);
+                    console.log("approvedTypes", approvedClassTypes);
+                    const classTypesData = approvedClassTypes.map(classType => ({
+                        name: classType.name,
+                        typeId: classType.typeId,
+                    }));
+
+                    // Assign the retrieved classTypes to types array
+                    this.types = classTypesData;
+                })
+                .catch(error => {
+                    console.error('Error fetching classTypes:', error);
+                });
+        },
+        assignMyself() {
+            console.log("yeehaw", JSON.parse(JSON.stringify((globalState.accountId))));
+            const specificClassRequestBody = {
+                instructorId: globalState.accountId
+            }
+            const id = JSON.parse(JSON.stringify(this.selectedClass))[0].id;
+            console.log("this.selectedClass", this.selectedClass);
+            console.log("id", id);
+            console.log("url", `/${id}/assign-instructor`);
+            CLIENT.put(`specificClass/${id}/assign-instructor`, specificClassRequestBody).then(response => {
+                this.teachOK = true;
+
+            }).catch(error => {
+                this.teachError = "Could not Assign you to this class";
+                this.teachOK = false;
+                console.log("error", error);
+            });
+
+        },
+        onClassSelected(item) {
+            this.selectedClass = item;
+            console.log('Selected class:', item);
+        },
+        onInstructorSelected(item) {
+            this.selectedInstructor = item;
+            console.log('Selected instructor:', item);
+        },
+        onTypeSelected(item) {
+            this.selectedType = item;
+            console.log('Selected type:', item);
+        },
+        tabIsAllAvailable(tab) {
+            this.option = 'all-available';
+            this.fetchData();
+        },
+        tabIsNoFilter(tab) {
+            this.option = 'no-filter';
+            this.fetchData();
+        },
+        tabIsInstructor(tab) {
+            this.option = 'filter-by-instructors';
+            this.fetchData_Instructors();
+        },
+        tabIsClassType(tab) {
+            this.option = 'filter-by-classType';
+            this.fetchData_ClassTypes();
+        },
+        tabIsByDate() {
+            this.option = 'filter-by-dates';
+            console.log('tab', option);
+        },
+        rowVariant(index) {
+            return this.selectedClass === index ? 'info' : null;
+        },
+        formatDate(dateString) {
+            const date = new Date(dateString);
+            const options = { weekday: 'short', month: 'long', day: 'numeric', year: 'numeric' };
+            return date.toLocaleDateString('en-US', options);
+        },
+        isDateSeparator(item) {
+            // Check if the item is a separator row
+            return item.dateSeparator !== undefined;
+        },
         fetchClassesByInstructor() {
             // Make a HTTP GET request to fetch specific classes by instructor ID
             axios.get(`/specificClass/instructor/${this.accountId}`)
@@ -233,7 +451,7 @@ export default {
 }
 
 .column {
-    flex-basis: 30%;
+    flex-basis: 45%;
     padding: 10px;
 }
 

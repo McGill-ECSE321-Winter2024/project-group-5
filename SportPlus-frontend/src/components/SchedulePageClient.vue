@@ -220,7 +220,7 @@ import config from "../../config";
             const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
         return {
-            registrationOK: false,
+            registrationOK: true,
             registrationError: null,
             closeRegPanel: null,
             min: today,
@@ -248,7 +248,7 @@ import config from "../../config";
                 { key: 'description', show: false},
                 { key: 'id', show: false},
                 { key: 'name', show: false},
-                { key: 'numOfRegistrations', show: false}
+                { key: 'numOfRegistrations', show: true}
                 ],
             fields_I: [
                 {key: 'firstName', label: 'Instructor', show: true},
@@ -353,7 +353,7 @@ import config from "../../config";
                         duration: '60 min',
                         description: item.classType.description,
                         id: item.id,
-                        name: item.name,
+                        name: item.name
                     });
                 });
 
@@ -363,7 +363,6 @@ import config from "../../config";
                     .catch(error => {
                         console.error('Error fetching data:', error);
                         });
-                
             },
             fetchData_Instructors(){
                 // Make an HTTP GET request to fetch instructors
@@ -427,7 +426,6 @@ import config from "../../config";
                 console.log("email input to isAlre...",globalState.accountEmail);
                 CLIENT.get(`/registrations/getByClient/${globalState.accountEmail}`).then(response =>{
                     if(response.data.length === 0){
-                        this.isAlreadyReg= false;
                         return;
                     }else{
                     const resp = response.data.registrations;
@@ -444,24 +442,38 @@ import config from "../../config";
                     this.isAlreadyReg= false;
                     return;
                 });
-            },
-            classIsComplete(){
-                CLIENT.get(`/registrations/getBySpecificClass/${JSON.stringify(this.selectedClass)[0].id}`).then(response =>{
+                CLIENT.get(`/registrations/getBySpecificClass/${JSON.parse(JSON.stringify(this.selectedClass))[0].id}`).then(response =>{
                     if(response.data.length >= 30){
-                        this.classIsFull = true;
-                        
+                        this.registrationError = "This class is full!"
                     }else{
-                        this.classIsFull = false;
-                        
+                        return;
                     }
                 }).catch(error =>{
-                    console.error('Error getBySpecificClass:', error);
-                    return true;
+                    console.error('Error:', error);
                 });
-            },
-            handleModalClose(){
-                this.registrationOK = null;
-                this.registrationError = null;
+                //since registration doesnt already exist & class not full, register for class
+                const client = {
+                    Email: globalState.accountEmail, 
+                    FirstName:null,
+                    Password: null, 
+                    LastName: null,
+                    AccountId: globalState.accountId
+                };
+                const specificClass = {
+                    name: JSON.parse(JSON.stringify(this.selectedClass))[0].name,
+                    //TODO 
+                };
+                const requestBody = {
+                    client: client,
+                    specificClass: specificClass
+                };
+                CLIENT.post("/registrations/create", requestBody).then(response =>{
+
+                }).catch(error =>{
+                    console.error('Error:', error);
+                    this.registrationError = ""
+                });
+
             },
             onClassSelected(item) {
                 this.selectedClass = item;
