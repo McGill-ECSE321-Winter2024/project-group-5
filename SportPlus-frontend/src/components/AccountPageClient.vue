@@ -144,7 +144,13 @@ export default {
             oldPasswordFieldType: 'password',
             newPasswordFieldType: 'password',
             registrations: [],
-            registrationFields: [],
+            registrationFields: [
+                // Define fields for registration table
+                { key: 'date', label: 'Date' },
+                { key: 'classType', label: 'Class Type' },
+                { key: 'instructor', label: 'Instructor' },
+                // Add more fields as needed
+            ],
             paymentMethods: [],
             paymentMethodFields: [
                 // Define fields for payment methods table
@@ -152,6 +158,7 @@ export default {
             ],
             selectedItem: null,
             accountId: globalState.accountId,
+            accountEmail: globalState.accountEmail,
             newCardNumber: '',
             newExpDate: '',
             newCvc: '',
@@ -184,7 +191,7 @@ export default {
                 });
         },
         fetchRegistrations() {
-            CLIENT.get('/registrations')
+            axios.get(`/registrations/getByClient/${this.accountEmail}`)
                 .then(response => {
                     this.registrations = response.data;
                 })
