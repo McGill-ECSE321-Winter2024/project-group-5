@@ -70,7 +70,7 @@ export default {
 
       await AXIOS.delete(fullUrlLogout);
 
-      //Go Back to login 
+      //Go Back to login Page
       this.$router.push('/');
 
       } catch (error) {
