@@ -12,7 +12,7 @@
                         </b-row>
                         <!-- button group-->
                         <div class="btn-group-vertical">
-                            <b-button variant="outline-primary" @click="showSelected = true" class="mb-2">View Selected</b-button>
+                            <b-button variant="outline-primary" @click="showSelected = true" class="mb-2">View Selected || Assign </b-button>
                             <b-button variant="outline-primary" @click="createNewSpecificClass = true" class="mb-2">Create New Specific Class</b-button>
                             <b-button variant="outline-primary" @click="createNewClassType = true" class="mb-2">Create New ClassType</b-button>
                         </div>
@@ -176,13 +176,13 @@
 
                     </b-col>
                     <b-col>
-                        <b-button variant="outline-primary" @click="assignMyself" class="mb-2">Register to Teach this Class</b-button>
-                        <div v-if="teachOK" 
+                        <b-button v-if="!JSON.parse(JSON.stringify(this.selectedClass))[0].supervisor" variant="outline-primary" @click="assignMyself" class="mb-2">Register to Teach this Class</b-button>
+                        <div v-if="teachOK && !JSON.parse(JSON.stringify(this.selectedClass))[0].supervisor" 
                             class="success-message"
                             style="color: green; text-decoration: underline;"
                             >Your request was processed successfully!
                         </div>
-                        <div v-if="!teachOK" 
+                        <div v-if="!teachOK && !JSON.parse(JSON.stringify(this.selectedClass))[0].supervisor" 
                             class="Error-message"
                             style="color: red; text-decoration: underline;"
                             >{{this.teachError}}
@@ -231,6 +231,8 @@ import config from "../../config";
             min: today,
             displayError_I: false,
             displayError_T: false,
+            teachError: null,
+            teachOK:null,
             startDate: null,
             endDate: null,
             option: 'no-filter',
@@ -251,7 +253,8 @@ import config from "../../config";
                 { key: 'classType', label: 'Class Type',show:true },
                 { key: 'supervisor', label: 'Instructor', show:true },
                 { key: 'duration', label: 'Duration', show: true },
-                { key: 'description', show: false}
+                { key: 'description', show: false},
+                { key: 'id', show: false}
                 ],
             fields_I: [
                 {key: 'firstName', label: 'Instructor', show: true},
@@ -356,7 +359,8 @@ import config from "../../config";
                         supervisor: item.instructor ? `${item.instructor.lastName}, ${item.instructor.firstName}` : '', 
                         classType: item.classType.name, 
                         duration: '60 min',
-                        description: item.classType.description
+                        description: item.classType.description,
+                        id: item.id
                     });
                 });
 
@@ -404,7 +408,25 @@ import config from "../../config";
                     console.error('Error fetching classTypes:', error);
                     });
             },
-            
+            assignMyself(){
+                console.log("yeehaw",JSON.parse(JSON.stringify((globalState.accountId))));
+                const specificClassRequestBody = {
+                    instructorId: globalState.accountId
+                }
+                const id = JSON.parse(JSON.stringify(this.selectedClass))[0].id;
+                console.log("this.selectedClass", this.selectedClass);
+                console.log("id", id);
+                console.log("url", `/${id}/assign-instructor`);
+                CLIENT.put(`/${id}/assign-instructor`,specificClassRequestBody).then(response =>{
+                    this.teachOK =true;
+                   
+                }).catch(error =>{
+                    this.teachError = "Could not Assign you to this class";
+                    this.teachOK = false;
+                    console.log("error", error);
+                });
+
+            },
             onClassSelected(item) {
                 this.selectedClass = item;
                 console.log('Selected class:', item);

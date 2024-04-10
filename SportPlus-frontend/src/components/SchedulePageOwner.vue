@@ -50,7 +50,7 @@
                             <b-tab id="no-filter" title="No Filter" @click="tabIsNoFilter"></b-tab>
                             <b-tab id="all-available" title="Open for Registration" @click="tabIsAllAvailable"></b-tab>
                             <b-tab id="filter-by-dates" title="Filter By Date Range" @click="tabIsByDate">
-                                <b-card style="width:100%; height: 200px">
+                                <b-card style="width:100%; height: 250px">
                                     <b-row class="2">
                                         <b-col>
                                             <label for="datepicker-start">Start Date</label>
@@ -101,7 +101,7 @@
                             
                             <b-tab id="filter-by-instructors" title="Filter By Instructor" @click="tabIsInstructor">
                                 <b-card style="width: 100%;
-                                    height: 200px">
+                                    height: 250px">
                                         <b-table hover
                                             id="filterInstructors"
                                             small
@@ -129,7 +129,7 @@
                             </b-tab>
                             <b-tab id="filter-by-classType" title="Filter By ClassType" @click="tabIsClassType">
                                 <b-card style="width: 100%;
-                                        height: 200px">
+                                        height: 250pxpx">
                                     <b-table hover
                                         small
                                         :items="types"
@@ -245,10 +245,7 @@ import config from "../../config";
 
     const CLIENT = axios.create({
         baseURL: backendUrl,
-        headers: {
-        'Access-Control-Allow-Origin': frontendUrl,
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE',
-    }
+        headers: { 'Access-Control-Allow-Origin': frontendUrl }
         
     });
 
@@ -393,6 +390,7 @@ import config from "../../config";
                     if (item.date !== currentDate) {
                         // Insert row with day, month, and year
                         const dateObj = new Date(item.date);
+                        dateObj.setDate(dateObj.getDate() + 1);
                         const formattedDate = dateObj.toLocaleDateString('en-US', { weekday: 'short', month: 'long', day: 'numeric', year: 'numeric' }).replace(',', '');;
                         formattedClasses.push({ dateSeparator: formattedDate });
                         currentDate = item.date;
