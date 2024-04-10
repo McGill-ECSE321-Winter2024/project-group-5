@@ -341,6 +341,7 @@ import config from "../../config";
                     if (item.date !== currentDate) {
                         // Insert row with day, month, and year
                         const dateObj = new Date(item.date);
+                        dateObj.setDate(dateObj.getDate() + 1);
                         const formattedDate = dateObj.toLocaleDateString('en-US', { weekday: 'short', month: 'long', day: 'numeric', year: 'numeric' }).replace(',', '');;
                         formattedClasses.push({ dateSeparator: formattedDate });
                         currentDate = item.date;
