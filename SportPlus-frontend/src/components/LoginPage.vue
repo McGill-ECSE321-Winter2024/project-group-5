@@ -27,6 +27,7 @@
                   required
                   placeholder="Enter email"
                   :disabled="emailFieldDisabled"
+                  :state="emailState"
                 ></b-form-input>
               </b-form-group>
   
@@ -37,11 +38,11 @@
                   v-model="loginForm.password"
                   required
                   placeholder="Enter password"
+                  :state="passwordState"
                 ></b-form-input>
               </b-form-group>
 
-              
-                <b-button type="submit" variant="primary" block class="login-button">Login</b-button>
+              <b-button type="submit" variant="primary" block class="login-button">Login</b-button>
             
             </b-form>
             
@@ -58,8 +59,9 @@
   
   import axios from "axios";
   import config from "../../config";
-  import { globalState } from "@/global.js";
+  import { globalState } from '@/global.js';
 
+  // Setting up urls
   const frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
   const backendUrl = 'http://' + config.dev.backendHost + ':' + config.dev.backendPort
 
@@ -77,7 +79,9 @@
           password: ''
         },
         userType: 'Client', // Default selection
-        emailFieldDisabled: false // New data property
+        emailFieldDisabled: false, 
+        emailState: null,
+        passwordState: null,
       };
     },
     methods: {
@@ -100,47 +104,11 @@
         // Format the current time to match java.sql.Time format (HH:mm:ss)
         const currentTime = now.toTimeString().split(' ')[0];
 
-
         try {
-
-          let userExists = false;
-          // Determine the correct endpoint based on userType
-          let endpointPath = '';
-          if (this.userType === 'Client') {
-            endpointPath = `/clients/getByEmail/${this.loginForm.email}`;
-          } else if (this.userType === 'Instructor') {
-            // Update this path according to your actual instructor endpoint
-            endpointPath = `/instructors/getByEmail/${this.loginForm.email}`;
-          } else if (this.userType === 'Owner') {
-            endpointPath = '/owner/get';
-          }
-
-          const fullUrlGet = `http://${config.dev.backendHost}:${config.dev.backendPort}${endpointPath}`;
-
-          // Attempt to fetch the user by email
-          const userResponse = await AXIOS.get(fullUrlGet);
-
-          console.log(userResponse)
-          // Check if the user exists (based on how your backend responds)
-          userExists = userResponse && userResponse.data;
-
-          if (!userExists) {
-            alert('No account found with this email.');
-            return;
-          }
-
-        // If user exists but the password is wrong, throw an error or alert the user
-        if (userResponse.data.password !== this.loginForm.password) {
-          alert('Password is incorrect');
-          return;
-        }
-
+        
+        //Create the login url 
         const backendBaseUrl = `http://${config.dev.backendHost}:${config.dev.backendPort}`;
         const fullUrlLogin = backendBaseUrl + '/login';
-        console.log(fullUrlLogin);
-        console.log(this.loginForm.email);
-        console.log(this.loginForm.password);
-        console.log(this.userType);
 
         // Create a login
         const response = await AXIOS.post(fullUrlLogin, {
@@ -149,9 +117,11 @@
           type: this.userType.toUpperCase(), // or the type of the user (OWNER, INSTRUCTOR, CLIENT)
           currentTime: currentTime // or the format your backend expects
         });
-        
 
-        // Set the global account ID 
+        // LOGIN CREATED SUCCESFULLY
+        
+        // Set the global account variables
+        //Retreive the account
         let endpointPathAccountId = '';
         if (this.userType === 'Client') {
           endpointPathAccountId = `/clients/getByEmail/${this.loginForm.email}`;
@@ -165,25 +135,36 @@
           return false; // Invalid user type
         }
 
+        // Get info of the account 
         const fullUrl = `http://${config.dev.backendHost}:${config.dev.backendPort}${endpointPathAccountId}`;
         const userResponseAccountID = await AXIOS.get(fullUrl);
 
         const accountId = userResponseAccountID.data.accountId;
         console.log(accountId);
 
-        //Setting up global variables 
+        //S etting up global variables 
         globalState.accountId = accountId;
-        globalState.type = this.userType
+        globalState.type = this.userType;
+        globalState.accountEmail = this.loginForm.email;
+        console.log(this.loginForm.email);
+        console.log(globalState.accountEmail);
+  
         console.log(globalState.type)
 
-        // Go to schedule Page
+        // Go to schedule Page if succesfull
+        this.emailState = null;
+        this.passwordState = null;
         this.$router.push('/SchedulePage'); 
       } catch (error) {
+
+        // Any errors means the backend returned an error 
+        // Meaning we couldn't login with the info provided 
+        this.emailState = false;
+        this.passwordState = false;
         console.error(error);
-        alert('Login failed! No Account Found with this email !');
+        alert('Login failed! Email or password incorrect !');
       }
 
-        // TODO: Implement your login logic here
         console.log('Login form submitted', this.loginForm, this.userType);
       }
     }
@@ -191,12 +172,11 @@
   </script>
   
   <style scoped>
-    /* Add your font import here, for example from Google Fonts */
+
     @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
-
     .login-background {
-    position: relative; /* Needed for the absolute positioning of the pseudo-element */
+    position: relative; 
     background: url('~@/assets/workoutjpg.jpg') no-repeat center center;
     background-size: cover;
     height: 100%;
@@ -216,16 +196,16 @@
 
     .login-title {
     text-align: left;
-    font-size: 1.5rem; /* Smaller size */
-    font-family: 'Roboto', sans-serif; /* Change the font */
+    font-size: 1.5rem;
+    font-family: 'Roboto', sans-serif; 
     }
 
     .login-subtitle {
     font-size: 0.95rem;
     font-family: 'Roboto', sans-serif;
     text-align: left;
-    color: #6c757d; /* Subdued color for the subtitle */
-    margin-top: -0.5rem; /* Adjust spacing as needed */
+    color: #6c757d;
+    margin-top: -0.5rem; 
     }
 
     .login-form {
@@ -244,7 +224,6 @@
     margin-bottom: 2rem;
     }
 
-    /* Continue with the rest of your styles... */
   </style>
 
   
