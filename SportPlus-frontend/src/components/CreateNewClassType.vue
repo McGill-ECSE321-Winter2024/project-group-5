@@ -117,11 +117,11 @@ let endpointPath = '';
         // Create the URL
         
         const classtype={ name: this.className, description: this.description ,approved : null,approver:null};
-        const response = await axios.post(backendBaseUrl,'/create', classtype);
+        const response = await AXIOS.post(backendBaseUrl,'/create', classtype);
         this.classTypes.push(response.data); // Add the newly created class type to the list
-        const response1 = await axios.get(backendBaseUrl,'/get', this.typeID);
+        const response1 = await AXIOS.get(backendBaseUrl,'/get', this.typeID);
         if(globalState.user=="Owner"){ // if the owner iscreating approve
-            await axios.post(backendBaseUrl,'/approve',response1.data.className);
+            await AXIOS.post(backendBaseUrl,'/approve',response1.data.className);
         }
         this.classType = { name: '', description: '' }; // Reset form
         alert('Class type created successfully!');
@@ -135,7 +135,7 @@ let endpointPath = '';
   try {
     // Check if there's a new name to update and send the request
     if (this.newName && this.typeID) {
-      await axios.put(baseURL,`/updateName/${this.typeID}`, this.newName, {
+      await AXIOS.put(baseURL,`/updateName/${this.typeID}`, this.newName, {
         headers: {
           'Content-Type': 'application/json'
         }
@@ -145,7 +145,7 @@ let endpointPath = '';
 
     // Check if there's a new description to update and send the request
     if (this.newDescription && this.typeID) {
-      await axios.put(baseURL,`/updateDescription/${this.typeID}`, this.newDescription, {
+      await AXIOS.put(baseURL,`/updateDescription/${this.typeID}`, this.newDescription, {
         headers: {
           'Content-Type': 'application/json'
         }
@@ -165,7 +165,7 @@ let endpointPath = '';
 },
     async deleteClassType (){
         try {
-        await axios.delete(backendBaseUrl,'/delete',this.className);
+        await AXIOS.delete(backendBaseUrl,'/delete',this.className);
         this.fetchAllClassTypes();
       } catch (error) {
         console.error('There was an error deleting the class type:', error);
