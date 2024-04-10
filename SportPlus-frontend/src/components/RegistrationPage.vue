@@ -209,7 +209,14 @@
       } else if (this.userType === 'Instructor') {
         endpointPath = `/instructors/getByEmail/${email}`;
       } else if (this.userType === 'Owner') {
-        endpointPath = `/owner/get`;
+        const fullUrl = `http://${config.dev.backendHost}:${config.dev.backendPort}/owner/get`;
+      const response = await axios.get(fullUrl);
+      // Check if the response contains data and if the firstName is null or empty
+      if (response.data && (!response.data.firstName || response.data.firstName.trim() === '')) {
+        return false; // Owner account is not fully set up, allow registration
+      } else {
+        return true; // Owner account already exists and is fully set up, prevent registration
+      }
       }
        else {
         console.log('Invalid user type');

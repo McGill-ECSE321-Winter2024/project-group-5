@@ -142,13 +142,16 @@
         const accountId = userResponseAccountID.data.accountId;
         console.log(accountId);
 
-        //S etting up global variables 
         globalState.accountId = accountId;
         globalState.type = this.userType;
         globalState.accountEmail = this.loginForm.email;
-        console.log(this.loginForm.email);
+
+        localStorage.setItem('accountId', accountId);
+        localStorage.setItem('type', this.userType);
+        localStorage.setItem('accountEmail', this.loginForm.email);
+
+        console.log(globalState.accountId);
         console.log(globalState.accountEmail);
-  
         console.log(globalState.type)
 
         // Go to schedule Page if succesfull

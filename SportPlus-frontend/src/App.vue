@@ -7,7 +7,7 @@
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav>
           <b-nav-item :to="schedulePath">Schedule</b-nav-item>
-          <b-nav-item to="/AccountPage">Account Page</b-nav-item>
+          <b-nav-item to="/account">Account Page</b-nav-item>
           <!-- More links can be added here -->
         </b-navbar-nav>
         <!-- Right aligned items -->

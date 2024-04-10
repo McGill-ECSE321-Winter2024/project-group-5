@@ -217,7 +217,7 @@ export default {
     methods: {
         fetchClassesByInstructor() {
             // Make a HTTP GET request to fetch specific classes by instructor ID
-            axios.get(`/specificClass/instructor/${this.accountId}`)
+            axios.get(`/specificClass/client/${this.accountId}`)
                 .then(response => {
                     // Update your component's data with the fetched specific classes
                     this.specificClasses = response.data.specificClasses;
@@ -248,7 +248,7 @@ export default {
                 });
         },
         fetchAccountDetails() {
-            CLIENT.get(`/instructors/getById/${this.accountId}`)
+            CLIENT.get(`/clients/getById/${this.accountId}`)
                 .then(response => {
                     const { firstName, lastName, email } = response.data;
                     this.firstName = firstName;
