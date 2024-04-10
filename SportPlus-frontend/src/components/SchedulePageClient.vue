@@ -12,7 +12,7 @@
                         </b-row>
                         <!-- button group-->
                         <div class="btn-group-vertical">
-                            <b-button variant="outline-primary" @click="showSelected = true" class="mb-2">View Selected</b-button>
+                            <b-button variant="outline-primary" @click="showSelected = true" class="mb-2">View Selected || Register</b-button>
                         </div>
                     </b-card>
                 </b-col>
@@ -93,13 +93,13 @@
                                         @click="fetchData" 
                                         class="mb-2"
                                         v-if="endDate && startDate"
-                                        >Search</b-button>
+                                        >Filter</b-button>
                                 </b-card>
                             </b-tab>
                             
                             <b-tab id="filter-by-instructors" title="Filter By Instructor" @click="tabIsInstructor">
                                 <b-card style="width: 100%;
-                                    height: 180px">
+                                    height: 100%">
                                         <b-table hover
                                             small
                                             :items="instructors"
@@ -116,7 +116,7 @@
                                             @click="fetchData" 
                                             class="mb-2"
                                             v-if="selectedInstructor"
-                                            >Search</b-button>
+                                            >Filter</b-button>
                                         <div v-if="displayError_I"  
                                                 class="error-message"
                                                 style="color: red; text-decoration: underline;"
@@ -126,7 +126,7 @@
                             </b-tab>
                             <b-tab id="filter-by-classType" title="Filter By ClassType" @click="tabIsClassType">
                                 <b-card style="width: 100%;
-                                        height: 180px">
+                                        height: 100%">
                                     <b-table hover
                                         small
                                         :items="types"
@@ -143,7 +143,7 @@
                                             @click="fetchData" 
                                             class="mb-2"
                                             v-if="selectedType"
-                                        >Search</b-button>
+                                        >Filter</b-button>
                                         <div v-if="displayError_T" 
                                             class="error-message"
                                             style="color: red; text-decoration: underline;"
@@ -158,11 +158,7 @@
             
         </b-container>
         <div>
-            <b-modal v-model="createNewSpecificClass" title="Create New Class">
-                <CreateNewSpecificClass />
-            </b-modal>
-            
-            <b-modal v-model="showSelected" title="Class Details">
+            <b-modal v-model="showSelected" title="Class Details" @close="handleModalClose">
                 <div v-if="selectedClass">
                     <p><strong>Instructor Name:</strong> {{JSON.parse(JSON.stringify(this.selectedClass))[0].supervisor}}</p>
                     <p><strong>Class Type:</strong> {{JSON.parse(JSON.stringify(this.selectedClass))[0].classType}}</p>
@@ -171,13 +167,16 @@
 
                     </b-col>
                     <b-col>
-                        <b-button variant="outline-primary" @click="registerForClass" class="mb-2">Register for This Class</b-button>
-                        <div v-if="registrationOK" 
+                        <b-button variant="outline-primary" 
+                        @click="registerForClass" 
+                        v-bind:disabled="registrationOK" 
+                        class="mb-2">Register for This Class</b-button>
+                        <div v-if="registrationOK && registerForClass" 
                             class="success-message"
                             style="color: green; text-decoration: underline;"
                             >Your registration was processed successfully!
                         </div>
-                        <div v-if="!registrationOK" 
+                        <div v-if="!registrationOK && registerForClass" 
                             class="Error-message"
                             style="color: red; text-decoration: underline;"
                             >{{this.registrationError}}
@@ -188,9 +187,6 @@
                 <template v-else>
                     <p>No item selected</p>
                 </template>
-            </b-modal>
-            <b-modal v-model="createNewClassType" title="Create New Class Type">
-                <CreateNewClassType />
             </b-modal>
         </div>
     </div>
@@ -226,6 +222,7 @@ import config from "../../config";
         return {
             registrationOK: false,
             registrationError: null,
+            closeRegPanel: null,
             min: today,
             displayError_I: false,
             displayError_T: false,
@@ -233,13 +230,12 @@ import config from "../../config";
             endDate: null,
             option: 'all-available',
             searchDate: false,
-            createNewSpecificClass: false,
-            createNewClassType: false,
-            modifySelected: false,
             showSelected: false,
             selectedClass: null,
             selectedInstructor : null,
             selectedType : null,
+            isAlreadyReg: null,
+            classIsFull:null,
             classes: [],
             instructors: [],
             types: [],
@@ -252,7 +248,7 @@ import config from "../../config";
                 { key: 'description', show: false},
                 { key: 'id', show: false},
                 { key: 'name', show: false},
-                { key: 'numOfRegistrations', show: true}
+                { key: 'numOfRegistrations', show: false}
                 ],
             fields_I: [
                 {key: 'firstName', label: 'Instructor', show: true},
@@ -407,53 +403,65 @@ import config from "../../config";
                     });
             },
             registerForClass(){//TODO 
-                CLIENT.get(`/registrations/getByClient/${globalState.email}`).then(response =>{
+                this.isAlreadyRegisteredForClass();
+                this.classIsComplete();
+                if(this.isAlreadyReg){
+                    this.registrationError = "You are already registered for this class!"
+                    this.registrationOK = false;
+                }else if(this.classIsFull){
+                    this.registrationError = "This class is full!"
+                    this.registrationOK = false;
+                }else{
+
+                CLIENT.post(`/registrations/create/${JSON.parse(JSON.stringify(this.selectedClass))[0].id}/${globalState.accountEmail}`).then(response =>{
+                    this.registrationOK = true;
+                }).catch(error =>{
+                    console.error('Error Create:', error);
+                    this.registrationError = "Process could not be completed"
+                    this.registrationOK = false;
+                });
+            }
+            
+            },
+            isAlreadyRegisteredForClass(){
+                console.log("email input to isAlre...",globalState.accountEmail);
+                CLIENT.get(`/registrations/getByClient/${globalState.accountEmail}`).then(response =>{
                     if(response.data.length === 0){
+                        this.isAlreadyReg= false;
                         return;
                     }else{
-                    response.data.forEach(registration => {
+                    const resp = response.data.registrations;
+                    resp.forEach(registration => {
                         if(registration.specificClass.id === JSON.parse(JSON.stringify(this.selectedClass))[0].id){
-                            this.registrationError = "You are already registered for this class! Visit your account page for a complete list of classes you are signed up for."
-                            registrationOK = false;
+                            this.isAlreadyReg= true;
+                            return;
                         }
                         console.log(registration);
                     });
                 }
                 }).catch(error =>{
-                    console.error('Error:', error);
+                    console.error('Error getByClient:', error);
+                    this.isAlreadyReg= false;
+                    return;
                 });
-                CLIENT.get(`/registrations/getBySpecificClass/${JSON.parse(JSON.stringify(this.selectedClass))[0].id}`).then(response =>{
+            },
+            classIsComplete(){
+                CLIENT.get(`/registrations/getBySpecificClass/${JSON.stringify(this.selectedClass)[0].id}`).then(response =>{
                     if(response.data.length >= 30){
-                        this.registrationError = "This class is full!"
+                        this.classIsFull = true;
+                        
                     }else{
-                        return;
+                        this.classIsFull = false;
+                        
                     }
                 }).catch(error =>{
-                    console.error('Error:', error);
+                    console.error('Error getBySpecificClass:', error);
+                    return true;
                 });
-                //since registration doesnt already exist & class not full, register for class
-                const client = {
-                    Email: globalState.accountEmail, 
-                    FirstName:null,
-                    Password: null, 
-                    LastName: null,
-                    AccountId: globalState.accountId
-                };
-                const specificClass = {
-                    name: JSON.parse(JSON.stringify(this.selectedClass))[0].name,
-                    //TODO 
-                };
-                const requestBody = {
-                    client: client,
-                    specificClass: specificClass
-                };
-                CLIENT.post("/registrations/create", requestBody).then(response =>{
-
-                }).catch(error =>{
-                    console.error('Error:', error);
-                    this.registrationError = ""
-                });
-
+            },
+            handleModalClose(){
+                this.registrationOK = null;
+                this.registrationError = null;
             },
             onClassSelected(item) {
                 this.selectedClass = item;
