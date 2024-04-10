@@ -41,7 +41,20 @@
 export default {
   name: 'app',
   computed:{
-
+    
+    // Computed property to determine the schedule path based on the isLoggedIn variable
+    schedulePath() {
+      // Define your paths based on the isLoggedIn variable
+      if (globalState.type === "Owner") {
+        return '/SchedulePageOwner'; 
+      }else if(globalState.type === "Instructor") {
+        return '/SchedulePageInstructor'; 
+      }else if(globalState.type === "Client"){
+        return '/SchedulePageClient'
+      }else{
+        return '/'; //if no one logged in, go back to loginPage
+      }
+    },
     // Does not display the nav bar in register and login poge
     isAuthRoute() {
       return this.$route.path === '/' || this.$route.path === '/register';
@@ -78,23 +91,6 @@ export default {
       } catch (error) {
         console.log("There was an error")
         console.log(error)
-      }
-
-    },
-
-  },
-  computed: {
-    // Computed property to determine the schedule path based on the isLoggedIn variable
-    schedulePath() {
-      // Define your paths based on the isLoggedIn variable
-      if (globalState.type === "Owner") {
-        return '/SchedulePageOwner'; 
-      }else if(globalState.type === "Instructor") {
-        return '/SchedulePageInstructor'; 
-      }else if(globalState.type === "Client"){
-        return '/SchedulePageClient'
-      }else{
-        return '/'; //if no one logged in, go back to loginPage
       }
     }
   }
