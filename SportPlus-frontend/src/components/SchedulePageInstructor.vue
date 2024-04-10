@@ -347,6 +347,7 @@ import config from "../../config";
                     if (item.date !== currentDate) {
                         // Insert row with day, month, and year
                         const dateObj = new Date(item.date);
+                        dateObj.setDate(dateObj.getDate() + 1);
                         const formattedDate = dateObj.toLocaleDateString('en-US', { weekday: 'short', month: 'long', day: 'numeric', year: 'numeric' }).replace(',', '');;
                         formattedClasses.push({ dateSeparator: formattedDate });
                         currentDate = item.date;
@@ -417,7 +418,7 @@ import config from "../../config";
                 console.log("this.selectedClass", this.selectedClass);
                 console.log("id", id);
                 console.log("url", `/${id}/assign-instructor`);
-                CLIENT.put(`/${id}/assign-instructor`,specificClassRequestBody).then(response =>{
+                CLIENT.put(`specificClass/${id}/assign-instructor`,specificClassRequestBody).then(response =>{
                     this.teachOK =true;
                    
                 }).catch(error =>{

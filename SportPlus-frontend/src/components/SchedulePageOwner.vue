@@ -240,6 +240,15 @@ import { globalState } from '@/global';
 import axios from "axios";
 import config from "../../config";
 
+    // const express = require('express');
+    // const cors = require('cors');
+
+    // const app = express();
+
+    // // Enable CORS for all routes
+    // app.use(cors());
+
+    // Define your routes and other middleware here
     const backendUrl = 'http://' + config.dev.backendHost + ':' + config.dev.backendPort
     const frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
 
@@ -465,7 +474,7 @@ import config from "../../config";
                 }
                 const id = JSON.parse(JSON.stringify(this.selectedClass))[0].id;
                 console.log("url", `/${id}/assign-instructor`);
-                CLIENT.put(`/${id}/assign-instructor`,specificClassRequestBody).then(response =>{
+                CLIENT.put(`/specificClass/${id}/assign-instructor`,specificClassRequestBody).then(response =>{
                     this.teachOK =true;
                    
                 }).catch(error =>{
