@@ -102,7 +102,10 @@
 
   import axios from "axios";
   import config from "../../config";
+
+
   import { globalState } from "@/global.js";
+
 
   const frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
   const backendUrl = 'http://' + config.dev.backendHost + ':' + config.dev.backendPort
@@ -316,6 +319,7 @@
          //Setting up global variables
         globalState.accountId = accountId;
         globalState.type = this.userType;
+        globalState.accountEmail = this.registerForm.email;
         console.log(globalState.type)
 
           // Handle the response, such as redirecting the user to the SchedulePage page for now 
