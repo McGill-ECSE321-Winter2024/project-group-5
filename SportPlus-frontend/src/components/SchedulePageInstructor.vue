@@ -96,7 +96,7 @@
                                         @click="fetchData" 
                                         class="mb-2"
                                         v-if="endDate && startDate"
-                                        >Search</b-button>
+                                        >Filter</b-button>
                                 </b-card>
                             </b-tab>
                             
@@ -119,7 +119,7 @@
                                             @click="fetchData" 
                                             class="mb-2"
                                             v-if="selectedInstructor"
-                                            >Search</b-button>
+                                            >Filter</b-button>
                                         <div v-if="displayError_I"  
                                             class="error-message"
                                             style="color: red; text-decoration: underline;"
@@ -146,7 +146,7 @@
                                         @click="fetchData" 
                                         class="mb-2"
                                         v-if="selectedType"
-                                        >Search
+                                        >Filter
                                     </b-button>
                                      <div v-if="displayError_T" 
                                         class="error-message"

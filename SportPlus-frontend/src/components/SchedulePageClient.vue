@@ -224,7 +224,7 @@ import config from "../../config";
             const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
         return {
-            registrationOK: true,
+            registrationOK: false,
             registrationError: null,
             min: today,
             displayError_I: false,
@@ -251,7 +251,8 @@ import config from "../../config";
                 { key: 'duration', label: 'Duration', show: true },
                 { key: 'description', show: false},
                 { key: 'id', show: false},
-                { key: 'name', show: false}
+                { key: 'name', show: false},
+                { key: 'numOfRegistrations', show: true}
                 ],
             fields_I: [
                 {key: 'firstName', label: 'Instructor', show: true},
@@ -356,7 +357,7 @@ import config from "../../config";
                         duration: '60 min',
                         description: item.classType.description,
                         id: item.id,
-                        name: item.name
+                        name: item.name,
                     });
                 });
 
@@ -366,6 +367,7 @@ import config from "../../config";
                     .catch(error => {
                         console.error('Error fetching data:', error);
                         });
+                
             },
             fetchData_Instructors(){
                 // Make an HTTP GET request to fetch instructors
@@ -407,7 +409,7 @@ import config from "../../config";
             registerForClass(){//TODO 
                 CLIENT.get(`/registrations/getByClient/${globalState.email}`).then(response =>{
                     if(response.data.length === 0){
-                        
+                        return;
                     }else{
                     response.data.forEach(registration => {
                         if(registration.specificClass.id === JSON.parse(JSON.stringify(this.selectedClass))[0].id){
@@ -420,13 +422,22 @@ import config from "../../config";
                 }).catch(error =>{
                     console.error('Error:', error);
                 });
-                //since registration doesnt already exist, register for class
+                CLIENT.get(`/registrations/getBySpecificClass/${JSON.parse(JSON.stringify(this.selectedClass))[0].id}`).then(response =>{
+                    if(response.data.length >= 30){
+                        this.registrationError = "This class is full!"
+                    }else{
+                        return;
+                    }
+                }).catch(error =>{
+                    console.error('Error:', error);
+                });
+                //since registration doesnt already exist & class not full, register for class
                 const client = {
-                    Email: globalState.email, 
+                    Email: globalState.accountEmail, 
                     FirstName:null,
                     Password: null, 
                     LastName: null,
-                    AccountId: globalState.id
+                    AccountId: globalState.accountId
                 };
                 const specificClass = {
                     name: JSON.parse(JSON.stringify(this.selectedClass))[0].name,
@@ -436,9 +447,12 @@ import config from "../../config";
                     client: client,
                     specificClass: specificClass
                 };
-                // CLIENT.post("/registrations/create/", requestBody).then(response =>{
+                CLIENT.post("/registrations/create", requestBody).then(response =>{
 
-                // })
+                }).catch(error =>{
+                    console.error('Error:', error);
+                    this.registrationError = ""
+                });
 
             },
             onClassSelected(item) {
