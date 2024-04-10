@@ -8,7 +8,6 @@ public class OwnerResponseDto {
     private String email;
     private String firstName;
     private String lastName;
-    private String password;
 
     // Constructors
     @SuppressWarnings("unused")
@@ -20,7 +19,6 @@ public class OwnerResponseDto {
         this.email = owner.getEmail();
         this.firstName = owner.getFirstName();
         this.lastName = owner.getLastName();
-        this.password = owner.getPassword();
     }
 
     // Getter and setter accountId
@@ -56,10 +54,6 @@ public class OwnerResponseDto {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
 }

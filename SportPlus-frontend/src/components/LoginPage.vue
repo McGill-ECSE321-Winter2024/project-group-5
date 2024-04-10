@@ -27,6 +27,7 @@
                   required
                   placeholder="Enter email"
                   :disabled="emailFieldDisabled"
+                  :state="emailState"
                 ></b-form-input>
               </b-form-group>
   
@@ -37,11 +38,11 @@
                   v-model="loginForm.password"
                   required
                   placeholder="Enter password"
+                  :state="passwordState"
                 ></b-form-input>
               </b-form-group>
 
-              
-                <b-button type="submit" variant="primary" block class="login-button">Login</b-button>
+              <b-button type="submit" variant="primary" block class="login-button">Login</b-button>
             
             </b-form>
             
@@ -58,7 +59,7 @@
   
   import axios from "axios";
   import config from "../../config";
-  import { globalState } from '@/global';
+  import { globalState } from "@/global.js";
 
   const frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
   const backendUrl = 'http://' + config.dev.backendHost + ':' + config.dev.backendPort
@@ -77,7 +78,9 @@
           password: ''
         },
         userType: 'Client', // Default selection
-        emailFieldDisabled: false // New data property
+        emailFieldDisabled: false, 
+        emailState: null,
+        passwordState: null,
       };
     },
     methods: {
@@ -100,47 +103,10 @@
         // Format the current time to match java.sql.Time format (HH:mm:ss)
         const currentTime = now.toTimeString().split(' ')[0];
 
-
         try {
-
-          let userExists = false;
-          // Determine the correct endpoint based on userType
-          let endpointPath = '';
-          if (this.userType === 'Client') {
-            endpointPath = `/clients/getByEmail/${this.loginForm.email}`;
-          } else if (this.userType === 'Instructor') {
-            // Update this path according to your actual instructor endpoint
-            endpointPath = `/instructors/getByEmail/${this.loginForm.email}`;
-          } else if (this.userType === 'Owner') {
-            endpointPath = '/owner/get';
-          }
-
-          const fullUrlGet = `http://${config.dev.backendHost}:${config.dev.backendPort}${endpointPath}`;
-
-          // Attempt to fetch the user by email
-          const userResponse = await AXIOS.get(fullUrlGet);
-
-          console.log(userResponse)
-          // Check if the user exists (based on how your backend responds)
-          userExists = userResponse && userResponse.data;
-
-          if (!userExists) {
-            alert('No account found with this email.');
-            return;
-          }
-
-        // If user exists but the password is wrong, throw an error or alert the user
-        if (userResponse.data.password !== this.loginForm.password) {
-          alert('Password is incorrect');
-          return;
-        }
 
         const backendBaseUrl = `http://${config.dev.backendHost}:${config.dev.backendPort}`;
         const fullUrlLogin = backendBaseUrl + '/login';
-        console.log(fullUrlLogin);
-        console.log(this.loginForm.email);
-        console.log(this.loginForm.password);
-        console.log(this.userType);
 
         // Create a login
         const response = await AXIOS.post(fullUrlLogin, {
@@ -149,9 +115,12 @@
           type: this.userType.toUpperCase(), // or the type of the user (OWNER, INSTRUCTOR, CLIENT)
           currentTime: currentTime // or the format your backend expects
         });
+
+        // LOGIN CREATED
         
 
         // Set the global account ID 
+        //Retreive the account
         let endpointPathAccountId = '';
         if (this.userType === 'Client') {
           endpointPathAccountId = `/clients/getByEmail/${this.loginForm.email}`;
@@ -170,16 +139,24 @@
 
         const accountId = userResponseAccountID.data.accountId;
         console.log(accountId);
+
+        //Setting up global variables 
         globalState.accountId = accountId;
+        globalState.type = this.userType
+  
+        console.log(globalState.type)
 
         // Go to schedule Page
+        this.emailState = null;
+        this.passwordState = null;
         this.$router.push('/SchedulePage'); 
       } catch (error) {
+        this.emailState = false;
+        this.passwordState = false;
         console.error(error);
-        alert('Login failed! No Account Found with this email !');
+        alert('Login failed! Email or password incorrect !');
       }
 
-        // TODO: Implement your login logic here
         console.log('Login form submitted', this.loginForm, this.userType);
       }
     }

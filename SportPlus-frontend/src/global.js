@@ -1,5 +1,6 @@
 import Vue from 'vue';
 
 export const globalState = Vue.observable({
-  accountId: null
+  accountId: null,
+  type: null
 });
