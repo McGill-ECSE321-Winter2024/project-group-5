@@ -46,124 +46,117 @@
                             </template>
                         </b-table>
                     </div>
-
-                    <!-- radio buttons-->
-                    <b-form-radio-group v-model="selectedOption">
-                        <b-form-radio value="no-filter">No Filter</b-form-radio>
-                        <b-form-radio value="all-available">All Available Classes</b-form-radio>
-                        <b-form-radio value="filter-by-dates">Filter by Dates</b-form-radio>
-                        <b-form-radio value="filter-by-instructors">Filter by Instructor</b-form-radio>
-                        <b-form-radio value="filter-by-classType">Filter by Class Type</b-form-radio>
-                    </b-form-radio-group>
                     <!-- sub-row-->
                     <b-row class="justify-content-center">
-                        <b-card style="width:40%;
-                                height: 170px">
-                            <b-col>
-                                <b-row class="2">
-                                    <b-col>
-                                        <label for="datepicker-start">Start Date</label>
-                                            <b-form-datepicker
-                                                id="datepicker-start"
-                                                today-button
-                                                reset-button
-                                                close-button
-                                                :min="min" 
-                                                v-model="startDate"
-                                                :disabled="selectedOption !== 'filter-by-dates'"
-                                                locale="en"
-                                                placeholder="Pick start date" 
-                                            ></b-form-datepicker>
-                                            <div v-if="!startDate && selectedOption === 'filter-by-dates'" 
+                        <b-tabs v-model="selectedTab" pills card>
+                            <b-tab id="no-filter" title="No Filter" @click="tabIsNoFilter"></b-tab>
+                            <b-tab id="all-available" title="Open for Registration" @click="tabIsAllAvailable"></b-tab>
+                            <b-tab id="filter-by-dates" title="Filter By Date Range" @click="tabIsByDate">
+                                <b-card style="width:100%; height: 180px">
+                                    <b-row class="2">
+                                        <b-col>
+                                            <label for="datepicker-start">Start Date</label>
+                                                <b-form-datepicker
+                                                    id="datepicker-start"
+                                                    today-button
+                                                    reset-button
+                                                    close-button
+                                                    :min="min" 
+                                                    v-model="startDate"
+                                                    locale="en"
+                                                    placeholder="Pick start date" 
+                                                ></b-form-datepicker>
+                                                <div v-if="!startDate === 'filter-by-dates'" 
+                                                    class="error-message"
+                                                    style="color: red; text-decoration: underline;"
+                                                    >Please select a start date.
+                                                </div>
+                                        </b-col>
+                                        <b-col>
+                                            <label for="datepicker-end">End Date</label>
+                                                <b-form-datepicker
+                                                    id="datepicker-end"
+                                                    today-button
+                                                    reset-button
+                                                    close-button
+                                                    :min="startDate ? startDate : min"
+                                                    v-model="endDate"
+                                                    
+                                                    locale="en"
+                                                    placeholder="Pick end date" 
+                                                ></b-form-datepicker>
+                                                <div v-if="!endDate === 'filter-by-dates'" 
+                                                    class="error-message"
+                                                    style="color: red; text-decoration: underline;"
+                                                    >Please select an endDate.
+                                                </div>
+                                        </b-col>
+                                    </b-row>
+                            
+                                    <div class="empty-divider-table"></div>
+                                    <b-button variant="outline-primary" 
+                                        @click="fetchData" 
+                                        class="mb-2"
+                                        v-if="endDate && startDate"
+                                        >Search</b-button>
+                                </b-card>
+                            </b-tab>
+                            
+                            <b-tab id="filter-by-instructors" title="Filter By Instructor" @click="tabIsInstructor">
+                                <b-card style="width: 100%;
+                                    height: 180px">
+                                        <b-table hover
+                                            small
+                                            :items="instructors"
+                                            :fields="filteredInstructors"
+                                            :outlined="true"
+                                            select-mode="single"
+                                            responsive="sm"
+                                            ref="selectableTable"
+                                            selectable
+                                            @row-selected="onInstructorSelected"
+                                            >
+                                        </b-table>
+                                        <b-button variant="outline-primary" 
+                                            @click="fetchData" 
+                                            class="mb-2"
+                                            v-if="selectedInstructor"
+                                            >Search</b-button>
+                                        <div v-if="displayError_I"  
                                                 class="error-message"
                                                 style="color: red; text-decoration: underline;"
-                                                >Please select a start date.
-                                            </div>
-                                    </b-col>
-                                    <b-col>
-                                        <label for="datepicker-end">End Date</label>
-                                            <b-form-datepicker
-                                                id="datepicker-end"
-                                                today-button
-                                                reset-button
-                                                close-button
-                                                :min="startDate ? startDate : min"
-                                                v-model="endDate"
-                                                :disabled="selectedOption !== 'filter-by-dates'"
-                                                locale="en"
-                                                placeholder="Pick end date" 
-                                            ></b-form-datepicker>
-                                            <div v-if="!endDate && selectedOption === 'filter-by-dates'" 
-                                                class="error-message"
-                                                style="color: red; text-decoration: underline;"
-                                                >Please select an endDate.
-                                            </div>
-                                    </b-col>
-                                </b-row>
-                                <div class="empty-divider-table"></div>
-                                <b-button variant="outline-primary" 
-                                    @click="fetchData" 
-                                    class="mb-2"
-                                    v-if="endDate && startDate && selectedOption === 'filter-by-dates'"
-                                    >Search</b-button>
-                            </b-col>
-                        </b-card>
-                        <b-card style="width: 20%;
-                                height: 170px">
-                            <b-col>
+                                                >Please select an Instructor.
+                                                </div>
+                                </b-card>
+                            </b-tab>
+                            <b-tab id="filter-by-classType" title="Filter By ClassType" @click="tabIsClassType">
+                                <b-card style="width: 100%;
+                                        height: 180px">
                                     <b-table hover
                                         small
-                                        :items="instructors"
-                                        :fields="filteredInstructors"
+                                        :items="types"
+                                        :fields="filteredClassTypes"
                                         :outlined="true"
                                         select-mode="single"
                                         responsive="sm"
                                         ref="selectableTable"
                                         selectable
-                                        @row-selected="onInstructorSelected"
-                                        :disabled="selectedOption !== 'filter-by-instructors'"
+                                        @row-selected="onTypeSelected"
                                         >
                                     </b-table>
                                     <b-button variant="outline-primary" 
-                                        @click="fetchData" 
-                                        class="mb-2"
-                                        v-if="selectedOption === 'filter-by-instructors' && selectedInstructor"
-                                    >Search</b-button>
-                                    <div v-if="displayError_I"  
-                                                class="error-message"
-                                                style="color: red; text-decoration: underline;"
-                                                >Please select an Instructor.
-                                            </div>
-                            </b-col>
-                        </b-card>
-                        <b-card style="width: 20%;
-                                height: 170px">
-                            <b-col>
-                                <b-table hover
-                                    small
-                                    :items="types"
-                                    :fields="filteredClassTypes"
-                                    :outlined="true"
-                                    select-mode="single"
-                                    responsive="sm"
-                                    ref="selectableTable"
-                                    selectable
-                                    @row-selected="onTypeSelected"
-                                    :disabled="selectedOption !== 'filter-by-classType'"
-                                    >
-                                </b-table>
-                                <b-button variant="outline-primary" 
-                                        @click="fetchData" 
-                                        class="mb-2"
-                                        v-if="selectedOption === 'filter-by-classType' && selectedType"
-                                    >Search</b-button>
-                                    <div v-if="displayError_T" 
-                                                class="error-message"
-                                                style="color: red; text-decoration: underline;"
-                                                >Please select a ClassType.
-                                            </div>
-                            </b-col>
-                        </b-card>
+                                            @click="fetchData" 
+                                            class="mb-2"
+                                            v-if="selectedType"
+                                        >Search</b-button>
+                                        <div v-if="displayError_T" 
+                                            class="error-message"
+                                            style="color: red; text-decoration: underline;"
+                                            >Please select a ClassType.
+                                        </div>
+                                </b-card>
+                            </b-tab>
+                        </b-tabs>
                     </b-row>
                 </b-col>
             </b-row>
@@ -231,7 +224,7 @@ import config from "../../config";
             displayError_T: false,
             startDate: null,
             endDate: null,
-            selectedOption: 'no-filter',
+            option: 'no-filter',
             searchDate: false,
             createNewSpecificClass: false,
             createNewClassType: false,
@@ -253,26 +246,15 @@ import config from "../../config";
                 ],
             fields_I: [
                 {key: 'firstName', label: 'Instructor', show: true},
-                {key: 'accountId', label: 'Id', show: true}
+                {key: 'accountId', label: 'Id', show: false}
             ],
             fields_T: [
                 {key: 'name', label: 'Class Type', show: true},
-                {key: 'typeId', label: 'Id', show: true}
+                {key: 'typeId', label: 'Id', show: false}
             ]    
             };
         },
-        watch: {
-            selectedOption(newOption){
-                if(newOption === 'no-filter' || newOption === 'all-available'){
-                    this.fetchData();
-                }else if(newOption === 'filter-by-classType'){
-                    this.fetchData_ClassTypes();
-                }else if(newOption ==='filter-by-instructors'){
-                    this.fetchData_Instructors();
-                }
-            }
-    
-        },
+
         computed: {
             filteredFields() {
                 return this.fields_C.filter(field => field.show);
@@ -325,7 +307,7 @@ import config from "../../config";
             },
 
             fetchData() {
-                const endpoint = this.fetchEndpoint(this.selectedOption);
+                const endpoint = this.fetchEndpoint(this.option);
                 CLIENT.get(endpoint)
                 .then(response => {
                     console.log('Response:', response.data); 
@@ -420,6 +402,26 @@ import config from "../../config";
                 this.selectedType = item;
                 console.log('Selected type:', item);
             },
+            tabIsAllAvailable(tab){
+                this.option = 'all-available';
+                this.fetchData();
+            },
+            tabIsNoFilter(tab){
+                this.option = 'no-filter';
+                this.fetchData();
+            },
+            tabIsInstructor(tab){
+                this.option = 'filter-by-instructors';
+                this.fetchData_Instructors();
+            },
+            tabIsClassType(tab){
+                this.option = 'filter-by-classType';
+                this.fetchData_ClassTypes();
+            },
+            tabIsByDate(){
+                this.option = 'filter-by-dates';
+                console.log('tab',option);
+            },
             rowVariant(index) {
                 return this.selectedClass === index ? 'info' : null;
             },
@@ -448,7 +450,6 @@ import config from "../../config";
     font-weight: bold;
     font-size: larger;
     text-align: left;
-    fill: #2c3e50;
 }
 .container-wrapper{
     margin: 0 auto; /* Center the container */
