@@ -1,12 +1,85 @@
 <template>
   <div id="app">
+    <!-- Navbar -->
+    <b-navbar toggleable="lg" type="dark" variant="info" v-if="!isAuthRoute">
+      <b-navbar-brand href="#">SportPlus</b-navbar-brand>
+      <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+      <b-collapse id="nav-collapse" is-nav>
+        <b-navbar-nav>
+          <b-nav-item to="/SchedulePage">Schedule</b-nav-item>
+          <b-nav-item to="/AccountPage">Account Page</b-nav-item>
+          <!-- More links can be added here -->
+        </b-navbar-nav>
+        <!-- Right aligned items -->
+        <b-navbar-nav class="ml-auto">
+          <b-nav-item @click="logout">Logout</b-nav-item>
+        </b-navbar-nav>
+      </b-collapse>
+    </b-navbar>
+
+    <!-- Page Content -->
     <router-view></router-view>
   </div>
 </template>
 
 <script>
+
+  import axios from "axios";
+  import config from "../config";
+  import { globalState } from '@/global.js';
+
+  const frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
+  const backendUrl = 'http://' + config.dev.backendHost + ':' + config.dev.backendPort
+
+  const AXIOS = axios.create({
+    baseURL: backendUrl,
+    headers: { 'Access-Control-Allow-Origin': frontendUrl }
+  })
+
 export default {
-  name: 'app'
+  name: 'app',
+  computed:{
+
+    // Does not display the nav bar in register and login poge
+    isAuthRoute() {
+      return this.$route.path === '/' || this.$route.path === '/register';
+    },
+    userType() {
+      return globalState.type;
+    },
+    userEmail() {
+      return globalState.accountEmail;
+    },
+    userAccountId() {
+      return globalState.accountId;
+    }
+  },
+  methods: {
+    async logout() {
+      try {     
+      
+      // Get the current login Id
+      const endpointPath = `/login/getByAccount/${this.userEmail}/${this.userType.toUpperCase()}`;
+
+      const fullUrlloginId = `http://${config.dev.backendHost}:${config.dev.backendPort}${endpointPath}`;
+      const login = await AXIOS.get(fullUrlloginId);
+
+      //Logout from the session
+      const endPointPathLogout = `/logout/${login.data.loginId}`;
+      const fullUrlLogout = `http://${config.dev.backendHost}:${config.dev.backendPort}${endPointPathLogout}`;
+
+      await AXIOS.delete(fullUrlLogout);
+
+      //Go Back to login 
+      this.$router.push('/');
+
+      } catch (error) {
+        console.log("There was an error")
+        console.log(error)
+      }
+
+    }
+  }
 }
 </script>
 
