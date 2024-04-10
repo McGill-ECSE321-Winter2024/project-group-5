@@ -19,7 +19,9 @@ import org.springframework.http.ResponseEntity;
 import ca.mcgill.ecse321.SportPlus.dao.ClassTypeRepository;
 import ca.mcgill.ecse321.SportPlus.dao.ClientRepository;
 import ca.mcgill.ecse321.SportPlus.dao.InstructorRepository;
+import ca.mcgill.ecse321.SportPlus.dao.LoginRepository;
 import ca.mcgill.ecse321.SportPlus.dao.OwnerRepository;
+import ca.mcgill.ecse321.SportPlus.dao.PaymentMethodRepository;
 import ca.mcgill.ecse321.SportPlus.dao.RegistrationRepository;
 import ca.mcgill.ecse321.SportPlus.dao.SpecificClassRepository;
 import ca.mcgill.ecse321.SportPlus.dto.RegistrationListDto;
@@ -55,13 +57,21 @@ public class RegistrationIntegrationTests {
     @Autowired
     private SpecificClassRepository specificClassRepository;
 
+    @Autowired
+    private LoginRepository loginRepository;
+
+    @Autowired
+    private PaymentMethodRepository paymentMethodRepository;
+
     @BeforeEach
     @AfterEach
     public void clearDatabase() {
-        instructorRepository.deleteAll();
+        loginRepository.deleteAll();
         registrationRepository.deleteAll();
         specificClassRepository.deleteAll();
         classTypeRepository.deleteAll();
+        instructorRepository.deleteAll();
+        paymentMethodRepository.deleteAll();
         clientRepository.deleteAll();
         ownerRepository.deleteAll();
     }
@@ -123,7 +133,8 @@ public class RegistrationIntegrationTests {
         // Test execution
         // Building the URL for the GET request
         String url = "/registrations/getByClient/" + String.valueOf(CLIENT_EMAIL);
-        // Sending a GET request to retrieve registrations associated with the client email
+        // Sending a GET request to retrieve registrations associated with the client
+        // email
         ResponseEntity<RegistrationListDto> response = restTemplate.getForEntity(url, RegistrationListDto.class);
         // Asserting that the response is not null and has a status code of OK
         assertNotNull(response);
@@ -177,7 +188,8 @@ public class RegistrationIntegrationTests {
         // Test execution
         // Building the URL for the GET request
         String url = "/registrations/getByClient/" + String.valueOf(CLIENT_EMAIL) + "/";
-        // Sending a GET request to retrieve registrations associated with the client email
+        // Sending a GET request to retrieve registrations associated with the client
+        // email
         ResponseEntity<RegistrationListDto> response = restTemplate.getForEntity(url, RegistrationListDto.class);
         // Asserting that the response is not null and has a status code of OK
         assertNotNull(response);
@@ -345,7 +357,7 @@ public class RegistrationIntegrationTests {
         ClassType aClassType = new ClassType(CLASS_TYPE_NAME, CLASS_TYPE_DESCRIPTION, CLASS_TYPE_ID, true, owner);
         SpecificClass specificClass = new SpecificClass(SPECIFICCLASS_DATE, SPECIFICCLASS_STARTTIME,
                 SPECIFICCLASS_ENDTIME, SPECIFICCLASS_ID, aClassType, SPECIFICCLASS_NAME);
-        
+
         // Saving entities to repositories
         clientRepository.save(client);
         ownerRepository.save(owner);
@@ -591,7 +603,8 @@ public class RegistrationIntegrationTests {
         // Test execution
         // Building the URL for the GET request
         String url = "/registrations/getByRegistrationId/" + String.valueOf(reg_id);
-        ResponseEntity<RegistrationResponseDto> response = restTemplate.getForEntity(url, RegistrationResponseDto.class);
+        ResponseEntity<RegistrationResponseDto> response = restTemplate.getForEntity(url,
+                RegistrationResponseDto.class);
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         // Extracting the registration from the response body
@@ -601,7 +614,7 @@ public class RegistrationIntegrationTests {
         assertNotNull(registrationResponse);
 
         reg_id = registrationResponse.getRegId();
-        String urlToDelete = "/registrations/deleteByRegistrationId/" +  String.valueOf(reg_id);
+        String urlToDelete = "/registrations/deleteByRegistrationId/" + String.valueOf(reg_id);
         restTemplate.delete(urlToDelete);
 
         response = restTemplate.getForEntity(url, RegistrationResponseDto.class);
@@ -609,10 +622,9 @@ public class RegistrationIntegrationTests {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         registrationResponse = response.getBody();
         assertNull(registrationResponse);
-        
+
     }
 
-    
     @Test
     public void testDeleteRegistrationByRegId2() {
         // Test data setup
@@ -642,7 +654,8 @@ public class RegistrationIntegrationTests {
         // Test execution
         // Building the URL for the GET request
         String url = "/registrations/getByRegistrationId/" + String.valueOf(reg_id) + "/";
-        ResponseEntity<RegistrationResponseDto> response = restTemplate.getForEntity(url, RegistrationResponseDto.class);
+        ResponseEntity<RegistrationResponseDto> response = restTemplate.getForEntity(url,
+                RegistrationResponseDto.class);
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         // Extracting the registration from the response body
@@ -652,7 +665,7 @@ public class RegistrationIntegrationTests {
         assertNotNull(registrationResponse);
 
         reg_id = registrationResponse.getRegId();
-        String urlToDelete = "/registrations/deleteByRegistrationId/" +  String.valueOf(reg_id) + "/";
+        String urlToDelete = "/registrations/deleteByRegistrationId/" + String.valueOf(reg_id) + "/";
         restTemplate.delete(urlToDelete);
 
         response = restTemplate.getForEntity(url, RegistrationResponseDto.class);
@@ -666,7 +679,8 @@ public class RegistrationIntegrationTests {
     @Test
     public void testCreateRegistration() {
         // Test data setup
-        // Creating instances of Owner, ClassType, SpecificClass, and Client and saving entities to repositories
+        // Creating instances of Owner, ClassType, SpecificClass, and Client and saving
+        // entities to repositories
         Owner owner = new Owner(OWNER_EMAIL, OWNER_FIRSTNAME, OWNER_PASSWORD, OWNER_LASTNAME, OWNER_ACCOUNTID);
         ownerRepository.save(owner);
         owner = ownerRepository.findByEmail(OWNER_EMAIL);
@@ -711,7 +725,8 @@ public class RegistrationIntegrationTests {
     @Test
     public void testCreateRegistration2() {
         // Test data setup
-        // Creating instances of Owner, ClassType, SpecificClass, and Client and saving entities to repositories
+        // Creating instances of Owner, ClassType, SpecificClass, and Client and saving
+        // entities to repositories
         Owner owner = new Owner(OWNER_EMAIL, OWNER_FIRSTNAME, OWNER_PASSWORD, OWNER_LASTNAME, OWNER_ACCOUNTID);
         ownerRepository.save(owner);
         owner = ownerRepository.findByEmail(OWNER_EMAIL);

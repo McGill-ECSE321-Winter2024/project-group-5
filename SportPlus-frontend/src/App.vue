@@ -88,7 +88,15 @@ export default {
       //Go Back to login Page
       this.$router.push('/');
 
+      globalState.accountEmail = null;
+      globalState.accountEmail = null;
+      globalState.type = null;
+
       } catch (error) {
+        globalState.accountEmail = null;
+      globalState.accountEmail = null;
+      globalState.type = null;
+      
         console.log("There was an error")
         console.log(error)
       }
