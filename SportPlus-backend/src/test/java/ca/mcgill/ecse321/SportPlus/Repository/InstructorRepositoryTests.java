@@ -12,19 +12,54 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
+import ca.mcgill.ecse321.SportPlus.dao.ClassTypeRepository;
+import ca.mcgill.ecse321.SportPlus.dao.ClientRepository;
 import ca.mcgill.ecse321.SportPlus.dao.InstructorRepository;
+import ca.mcgill.ecse321.SportPlus.dao.LoginRepository;
+import ca.mcgill.ecse321.SportPlus.dao.OwnerRepository;
+import ca.mcgill.ecse321.SportPlus.dao.PaymentMethodRepository;
+import ca.mcgill.ecse321.SportPlus.dao.RegistrationRepository;
+import ca.mcgill.ecse321.SportPlus.dao.SpecificClassRepository;
 import ca.mcgill.ecse321.SportPlus.model.Instructor;
 
 @SpringBootTest
 public class InstructorRepositoryTests {
 
     @Autowired
+    private RegistrationRepository registrationRepository;
+
+    @Autowired
+    private OwnerRepository ownerRepository;
+
+    @Autowired
+    private ClientRepository clientRepository;
+
+    @Autowired
     private InstructorRepository instructorRepository;
+
+    @Autowired
+    private ClassTypeRepository classTypeRepository;
+
+    @Autowired
+    private SpecificClassRepository specificClassRepository;
+
+    @Autowired
+    private LoginRepository loginRepository;
+
+    @Autowired
+    private PaymentMethodRepository paymentMethodRepository;
 
     @BeforeEach
     @AfterEach
     public void clearDatabase() {
+        loginRepository.deleteAll();
+        registrationRepository.deleteAll();
+        specificClassRepository.deleteAll();
+        classTypeRepository.deleteAll();
         instructorRepository.deleteAll();
+        paymentMethodRepository.deleteAll();
+        clientRepository.deleteAll();
+        ownerRepository.deleteAll();
     }
 
     @Test

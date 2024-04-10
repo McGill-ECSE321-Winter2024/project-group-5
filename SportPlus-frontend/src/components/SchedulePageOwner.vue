@@ -12,8 +12,7 @@
                         </b-row>
                         <!-- button group-->
                         <div class="btn-group-vertical">
-                            <b-button variant="outline-primary" @click="showSelected = true" class="mb-2">View Selected</b-button>
-                            <b-button variant="outline-primary" @click="registerForClass = true" class="mb-2">Register For Selected</b-button>
+                            <b-button variant="outline-primary" @click="toggleModal" class="mb-2">View Selected || Assign Instructor</b-button>
                             <b-button variant="outline-primary" @click="modifySelected = true" class="mb-2"> Modify Selected</b-button>
                             <b-button variant="outline-primary" @click="createNewSpecificClass = true" class="mb-2">Create New Specific Class</b-button>
                             <b-button variant="outline-primary" @click="createNewClassType = true" class="mb-2">Create New ClassType</b-button>
@@ -32,7 +31,6 @@
                             :fields="filteredFields"
                             :sticky-header="true"
                             :outlined="true"
-                            
                             select-mode="single"
                             responsive="sm"
                             ref="selectableTable"
@@ -52,7 +50,7 @@
                             <b-tab id="no-filter" title="No Filter" @click="tabIsNoFilter"></b-tab>
                             <b-tab id="all-available" title="Open for Registration" @click="tabIsAllAvailable"></b-tab>
                             <b-tab id="filter-by-dates" title="Filter By Date Range" @click="tabIsByDate">
-                                <b-card style="width:100%; height: 180px">
+                                <b-card style="width:100%; height: 250px">
                                     <b-row class="2">
                                         <b-col>
                                             <label for="datepicker-start">Start Date</label>
@@ -61,7 +59,7 @@
                                                     today-button
                                                     reset-button
                                                     close-button
-                                                    :min="min" 
+                                                    :min="status ? new Date('1995-01-01') : min"
                                                     v-model="startDate"
                                                     locale="en"
                                                     placeholder="Pick start date" 
@@ -79,9 +77,8 @@
                                                     today-button
                                                     reset-button
                                                     close-button
-                                                    :min="startDate ? startDate : min"
+                                                    :min="min"
                                                     v-model="endDate"
-                                                    
                                                     locale="en"
                                                     placeholder="Pick end date" 
                                                 ></b-form-datepicker>
@@ -104,8 +101,9 @@
                             
                             <b-tab id="filter-by-instructors" title="Filter By Instructor" @click="tabIsInstructor">
                                 <b-card style="width: 100%;
-                                    height: 180px">
+                                    height: 250px">
                                         <b-table hover
+                                            id="filterInstructors"
                                             small
                                             :items="instructors"
                                             :fields="filteredInstructors"
@@ -131,7 +129,7 @@
                             </b-tab>
                             <b-tab id="filter-by-classType" title="Filter By ClassType" @click="tabIsClassType">
                                 <b-card style="width: 100%;
-                                        height: 180px">
+                                        height: 250pxpx">
                                     <b-table hover
                                         small
                                         :items="types"
@@ -158,38 +156,81 @@
                             </b-tab>
                         </b-tabs>
                     </b-row>
+                    <b-form-checkbox
+                                    id="checkbox"
+                                    v-model="status"
+                                    name="checkbox"
+                                    value="accepted"
+                                    unchecked-value="not_accepted"
+                                    >
+                                    Include Past Classes in Search
+                                </b-form-checkbox>
                 </b-col>
             </b-row>
             
         </b-container>
         <div>
-            <b-modal v-model="createNewSpecificClass" title="Create New Class">
+            <b-modal v-model="createNewSpecificClass" title="Create New Class" size="100%">
                 <CreateNewSpecificClass />
             </b-modal>
             
-            <b-modal v-model="showSelected" title="Class Details">
-                
+            <b-modal v-model="showSelected" title="Class Details" size="50%">
+                <b-container fluid>
                 <div v-if="selectedClass">
-                    <p><strong>Instructor Name:</strong> {{JSON.parse(JSON.stringify(this.selectedClass))[0].supervisor}}</p>
-                    <p><strong>Class Type:</strong> {{JSON.parse(JSON.stringify(this.selectedClass))[0].classType}}</p>
-                    <p><strong>Description:</strong> {{JSON.parse(JSON.stringify(this.selectedClass))[0].description}}</p>
-                    <b-col>
-
-                    </b-col>
-                    <b-col>
-                        <b-button variant="outline-primary" @click="assignInstructor" class="mb-2">Assign Instructor</b-button>
-                    </b-col>
+                    <b-row>
+                        <b-col lg="15">
+                        <p><strong>Instructor Name:</strong> {{JSON.parse(JSON.stringify(this.selectedClass))[0].supervisor}}</p>
+                        <p><strong>Class Type:</strong> {{JSON.parse(JSON.stringify(this.selectedClass))[0].classType}}</p>
+                        <p><strong>Description:</strong> {{JSON.parse(JSON.stringify(this.selectedClass))[0].description}}</p>
+                        
+                            <b-button v-if="!displayForum"                            
+                                variant="outline-primary" 
+                                @click="viewAssignInstructorForum" 
+                                class="mb-2">
+                                {{!JSON.parse(JSON.stringify(this.selectedClass))[0].supervisor ? 'Assign an Instructor to this Class' : 'Assign a Different Instructor' }}
+                            </b-button>
+                        </b-col>
+                        <b-col lg="10">
+                                <b-table hover
+                                    id="forumTableInstructors"
+                                    small
+                                    :items="instructors"
+                                    :fields="filteredInstructors"
+                                    :outlined="true"
+                                    select-mode="single"
+                                    responsive="sm"
+                                    v-if=displayForum
+                                    ref="selectableTable"
+                                    selectable
+                                    @row-selected="onForumInstructorSelected"
+                                    >
+                                </b-table>
+                                <b-button v-if="assignmentSelectionForum" variant="outline-primary" @click="assignInstructor">Assign instructor to Selected Class</b-button>
+                                <div v-if="teachOK" 
+                                    class="success-message"
+                                    style="color: green; text-decoration: underline;"
+                                    >Your request was processed successfully!
+                                </div>
+                                <div v-if="!teachOK" 
+                                    class="Error-message"
+                                    style="color: red; text-decoration: underline;"
+                                    >{{this.teachError}}
+                                </div>
+                        </b-col>
+                    </b-row>
                 </div>
+                
                 <template v-else>
                     <p>No item selected</p>
                 </template>
+              
+            </b-container>
             </b-modal>
-            <b-modal v-model="createNewClassType" title="Create New Class Type">
+            <b-modal v-model="createNewClassType" title="Create New Class Type" size="lg">
                 <CreateNewClassType />
             </b-modal>
         </div>
     </div>
-
 </template>
 
 <script>
@@ -209,7 +250,7 @@ import config from "../../config";
     });
 
     export default {
-        name : 'SchedulePage',
+        name : 'SchedulePageOwner',
         components: {
             CreateNewSpecificClass,
             CreateNewClassType
@@ -219,7 +260,15 @@ import config from "../../config";
             const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
         return {
+            displayForum: false,
+            assignmentSelectionForum: null,
+            listInstructAssignment:[
+                {value:'id', text: "name"}
+            ],
             min: today,
+            status:'not_accepted',
+            teachError: null,
+            teachOK:null,
             displayError_I: false,
             displayError_T: false,
             startDate: null,
@@ -242,7 +291,8 @@ import config from "../../config";
                 { key: 'classType', label: 'Class Type',show:true },
                 { key: 'supervisor', label: 'Instructor', show:true },
                 { key: 'duration', label: 'Duration', show: true },
-                { key: 'description', show: false}
+                { key: 'description', show: false},
+                { key: 'id', show: false}
                 ],
             fields_I: [
                 {key: 'firstName', label: 'Instructor', show: true},
@@ -311,7 +361,17 @@ import config from "../../config";
                 CLIENT.get(endpoint)
                 .then(response => {
                     console.log('Response:', response.data); 
-                    const sortedClasses = response.data.sort((a, b) => {
+                    let filteredClasses = null;
+                    if (this.status === 'not_accepted'){
+                        filteredClasses = response.data.filter(item => {
+                        const classDate = new Date(item.date);
+                        const today = new Date();
+                        return classDate >= today;
+                    });
+                    }else{
+                        filteredClasses = response.data;
+                    }
+                    const sortedClasses = filteredClasses.sort((a, b) => {
                         // Compare dates
                         if (a.date < b.date) return -1;
                         if (a.date > b.date) return 1;
@@ -330,6 +390,7 @@ import config from "../../config";
                     if (item.date !== currentDate) {
                         // Insert row with day, month, and year
                         const dateObj = new Date(item.date);
+                        dateObj.setDate(dateObj.getDate() + 1);
                         const formattedDate = dateObj.toLocaleDateString('en-US', { weekday: 'short', month: 'long', day: 'numeric', year: 'numeric' }).replace(',', '');;
                         formattedClasses.push({ dateSeparator: formattedDate });
                         currentDate = item.date;
@@ -342,7 +403,8 @@ import config from "../../config";
                         supervisor: item.instructor ? `${item.instructor.lastName}, ${item.instructor.firstName}` : '', 
                         classType: item.classType.name, 
                         duration: '60 min',
-                        description: item.classType.description
+                        description: item.classType.description,
+                        id: item.id
                     });
                 });
 
@@ -390,6 +452,31 @@ import config from "../../config";
                     console.error('Error fetching classTypes:', error);
                     });
             },
+            viewAssignInstructorForum(){
+                
+                this.displayForum = true;
+                this.fetchData_Instructors();
+                console.log("instrucot forum info",this.instructors);
+            },
+            assignInstructor(){
+                console.log("this.assignmentSelectionForum",this.assignmentSelectionForum);
+                const specificClassRequestBody = {
+                    instructorId: JSON.parse(JSON.stringify(this.assignmentSelectionForum))[0].accountId
+                }
+                const id = JSON.parse(JSON.stringify(this.selectedClass))[0].id;
+                console.log("url", `/${id}/assign-instructor`);
+                CLIENT.put(`/${id}/assign-instructor`,specificClassRequestBody).then(response =>{
+                    this.teachOK =true;
+                   
+                }).catch(error =>{
+                    this.teachError = "Could not Assign Instructor to class";
+                    this.teachOK = false;
+                    console.log("error", error);
+                });
+            },
+            onForumInstructorSelected(item){
+                this.assignmentSelectionForum = item;
+            },
             onClassSelected(item) {
                 this.selectedClass = item;
                 console.log('Selected class:', item);
@@ -401,6 +488,10 @@ import config from "../../config";
             onTypeSelected(item){
                 this.selectedType = item;
                 console.log('Selected type:', item);
+            },
+            toggleModal() {
+                this.showSelected = true;
+                this.displayForum = false;
             },
             tabIsAllAvailable(tab){
                 this.option = 'all-available';
@@ -457,9 +548,9 @@ import config from "../../config";
 }
 
 .custom-modal .modal-dialog {
-    max-width: 1000px; /* Adjust as needed */
+    max-width: 80%; /* Adjust as needed */
     width: 80%; /* Adjust as needed */
-    max-height: 1000px; /* Adjust as needed */
+    max-height: 80%; /* Adjust as needed */
     height: 60%; /* Adjust as needed */
 }
 .empty-divider {

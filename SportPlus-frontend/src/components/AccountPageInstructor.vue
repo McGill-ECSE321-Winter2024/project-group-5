@@ -64,81 +64,7 @@
             </b-container>
         </div>
 
-        <!-- Second column: Registration -->
-        <div class="column">
-            <b-container>
-                <h2 class="tableTitle">Registration</h2>
-                <div class="ScheduleTable">
-                    <b-table hover :items="registrations" :fields="registrationFields" :sticky-header="true"
-                        :outlined="true" :row-variant="rowVariant" select-mode="single" responsive="sm"
-                        ref="registrationTable" selectable @row-selected="onRowSelected"></b-table>
-                </div>
-            </b-container>
-        </div>
-
-        <!-- Third column: Payment Method -->
-        <div class="column">
-            <b-container>
-                <h2 class="tableTitle">Payment Method</h2>
-                <!-- Input fields for adding a new payment method -->
-                <div class="mb-3">
-                    <label for="cardNumber">Card Number:</label></br>
-                    <input type="text" id="cardNumber" v-model="newCardNumber"></br>
-                </div>
-                <div class="mb-3">
-                    <label for="expDate">Expiry Date (YYYY-MM-DD):</label></br>
-                    <input type="text" id="expDate" v-model="newExpDate"></br>
-                </div>
-                <div class="mb-3">
-                    <label for="cvc">CVC:</label></br>
-                    <input type="text" id="cvc" v-model="newCvc"></br>
-                </div>
-                <div class="mb-3">
-                    <label for="cardHolderName">Cardholder Name:</label></br>
-                    <input type="text" id="cardHolderName" v-model="newCardHolderName"></br>
-                </div>
-                <div class="mb-3">
-                    <b-button variant="success" @click="addPaymentMethod">Add Payment Method</b-button></br>
-                </div>
-                <!-- End of input fields -->
-                <div v-if="paymentMethods.length > 0">
-                    <b-card v-for="method in paymentMethods" :key="method.cardNumber">
-                        <p><strong>Card Number:</strong> {{ method.cardNumber }}</p>
-                        <!-- Add more fields of payment method as required -->
-                        <div>
-                            <b-button @click="deletePaymentMethod(method.cardNumber)" variant="danger">Delete</b-button>
-                        </div>
-                    </b-card>
-                </div>
-                <div v-else>
-                    <p>No payment methods found.</p>
-                </div>
-            </b-container>
-        </div>
-
-
-        <!-- Fourth column: Class Types -->
-        <div class="column">
-            <!-- Class Types -->
-            <b-container>
-                <h2 class="tableTitle">Class Types</h2>
-                <!-- Display class types and approve button -->
-                <div v-if="unapprovedClassTypes.length > 0">
-                    <b-card v-for="classType in unapprovedClassTypes" :key="classType.typeId">
-                        <p><strong>Name:</strong> {{ classType.name }}</p>
-                        <p><strong>Description:</strong> {{ classType.description }}</p>
-                        <div>
-                            <b-button @click="approveClassType(classType.typeId)" variant="success">Approve</b-button>
-                        </div>
-                    </b-card>
-                </div>
-                <div v-else>
-                    <p>No unapproved class types found.</p>
-                </div>
-            </b-container>
-        </div>
-
-        <!-- Fourth column: Specific Classes By Instructor -->
+        <!-- Second column: Specific Classes By Instructor -->
         <div class="column">
             <b-container>
                 <h2 class="tableTitle">Classes Taught By Instructor</h2>
@@ -168,7 +94,7 @@ const CLIENT = axios.create({
 });
 
 export default {
-    name: 'AccountPage',
+    name: 'AccountPageInstructor',
     data() {
         return {
             firstName: '',
@@ -209,9 +135,6 @@ export default {
     },
     mounted() {
         this.fetchAccountDetails();
-        this.fetchRegistrations();
-        this.fetchPaymentMethods();
-        this.fetchClassTypes();
         this.fetchClassesByInstructor();
     },
     methods: {
@@ -226,27 +149,6 @@ export default {
                     console.error('Error fetching specific classes by instructor:', error);
                 });
         },
-        fetchClassTypes() {
-            CLIENT.get('/classType/all')
-                .then(response => {
-                    this.classTypes = response.data.classTypes;
-                })
-                .catch(error => {
-                    console.error('Error fetching class types:', error);
-                });
-        },
-        // Method to approve a class type
-        approveClassType(typeId) {
-            CLIENT.post(`/classType/approve/${typeId}`)
-                .then(response => {
-                    // Optionally, update the UI to reflect the approved class type
-                    // For example, remove it from the list
-                    this.classTypes = this.classTypes.filter(classType => classType.typeId !== typeId);
-                })
-                .catch(error => {
-                    console.error('Error approving class type:', error);
-                });
-        },
         fetchAccountDetails() {
             CLIENT.get(`/instructors/getById/${this.accountId}`)
                 .then(response => {
@@ -257,65 +159,6 @@ export default {
                 })
                 .catch(error => {
                     console.error('Error fetching account details:', error);
-                });
-        },
-        fetchRegistrations() {
-            CLIENT.get('/registrations')
-                .then(response => {
-                    this.registrations = response.data;
-                })
-                .catch(error => {
-                    console.error('Error fetching registrations:', error);
-                });
-        },
-        fetchPaymentMethods() {
-            CLIENT.get(`/paymentMethod/getByClient/${this.accountId}`)
-
-                .then(response => {
-                    this.paymentMethods = response.data.paymentMethods;
-                })
-                .catch(error => {
-                    console.error('Error fetching payment methods:', error);
-                });
-        },
-        deletePaymentMethod(cardNumber) {
-            CLIENT.delete(`/paymentMethod/deleteByCardNumber/${cardNumber}`)
-                .then(() => {
-                    // Remove the deleted payment method from the list
-                    this.paymentMethods = this.paymentMethods.filter(method => method.cardNumber !== cardNumber);
-                })
-                .catch(error => {
-                    console.error('Error deleting payment method:', error);
-                });
-        },
-        addPaymentMethod() {
-            // Collect payment method details from input fields
-            const cardNumber = this.newCardNumber;
-            const expDate = this.newExpDate;
-            const cvc = this.newCvc;
-            const cardHolderName = this.newCardHolderName;
-
-            // You might need to fetch the client ID from somewhere in your application
-            const clientId = this.accountId; // Replace this with the actual client ID
-
-            // Prepare the payment method object
-            const paymentMethod = {
-                cardNumber: cardNumber,
-                expDate: expDate,
-                cvc: cvc,
-                cardHolderName: cardHolderName,
-                clientId: clientId // Assuming client ID is required and you have it available
-            };
-
-            // Send the payment method object to the backend
-            CLIENT.post('/paymentMethod/create', paymentMethod)
-                .then(response => {
-                    // Handle success response if needed
-                    // For example, you might want to refresh the payment methods list
-                    this.fetchPaymentMethods();
-                })
-                .catch(error => {
-                    console.error('Error adding payment method:', error);
                 });
         },
         onRowSelected(item) {
@@ -342,7 +185,7 @@ export default {
         },
         saveFirstName() {
             // Make API call to update first name
-            CLIENT.put(`/clients/updateFirstName/${this.email}/${this.newFirstName}`)
+            CLIENT.put(`/instructors/updateFirstName/${this.email}/${this.newFirstName}`)
                 .then(response => {
                     this.firstName = this.newFirstName;
                     this.isEditingFirstName = false;
@@ -353,7 +196,7 @@ export default {
         },
         saveLastName() {
             // Make API call to update last name
-            CLIENT.put(`/clients/updateLastName/${this.email}/${this.newLastName}`)
+            CLIENT.put(`/instructors/updateLastName/${this.email}/${this.newLastName}`)
                 .then(response => {
                     this.lastName = this.newLastName;
                     this.isEditingLastName = false;
@@ -364,7 +207,7 @@ export default {
         },
         savePassword() {
             // Make API call to update password
-            CLIENT.put(`/clients/updatePassword/${this.email}/${this.oldPassword}/${this.newPassword}`)
+            CLIENT.put(`/instructors/updatePassword/${this.email}/${this.oldPassword}/${this.newPassword}`)
                 .then(response => {
                     this.isEditingPassword = false;
                     // Optionally, you may clear the input fields for security

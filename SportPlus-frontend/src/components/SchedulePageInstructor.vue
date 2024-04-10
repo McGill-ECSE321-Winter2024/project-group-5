@@ -12,9 +12,7 @@
                         </b-row>
                         <!-- button group-->
                         <div class="btn-group-vertical">
-                            <b-button variant="outline-primary" @click="showSelected = true" class="mb-2">View Selected</b-button>
-                            <b-button variant="outline-primary" @click="registerForClass = true" class="mb-2">Register For Selected</b-button>
-                            <b-button variant="outline-primary" @click="modifySelected = true" class="mb-2"> Modify Selected</b-button>
+                            <b-button variant="outline-primary" @click="showSelected = true" class="mb-2">View Selected || Assign </b-button>
                             <b-button variant="outline-primary" @click="createNewSpecificClass = true" class="mb-2">Create New Specific Class</b-button>
                             <b-button variant="outline-primary" @click="createNewClassType = true" class="mb-2">Create New ClassType</b-button>
                         </div>
@@ -52,7 +50,7 @@
                             <b-tab id="no-filter" title="No Filter" @click="tabIsNoFilter"></b-tab>
                             <b-tab id="all-available" title="Open for Registration" @click="tabIsAllAvailable"></b-tab>
                             <b-tab id="filter-by-dates" title="Filter By Date Range" @click="tabIsByDate">
-                                <b-card style="width:100%; height: 180px">
+                                <b-card style="width:100%; height: 200px">
                                     <b-row class="2">
                                         <b-col>
                                             <label for="datepicker-start">Start Date</label>
@@ -104,7 +102,7 @@
                             
                             <b-tab id="filter-by-instructors" title="Filter By Instructor" @click="tabIsInstructor">
                                 <b-card style="width: 100%;
-                                    height: 180px">
+                                    height: 200px">
                                         <b-table hover
                                             small
                                             :items="instructors"
@@ -123,15 +121,15 @@
                                             v-if="selectedInstructor"
                                             >Search</b-button>
                                         <div v-if="displayError_I"  
-                                                class="error-message"
-                                                style="color: red; text-decoration: underline;"
-                                                >Please select an Instructor.
-                                                </div>
+                                            class="error-message"
+                                            style="color: red; text-decoration: underline;"
+                                            >Please select an Instructor.
+                                            </div>
                                 </b-card>
                             </b-tab>
                             <b-tab id="filter-by-classType" title="Filter By ClassType" @click="tabIsClassType">
                                 <b-card style="width: 100%;
-                                        height: 180px">
+                                        height: 200px">
                                     <b-table hover
                                         small
                                         :items="types"
@@ -145,15 +143,16 @@
                                         >
                                     </b-table>
                                     <b-button variant="outline-primary" 
-                                            @click="fetchData" 
-                                            class="mb-2"
-                                            v-if="selectedType"
-                                        >Search</b-button>
-                                        <div v-if="displayError_T" 
-                                            class="error-message"
-                                            style="color: red; text-decoration: underline;"
-                                            >Please select a ClassType.
-                                        </div>
+                                        @click="fetchData" 
+                                        class="mb-2"
+                                        v-if="selectedType"
+                                        >Search
+                                    </b-button>
+                                     <div v-if="displayError_T" 
+                                        class="error-message"
+                                        style="color: red; text-decoration: underline;"
+                                        >Please select a ClassType.
+                                    </div>
                                 </b-card>
                             </b-tab>
                         </b-tabs>
@@ -177,7 +176,17 @@
 
                     </b-col>
                     <b-col>
-                        <b-button variant="outline-primary" @click="assignInstructor" class="mb-2">Assign Instructor</b-button>
+                        <b-button v-if="!JSON.parse(JSON.stringify(this.selectedClass))[0].supervisor" variant="outline-primary" @click="assignMyself" class="mb-2">Register to Teach this Class</b-button>
+                        <div v-if="teachOK && !JSON.parse(JSON.stringify(this.selectedClass))[0].supervisor" 
+                            class="success-message"
+                            style="color: green; text-decoration: underline;"
+                            >Your request was processed successfully!
+                        </div>
+                        <div v-if="!teachOK && !JSON.parse(JSON.stringify(this.selectedClass))[0].supervisor" 
+                            class="Error-message"
+                            style="color: red; text-decoration: underline;"
+                            >{{this.teachError}}
+                        </div>
                     </b-col>
                 </div>
                 <template v-else>
@@ -209,7 +218,7 @@ import config from "../../config";
     });
 
     export default {
-        name : 'SchedulePage',
+        name : 'SchedulePageOwner',
         components: {
             CreateNewSpecificClass,
             CreateNewClassType
@@ -222,6 +231,8 @@ import config from "../../config";
             min: today,
             displayError_I: false,
             displayError_T: false,
+            teachError: null,
+            teachOK:null,
             startDate: null,
             endDate: null,
             option: 'no-filter',
@@ -242,7 +253,8 @@ import config from "../../config";
                 { key: 'classType', label: 'Class Type',show:true },
                 { key: 'supervisor', label: 'Instructor', show:true },
                 { key: 'duration', label: 'Duration', show: true },
-                { key: 'description', show: false}
+                { key: 'description', show: false},
+                { key: 'id', show: false}
                 ],
             fields_I: [
                 {key: 'firstName', label: 'Instructor', show: true},
@@ -311,7 +323,12 @@ import config from "../../config";
                 CLIENT.get(endpoint)
                 .then(response => {
                     console.log('Response:', response.data); 
-                    const sortedClasses = response.data.sort((a, b) => {
+                    const filteredClasses = response.data.filter(item => {
+                        const classDate = new Date(item.date);
+                        const today = new Date();
+                        return classDate >= today;
+                    });
+                    const sortedClasses = filteredClasses.sort((a, b) => {
                         // Compare dates
                         if (a.date < b.date) return -1;
                         if (a.date > b.date) return 1;
@@ -342,7 +359,8 @@ import config from "../../config";
                         supervisor: item.instructor ? `${item.instructor.lastName}, ${item.instructor.firstName}` : '', 
                         classType: item.classType.name, 
                         duration: '60 min',
-                        description: item.classType.description
+                        description: item.classType.description,
+                        id: item.id
                     });
                 });
 
@@ -389,6 +407,25 @@ import config from "../../config";
                     .catch(error => {
                     console.error('Error fetching classTypes:', error);
                     });
+            },
+            assignMyself(){
+                console.log("yeehaw",JSON.parse(JSON.stringify((globalState.accountId))));
+                const specificClassRequestBody = {
+                    instructorId: globalState.accountId
+                }
+                const id = JSON.parse(JSON.stringify(this.selectedClass))[0].id;
+                console.log("this.selectedClass", this.selectedClass);
+                console.log("id", id);
+                console.log("url", `/${id}/assign-instructor`);
+                CLIENT.put(`/${id}/assign-instructor`,specificClassRequestBody).then(response =>{
+                    this.teachOK =true;
+                   
+                }).catch(error =>{
+                    this.teachError = "Could not Assign you to this class";
+                    this.teachOK = false;
+                    console.log("error", error);
+                });
+
             },
             onClassSelected(item) {
                 this.selectedClass = item;

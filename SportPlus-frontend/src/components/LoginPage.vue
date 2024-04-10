@@ -142,19 +142,33 @@
         const accountId = userResponseAccountID.data.accountId;
         console.log(accountId);
 
-        //S etting up global variables 
         globalState.accountId = accountId;
         globalState.type = this.userType;
         globalState.accountEmail = this.loginForm.email;
-        console.log(this.loginForm.email);
+
+        localStorage.setItem('accountId', accountId);
+        localStorage.setItem('type', this.userType);
+        localStorage.setItem('accountEmail', this.loginForm.email);
+
+        console.log(globalState.accountId);
         console.log(globalState.accountEmail);
-  
         console.log(globalState.type)
 
         // Go to schedule Page if succesfull
         this.emailState = null;
         this.passwordState = null;
-        this.$router.push('/SchedulePage'); 
+
+        // Define your paths based on the isLoggedIn variable
+        if (this.userType === "Owner") {
+          this.$router.push('/SchedulePageOwner'); 
+        }else if(this.userType === "Instructor") {
+          this.$router.push('/SchedulePageInstructor');
+        }else if(this.userType === "Client"){
+          this.$router.push('/SchedulePageClient');
+        }else{
+          this.$router.push('/'); //if no one logged in, go back to loginPage
+        }
+
       } catch (error) {
 
         // Any errors means the backend returned an error 

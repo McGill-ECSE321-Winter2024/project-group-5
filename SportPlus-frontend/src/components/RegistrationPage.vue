@@ -209,7 +209,14 @@
       } else if (this.userType === 'Instructor') {
         endpointPath = `/instructors/getByEmail/${email}`;
       } else if (this.userType === 'Owner') {
-        endpointPath = `/owner/get`;
+        const fullUrl = `http://${config.dev.backendHost}:${config.dev.backendPort}/owner/get`;
+      const response = await axios.get(fullUrl);
+      // Check if the response contains data and if the firstName is null or empty
+      if (response.data && (!response.data.firstName || response.data.firstName.trim() === '')) {
+        return false; // Owner account is not fully set up, allow registration
+      } else {
+        return true; // Owner account already exists and is fully set up, prevent registration
+      }
       }
        else {
         console.log('Invalid user type');
@@ -329,8 +336,18 @@
           console.log(globalState.type)
 
           // Handle the response, such as redirecting the user to the SchedulePage page  
-          this.$router.push('/SchedulePage');
-          console.log('Registration form submitted', this.registerForm);
+                  // Define your paths based on the isLoggedIn variable
+        if (this.userType === "Owner") {
+          this.$router.push('/SchedulePageOwner'); 
+        }else if(this.userType === "Instructor") {
+          this.$router.push('/SchedulePageInstructor');
+        }else if(this.userType === "Client"){
+          this.$router.push('/SchedulePageClient');
+        }else{
+          this.$router.push('/register'); //if no one logged in, go back to registerPage
+        }
+        
+        console.log('Registration form submitted', this.registerForm);
         } catch (error) {
           // Handle errors, such as displaying a message to the user
           this.errorMessage = "Registration failed: " + (error.response.data.message || error.message);

@@ -13,10 +13,6 @@
                         <!-- button group-->
                         <div class="btn-group-vertical">
                             <b-button variant="outline-primary" @click="showSelected = true" class="mb-2">View Selected</b-button>
-                            <b-button variant="outline-primary" @click="registerForClass = true" class="mb-2">Register For Selected</b-button>
-                            <b-button variant="outline-primary" @click="modifySelected = true" class="mb-2"> Modify Selected</b-button>
-                            <b-button variant="outline-primary" @click="createNewSpecificClass = true" class="mb-2">Create New Specific Class</b-button>
-                            <b-button variant="outline-primary" @click="createNewClassType = true" class="mb-2">Create New ClassType</b-button>
                         </div>
                     </b-card>
                 </b-col>
@@ -49,7 +45,6 @@
                     <!-- sub-row-->
                     <b-row class="justify-content-center">
                         <b-tabs v-model="selectedTab" pills card>
-                            <b-tab id="no-filter" title="No Filter" @click="tabIsNoFilter"></b-tab>
                             <b-tab id="all-available" title="Open for Registration" @click="tabIsAllAvailable"></b-tab>
                             <b-tab id="filter-by-dates" title="Filter By Date Range" @click="tabIsByDate">
                                 <b-card style="width:100%; height: 180px">
@@ -168,7 +163,6 @@
             </b-modal>
             
             <b-modal v-model="showSelected" title="Class Details">
-                
                 <div v-if="selectedClass">
                     <p><strong>Instructor Name:</strong> {{JSON.parse(JSON.stringify(this.selectedClass))[0].supervisor}}</p>
                     <p><strong>Class Type:</strong> {{JSON.parse(JSON.stringify(this.selectedClass))[0].classType}}</p>
@@ -177,7 +171,18 @@
 
                     </b-col>
                     <b-col>
-                        <b-button variant="outline-primary" @click="assignInstructor" class="mb-2">Assign Instructor</b-button>
+                        <b-button variant="outline-primary" @click="registerForClass" class="mb-2">Register for This Class</b-button>
+                        <div v-if="registrationOK" 
+                            class="success-message"
+                            style="color: green; text-decoration: underline;"
+                            >Your registration was processed successfully!
+                        </div>
+                        <div v-if="!registrationOK" 
+                            class="Error-message"
+                            style="color: red; text-decoration: underline;"
+                            >{{this.registrationError}}
+                        </div>
+
                     </b-col>
                 </div>
                 <template v-else>
@@ -209,7 +214,7 @@ import config from "../../config";
     });
 
     export default {
-        name : 'SchedulePage',
+        name : 'SchedulePageOwner',
         components: {
             CreateNewSpecificClass,
             CreateNewClassType
@@ -219,12 +224,14 @@ import config from "../../config";
             const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
         return {
+            registrationOK: true,
+            registrationError: null,
             min: today,
             displayError_I: false,
             displayError_T: false,
             startDate: null,
             endDate: null,
-            option: 'no-filter',
+            option: 'all-available',
             searchDate: false,
             createNewSpecificClass: false,
             createNewClassType: false,
@@ -242,7 +249,9 @@ import config from "../../config";
                 { key: 'classType', label: 'Class Type',show:true },
                 { key: 'supervisor', label: 'Instructor', show:true },
                 { key: 'duration', label: 'Duration', show: true },
-                { key: 'description', show: false}
+                { key: 'description', show: false},
+                { key: 'id', show: false},
+                { key: 'name', show: false}
                 ],
             fields_I: [
                 {key: 'firstName', label: 'Instructor', show: true},
@@ -297,10 +306,6 @@ import config from "../../config";
                         const intId = JSON.parse(JSON.stringify(this.selectedType));
                         endpoint = `/specificClass/class-type/${intId[0].typeId}`;
                         break;
-
-                    case "no-filter":
-                        endpoint =`/specificClass/all`;
-                        break;
                 }
                 console.log('Constructed endpoint :', endpoint); 
                 return endpoint;
@@ -311,7 +316,13 @@ import config from "../../config";
                 CLIENT.get(endpoint)
                 .then(response => {
                     console.log('Response:', response.data); 
-                    const sortedClasses = response.data.sort((a, b) => {
+                     // Filter out classes with dates earlier than today
+                    const filteredClasses = response.data.filter(item => {
+                        const classDate = new Date(item.date);
+                        const today = new Date();
+                        return classDate >= today;
+                    });
+                    const sortedClasses = filteredClasses.sort((a, b) => {
                         // Compare dates
                         if (a.date < b.date) return -1;
                         if (a.date > b.date) return 1;
@@ -342,7 +353,9 @@ import config from "../../config";
                         supervisor: item.instructor ? `${item.instructor.lastName}, ${item.instructor.firstName}` : '', 
                         classType: item.classType.name, 
                         duration: '60 min',
-                        description: item.classType.description
+                        description: item.classType.description,
+                        id: item.id,
+                        name: item.name
                     });
                 });
 
@@ -390,6 +403,43 @@ import config from "../../config";
                     console.error('Error fetching classTypes:', error);
                     });
             },
+            registerForClass(){//TODO 
+                CLIENT.get(`/registrations/getByClient/${globalState.email}`).then(response =>{
+                    if(response.data.length === 0){
+                        
+                    }else{
+                    response.data.forEach(registration => {
+                        if(registration.specificClass.id === JSON.parse(JSON.stringify(this.selectedClass))[0].id){
+                            this.registrationError = "You are already registered for this class! Visit your account page for a complete list of classes you are signed up for."
+                            registrationOK = false;
+                        }
+                        console.log(registration);
+                    });
+                }
+                }).catch(error =>{
+                    console.error('Error:', error);
+                });
+                //since registration doesnt already exist, register for class
+                const client = {
+                    Email: globalState.email, 
+                    FirstName:null,
+                    Password: null, 
+                    LastName: null,
+                    AccountId: globalState.id
+                };
+                const specificClass = {
+                    name: JSON.parse(JSON.stringify(this.selectedClass))[0].name,
+                    //TODO 
+                };
+                const requestBody = {
+                    client: client,
+                    specificClass: specificClass
+                };
+                // CLIENT.post("/registrations/create/", requestBody).then(response =>{
+
+                // })
+
+            },
             onClassSelected(item) {
                 this.selectedClass = item;
                 console.log('Selected class:', item);
@@ -404,10 +454,6 @@ import config from "../../config";
             },
             tabIsAllAvailable(tab){
                 this.option = 'all-available';
-                this.fetchData();
-            },
-            tabIsNoFilter(tab){
-                this.option = 'no-filter';
                 this.fetchData();
             },
             tabIsInstructor(tab){
