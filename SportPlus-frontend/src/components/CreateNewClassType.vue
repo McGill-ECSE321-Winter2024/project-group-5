@@ -60,11 +60,15 @@
   import axios from "axios";
   import config from "../../config";
   import { globalState } from "@/global.js";
-  const client = axios.create({
+  const AXIOS = axios.create({
     // IMPORTANT: baseURL, not baseUrl
     baseURL: config.dev.backendBaseUrl
   });
-  
+  // Create the URL
+  const backendBaseUrl = `http://${config.dev.backendHost}:${config.dev.backendPort}`;
+
+// Determine the specific endpoint based on accountType
+let endpointPath = '';
   export default {
     name: "CreateNewClassType",
     data() {
@@ -99,7 +103,7 @@
 
     methods: {
     async fetchAllClassTypes(){
-        CLIENT.get('/classType/all')
+        CLIENT.get(backendBaseUrl,'/classType/all')
                 .then(response => {
                     this.classTypes = response.data.classTypes;
                 })
@@ -110,13 +114,20 @@
     // Method to create a new class type
     async createClassType() {
       try {
+<<<<<<< HEAD
         const classType={ name: this.className, description: this.description ,approved : null,approver:null};
         //console.log("classtype", classtype);
         const response = await axios.post('/create', classType);
+=======
+        // Create the URL
+        
+        const classtype={ name: this.className, description: this.description ,approved : null,approver:null};
+        const response = await axios.post(backendBaseUrl,'/create', classtype);
+>>>>>>> e969f6001843a2155b3a1f99a6c1af455e91bb3a
         this.classTypes.push(response.data); // Add the newly created class type to the list
-        const response1 = await axios.get('/get', this.typeID);
+        const response1 = await axios.get(backendBaseUrl,'/get', this.typeID);
         if(globalState.user=="Owner"){ // if the owner iscreating approve
-            await axios.post('/approve',response1.data.className);
+            await axios.post(backendBaseUrl,'/approve',response1.data.className);
         }
         this.classType = { name: '', description: '' }; // Reset form
         alert('Class type created successfully!');
@@ -130,7 +141,7 @@
   try {
     // Check if there's a new name to update and send the request
     if (this.newName && this.typeID) {
-      await axios.put(`/updateName/${this.typeID}`, this.newName, {
+      await axios.put(baseURL,`/updateName/${this.typeID}`, this.newName, {
         headers: {
           'Content-Type': 'application/json'
         }
@@ -140,7 +151,7 @@
 
     // Check if there's a new description to update and send the request
     if (this.newDescription && this.typeID) {
-      await axios.put(`/updateDescription/${this.typeID}`, this.newDescription, {
+      await axios.put(baseURL,`/updateDescription/${this.typeID}`, this.newDescription, {
         headers: {
           'Content-Type': 'application/json'
         }
@@ -160,7 +171,7 @@
 },
     async deleteClassType (){
         try {
-        await axios.delete('/delete',this.className);
+        await axios.delete(backendBaseUrl,'/delete',this.className);
         this.fetchAllClassTypes();
       } catch (error) {
         console.error('There was an error deleting the class type:', error);
