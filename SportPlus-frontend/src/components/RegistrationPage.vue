@@ -336,8 +336,18 @@
           console.log(globalState.type)
 
           // Handle the response, such as redirecting the user to the SchedulePage page  
-          this.$router.push('/SchedulePage');
-          console.log('Registration form submitted', this.registerForm);
+                  // Define your paths based on the isLoggedIn variable
+        if (this.userType === "Owner") {
+          this.$router.push('/SchedulePageOwner'); 
+        }else if(this.userType === "Instructor") {
+          this.$router.push('/SchedulePageInstructor');
+        }else if(this.userType === "Client"){
+          this.$router.push('/SchedulePageClient');
+        }else{
+          this.$router.push('/register'); //if no one logged in, go back to registerPage
+        }
+        
+        console.log('Registration form submitted', this.registerForm);
         } catch (error) {
           // Handle errors, such as displaying a message to the user
           this.errorMessage = "Registration failed: " + (error.response.data.message || error.message);
