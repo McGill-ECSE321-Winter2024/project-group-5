@@ -59,7 +59,7 @@
   
   import axios from "axios";
   import config from "../../config";
-  import { globalState } from '@/global';
+  import { globalState } from '@/global.js';
 
   const frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
   const backendUrl = 'http://' + config.dev.backendHost + ':' + config.dev.backendPort
@@ -142,7 +142,10 @@
 
         //Setting up global variables 
         globalState.accountId = accountId;
-        globalState.type = this.userType
+        globalState.type = this.userType;
+        globalState.accountEmail = this.loginForm.email;
+        console.log(this.loginForm.email);
+        console.log(globalState.accountEmail);
   
         console.log(globalState.type)
 
