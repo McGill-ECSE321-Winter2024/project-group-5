@@ -154,7 +154,18 @@
         // Go to schedule Page if succesfull
         this.emailState = null;
         this.passwordState = null;
-        this.$router.push('/SchedulePage'); 
+
+        // Define your paths based on the isLoggedIn variable
+        if (this.userType === "Owner") {
+          this.$router.push('/SchedulePageOwner'); 
+        }else if(this.userType === "Instructor") {
+          this.$router.push('/SchedulePageInstructor');
+        }else if(this.userType === "Client"){
+          this.$router.push('/SchedulePageClient');
+        }else{
+          this.$router.push('/'); //if no one logged in, go back to loginPage
+        }
+
       } catch (error) {
 
         // Any errors means the backend returned an error 
