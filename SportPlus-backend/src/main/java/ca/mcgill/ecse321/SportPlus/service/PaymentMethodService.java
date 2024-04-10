@@ -68,14 +68,28 @@ public class PaymentMethodService {
         if (cardNumber == null || cardNumber.trim().length() == 0) {
             throw new IllegalArgumentException("Card Number is invalid!");
         }
-        // Find the paymentmeyhod with the card number
-        PaymentMethod paymentMethod = paymentMethodRepository.findByCardNumber(cardNumber);
-        if (paymentMethod == null) {
-            throw new IllegalArgumentException("Payment method does not exist!");
+        try {
+            // Find the paymentmeyhod with the card number
+            PaymentMethod paymentMethod = paymentMethodRepository.findByCardNumber(cardNumber);
+            if (paymentMethod == null) {
+                throw new IllegalArgumentException("Payment method does not exist!");
+            }
+
+            // Delete the payment method
+            paymentMethodRepository.deleteByCardNumber(cardNumber);
+        } catch (Exception e) {
+            try {
+                List<PaymentMethod> paymentMethods = (List<PaymentMethod>) paymentMethodRepository.findAll();
+                for (PaymentMethod pm : paymentMethods) {
+                    if (pm.getCardNumber().equals(cardNumber)) {
+                        paymentMethodRepository.deleteById(pm.getCardId());
+                    }
+                }
+            } finally {
+
+            }
         }
 
-        // Delete the payment method
-        paymentMethodRepository.deleteByCardNumber(cardNumber);
     }
 
     @Transactional

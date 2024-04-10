@@ -285,7 +285,7 @@ public class PaymentMethodIntegrationTests {
         Client PAYMENTMETHOD_CLIENT = new Client(CLIENT_EMAIL, "John", "Pass123", "Doe", 2);
         clientRepository.save(PAYMENTMETHOD_CLIENT);
         PaymentMethodRequestDto request = new PaymentMethodRequestDto(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE,
-                PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CLIENT);
+                PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CLIENT.getAccountId());
 
         // get the response
         ResponseEntity<PaymentMethodResponseDto> response = client.postForEntity("/paymentMethod/create", request,
@@ -310,7 +310,7 @@ public class PaymentMethodIntegrationTests {
         Client PAYMENTMETHOD_CLIENT = new Client(CLIENT_EMAIL, "John", "Pass123", "Doe", 2);
         clientRepository.save(PAYMENTMETHOD_CLIENT);
         PaymentMethodRequestDto request = new PaymentMethodRequestDto(PAYMENTMETHOD_CARDNUMBER, PAYMENTMETHOD_EXPDATE,
-                PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CLIENT);
+                PAYMENTMETHOD_CVC, PAYMENTMETHOD_CARDHOLDERNAME, PAYMENTMETHOD_CLIENT.getAccountId());
 
         // Get the response
         ResponseEntity<PaymentMethodResponseDto> response = client.postForEntity("/paymentMethod/create/", request,

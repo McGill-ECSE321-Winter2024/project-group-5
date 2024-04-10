@@ -1,7 +1,6 @@
 package ca.mcgill.ecse321.SportPlus.dto;
 
 import java.sql.Date;
-import ca.mcgill.ecse321.SportPlus.model.Client;
 
 public class PaymentMethodRequestDto {
 
@@ -9,19 +8,19 @@ public class PaymentMethodRequestDto {
     private Date expDate;
     private String cvc;
     private String cardHolderName;
-    private Client client;
+    private int clientId;
 
 
     // Constructors
     public PaymentMethodRequestDto() {
     }
 
-    public PaymentMethodRequestDto(String cardNumber, Date expDate, String cvc, String cardHolderName, Client client) {
+    public PaymentMethodRequestDto(String cardNumber, Date expDate, String cvc, String cardHolderName, int clientId) {
         this.cardNumber = cardNumber;
         this.expDate = expDate;
         this.cvc = cvc;
         this.cardHolderName = cardHolderName;
-        this.client = client;
+        this.clientId = clientId;
     }
 
     // Getter and Setter cardNumber
@@ -61,12 +60,12 @@ public class PaymentMethodRequestDto {
     }
 
     // Getter and setter client 
-    public Client getClient() {
-        return this.client;
+    public int getClientId() {
+        return this.clientId;
     }
 
-    public void setClient(Client client) {
-        this.client = client;
+    public void setClient(int clientId) {
+        this.clientId = clientId;
     }
 
 }
