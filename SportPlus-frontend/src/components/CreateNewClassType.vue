@@ -110,7 +110,8 @@
     // Method to create a new class type
     async createClassType() {
       try {
-        const classtype={ name: this.className, description: this.description ,approved : null,approver:null};
+        const classType={ name: this.className, description: this.description ,approved : null,approver:null};
+        //console.log("classtype", classtype);
         const response = await axios.post('/create', classType);
         this.classTypes.push(response.data); // Add the newly created class type to the list
         const response1 = await axios.get('/get', this.typeID);
