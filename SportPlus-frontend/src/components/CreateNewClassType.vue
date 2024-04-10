@@ -60,10 +60,14 @@
   import axios from "axios";
   import config from "../../config";
   import { globalState } from "@/global.js";
+  // Setting up urls
+  const frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
+  const backendUrl = 'http://' + config.dev.backendHost + ':' + config.dev.backendPort
+
   const AXIOS = axios.create({
-    // IMPORTANT: baseURL, not baseUrl
-    baseURL: config.dev.backendBaseUrl
-  });
+    baseURL: backendUrl,
+    headers: { 'Access-Control-Allow-Origin': frontendUrl }
+  })
   // Create the URL
   const backendBaseUrl = `http://${config.dev.backendHost}:${config.dev.backendPort}`;
 
