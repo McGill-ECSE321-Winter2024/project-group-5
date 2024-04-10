@@ -118,10 +118,10 @@ let endpointPath = '';
     async createClassType() {
       try {        
         const classtype={ name: this.className, description: this.description ,approved : false,approver:null};
-        const path='ClassType/create/';
+        const path='classType/create/';
         const response = await AXIOS.post(path, classtype);
         this.classTypes.push(response.data); // Add the newly created class type to the list
-        const path1='ClassType/get/'+this.name;
+        const path1='classType/get/'+this.name;
         const response1 = await AXIOS.get(path1);
         if(globalState.user=="Owner"){ // if the owner iscreating approve
             await AXIOS.post(backendBaseUrl,'/approve',response1.data.typeID);
@@ -139,7 +139,7 @@ let endpointPath = '';
 
     // Check if there's a new name to update and send the request
     if (this.newName && this.typeID) {
-      const path='ClassType/updateName/'+this.typeID;
+      const path='classType/updateName/'+this.typeID;
       await AXIOS.put(path, this.newName,{
         headers: {
           'Content-Type': 'application/json'
@@ -150,7 +150,7 @@ let endpointPath = '';
 
     // Check if there's a new description to update and send the request
     if (this.newDescription && this.typeID) {
-      const path='ClassType/updateName/'+this.typeID+this.newDescription;
+      const path='classType/updateName/'+this.typeID+this.newDescription;
       await AXIOS.put(path, {
         headers: {
           'Content-Type': 'application/json'
@@ -171,7 +171,7 @@ let endpointPath = '';
 },
     async deleteClassType (){
         try {
-        const path='ClassType/delete/'+this.className;
+        const path='classType/delete/'+this.className;
         await AXIOS.delete(path);
         this.fetchAllClassTypes();
       } catch (error) {
