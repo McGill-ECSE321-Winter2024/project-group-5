@@ -102,11 +102,9 @@
 
   import axios from "axios";
   import config from "../../config";
-
-
   import { globalState } from "@/global.js";
 
-
+  // Create URLs
   const frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
   const backendUrl = 'http://' + config.dev.backendHost + ':' + config.dev.backendPort
 
@@ -144,7 +142,7 @@
             this.emailDisabled = false; // Enable the email input
         }
         },
-
+      // Validate the password 
       validatePassword() {
       const password = this.registerForm.password;
       if (!password) {
@@ -161,7 +159,7 @@
         this.passwordFeedback = "";
        }
      },
-
+     //Make sure the passowrd matches
      validateConfirmPassword() {
       if (this.registerForm.confirmPassword !== this.registerForm.password) {
         this.confirmPasswordState = false;
@@ -171,7 +169,7 @@
         this.confirmPasswordFeedback = "";
       }
     },
-
+    // Check if email meets requirements
       validateEmail() {
       const email = this.registerForm.email;
       const allowedCharacters = 'abcdefghijklmnopqrstuvwxyz._-@1234567890';
@@ -202,6 +200,7 @@
       }
     },
 
+    // Check if account already created 
     async checkEmailExists(email) {
     try {
       let endpointPath = '';
@@ -217,10 +216,10 @@
         return false; // Invalid user type
       }
 
+      // Try to get the account with the email
       const fullUrl = `http://${config.dev.backendHost}:${config.dev.backendPort}${endpointPath}`;
       const userResponse = await axios.get(fullUrl);
-      console.log("HELLO");
-      console.log(userResponse);
+
       return true; // If the request succeeds, the email exists
     } catch (error) {
        return false; // An error occurred, means an account with that email does not exist
@@ -239,6 +238,9 @@
 
         const emailExists = await this.checkEmailExists(this.registerForm.email);
 
+        // First check if emaail is preprely written,
+        // Password meets requirements
+        // Email is not used
         if (!this.emailState || !this.passwordState || !this.confirmPasswordState) {
           alert(this.emailFeedback || this.passwordFeedback || this.confirmPasswordFeedback);
           return;
@@ -250,10 +252,11 @@
         }
 
         if (emailExists){
-          alert("Email already in use")
-          return
+          alert("Email already in use") 
+          return;
         }
 
+        // Create the request
         const userData = {
           email: this.registerForm.email,
           firstName: this.registerForm.firstName,
@@ -261,10 +264,10 @@
           password: this.registerForm.password,
         };
 
-
+        // Create the URL
         const backendBaseUrl = `http://${config.dev.backendHost}:${config.dev.backendPort}`;
 
-        // // Determine the specific endpoint based on accountType
+        // Determine the specific endpoint based on accountType
         let endpointPath = '';
         switch (this.userType) {
           case 'Client':
@@ -285,44 +288,47 @@
         const fullUrlLogin = backendBaseUrl + '/login'
 
         try {
-          // Replace with your backend endpoint URL
-          //Creates an account
+          //Creates an account with 
           const responseCreate = await axios.post(fullUrlCreate, userData);
 
           // Creates a login
-        const responseLogin = await AXIOS.post(fullUrlLogin, {
-          email: this.registerForm.email,
-          password: this.registerForm.password,
-          type: this.userType.toUpperCase(), // or the type of the user (OWNER, INSTRUCTOR, CLIENT)
-          currentTime: currentTime // or the format your backend expects
-        });
+          const responseLogin = await AXIOS.post(fullUrlLogin, {
+            email: this.registerForm.email,
+            password: this.registerForm.password,
+            type: this.userType.toUpperCase(), // or the type of the user (OWNER, INSTRUCTOR, CLIENT)
+            currentTime: currentTime // or the format your backend expects
+            }
+          );
 
+          // Determine the specific endpoint based on accountType
+          let endpointPathAccountId = '';
+          if (this.userType === 'Client') {
+            endpointPathAccountId = `/clients/getByEmail/${this.registerForm.email}`;
+          } else if (this.userType === 'Instructor') {
+            endpointPathAccountId = `/instructors/getByEmail/${this.registerForm.email}`;
+          } else if (this.userType === 'Owner') {
+            endpointPathAccountId = '/owner/get/';
+          }
+          else {
+            console.log('Invalid user type');
+            return false; // Invalid user type
+          }
 
-        let endpointPathAccountId = '';
-        if (this.userType === 'Client') {
-          endpointPathAccountId = `/clients/getByEmail/${this.registerForm.email}`;
-        } else if (this.userType === 'Instructor') {
-          endpointPathAccountId = `/instructors/getByEmail/${this.registerForm.email}`;
-        } else if (this.userType === 'Owner') {
-          endpointPathAccountId = '/owner/get/';
-        }
-         else {
-          console.log('Invalid user type');
-          return false; // Invalid user type
-        }
+          // Get the added user 
+          const fullUrl = `http://${config.dev.backendHost}:${config.dev.backendPort}${endpointPathAccountId}`;
+          const userResponseAccountID = await AXIOS.get(fullUrl);
 
-        const fullUrl = `http://${config.dev.backendHost}:${config.dev.backendPort}${endpointPathAccountId}`;
-        const userResponseAccountID = await AXIOS.get(fullUrl);
+          // Retreive its information
+          const accountId = userResponseAccountID.data.accountId;
+          console.log(accountId);
+          
+          //Setting up global variables
+          globalState.accountId = accountId;
+          globalState.type = this.userType;
+          globalState.accountEmail = this.registerForm.email;
+          console.log(globalState.type)
 
-        const accountId = userResponseAccountID.data.accountId;
-        console.log(accountId);
-         //Setting up global variables
-        globalState.accountId = accountId;
-        globalState.type = this.userType;
-        globalState.accountEmail = this.registerForm.email;
-        console.log(globalState.type)
-
-          // Handle the response, such as redirecting the user to the SchedulePage page for now 
+          // Handle the response, such as redirecting the user to the SchedulePage page  
           this.$router.push('/SchedulePage');
           console.log('Registration form submitted', this.registerForm);
         } catch (error) {
@@ -335,15 +341,13 @@
   };
   </script>
   
-  <!-- Add any additional styles if required -->
+
   <style scoped>
 
-      /* Add your font import here, for example from Google Fonts */
       @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
-
       .register-background {
-      position: relative; /* Needed for the absolute positioning of the pseudo-element */
+      position: relative; 
       background: url('~@/assets/crossfitjpg.jpg') no-repeat center center;
       background-size: cover;
       height: 100%;
@@ -362,16 +366,16 @@
     
       .register-title {
       text-align: left;
-      font-size: 1.5rem; /* Smaller size */
-      font-family: 'Roboto', sans-serif; /* Change the font */
+      font-size: 1.5rem; 
+      font-family: 'Roboto', sans-serif;
       }
 
       .register-subtitle {
       font-size: 0.95rem;
       font-family: 'Roboto', sans-serif;
       text-align: left;
-      color: #6c757d; /* Subdued color for the subtitle */
-      margin-top: -0.5rem; /* Adjust spacing as needed */
+      color: #6c757d;
+      margin-top: -0.5rem;
       }
 
       .register-form {
@@ -389,6 +393,5 @@
     justify-content: center;
     margin-bottom: 2rem;
     }
-
 
   </style>

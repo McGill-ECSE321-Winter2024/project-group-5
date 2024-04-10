@@ -59,10 +59,9 @@
   
   import axios from "axios";
   import config from "../../config";
-
   import { globalState } from '@/global.js';
 
-
+  // Setting up urls
   const frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
   const backendUrl = 'http://' + config.dev.backendHost + ':' + config.dev.backendPort
 
@@ -106,7 +105,8 @@
         const currentTime = now.toTimeString().split(' ')[0];
 
         try {
-
+        
+        //Create the login url 
         const backendBaseUrl = `http://${config.dev.backendHost}:${config.dev.backendPort}`;
         const fullUrlLogin = backendBaseUrl + '/login';
 
@@ -118,10 +118,9 @@
           currentTime: currentTime // or the format your backend expects
         });
 
-        // LOGIN CREATED
+        // LOGIN CREATED SUCCESFULLY
         
-
-        // Set the global account ID 
+        // Set the global account variables
         //Retreive the account
         let endpointPathAccountId = '';
         if (this.userType === 'Client') {
@@ -136,13 +135,14 @@
           return false; // Invalid user type
         }
 
+        // Get info of the account 
         const fullUrl = `http://${config.dev.backendHost}:${config.dev.backendPort}${endpointPathAccountId}`;
         const userResponseAccountID = await AXIOS.get(fullUrl);
 
         const accountId = userResponseAccountID.data.accountId;
         console.log(accountId);
 
-        //Setting up global variables 
+        //S etting up global variables 
         globalState.accountId = accountId;
         globalState.type = this.userType;
         globalState.accountEmail = this.loginForm.email;
@@ -151,11 +151,14 @@
   
         console.log(globalState.type)
 
-        // Go to schedule Page
+        // Go to schedule Page if succesfull
         this.emailState = null;
         this.passwordState = null;
         this.$router.push('/SchedulePage'); 
       } catch (error) {
+
+        // Any errors means the backend returned an error 
+        // Meaning we couldn't login with the info provided 
         this.emailState = false;
         this.passwordState = false;
         console.error(error);
@@ -169,12 +172,11 @@
   </script>
   
   <style scoped>
-    /* Add your font import here, for example from Google Fonts */
+
     @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
-
     .login-background {
-    position: relative; /* Needed for the absolute positioning of the pseudo-element */
+    position: relative; 
     background: url('~@/assets/workoutjpg.jpg') no-repeat center center;
     background-size: cover;
     height: 100%;
@@ -194,16 +196,16 @@
 
     .login-title {
     text-align: left;
-    font-size: 1.5rem; /* Smaller size */
-    font-family: 'Roboto', sans-serif; /* Change the font */
+    font-size: 1.5rem;
+    font-family: 'Roboto', sans-serif; 
     }
 
     .login-subtitle {
     font-size: 0.95rem;
     font-family: 'Roboto', sans-serif;
     text-align: left;
-    color: #6c757d; /* Subdued color for the subtitle */
-    margin-top: -0.5rem; /* Adjust spacing as needed */
+    color: #6c757d;
+    margin-top: -0.5rem; 
     }
 
     .login-form {
@@ -222,7 +224,6 @@
     margin-bottom: 2rem;
     }
 
-    /* Continue with the rest of your styles... */
   </style>
 
   
