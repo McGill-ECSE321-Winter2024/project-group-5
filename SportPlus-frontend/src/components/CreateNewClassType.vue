@@ -60,10 +60,14 @@
   import axios from "axios";
   import config from "../../config";
   import { globalState } from "@/global.js";
+  // Setting up urls
+  const frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
+  const backendUrl = 'http://' + config.dev.backendHost + ':' + config.dev.backendPort
+
   const AXIOS = axios.create({
-    // IMPORTANT: baseURL, not baseUrl
-    baseURL: config.dev.backendBaseUrl
-  });
+    baseURL: backendUrl,
+    headers: { 'Access-Control-Allow-Origin': frontendUrl }
+  })
   // Create the URL
   const backendBaseUrl = `http://${config.dev.backendHost}:${config.dev.backendPort}`;
 
@@ -103,7 +107,7 @@ let endpointPath = '';
 
     methods: {
     async fetchAllClassTypes(){
-        CLIENT.get(backendBaseUrl,'/classType/all')
+        AXIOS.get(backendBaseUrl,'/classType/all')
                 .then(response => {
                     this.classTypes = response.data.classTypes;
                 })
@@ -114,8 +118,12 @@ let endpointPath = '';
     // Method to create a new class type
     async createClassType() {
       try {        
-        const classtype={ name: this.className, description: this.description ,approved : null,approver:null};
-        const response = await AXIOS.post(backendBaseUrl,'/create', classtype);
+        const classtype={ name: this.className, description: this.description ,approved : false,approver:null};
+        console.log(backendBaseUrl+'/classType'+'/create');
+        console.log(classtype);
+        const backendBaseUrlCreate = backendBaseUrl+'/classType'+'/create';
+        console.log("bURL", backendBaseUrlCreate);
+        const response = await AXIOS.post(backendBaseUrlCreate, classtype);
         this.classTypes.push(response.data); // Add the newly created class type to the list
         const response1 = await AXIOS.get(backendBaseUrl,'/get', this.typeID);
         if(globalState.user=="Owner"){ // if the owner iscreating approve
