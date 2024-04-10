@@ -80,75 +80,6 @@
                         </template>
                     </b-table>
                 </div>
-                <!-- sub-row-->
-                <b-row class="justify-content-center">
-                    <b-tabs v-model="selectedTab" pills card>
-                        <b-tab id="no-filter" title="No Filter" @click="tabIsNoFilter"></b-tab>
-                        <b-tab id="all-available" title="Open for Registration" @click="tabIsAllAvailable"></b-tab>
-                        <b-tab id="filter-by-dates" title="Filter By Date Range" @click="tabIsByDate">
-                            <b-card style="width:100%; height: 200px">
-                                <b-row class="2">
-                                    <b-col>
-                                        <label for="datepicker-start">Start Date</label>
-                                        <b-form-datepicker id="datepicker-start" today-button reset-button close-button
-                                            :min="min" v-model="startDate" locale="en"
-                                            placeholder="Pick start date"></b-form-datepicker>
-                                        <div v-if="!startDate === 'filter-by-dates'" class="error-message"
-                                            style="color: red; text-decoration: underline;">Please select a start
-                                            date.
-                                        </div>
-                                    </b-col>
-                                    <b-col>
-                                        <label for="datepicker-end">End Date</label>
-                                        <b-form-datepicker id="datepicker-end" today-button reset-button close-button
-                                            :min="startDate ? startDate : min" v-model="endDate" locale="en"
-                                            placeholder="Pick end date"></b-form-datepicker>
-                                        <div v-if="!endDate === 'filter-by-dates'" class="error-message"
-                                            style="color: red; text-decoration: underline;">Please select an
-                                            endDate.
-                                        </div>
-                                    </b-col>
-                                </b-row>
-
-                                <div class="empty-divider-table"></div>
-                                <b-button variant="outline-primary" @click="fetchData" class="mb-2"
-                                    v-if="endDate && startDate">Search</b-button>
-                            </b-card>
-                        </b-tab>
-
-                        <b-tab id="filter-by-instructors" title="Filter By Instructor" @click="tabIsInstructor">
-                            <b-card style="width: 100%;
-                                    height: 200px">
-                                <b-table hover small :items="instructors" :fields="filteredInstructors" :outlined="true"
-                                    select-mode="single" responsive="sm" ref="selectableTable" selectable
-                                    @row-selected="onInstructorSelected">
-                                </b-table>
-                                <b-button variant="outline-primary" @click="fetchData" class="mb-2"
-                                    v-if="selectedInstructor">Search</b-button>
-                                <div v-if="displayError_I" class="error-message"
-                                    style="color: red; text-decoration: underline;">Please
-                                    select an Instructor.
-                                </div>
-                            </b-card>
-                        </b-tab>
-                        <b-tab id="filter-by-classType" title="Filter By ClassType" @click="tabIsClassType">
-                            <b-card style="width: 100%;
-                                        height: 200px">
-                                <b-table hover small :items="types" :fields="filteredClassTypes" :outlined="true"
-                                    select-mode="single" responsive="sm" ref="selectableTable" selectable
-                                    @row-selected="onTypeSelected">
-                                </b-table>
-                                <b-button variant="outline-primary" @click="fetchData" class="mb-2"
-                                    v-if="selectedType">Search
-                                </b-button>
-                                <div v-if="displayError_T" class="error-message"
-                                    style="color: red; text-decoration: underline;">Please
-                                    select a ClassType.
-                                </div>
-                            </b-card>
-                        </b-tab>
-                    </b-tabs>
-                </b-row>
             </b-col>
         </div>
 
@@ -229,7 +160,7 @@ export default {
                 { key: 'startTime', label: 'Start Time', show: true },
                 { key: 'date', label: 'Date', show: false },
                 { key: 'classType', label: 'Class Type', show: true },
-                { key: 'supervisor', label: 'Instructor', show: true },
+                { key: 'supervisor', label: 'Instructor', show: false },
                 { key: 'duration', label: 'Duration', show: true },
                 { key: 'description', show: false },
                 { key: 'id', show: false }
@@ -266,38 +197,10 @@ export default {
         this.fetchData_ClassTypes();
     },
     methods: {
-        fetchEndpoint(option) {
-            let endpoint;
-            switch (option) {
-
-                case "all-available":
-                    endpoint = `/specificClass/available`;
-                    break;
-
-                case "filter-by-dates":
-                    const newEnd = new Date(this.endDate);
-                    newEnd.setDate(newEnd.getDate() + 1);
-                    const endFormatted = this.endDate ? newEnd.toISOString().substring(0, 10) : '';
-                    endpoint = `/specificClass/by-date-range?startDate=${this.startDate}&endDate=${endFormatted}`;
-                    break;
-
-                case "filter-by-instructors":
-                    const instructorId = JSON.parse(JSON.stringify(this.selectedInstructor));
-                    endpoint = `/specificClass/instructor/${instructorId[0].accountId}`;
-                    break;
-
-                case "filter-by-classType":
-                    const intId = JSON.parse(JSON.stringify(this.selectedType));
-                    endpoint = `/specificClass/class-type/${intId[0].typeId}`;
-                    break;
-
-                case "no-filter":
-                    endpoint = `/specificClass/all`;
-                    break;
-            }
-            console.log('Constructed endpoint :', endpoint);
-            return endpoint;
-        },
+        fetchEndpoint() {
+        // Always fetch data filtered by accountId
+        return `/specificClass/instructor/${this.accountId}`;
+    },
 
         fetchData() {
             const endpoint = this.fetchEndpoint(this.option);
@@ -548,7 +451,7 @@ export default {
 }
 
 .column {
-    flex-basis: 30%;
+    flex-basis: 45%;
     padding: 10px;
 }
 
