@@ -114,10 +114,20 @@ let endpointPath = '';
     // Method to create a new class type
     async createClassType() {
       try {
+<<<<<<< HEAD
+        const classType={ name: this.className, description: this.description ,approved : null,approver:null};
+        //console.log("classtype", classtype);
+        const response = await axios.post('/create', classType);
+=======
         // Create the URL
         
         const classtype={ name: this.className, description: this.description ,approved : null,approver:null};
+<<<<<<< HEAD
         const response = await AXIOS.post(backendBaseUrl,'/create', classtype);
+=======
+        const response = await axios.post(backendBaseUrl,'/create', classtype);
+>>>>>>> e969f6001843a2155b3a1f99a6c1af455e91bb3a
+>>>>>>> 2cbcb4f183374d00268f5f0572a112fba45acea7
         this.classTypes.push(response.data); // Add the newly created class type to the list
         const response1 = await AXIOS.get(backendBaseUrl,'/get', this.typeID);
         if(globalState.user=="Owner"){ // if the owner iscreating approve
