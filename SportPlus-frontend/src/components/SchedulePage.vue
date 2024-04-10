@@ -32,7 +32,7 @@
                             :fields="filteredFields"
                             :sticky-header="true"
                             :outlined="true"
-                            :small="true"
+                            
                             select-mode="single"
                             responsive="sm"
                             ref="selectableTable"
@@ -56,8 +56,9 @@
                         <b-form-radio value="filter-by-classType">Filter by Class Type</b-form-radio>
                     </b-form-radio-group>
                     <!-- sub-row-->
-                    <b-row class="1">
-                        <b-card style="width: auto;">
+                    <b-row class="justify-content-center">
+                        <b-card style="width:40%;
+                                height: 170px">
                             <b-col>
                                 <b-row class="2">
                                     <b-col>
@@ -107,7 +108,8 @@
                                     >Search</b-button>
                             </b-col>
                         </b-card>
-                        <b-card style="width: auto;">
+                        <b-card style="width: 20%;
+                                height: 170px">
                             <b-col>
                                     <b-table hover
                                         small
@@ -134,7 +136,8 @@
                                             </div>
                             </b-col>
                         </b-card>
-                        <b-card style="width: auto;">
+                        <b-card style="width: 20%;
+                                height: 170px">
                             <b-col>
                                 <b-table hover
                                     small
@@ -437,11 +440,15 @@ import config from "../../config";
 .tableTitle th {
     text-align: left;
 }
+.ScheduleTable{
+    height: 300px;
+}
 
 .bold-row-separator {
     font-weight: bold;
     font-size: larger;
     text-align: left;
+    fill: #2c3e50;
 }
 .container-wrapper{
     margin: 0 auto; /* Center the container */
