@@ -702,13 +702,11 @@ public class RegistrationIntegrationTests {
         client = clientRepository.findByEmail(CLIENT_EMAIL);
         assertNotNull(client);
 
-        // Building the registration request DTO
-        RegistrationRequestDto request = new RegistrationRequestDto(specificClass, client);
-        assertEquals(CLIENT_EMAIL, request.getClient().getEmail());
+        // Building the registration request URL
+        String url = "/registrations/create/" + specificClass.getSessionId()+"/" + CLIENT_EMAIL;
 
         // Building the registration response DTO
-        ResponseEntity<RegistrationResponseDto> response = restTemplate.postForEntity("/registrations/create", request,
-                RegistrationResponseDto.class);
+        ResponseEntity<RegistrationResponseDto> response = restTemplate.postForEntity(url,null,RegistrationResponseDto.class);
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
 
@@ -748,13 +746,11 @@ public class RegistrationIntegrationTests {
         client = clientRepository.findByEmail(CLIENT_EMAIL);
         assertNotNull(client);
 
-        // Building the registration request DTO
-        RegistrationRequestDto request = new RegistrationRequestDto(specificClass, client);
-        assertEquals(CLIENT_EMAIL, request.getClient().getEmail());
+        // Building the registration request URL
+        String url = "/registrations/create/" + specificClass.getSessionId()+"/" + CLIENT_EMAIL;
 
         // Building the registration response DTO
-        ResponseEntity<RegistrationResponseDto> response = restTemplate.postForEntity("/registrations/create/", request,
-                RegistrationResponseDto.class);
+        ResponseEntity<RegistrationResponseDto> response = restTemplate.postForEntity(url,null,RegistrationResponseDto.class);
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
 

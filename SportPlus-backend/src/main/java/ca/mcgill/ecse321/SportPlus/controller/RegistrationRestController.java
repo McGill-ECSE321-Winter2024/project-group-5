@@ -86,11 +86,11 @@ public class RegistrationRestController {
     }
 
     // Endpoint to create a new registration
-    @PostMapping(value = { "/registrations/create", "registrations/create/" })
+    @PostMapping(value = { "/registrations/create/{specificClassId}/{clientEmail}", "registrations/create/" })
     @ResponseStatus(HttpStatus.CREATED)
-    public RegistrationResponseDto createRegistration(@RequestBody RegistrationRequestDto registration) {
+    public RegistrationResponseDto createRegistration(@PathVariable("clientEmail") String email,@PathVariable("specificClassId") int specificClassId) {
         // Create registration using service layer
-        Registration createRegistration = registrationService.createRegistration("send", registration.getSpecificClass().getName(), registration.getClient().getEmail());
+        Registration createRegistration = registrationService.createRegistration("send", specificClassId, email);
         // Convert created registration to DTO and return
         return new RegistrationResponseDto(createRegistration);
     }
