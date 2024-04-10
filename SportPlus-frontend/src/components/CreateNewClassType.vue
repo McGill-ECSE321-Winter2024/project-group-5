@@ -107,7 +107,7 @@ let endpointPath = '';
 
     methods: {
     async fetchAllClassTypes(){
-        CLIENT.get(backendBaseUrl,'/classType/all')
+        AXIOS.get(backendBaseUrl,'/classType/all')
                 .then(response => {
                     this.classTypes = response.data.classTypes;
                 })
@@ -118,8 +118,12 @@ let endpointPath = '';
     // Method to create a new class type
     async createClassType() {
       try {        
-        const classtype={ name: this.className, description: this.description ,approved : null,approver:null};
-        const response = await AXIOS.post(backendBaseUrl,'/create', classtype);
+        const classtype={ name: this.className, description: this.description ,approved : false,approver:null};
+        console.log(backendBaseUrl+'/classType'+'/create');
+        console.log(classtype);
+        const backendBaseUrlCreate = backendBaseUrl+'/classType'+'/create';
+        console.log("bURL", backendBaseUrlCreate);
+        const response = await AXIOS.post(backendBaseUrlCreate, classtype);
         this.classTypes.push(response.data); // Add the newly created class type to the list
         const response1 = await AXIOS.get(backendBaseUrl,'/get', this.typeID);
         if(globalState.user=="Owner"){ // if the owner iscreating approve
