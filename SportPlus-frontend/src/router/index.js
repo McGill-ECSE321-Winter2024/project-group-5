@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import SchedulePage from '@/components/SchedulePage'
+import SchedulePageOwner from '@/components/SchedulePageOwner'
+import SchedulePageClient from '@/components/SchedulePageClient'
+import SchedulePageInstructor from '@/components/SchedulePageInstructor'
 import LoginPage from '@/components/LoginPage'
 import RegistrationPage from '@/components/RegistrationPage'
 import CreateNewSpecificClass from '@/components/CreateNewSpecificClass'
@@ -16,9 +18,19 @@ export default new Router({
       component: LoginPage
     },
     {
-      path: '/SchedulePage',
-      name: 'SchedulePage',
-      component: SchedulePage
+      path: '/SchedulePageOwner',
+      name: 'SchedulePageOwner',
+      component: SchedulePageOwner
+    },
+    {
+      path: '/SchedulePageClient',
+      name: 'SchedulePageClient',
+      component: SchedulePageClient
+    },
+    {
+      path: '/SchedulePageInstructor',
+      name: 'SchedulePageInstructor',
+      component: SchedulePageInstructor
     },
     {
       path: '/register',

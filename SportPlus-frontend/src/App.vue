@@ -6,7 +6,7 @@
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav>
-          <b-nav-item to="/SchedulePage">Schedule</b-nav-item>
+          <b-nav-item :to="schedulePath">Schedule</b-nav-item>
           <b-nav-item to="/AccountPage">Account Page</b-nav-item>
           <!-- More links can be added here -->
         </b-navbar-nav>
@@ -30,6 +30,8 @@
 
   const frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
   const backendUrl = 'http://' + config.dev.backendHost + ':' + config.dev.backendPort
+
+  const schedulePath = null;
 
   const AXIOS = axios.create({
     baseURL: backendUrl,
@@ -78,6 +80,22 @@ export default {
         console.log(error)
       }
 
+    },
+
+  },
+  computed: {
+    // Computed property to determine the schedule path based on the isLoggedIn variable
+    schedulePath() {
+      // Define your paths based on the isLoggedIn variable
+      if (globalState.type === "Owner") {
+        return '/SchedulePageOwner'; 
+      }else if(globalState.type === "Instructor") {
+        return '/SchedulePageInstructor'; 
+      }else if(globalState.type === "Client"){
+        return '/SchedulePageClient'
+      }else{
+        return '/'; //if no one logged in, go back to loginPage
+      }
     }
   }
 }
