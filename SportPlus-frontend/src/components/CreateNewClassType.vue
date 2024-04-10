@@ -121,7 +121,8 @@ let endpointPath = '';
         const path='classType/create/';
         const response = await AXIOS.post(path, classtype);
         this.classTypes.push(response.data); // Add the newly created class type to the list
-        const path1='classType/get/'+this.name;
+        console.log("name is", this.className);
+        const path1='classType/get/'+this.className;
         const response1 = await AXIOS.get(path1);
         if(globalState.user=="Owner"){ // if the owner iscreating approve
             await AXIOS.post(backendBaseUrl,'/approve',response1.data.typeID);
