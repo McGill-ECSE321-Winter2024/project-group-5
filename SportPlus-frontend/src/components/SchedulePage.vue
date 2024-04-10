@@ -15,7 +15,7 @@
                             <b-button variant="outline-primary" @click="showSelected = true" class="mb-2">View Selected</b-button>
                             <b-button variant="outline-primary" @click="registerForClass = true" class="mb-2">Register For Selected</b-button>
                             <b-button variant="outline-primary" @click="modifySelected = true" class="mb-2"> Modify Selected</b-button>
-                            <b-button variant="outline-primary" @click="createNewSpecificClassOwner = true" class="mb-2">Create New Specific Class</b-button>
+                            <b-button variant="outline-primary" @click="createNewSpecificClass = true" class="mb-2">Create New Specific Class</b-button>
                             <b-button variant="outline-primary" @click="createNewClassType = true" class="mb-2">Create New ClassType</b-button>
                         </div>
                     </b-card>
@@ -167,8 +167,8 @@
             
         </b-container>
         <div>
-            <b-modal v-model="createNewSpecificClassOwner" title="Create New Class">
-                <CreateNewSpecificClassOwner />
+            <b-modal v-model="createNewSpecificClass" title="Create New Class">
+                <CreateNewSpecificClass />
             </b-modal>
             
             <b-modal v-model="showSelected" title="Class Details">
@@ -197,7 +197,7 @@
 </template>
 
 <script>
-import CreateNewSpecificClassOwner from '@/components/CreateNewSpecificClassOwner.vue'
+import CreateNewSpecificClass from '@/components/CreateNewSpecificClass.vue'
 import CreateNewClassType from '@/components/CreateNewClassType.vue'
 import { globalState } from '@/global';
 import axios from "axios";
@@ -215,7 +215,7 @@ import config from "../../config";
     export default {
         name : 'SchedulePage',
         components: {
-            CreateNewSpecificClassOwner,
+            CreateNewSpecificClass,
             CreateNewClassType
             },
         data() {
@@ -230,7 +230,7 @@ import config from "../../config";
             endDate: null,
             selectedOption: 'no-filter',
             searchDate: false,
-            createNewSpecificClassOwner: false,
+            createNewSpecificClass: false,
             createNewClassType: false,
             modifySelected: false,
             showSelected: false,
