@@ -83,7 +83,8 @@
                 <!-- Input fields for adding a new payment method -->
                 <div class="mb-3">
                     <label for="cardNumber">Card Number:</label></br>
-                    <input type="text" id="cardNumber" v-model="newCardNumber"></br>
+                    <input type="text" id="cardNumber" v-model="newCardNumber"
+                        @input="restrictNumericInput($event, 'cardNumber')"></br>
                 </div>
                 <div class="mb-3">
                     <label for="expDate">Expiry Date (YYYY-MM-DD):</label></br>
@@ -91,11 +92,12 @@
                 </div>
                 <div class="mb-3">
                     <label for="cvc">CVC:</label></br>
-                    <input type="text" id="cvc" v-model="newCvc"></br>
+                    <input type="text" id="cvc" v-model="newCvc" @input="restrictNumericInput($event, 'cvc')"></br>
                 </div>
                 <div class="mb-3">
                     <label for="cardHolderName">Cardholder Name:</label></br>
-                    <input type="text" id="cardHolderName" v-model="newCardHolderName"></br>
+                    <input type="text" id="cardHolderName" v-model="newCardHolderName"
+                        @input="validateCardHolderName"></br>
                 </div>
                 <div class="mb-3">
                     <b-button variant="success" @click="addPaymentMethod">Add Payment Method</b-button></br>
@@ -103,7 +105,8 @@
                 <!-- End of input fields -->
                 <div v-if="paymentMethods.length > 0">
                     <b-card v-for="method in paymentMethods" :key="method.cardNumber">
-                        <p><strong>Card Number:</strong> {{ method.cardNumber }}</p>
+                        <p><strong>Card Holder Name:</strong> {{ method.cardHolderName }}</p>
+                        <p><strong>Card Number:</strong> {{ maskedCardNumber(method.cardNumber) }}</p>
                         <!-- Add more fields of payment method as required -->
                         <div>
                             <b-button @click="deletePaymentMethod(method.cardNumber)" variant="danger">Delete</b-button>
@@ -219,12 +222,68 @@ export default {
                     console.error('Error deleting payment method:', error);
                 });
         },
+
+        restrictNumericInput(event, fieldName) {
+            // Prevent non-numeric characters from being entered
+            event.target.value = event.target.value.replace(/\D/g, '');
+            // Update the data model with the sanitized value
+            this[fieldName] = event.target.value;
+        },
+
+        validateCardHolderName() {
+            // Get the input value
+            const name = this.newCardHolderName;
+            // Validate if the name contains any numbers
+            if (/\d/.test(name)) {
+                alert("Cardholder name should not contain numbers.");
+                // Remove the numbers from the input value
+                this.newCardHolderName = name.replace(/\d/g, "");
+            }
+        },
+
+        maskedCardNumber(cardNumber) {
+            const visibleDigits = cardNumber.slice(-4); // Get the last 4 digits of the card number
+            const maskedDigits = 'X'.repeat(cardNumber.length - 4); // Replace the remaining digits with 'X'
+            return maskedDigits + visibleDigits; // Concatenate the masked digits with the visible ones
+        },
+
         addPaymentMethod() {
             // Collect payment method details from input fields
             const cardNumber = this.newCardNumber;
             const expDate = this.newExpDate;
             const cvc = this.newCvc;
             const cardHolderName = this.newCardHolderName;
+
+            const expDateRegex = /^\d{4}-\d{2}-\d{2}$/;
+            if (!expDate.match(expDateRegex)) {
+                alert("Expiry date must be in YYYY-MM-DD format.");
+                return; // Stop execution if the format is incorrect
+            }
+
+            const currentDate = new Date();
+            const expiryDate = new Date(expDate);
+            if (expiryDate <= currentDate) {
+                alert("The payment method you are inserting has already expired.");
+                return; // Stop execution if the expiry date is not in the future
+            }
+
+            // Validate the card number
+            if (!/^\d+$/.test(cardNumber)) {
+                alert("Card number should contain only numbers.");
+                return; // Stop execution if the card number contains non-numeric characters
+            }
+
+            // Validate the cvc
+            if (!/^\d+$/.test(cvc)) {
+                alert("CVC should contain only numbers.");
+                return; // Stop execution if the cvc contains non-numeric characters
+            }
+
+            if (/\d/.test(cardHolderName)) {
+                alert("Cardholder name should not contain numbers.");
+                return; // Stop execution if the cardholder name contains numbers
+            }
+
 
             // You might need to fetch the client ID from somewhere in your application
             const clientId = this.accountId; // Replace this with the actual client ID
