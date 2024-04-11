@@ -1,9 +1,26 @@
 <template>
     <div>
         <div id="newSpecificClasses">
+            <div class="radio-container">
+                <input type="radio" id="regular" value="regular" v-model="classMode">
+                <label for="regular">Regular Class</label>
+                <input type="radio" id="recurring" value="recurring" v-model="classMode">
+                <label for="recurring">Recurring Class</label>
+            </div>
+            <!-- Input fields for regular class -->
+            <div v-if="classMode === 'regular'">
+                <label for="newSpecificClassDate">Date:</label>
+                <input type="date" id="newSpecificClassDate" placeholder="Date" v-model="newSpecificClassDate">
+            </div>
+            <!-- Input fields for recurring class -->
+            <div v-else-if="classMode === 'recurring'">
+                <label for="startDate">Start Date:</label>
+                <input type="date" id="startDate" placeholder="Start Date" v-model="startDate">
+                <label for="endDate">End Date:</label>
+                <input type="date" id="endDate" placeholder="End Date" v-model="endDate">
+            </div>
             <b-form-select v-model="selectedClassType" :options="classTypeOptions" placeholder="Select a class type"></b-form-select>
             <b-form-select v-model="selectedInstructor" :options="instructorOptions" placeholder="Select an instructor"></b-form-select>
-            <input type="date" placeholder="Date" v-model="newSpecificClassDate" />
             <b-form-select v-model="selectedTime" :options="timeOptions" placeholder="Select a time slot"></b-form-select>
             <button @click="createSpecificClass()" v-bind:disabled="isCreateBtnDisabled">Create Event</button>
             <button class="danger-btn" @click="clearInputs()">Clear</button>
@@ -38,15 +55,19 @@
     baseURL: backendUrl,
     headers: { 'Access-Control-Allow-Origin': frontendUrl }
   });
-  //add recurring class 
-  //add filter approved class type
+
+  //instead of push in newspecifc classes, get all specific classes like fetch 
+  //check if overlapping specific classes
   
   export default {
     name: "CreateNewSpecificClass",
     data() {
         return {
             newSpecificClasses: [],
+            classMode : 'regular',
             newSpecificClassDate: null,
+            startDate: null,
+            endDate: null,
             newSpecificClassStartTime: null,
             newSpecificClassEndTime: null,
             selectedClassType: null,
@@ -118,20 +139,6 @@
                       });
       },
   
-      async fetchClassType(){
-          const classTypeName = this.getClassTypeName(this.selectedClassType);
-          CLIENT.get(`/classType/get/`+classTypeName)
-          .then(response => {
-                          return response.data.classType.typeId;
-  
-                      })
-          .catch(error => {
-                      console.error('Error fetching selected class Type:', error);
-                      });
-      },
-  
-     
-  
       generateTimeOptions() {
         const startTime = 8; // Starting hour (8 am)
         const endTime = 18; // Ending hour (6 pm)
@@ -166,20 +173,33 @@
             this.newSpecificClassDate = null;
             this.selectedClassType = null;
             this.selectedInstructor = null;
+            this.startDate = null;
+            this.endDate = null;
     
         },
   
         async createSpecificClass() {
+            //Format the time for java.sql.Time to read
           const startTime = this.getStartTime(this.selectedTime); 
           const endTime = startTime + 1;
-          console.log("date", new Date(this.newSpecificClassDate));
-          console.log("start time", startTime )
-          console.log("end time", new Date(this.newSpecificClassEndTime))
-          console.log("instroctorId", this.selectedInstructor)
-          console.log("classTypeId", this.selectedClassType)
-          
+          let javaStartTime = 0;
+              let javaEndTime = 0;
   
-              const date = new Date(this.newSpecificClassDate);
+              if(startTime < 10){
+                  javaStartTime = '0'+startTime+':00:00';
+              }else{
+                  javaStartTime = startTime+':00:00';
+              }
+  
+              if(endTime < 10){
+                  javaEndTime = '0'+endTime+':00:00';
+              }else{
+                  javaEndTime = endTime+':00:00';
+              }
+              console.log("start time java : ", javaStartTime)
+              console.log("end time java : ", javaEndTime)
+          if(this.classMode == 'regular'){
+            const date = new Date(this.newSpecificClassDate);
               const year = date.getFullYear();
               const month = date.getMonth()+1;
               const day = date.getDate()+1;
@@ -198,30 +218,12 @@
               }
               console.log("date java", javaDate);
   
-              let javaStartTime = 0;
-              let javaEndTime = 0;
-  
-              if(startTime < 10){
-                  javaStartTime = '0'+startTime+':00:00';
-              }else{
-                  javaStartTime = startTime+':00:00';
-              }
-  
-              if(endTime < 10){
-                  javaEndTime = '0'+endTime+':00:00';
-              }else{
-                  javaEndTime = endTime+':00:00';
-              }
-  
-              console.log("start time java : ", javaStartTime)
-              console.log("end time java : ", javaEndTime)
-  
             const newSpecificClass = {
               date: javaDate,
               startTime: javaStartTime,
               endTime: javaEndTime,
               instructorId : this.selectedInstructor ,
-              classTypeId :  this.selectedClassType,
+              classTypeId :  this.selectedClassType
             };
             console.log("specific class", newSpecificClass)
             try {
@@ -233,18 +235,101 @@
                 // TODO: show the user a warning
                 console.log(e);
             }
+          }else{
+            const startDate = new Date(this.startDate);
+            const startYear = startDate.getFullYear();
+            const startMonth = startDate.getMonth()+1;
+            const startDay = startDate.getDate()+1;
+            let dayOfWeek = startDate.getDay();
+            if(dayOfWeek === 0){
+                dayOfWeek = 7;
+            }
+  
+            let javaStartDate = null;
+            if(startMonth < 10 && startDay < 10){
+                javaStartDate = startYear + '-0' + startMonth +'-0'+ startDay;
+            }
+            else if(startMonth < 10 && startDay >= 10){
+                javaStartDate = startYear + '-0' + startMonth +'-'+ startDay;
+            }
+            else if(startMonth >= 10 && startDay < 10){
+                javaStartDate = startYear +'-'+ startMonth +'-0'+startDay ;
+            }else{
+                javaStartDate = startYear + '-'+ startMonth+'-'+startDay;
+            }
+
+            const endDate = new Date(this.endDate);
+            const endYear = endDate.getFullYear();
+            const endMonth = endDate.getMonth()+1;
+            const endDay = endDate.getDate()+1;
+  
+            let javaEndDate = null;
+            if(endMonth < 10 && endDay < 10){
+                javaEndDate = endYear + '-0' + endMonth +'-0'+ endDay;
+            }
+            else if(endMonth < 10 && endDay >= 10){
+                javaEndDate = endYear + '-0' + endMonth +'-'+ endDay;
+            }
+            else if(endMonth >= 10 && endDay < 10){
+                javaEndDate = endYear +'-'+ endMonth +'-0'+endDay ;
+            }else{
+                javaEndDate = endYear + '-'+ endMonth+'-'+endDay;
+            }
+
+            console.log("date start java", javaStartDate);
+            console.log("date end java", javaEndDate);
+
+            const newRecurringSpecificClass = {
+                date: javaStartDate,
+                startTime: javaStartTime,
+                endTime: javaEndTime,
+                instructorId : this.selectedInstructor ,
+                classTypeId :  this.selectedClassType,
+                endDate: javaEndDate,
+                dayOfWeek: dayOfWeek
+
+            }
+            console.log("reccuring specific class", newRecurringSpecificClass)
+            try {
+                const response = await CLIENT.post('/specificClass/recurring', newRecurringSpecificClass);
+                console.log("response", response.data);
+                console.log("response", response.data.specificClasses);
+
+
+
+                const reccuring = response.data.specificClasses;
+                reccuring.forEach(specificClass => {
+                    this.newSpecificClasses.push(specificClass);
+                });
+                this.clearInputs();
+            }
+            catch (e) {
+                // TODO: show the user a warning
+                console.log(e);
+            }
+          }
+              
         }
   
         
     },
     computed: {
         isCreateBtnDisabled() {
+            if (this.classMode === 'regular') {
             return (
-                 !this.newSpecificClassDate
-                || !this.selectedTime
-                || !this.selectedClassType
-                || !this.selectedInstructor
+                !this.newSpecificClassDate ||
+                !this.selectedTime ||
+                !this.selectedClassType ||
+                !this.selectedInstructor
             );
+            } else {
+            return (
+                (!this.startDate || !this.endDate) || // Check for both start and end date
+                !this.selectedTime ||
+                !this.selectedClassType ||
+                !this.selectedInstructor
+            );
+            }
         }
   
     }
