@@ -12,7 +12,7 @@
                         </b-row>
                         <!-- button group-->
                         <div class="btn-group-vertical">
-                            <b-button variant="outline-primary" @click="showSelected = true" class="mb-2">View Selected || Register</b-button>
+                            <b-button variant="outline-primary" @click="handleShowSelected" class="mb-2">View Selected || Register</b-button>
                         </div>
                     </b-card>
                 </b-col>
@@ -169,14 +169,14 @@
                     <b-col>
                         <b-button variant="outline-primary" 
                         @click="registerForClass" 
-                        v-bind:disabled="registrationOK" 
+                    
                         class="mb-2">Register for This Class</b-button>
-                        <div v-if="registrationOK && registerForClass" 
+                        <div v-if="registrationOK" 
                             class="success-message"
                             style="color: green; text-decoration: underline;"
                             >Your registration was processed successfully!
                         </div>
-                        <div v-if="!registrationOK && registerForClass" 
+                        <div v-if="!registrationOK" 
                             class="Error-message"
                             style="color: red; text-decoration: underline;"
                             >{{this.registrationError}}
@@ -196,7 +196,7 @@
 <script>
 import CreateNewSpecificClass from '@/components/CreateNewSpecificClass.vue'
 import CreateNewClassType from '@/components/CreateNewClassType.vue'
-import { globalState } from '@/global';
+import { globalState } from "@/global.js";
 import axios from "axios";
 import config from "../../config";
 
@@ -206,7 +206,7 @@ import config from "../../config";
     const CLIENT = axios.create({
         baseURL: backendUrl,
         headers: { 'Access-Control-Allow-Origin': frontendUrl }
-        
+         
     });
 
     export default {
@@ -223,6 +223,7 @@ import config from "../../config";
             registrationOK: true,
             registrationError: null,
             closeRegPanel: null,
+            DISABLE: false,
             min: today,
             displayError_I: false,
             displayError_T: false,
@@ -402,6 +403,7 @@ import config from "../../config";
                     });
             },
             registerForClass(){//TODO 
+                this.DISABLE = true;
                 this.isAlreadyRegisteredForClass();
                 this.classIsComplete();
                 if(this.isAlreadyReg){
@@ -411,7 +413,7 @@ import config from "../../config";
                     this.registrationError = "This class is full!"
                     this.registrationOK = false;
                 }else{
-
+                    
                 CLIENT.post(`/registrations/create/${JSON.parse(JSON.stringify(this.selectedClass))[0].id}/${globalState.accountEmail}`).then(response =>{
                     this.registrationOK = true;
                 }).catch(error =>{
@@ -419,16 +421,15 @@ import config from "../../config";
                     this.registrationError = "Process could not be completed"
                     this.registrationOK = false;
                 });
-            }
-            
+                }
             },
             isAlreadyRegisteredForClass(){
                 console.log("email input to isAlre...",globalState.accountEmail);
                 CLIENT.get(`/registrations/getByClient/${globalState.accountEmail}`).then(response =>{
-                    if(response.data.length === 0){
-                        return;
-                    }else{
                     const resp = response.data.registrations;
+                    if(resp.length === 0){
+                        this.isAlreadyReg= false;
+                    }else{
                     resp.forEach(registration => {
                         if(registration.specificClass.id === JSON.parse(JSON.stringify(this.selectedClass))[0].id){
                             this.isAlreadyReg= true;
@@ -439,41 +440,31 @@ import config from "../../config";
                 }
                 }).catch(error =>{
                     console.error('Error getByClient:', error);
-                    this.isAlreadyReg= false;
+                    this.isAlreadyReg = true;
                     return;
                 });
+            },
+            classIsComplete(){
                 CLIENT.get(`/registrations/getBySpecificClass/${JSON.parse(JSON.stringify(this.selectedClass))[0].id}`).then(response =>{
                     if(response.data.length >= 30){
-                        this.registrationError = "This class is full!"
+                        this.classIsFull = true;
+                        
                     }else{
-                        return;
+                        this.classIsFull = false;
                     }
                 }).catch(error =>{
-                    console.error('Error:', error);
+                    console.error('Error FULL:', error);
+                    this.classIsFull = true;
                 });
-                //since registration doesnt already exist & class not full, register for class
-                const client = {
-                    Email: globalState.accountEmail, 
-                    FirstName:null,
-                    Password: null, 
-                    LastName: null,
-                    AccountId: globalState.accountId
-                };
-                const specificClass = {
-                    name: JSON.parse(JSON.stringify(this.selectedClass))[0].name,
-                    //TODO 
-                };
-                const requestBody = {
-                    client: client,
-                    specificClass: specificClass
-                };
-                CLIENT.post("/registrations/create", requestBody).then(response =>{
-
-                }).catch(error =>{
-                    console.error('Error:', error);
-                    this.registrationError = ""
-                });
-
+            },
+            handleShowSelected(){
+                this.showSelected = true;
+                this.registrationError = null;
+                this.registrationOK = null;
+            },
+            handleModalClose(){
+                 this.registrationOK = null;
+                 this.registrationError = null;
             },
             onClassSelected(item) {
                 this.selectedClass = item;
