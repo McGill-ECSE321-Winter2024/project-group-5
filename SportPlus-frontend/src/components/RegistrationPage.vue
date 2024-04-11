@@ -134,6 +134,14 @@
     methods: {
       setUserType(type) {
         this.userType = type;
+
+        // Reset validation states and feedback messages
+        this.emailState = null; // Reset email validation state
+        this.emailFeedback = ''; // Clear email feedback message
+        this.passwordState = null; // Reset password validation state
+        this.passwordFeedback = ''; // Clear password feedback message
+        this.confirmPasswordState = null; // Reset confirm password validation state
+        this.confirmPasswordFeedback = ''; // Clear confirm password feedback message
         if (type === 'Owner') {
             this.registerForm.email = 'owner@sportplus.com';
             this.emailDisabled = true; // Disable the email input
