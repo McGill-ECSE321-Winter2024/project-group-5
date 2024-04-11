@@ -12,31 +12,25 @@
                         </b-row>
                         <!-- button group-->
                         <div class="btn-group-vertical">
-                            <b-button variant="outline-primary" @click="toggleModal" class="mb-2">View Selected || Assign Instructor</b-button>
-                            <b-button variant="outline-primary" @click="modifySelected = true" class="mb-2"> Modify Selected</b-button>
-                            <b-button variant="outline-primary" @click="createNewSpecificClass = true" class="mb-2">Create New Specific Class</b-button>
-                            <b-button variant="outline-primary" @click="createNewClassType = true" class="mb-2">Create New ClassType</b-button>
+                            <b-button variant="outline-primary" @click="toggleModal" class="mb-2">View Selected ||
+                                Assign Instructor</b-button>
+                            <b-button variant="outline-primary" @click="modifySelected = true" class="mb-2"> Modify
+                                Selected</b-button>
+                            <b-button variant="outline-primary" @click="createNewSpecificClass = true"
+                                class="mb-2">Create New Specific Class</b-button>
+                            <b-button variant="outline-primary" @click="createNewClassType = true" class="mb-2">Create
+                                New ClassType</b-button>
                         </div>
                     </b-card>
                 </b-col>
                 <!-- big right column-->
-                <b-col lg="10"> 
+                <b-col lg="10">
                     <div class="empty-divider-table"></div>
                     <h2 class="tableTitle">Class Schedule</h2>
                     <div class="ScheduleTable">
-                        <b-table hover
-                            id="schedule-tb"
-                            small
-                            :items="classes"
-                            :fields="filteredFields"
-                            :sticky-header="true"
-                            :outlined="true"
-                            select-mode="single"
-                            responsive="sm"
-                            ref="selectableTable"
-                            selectable
-                            @row-selected="onClassSelected"
-                            >
+                        <b-table hover id="schedule-tb" small :items="classes" :fields="filteredFields"
+                            :sticky-header="true" :outlined="true" select-mode="single" responsive="sm"
+                            ref="selectableTable" selectable @row-selected="onClassSelected">
                             <template v-slot:cell(startTime)="data">
                                 <b-table-simple :class="{ 'bold-row-separator': isDateSeparator(data.item) }">
                                     {{ isDateSeparator(data.item) ? data.item.dateSeparator : (data.value) }}
@@ -54,177 +48,122 @@
                                     <b-row class="2">
                                         <b-col>
                                             <label for="datepicker-start">Start Date</label>
-                                                <b-form-datepicker
-                                                    id="datepicker-start"
-                                                    today-button
-                                                    reset-button
-                                                    close-button
-                                                    :min="status ? new Date('1995-01-01') : min"
-                                                    v-model="startDate"
-                                                    locale="en"
-                                                    placeholder="Pick start date" 
-                                                ></b-form-datepicker>
-                                                <div v-if="!startDate === 'filter-by-dates'" 
-                                                    class="error-message"
-                                                    style="color: red; text-decoration: underline;"
-                                                    >Please select a start date.
-                                                </div>
+                                            <b-form-datepicker id="datepicker-start" today-button reset-button
+                                                close-button :min="status ? new Date('1995-01-01') : min"
+                                                v-model="startDate" locale="en"
+                                                placeholder="Pick start date"></b-form-datepicker>
+                                            <div v-if="!startDate === 'filter-by-dates'" class="error-message"
+                                                style="color: red; text-decoration: underline;">Please select a start
+                                                date.
+                                            </div>
                                         </b-col>
                                         <b-col>
                                             <label for="datepicker-end">End Date</label>
-                                                <b-form-datepicker
-                                                    id="datepicker-end"
-                                                    today-button
-                                                    reset-button
-                                                    close-button
-                                                    :min="min"
-                                                    v-model="endDate"
-                                                    locale="en"
-                                                    placeholder="Pick end date" 
-                                                ></b-form-datepicker>
-                                                <div v-if="!endDate === 'filter-by-dates'" 
-                                                    class="error-message"
-                                                    style="color: red; text-decoration: underline;"
-                                                    >Please select an endDate.
-                                                </div>
+                                            <b-form-datepicker id="datepicker-end" today-button reset-button
+                                                close-button :min="min" v-model="endDate" locale="en"
+                                                placeholder="Pick end date"></b-form-datepicker>
+                                            <div v-if="!endDate === 'filter-by-dates'" class="error-message"
+                                                style="color: red; text-decoration: underline;">Please select an
+                                                endDate.
+                                            </div>
                                         </b-col>
                                     </b-row>
-                            
+
                                     <div class="empty-divider-table"></div>
-                                    <b-button variant="outline-primary" 
-                                        @click="fetchData" 
-                                        class="mb-2"
-                                        v-if="endDate && startDate"
-                                        >Search</b-button>
+                                    <b-button variant="outline-primary" @click="fetchData" class="mb-2"
+                                        v-if="endDate && startDate">Search</b-button>
                                 </b-card>
                             </b-tab>
-                            
+
                             <b-tab id="filter-by-instructors" title="Filter By Instructor" @click="tabIsInstructor">
                                 <b-card style="width: 100%;
                                     height: 250px">
-                                        <b-table hover
-                                            id="filterInstructors"
-                                            small
-                                            :items="instructors"
-                                            :fields="filteredInstructors"
-                                            :outlined="true"
-                                            select-mode="single"
-                                            responsive="sm"
-                                            ref="selectableTable"
-                                            selectable
-                                            @row-selected="onInstructorSelected"
-                                            >
-                                        </b-table>
-                                        <b-button variant="outline-primary" 
-                                            @click="fetchData" 
-                                            class="mb-2"
-                                            v-if="selectedInstructor"
-                                            >Search</b-button>
-                                        <div v-if="displayError_I"  
-                                                class="error-message"
-                                                style="color: red; text-decoration: underline;"
-                                                >Please select an Instructor.
-                                                </div>
+                                    <b-table hover id="filterInstructors" small :items="instructors"
+                                        :fields="filteredInstructors" :outlined="true" select-mode="single"
+                                        responsive="sm" ref="selectableTable" selectable
+                                        @row-selected="onInstructorSelected">
+                                    </b-table>
+                                    <b-button variant="outline-primary" @click="fetchData" class="mb-2"
+                                        v-if="selectedInstructor">Search</b-button>
+                                    <div v-if="displayError_I" class="error-message"
+                                        style="color: red; text-decoration: underline;">Please
+                                        select an Instructor.
+                                    </div>
                                 </b-card>
                             </b-tab>
                             <b-tab id="filter-by-classType" title="Filter By ClassType" @click="tabIsClassType">
                                 <b-card style="width: 100%;
                                         height: 250pxpx">
-                                    <b-table hover
-                                        small
-                                        :items="types"
-                                        :fields="filteredClassTypes"
-                                        :outlined="true"
-                                        select-mode="single"
-                                        responsive="sm"
-                                        ref="selectableTable"
-                                        selectable
-                                        @row-selected="onTypeSelected"
-                                        >
+                                    <b-table hover small :items="types" :fields="filteredClassTypes" :outlined="true"
+                                        select-mode="single" responsive="sm" ref="selectableTable" selectable
+                                        @row-selected="onTypeSelected">
                                     </b-table>
-                                    <b-button variant="outline-primary" 
-                                            @click="fetchData" 
-                                            class="mb-2"
-                                            v-if="selectedType"
-                                        >Search</b-button>
-                                        <div v-if="displayError_T" 
-                                            class="error-message"
-                                            style="color: red; text-decoration: underline;"
-                                            >Please select a ClassType.
-                                        </div>
+                                    <b-button variant="outline-primary" @click="fetchData" class="mb-2"
+                                        v-if="selectedType">Search</b-button>
+                                    <div v-if="displayError_T" class="error-message"
+                                        style="color: red; text-decoration: underline;">Please
+                                        select a ClassType.
+                                    </div>
                                 </b-card>
                             </b-tab>
                         </b-tabs>
                     </b-row>
-                    <b-form-checkbox
-                                    id="checkbox"
-                                    v-model="status"
-                                    name="checkbox"
-                                    value="accepted"
-                                    unchecked-value="not_accepted"
-                                    >
-                                    Include Past Classes in Search
-                                </b-form-checkbox>
+                    <b-form-checkbox id="checkbox" v-model="status" name="checkbox" value="accepted"
+                        unchecked-value="not_accepted">
+                        Include Past Classes in Search
+                    </b-form-checkbox>
                 </b-col>
             </b-row>
-            
+
         </b-container>
         <div>
             <b-modal v-model="createNewSpecificClass" title="Create New Class" size="100%">
                 <CreateNewSpecificClass />
             </b-modal>
-            
+
             <b-modal v-model="showSelected" title="Class Details" size="50%">
                 <b-container fluid>
-                <div v-if="selectedClass">
-                    <b-row>
-                        <b-col lg="15">
-                        <p><strong>Instructor Name:</strong> {{JSON.parse(JSON.stringify(this.selectedClass))[0].supervisor}}</p>
-                        <p><strong>Class Type:</strong> {{JSON.parse(JSON.stringify(this.selectedClass))[0].classType}}</p>
-                        <p><strong>Description:</strong> {{JSON.parse(JSON.stringify(this.selectedClass))[0].description}}</p>
-                        
-                            <b-button v-if="!displayForum"                            
-                                variant="outline-primary" 
-                                @click="viewAssignInstructorForum" 
-                                class="mb-2">
-                                {{!JSON.parse(JSON.stringify(this.selectedClass))[0].supervisor ? 'Assign an Instructor to this Class' : 'Assign a Different Instructor' }}
-                            </b-button>
-                        </b-col>
-                        <b-col lg="10">
-                                <b-table hover
-                                    id="forumTableInstructors"
-                                    small
-                                    :items="instructors"
-                                    :fields="filteredInstructors"
-                                    :outlined="true"
-                                    select-mode="single"
-                                    responsive="sm"
-                                    v-if=displayForum
-                                    ref="selectableTable"
-                                    selectable
-                                    @row-selected="onForumInstructorSelected"
-                                    >
+                    <div v-if="selectedClass">
+                        <b-row>
+                            <b-col lg="15">
+                                <p><strong>Instructor Name:</strong>
+                                    {{ JSON.parse(JSON.stringify(this.selectedClass))[0].supervisor }}</p>
+                                <p><strong>Class Type:</strong>
+                                    {{ JSON.parse(JSON.stringify(this.selectedClass))[0].classType }}
+                                </p>
+                                <p><strong>Description:</strong>
+                                    {{ JSON.parse(JSON.stringify(this.selectedClass))[0].description }}</p>
+
+                                <b-button v-if="!displayForum" variant="outline-primary"
+                                    @click="viewAssignInstructorForum" class="mb-2">
+                                    {{ !JSON.parse(JSON.stringify(this.selectedClass))[0].supervisor ? 'Assign an Instructor to this Class' : 'Assign a Different Instructor' }}
+                                </b-button>
+                            </b-col>
+                            <b-col lg="10">
+                                <b-table hover id="forumTableInstructors" small :items="instructors"
+                                    :fields="filteredInstructors" :outlined="true" select-mode="single" responsive="sm"
+                                    v-if=displayForum ref="selectableTable" selectable
+                                    @row-selected="onForumInstructorSelected">
                                 </b-table>
-                                <b-button v-if="assignmentSelectionForum" variant="outline-primary" @click="assignInstructor">Assign instructor to Selected Class</b-button>
-                                <div v-if="teachOK" 
-                                    class="success-message"
-                                    style="color: green; text-decoration: underline;"
-                                    >Your request was processed successfully!
+                                <b-button v-if="assignmentSelectionForum" variant="outline-primary"
+                                    @click="assignInstructor">Assign instructor to Selected Class</b-button>
+                                <div v-if="teachOK" class="success-message"
+                                    style="color: green; text-decoration: underline;">
+                                    Your request was processed successfully!
                                 </div>
-                                <div v-if="!teachOK" 
-                                    class="Error-message"
-                                    style="color: red; text-decoration: underline;"
-                                    >{{this.teachError}}
+                                <div v-if="!teachOK" class="Error-message"
+                                    style="color: red; text-decoration: underline;">
+                                    {{ this.teachError }}
                                 </div>
-                        </b-col>
-                    </b-row>
-                </div>
-                
-                <template v-else>
-                    <p>No item selected</p>
-                </template>
-              
-            </b-container>
+                            </b-col>
+                        </b-row>
+                    </div>
+
+                    <template v-else>
+                        <p>No item selected</p>
+                    </template>
+
+                </b-container>
             </b-modal>
             <b-modal v-model="createNewClassType" title="Create New Class Type" size="lg">
                 <CreateNewClassType />
@@ -240,35 +179,53 @@ import { globalState } from '@/global.js';
 import axios from "axios";
 import config from "../../config";
 
-    const backendUrl = 'http://' + config.dev.backendHost + ':' + config.dev.backendPort
-    const frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
+const backendUrl = 'http://' + config.dev.backendHost + ':' + config.dev.backendPort
+const frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
 
-    const CLIENT = axios.create({
-        baseURL: backendUrl,
-        headers: { 'Access-Control-Allow-Origin': frontendUrl }
-        
-    });
+const CLIENT = axios.create({
+    baseURL: backendUrl,
+    headers: { 'Access-Control-Allow-Origin': frontendUrl }
 
-    export default {
-        name : 'SchedulePageOwner',
-        components: {
-            CreateNewSpecificClass,
-            CreateNewClassType
-            },
-        data() {
-            const now = new Date();
-            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+});
+
+export default {
+    name: 'SchedulePageOwner',
+    beforeRouteEnter(to, from, next) {
+        const userType = globalState.type;
+        if (userType === 'Owner') {
+            next();
+        } else if (userType === 'Client') {
+            next(vm => {
+                vm.$router.replace('/SchedulePageClient');
+            });
+        } else if (userType === 'Instructor') {
+            next(vm => {
+                vm.$router.replace('/SchedulePageInstructor');
+            });
+        } else {
+            next(vm => {
+                vm.$router.replace('/');
+            });
+        }
+    },
+    components: {
+        CreateNewSpecificClass,
+        CreateNewClassType
+    },
+    data() {
+        const now = new Date();
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
         return {
             displayForum: false,
             assignmentSelectionForum: null,
-            listInstructAssignment:[
-                {value:'id', text: "name"}
+            listInstructAssignment: [
+                { value: 'id', text: "name" }
             ],
             min: today,
-            status:'not_accepted',
+            status: 'not_accepted',
             teachError: null,
-            teachOK:null,
+            teachOK: null,
             displayError_I: false,
             displayError_T: false,
             startDate: null,
@@ -280,95 +237,95 @@ import config from "../../config";
             modifySelected: false,
             showSelected: false,
             selectedClass: null,
-            selectedInstructor : null,
-            selectedType : null,
+            selectedInstructor: null,
+            selectedType: null,
             classes: [],
             instructors: [],
             types: [],
             fields_C: [
-                { key: 'startTime', label: 'Start Time',show:true },
-                { key: 'date', label: 'Date',show: false },
-                { key: 'classType', label: 'Class Type',show:true },
-                { key: 'supervisor', label: 'Instructor', show:true },
+                { key: 'startTime', label: 'Start Time', show: true },
+                { key: 'date', label: 'Date', show: false },
+                { key: 'classType', label: 'Class Type', show: true },
+                { key: 'supervisor', label: 'Instructor', show: true },
                 { key: 'duration', label: 'Duration', show: true },
-                { key: 'description', show: false},
-                { key: 'id', show: false}
-                ],
+                { key: 'description', show: false },
+                { key: 'id', show: false }
+            ],
             fields_I: [
-                {key: 'firstName', label: 'Instructor', show: true},
-                {key: 'accountId', label: 'Id', show: false}
+                { key: 'firstName', label: 'Instructor', show: true },
+                { key: 'accountId', label: 'Id', show: false }
             ],
             fields_T: [
-                {key: 'name', label: 'Class Type', show: true},
-                {key: 'typeId', label: 'Id', show: false}
-            ]    
-            };
-        },
+                { key: 'name', label: 'Class Type', show: true },
+                { key: 'typeId', label: 'Id', show: false }
+            ]
+        };
+    },
 
-        computed: {
-            filteredFields() {
-                return this.fields_C.filter(field => field.show);
-            },
-            filteredInstructors(){
-                return this.fields_I.filter(field => field.show);
-            },
-            filteredClassTypes(){
-                return this.fields_T.filter(field => field.show);
+    computed: {
+        filteredFields() {
+            return this.fields_C.filter(field => field.show);
+        },
+        filteredInstructors() {
+            return this.fields_I.filter(field => field.show);
+        },
+        filteredClassTypes() {
+            return this.fields_T.filter(field => field.show);
+        }
+    },
+    mounted() {
+        this.fetchData();
+        this.fetchData_Instructors();
+        this.fetchData_ClassTypes();
+    },
+
+    methods: {
+        fetchEndpoint(option) {
+            let endpoint;
+            switch (option) {
+
+                case "all-available":
+                    endpoint = `/specificClass/available`;
+                    break;
+
+                case "filter-by-dates":
+                    const newEnd = new Date(this.endDate);
+                    newEnd.setDate(newEnd.getDate() + 1);
+                    const endFormatted = this.endDate ? newEnd.toISOString().substring(0, 10) : '';
+                    endpoint = `/specificClass/by-date-range?startDate=${this.startDate}&endDate=${endFormatted}`;
+                    break;
+
+                case "filter-by-instructors":
+                    const instructorId = JSON.parse(JSON.stringify(this.selectedInstructor));
+                    endpoint = `/specificClass/instructor/${instructorId[0].accountId}`;
+                    break;
+
+                case "filter-by-classType":
+                    const intId = JSON.parse(JSON.stringify(this.selectedType));
+                    endpoint = `/specificClass/class-type/${intId[0].typeId}`;
+                    break;
+
+                case "no-filter":
+                    endpoint = `/specificClass/all`;
+                    break;
             }
-        },
-        mounted() {
-            this.fetchData();
-            this.fetchData_Instructors();
-            this.fetchData_ClassTypes();
+            console.log('Constructed endpoint :', endpoint);
+            return endpoint;
         },
 
-        methods: {
-            fetchEndpoint(option) {
-                let endpoint;
-                switch (option) {
-
-                    case "all-available":
-                        endpoint = `/specificClass/available`;
-                        break;
-
-                    case "filter-by-dates":
-                        const newEnd = new Date(this.endDate);
-                        newEnd.setDate(newEnd.getDate() + 1);
-                        const endFormatted = this.endDate ? newEnd.toISOString().substring(0, 10) : '';
-                        endpoint = `/specificClass/by-date-range?startDate=${this.startDate}&endDate=${endFormatted}`;
-                        break;
-
-                    case "filter-by-instructors":
-                        const instructorId = JSON.parse(JSON.stringify(this.selectedInstructor));
-                        endpoint = `/specificClass/instructor/${instructorId[0].accountId}`;
-                        break;
-                    
-                    case "filter-by-classType":
-                        const intId = JSON.parse(JSON.stringify(this.selectedType));
-                        endpoint = `/specificClass/class-type/${intId[0].typeId}`;
-                        break;
-
-                    case "no-filter":
-                        endpoint =`/specificClass/all`;
-                        break;
-                }
-                console.log('Constructed endpoint :', endpoint); 
-                return endpoint;
-            },
-
-            fetchData() {
-                const endpoint = this.fetchEndpoint(this.option);
-                CLIENT.get(endpoint)
+        fetchData() {
+            const endpoint = this.fetchEndpoint(this.option);
+            CLIENT.get(endpoint)
                 .then(response => {
-                    console.log('Response:', response.data); 
+                    console.log('Response:', response.data);
                     let filteredClasses = null;
-                    if (this.status === 'not_accepted'){
+                    if (this.status === 'not_accepted') {
                         filteredClasses = response.data.filter(item => {
-                        const classDate = new Date(item.date);
-                        const today = new Date();
-                        return classDate >= today;
-                    });
-                    }else{
+                            const classDate = new Date(item.date);
+                            const today = new Date();
+                            return classDate >= today;
+                        });
+                    } else {
                         filteredClasses = response.data;
                     }
                     const sortedClasses = filteredClasses.sort((a, b) => {
@@ -386,156 +343,157 @@ import config from "../../config";
                     const formattedClasses = [];
                     let currentDate = null;
                     sortedClasses.forEach(item => {
-                    // Check if the date has changed
-                    if (item.date !== currentDate) {
-                        // Insert row with day, month, and year
-                        const dateObj = new Date(item.date);
-                        dateObj.setDate(dateObj.getDate() + 1);
-                        const formattedDate = dateObj.toLocaleDateString('en-US', { weekday: 'short', month: 'long', day: 'numeric', year: 'numeric' }).replace(',', '');;
-                        formattedClasses.push({ dateSeparator: formattedDate });
-                        currentDate = item.date;
-                    }
+                        // Check if the date has changed
+                        if (item.date !== currentDate) {
+                            // Insert row with day, month, and year
+                            const dateObj = new Date(item.date);
+                            dateObj.setDate(dateObj.getDate() + 1);
+                            const formattedDate = dateObj.toLocaleDateString('en-US', { weekday: 'short', month: 'long', day: 'numeric', year: 'numeric' }).replace(',', '');;
+                            formattedClasses.push({ dateSeparator: formattedDate });
+                            currentDate = item.date;
+                        }
 
-                    // Insert the regular item
+                        // Insert the regular item
                         formattedClasses.push({
-                        startTime: item.startTime,
-                        date: item.date,
-                        supervisor: item.instructor ? `${item.instructor.lastName}, ${item.instructor.firstName}` : '', 
-                        classType: item.classType.name, 
-                        duration: '60 min',
-                        description: item.classType.description,
-                        id: item.id
+                            startTime: item.startTime,
+                            date: item.date,
+                            supervisor: item.instructor ? `${item.instructor.lastName}, ${item.instructor.firstName}` : '',
+                            classType: item.classType.name,
+                            duration: '60 min',
+                            description: item.classType.description,
+                            id: item.id
+                        });
                     });
-                });
 
                     // Assign the formatted classes
                     this.classes = formattedClasses;
                 })
-                    .catch(error => {
-                        console.error('Error fetching data:', error);
-                        });
-            },
-            fetchData_Instructors(){
-                // Make an HTTP GET request to fetch instructors
-                CLIENT.get('/instructors/all')
-                    .then(response => {
-                        const resp = response.data.instructors;
-                        console.log("responseInstructors", resp);
-                        const instructorsData = resp.map(supervisor => ({
-                            firstName: `${supervisor.lastName}, ${supervisor.firstName}`,
-                            accountId: supervisor.accountId, 
-                        }));
-                    // Assign the retrieved instructors to the instructors array
-                        this.instructors = instructorsData;
-                    })
-                    .catch(error => {
-                    console.error('Error fetching instructors:', error);
-                    });
-            },
-            fetchData_ClassTypes(){
-                // Make an HTTP GET request to fetch classTypes
-                CLIENT.get('/classType/all')
-                    .then(response => {
-                        const resp = response.data.classTypes;
-                        console.log("responseClassTypes", resp);
-                        const approvedClassTypes = resp.filter(type => type.approved);
-                        console.log("approvedTypes", approvedClassTypes);
-                        const classTypesData = approvedClassTypes.map(classType =>({
-                            name: classType.name,
-                            typeId: classType.typeId,
-                        }));
-                        
-                    // Assign the retrieved classTypes to types array
-                        this.types = classTypesData;
-                    })
-                    .catch(error => {
-                    console.error('Error fetching classTypes:', error);
-                    });
-            },
-            viewAssignInstructorForum(){
-                
-                this.displayForum = true;
-                this.fetchData_Instructors();
-                console.log("instrucot forum info",this.instructors);
-            },
-            assignInstructor(){
-                console.log("this.assignmentSelectionForum",this.assignmentSelectionForum);
-                const specificClassRequestBody = {
-                    instructorId: JSON.parse(JSON.stringify(this.assignmentSelectionForum))[0].accountId
-                }
-                const id = JSON.parse(JSON.stringify(this.selectedClass))[0].id;
-                console.log("url", `/${id}/assign-instructor`);
-                CLIENT.put(`/specificClass/${id}/assign-instructor`,specificClassRequestBody).then(response =>{
-                    this.teachOK =true;
-                   
-                }).catch(error =>{
-                    this.teachError = "Could not Assign Instructor to class";
-                    this.teachOK = false;
-                    console.log("error", error);
+                .catch(error => {
+                    console.error('Error fetching data:', error);
                 });
-            },
-            onForumInstructorSelected(item){
-                this.assignmentSelectionForum = item;
-            },
-            onClassSelected(item) {
-                this.selectedClass = item;
-                console.log('Selected class:', item);
-            },
-            onInstructorSelected(item){
-                this.selectedInstructor = item;
-                console.log('Selected instructor:', item);
-            },
-            onTypeSelected(item){
-                this.selectedType = item;
-                console.log('Selected type:', item);
-            },
-            toggleModal() {
-                this.showSelected = true;
-                this.displayForum = false;
-                this.assignmentSelectionForum = null;
-                this.teachOK = null;
-            },
-            tabIsAllAvailable(tab){
-                this.option = 'all-available';
-                this.fetchData();
-            },
-            tabIsNoFilter(tab){
-                this.option = 'no-filter';
-                this.fetchData();
-            },
-            tabIsInstructor(tab){
-                this.option = 'filter-by-instructors';
-                this.fetchData_Instructors();
-            },
-            tabIsClassType(tab){
-                this.option = 'filter-by-classType';
-                this.fetchData_ClassTypes();
-            },
-            tabIsByDate(){
-                this.option = 'filter-by-dates';
-                console.log('tab',option);
-            },
-            rowVariant(index) {
-                return this.selectedClass === index ? 'info' : null;
-            },
-            formatDate(dateString) {
+        },
+        fetchData_Instructors() {
+            // Make an HTTP GET request to fetch instructors
+            CLIENT.get('/instructors/all')
+                .then(response => {
+                    const resp = response.data.instructors;
+                    console.log("responseInstructors", resp);
+                    const instructorsData = resp.map(supervisor => ({
+                        firstName: `${supervisor.lastName}, ${supervisor.firstName}`,
+                        accountId: supervisor.accountId,
+                    }));
+                    // Assign the retrieved instructors to the instructors array
+                    this.instructors = instructorsData;
+                })
+                .catch(error => {
+                    console.error('Error fetching instructors:', error);
+                });
+        },
+        fetchData_ClassTypes() {
+            // Make an HTTP GET request to fetch classTypes
+            CLIENT.get('/classType/all')
+                .then(response => {
+                    const resp = response.data.classTypes;
+                    console.log("responseClassTypes", resp);
+                    const approvedClassTypes = resp.filter(type => type.approved);
+                    console.log("approvedTypes", approvedClassTypes);
+                    const classTypesData = approvedClassTypes.map(classType => ({
+                        name: classType.name,
+                        typeId: classType.typeId,
+                    }));
+
+                    // Assign the retrieved classTypes to types array
+                    this.types = classTypesData;
+                })
+                .catch(error => {
+                    console.error('Error fetching classTypes:', error);
+                });
+        },
+        viewAssignInstructorForum() {
+
+            this.displayForum = true;
+            this.fetchData_Instructors();
+            console.log("instrucot forum info", this.instructors);
+        },
+        assignInstructor() {
+            console.log("this.assignmentSelectionForum", this.assignmentSelectionForum);
+            const specificClassRequestBody = {
+                instructorId: JSON.parse(JSON.stringify(this.assignmentSelectionForum))[0].accountId
+            }
+            const id = JSON.parse(JSON.stringify(this.selectedClass))[0].id;
+            console.log("url", `/${id}/assign-instructor`);
+            CLIENT.put(`/specificClass/${id}/assign-instructor`, specificClassRequestBody).then(response => {
+                this.teachOK = true;
+
+            }).catch(error => {
+                this.teachError = "Could not Assign Instructor to class";
+                this.teachOK = false;
+                console.log("error", error);
+            });
+        },
+        onForumInstructorSelected(item) {
+            this.assignmentSelectionForum = item;
+        },
+        onClassSelected(item) {
+            this.selectedClass = item;
+            console.log('Selected class:', item);
+        },
+        onInstructorSelected(item) {
+            this.selectedInstructor = item;
+            console.log('Selected instructor:', item);
+        },
+        onTypeSelected(item) {
+            this.selectedType = item;
+            console.log('Selected type:', item);
+        },
+        toggleModal() {
+            this.showSelected = true;
+            this.displayForum = false;
+            this.assignmentSelectionForum = null;
+            this.teachOK = null;
+        },
+        tabIsAllAvailable(tab) {
+            this.option = 'all-available';
+            this.fetchData();
+        },
+        tabIsNoFilter(tab) {
+            this.option = 'no-filter';
+            this.fetchData();
+        },
+        tabIsInstructor(tab) {
+            this.option = 'filter-by-instructors';
+            this.fetchData_Instructors();
+        },
+        tabIsClassType(tab) {
+            this.option = 'filter-by-classType';
+            this.fetchData_ClassTypes();
+        },
+        tabIsByDate() {
+            this.option = 'filter-by-dates';
+            console.log('tab', option);
+        },
+        rowVariant(index) {
+            return this.selectedClass === index ? 'info' : null;
+        },
+        formatDate(dateString) {
             const date = new Date(dateString);
             const options = { weekday: 'short', month: 'long', day: 'numeric', year: 'numeric' };
             return date.toLocaleDateString('en-US', options);
-            },
-            isDateSeparator(item) {
-                // Check if the item is a separator row
-                return item.dateSeparator !== undefined;
-            }
+        },
+        isDateSeparator(item) {
+            // Check if the item is a separator row
+            return item.dateSeparator !== undefined;
         }
     }
+}
 </script>
 
 <style scoped>
 .tableTitle th {
     text-align: left;
 }
-.ScheduleTable{
+
+.ScheduleTable {
     height: 300px;
 }
 
@@ -544,24 +502,35 @@ import config from "../../config";
     font-size: larger;
     text-align: left;
 }
-.container-wrapper{
-    margin: 0 auto; /* Center the container */
-    max-width: 1600px; 
+
+.container-wrapper {
+    margin: 0 auto;
+    /* Center the container */
+    max-width: 1600px;
 }
 
 .custom-modal .modal-dialog {
-    max-width: 80%; /* Adjust as needed */
-    width: 80%; /* Adjust as needed */
-    max-height: 80%; /* Adjust as needed */
-    height: 60%; /* Adjust as needed */
+    max-width: 80%;
+    /* Adjust as needed */
+    width: 80%;
+    /* Adjust as needed */
+    max-height: 80%;
+    /* Adjust as needed */
+    height: 60%;
+    /* Adjust as needed */
 }
+
 .empty-divider {
-  height: 65px; /* Adjust the height as needed */
+    height: 65px;
+    /* Adjust the height as needed */
 }
+
 .empty-divider-table {
-  height: 20px; /* Adjust the height as needed */
+    height: 20px;
+    /* Adjust the height as needed */
 }
-#schedule-tb{
+
+#schedule-tb {
     height: 500px;
 }
 </style>
