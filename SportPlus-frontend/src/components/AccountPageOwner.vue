@@ -91,11 +91,11 @@
                 <h2 class="tableTitle">Class Types</h2>
                 <!-- Display class types and delete button -->
                 <div v-if="classTypes.length > 0">
-                    <b-card v-for="classType in classTypes" :key="classType.typeId">
+                    <b-card v-for="classType in approvedClassTypes" :key="classType.typeId">
                         <p><strong>Name:</strong> {{ classType.name }}</p>
                         <p><strong>Description:</strong> {{ classType.description }}</p>
                         <div>
-                            <b-button @click="deleteClassType(classType.typeId)" variant="success">Delete</b-button>
+                            <b-button @click="deleteClassType(classType.name)" variant="success">Delete</b-button>
                         </div>
                     </b-card>
                 </div>
@@ -153,13 +153,17 @@ export default {
     computed: {
         unapprovedClassTypes() {
             return this.classTypes.filter(classType => !classType.approved);
-        }
+        },
+        approvedClassTypes() {
+            return this.classTypes.filter(classType => classType.approved);
+        },
     },
     mounted() {
         this.fetchAccountDetails();
         this.fetchClassTypes();
     },
     methods: {
+        
         fetchClassTypes() {
             CLIENT.get('/classType/all')
                 .then(response => {
@@ -183,8 +187,15 @@ export default {
         },
 
         //Method to delete class type
-        deleteClassType(typeId){
-
+        deleteClassType(className){
+            try {
+        console.log(className);
+        const path='classType/delete/'+className;
+        CLIENT.delete(path);
+        this.fetchClassTypes();
+      } catch (error) {
+        console.error('There was an error deleting the class type:', error);
+      }
         },
         
         fetchAccountDetails() {

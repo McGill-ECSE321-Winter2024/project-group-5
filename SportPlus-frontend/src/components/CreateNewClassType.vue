@@ -15,7 +15,7 @@
             <label for="description">Description:</label>
             <textarea id="description" v-model="description" required placeholder="Enter description"></textarea>
           </div>
-          <button type="submit" :disabled="isCreateBtnDisabled">Create Class Type</button>
+          <button type="submit">Create Class Type</button>
         </form>
       </div>
 
@@ -24,11 +24,13 @@
         <h2>Modify Class Type</h2>
         <form @submit.prevent="modifyClassType">
           <div>
-            <label for="typeID">Select Class Type:</label>
-            <select id="typeID" v-model="typeID" required>
+            <label for="className">Select Class Type:</label>
+            <select id="className" v-model="className" required>
               <option disabled value="">Please select one</option>
-              <option v-for="type in classTypes" :value="type.id">{{ type.name }}</option>
-            </select>
+              <option v-for="type in classTypes" :value="type.name">{{ type.name }}</option>
+
+          </select>
+          
           </div>
           <div>
             <label for="newName">New Name:</label>
@@ -38,17 +40,9 @@
             <label for="newDescription">New Description:</label>
             <textarea id="newDescription" v-model="newDescription" placeholder="Enter new description"></textarea>
           </div>
-          <button type="submit" :disabled="isModifyButtonDisabled">Modify Class Type</button>
+          <button type="submit" >Modify Class Type</button>
         </form>
         
-        <!-- List of Class Types -->
-        <h2>Class Types</h2>
-        <ul>
-          <li v-for="type in classTypes" :key="type.id">
-            {{ type.name }} - {{ type.description }}
-            <button @click="typeID = type.id; deleteClassType()">Delete</button>
-          </li>
-        </ul>
       </div>
     </div>
   </div>
@@ -61,10 +55,9 @@
   import config from "../../config";
   import { globalState } from "@/global.js";
   // Setting up urls
-  
+  const frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
   const backendUrl = 'http://' + config.dev.backendHost + ':' + config.dev.backendPort
-    const frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
-
+  
   const AXIOS = axios.create({
     baseURL: backendUrl,
     headers: { 'Access-Control-Allow-Origin': frontendUrl }
@@ -118,14 +111,17 @@ let endpointPath = '';
     // Method to create a new class type
     async createClassType() {
       try {        
+        console.log(globalState.type);
         const classtype={ name: this.className, description: this.description ,approved : false,approver:null};
         const path='classType/create/';
         const response = await AXIOS.post(path, classtype);
         this.classTypes.push(response.data); // Add the newly created class type to the list
         const path1='classType/get/'+this.className;
         const response1 = await AXIOS.get(path1);
-        if(globalState.user=="Owner"){ // if the owner iscreating approve
-            await AXIOS.post(backendBaseUrl,'/approve',response1.data.typeID);
+        if(globalState.type=="Owner"){ // if the owner iscreating approve
+          console.log(globalState.type);
+          console.log(response1.data.typeId);
+            await AXIOS.post('classType/approve/'+response1.data.typeId);
         }
         this.resetForm(); // Reset form
         alert('Class type created successfully!');
@@ -137,10 +133,15 @@ let endpointPath = '';
     },
     async modifyClassType() {
   try {
-
+    const path1='classType/get/'+this.className;
+    console.log(this.className);
+        const response1 = await AXIOS.get(path1);
+      const id=response1.data.typeId;
+      console.log(id);
     // Check if there's a new name to update and send the request
-    if (this.newName && this.typeID) {
-      const path='classType/updateName/'+this.typeID;
+    if (this.newName && id) {
+      console.log("Name is", this.newName)
+      const path='classType/updateName/'+id;
       await AXIOS.put(path, this.newName,{
         headers: {
           'Content-Type': 'application/json'
@@ -150,35 +151,28 @@ let endpointPath = '';
     }
 
     // Check if there's a new description to update and send the request
-    if (this.newDescription && this.typeID) {
-      const path='classType/updateName/'+this.typeID+this.newDescription;
-      await AXIOS.put(path, {
+    if (this.newDescription) {
+      console.log("Description is", this.newDescription)
+      const path='classType/updateDescription/'+id;
+      await AXIOS.put(path, this.newDescription,{
         headers: {
           'Content-Type': 'application/json'
         }
       });
     }
-
+    console.log("test");
 
     this.fetchAllClassTypes();    // update display
 
     // Reset local component state
     this.resetForm();
     alert('Class type modified successfully!');
+    
   } catch (error) {
     console.error('There was an error modifying the class type:', error);
     alert('Failed to modify class type.');
   }
 },
-    async deleteClassType (){
-        try {
-        const path='classType/delete/'+this.className;
-        await AXIOS.delete(path);
-        this.fetchAllClassTypes();
-      } catch (error) {
-        console.error('There was an error deleting the class type:', error);
-      }
-    },
     resetForm() {
   this.className = null;
   this.description = null;
@@ -187,22 +181,7 @@ let endpointPath = '';
   this.newName=null;
 
   // Clear other fields as necessary
-},
-
-    computed: {
-        isCreateBtnDisabled() {
-            return (
-                !this.newDescription
-                || !this.newName
-            );
-        },
-        isModifyButtonDisabled() {
-            return (
-                !this.description
-                && !this.n
-            );
-        }
-    }
+}
 }
 };
   </script>
