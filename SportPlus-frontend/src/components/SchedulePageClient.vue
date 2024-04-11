@@ -319,7 +319,7 @@ import config from "../../config";
                         const classDate = new Date(item.date);
                         const today = new Date();
                         return classDate >= today;
-                    });
+                    });`${CLASSDATE}`
                     const sortedClasses = filteredClasses.sort((a, b) => {
                         // Compare dates
                         if (a.date < b.date) return -1;
