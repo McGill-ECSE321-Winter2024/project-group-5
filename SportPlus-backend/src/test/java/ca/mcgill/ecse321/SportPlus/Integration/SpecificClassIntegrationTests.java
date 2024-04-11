@@ -426,13 +426,13 @@ class SpecificClassIntegrationTests {
                 // Create some available classes
                 ClassType classType = classTypeRepository.findByTypeId(CLASS_TYPE);
                 Instructor supervisor = instructorRepository.findByAccountId(INSTRUCTOR_ID);
-                SpecificClass availableClass = new SpecificClass(Date.valueOf("2024-04-11"), Time.valueOf("14:00:00"),
+                SpecificClass availableClass = new SpecificClass(Date.valueOf("2024-12-13"), Time.valueOf("14:00:00"),
                                 Time.valueOf("15:00:00"), 0, classType, null); // In the future
-                SpecificClass availableClass2 = new SpecificClass(Date.valueOf("2024-04-11"), Time.valueOf("21:00:00"),
+                SpecificClass availableClass2 = new SpecificClass(Date.valueOf("2024-12-13"), Time.valueOf("21:00:00"),
                                 Time.valueOf("22:00:00"), 0, classType, null);// Same date, just different time whould
                                                                               // still be
                                                                               // available
-                SpecificClass unavailableClass = new SpecificClass(Date.valueOf("2024-04-12"), Time.valueOf("14:00:00"),
+                SpecificClass unavailableClass = new SpecificClass(Date.valueOf("2024-12-13"), Time.valueOf("14:00:00"),
                                 Time.valueOf("15:00:00"), 0, classType, null);// In the future, but without an
                                                                               // instructor
                 availableClass.setSupervisor(supervisor);
@@ -844,13 +844,13 @@ class SpecificClassIntegrationTests {
                 // Create 2 available classes
                 ClassType classType = classTypeRepository.findByTypeId(CLASS_TYPE);
                 Instructor supervisor = instructorRepository.findByAccountId(INSTRUCTOR_ID);
-                SpecificClass availableClass = new SpecificClass(Date.valueOf("2024-04-11"), Time.valueOf("14:00:00"),
+                SpecificClass availableClass = new SpecificClass(Date.valueOf("2024-12-11"), Time.valueOf("14:00:00"),
                                 Time.valueOf("15:00:00"), 0, classType, null); // In the future
-                SpecificClass availableClass2 = new SpecificClass(Date.valueOf("2024-04-11"), Time.valueOf("21:00:00"),
+                SpecificClass availableClass2 = new SpecificClass(Date.valueOf("2024-12-11"), Time.valueOf("21:00:00"),
                                 Time.valueOf("22:00:00"), 0, classType, null);// Same date, just different time whould
                                                                               // still be
                                                                               // available
-                SpecificClass unavailableClass = new SpecificClass(Date.valueOf("2024-04-12"), Time.valueOf("14:00:00"),
+                SpecificClass unavailableClass = new SpecificClass(Date.valueOf("2024-12-12"), Time.valueOf("14:00:00"),
                                 Time.valueOf("15:00:00"), 0, classType, null);// In the future, but without an
                                                                               // instructor
                 availableClass.setSupervisor(supervisor);
