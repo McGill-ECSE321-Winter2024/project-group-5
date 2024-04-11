@@ -87,7 +87,7 @@
                             </b-table-simple>
                         </template>
                         <template v-slot:cell(unregister)="data">
-                            <b-button v-if="!isDateSeparator(data.item)" @click="unregisterSpecificClass(data.item.regId)" variant="danger">Unregister</b-button>
+                            <b-button class="unreg-button" v-if="!isDateSeparator(data.item)" @click="unregisterSpecificClass(data.item.regId)" variant="danger">Unregister</b-button>
                         </template>
                     </b-table>
                 </div>
@@ -239,7 +239,7 @@ export default {
                 });
         },
         fetchRegistrations() {
-            CLIENT.get(`/registrations/getByClient/${globalState.accountEmail}`)
+            CLIENT.get(`/registrations/getByClient/${this.accountEmail}`)
                 .then(response => {
                     console.log("raw response",response);
                     this.registrations = response.data.registrations;
@@ -537,9 +537,7 @@ export default {
 .tableTitle {
     text-align: center;
 }
-.ScheduleTable {
-    height: 300px;
-}
+
 .columns-container {
     display: flex;
     justify-content: space-between;
