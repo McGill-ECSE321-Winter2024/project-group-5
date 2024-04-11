@@ -29,12 +29,18 @@
         <table>
             <tbody id="newSpecificClasses-tbody">
                 <tr>
-                    <th>Name</th>
-                    <th>Date</th>
+                <th>Name</th>
+                <th>Instructor</th>
+                <th>Start Time</th>
+                <th>Duration</th>
+                <th>Date</th>
                 </tr>
                 <tr v-for="s in newSpecificClasses">
-                    <td>{{ s.name }}</td>
-                    <td>{{ s.date }}</td>
+                <td>{{ s.classType}}</td>
+                <td>{{ s.supervisor }}</td>
+                <td>{{ s.startTime }}</td>
+                <td>{{ s.duration}}</td>
+                <td>{{ s.date }}</td>
                 </tr>
             </tbody>
         </table>
@@ -75,7 +81,16 @@
             selectedTime: null,
             classTypeOptions: [ { text: 'Select a class type', value: null }],
             instructorOptions: [{ text: 'Select an instructor', value: null }],
-            timeOptions: [{ text: 'Select a time slot', value: null }]
+            timeOptions: [{ text: 'Select a time slot', value: null }],
+            fields_C: [
+                { key: 'startTime', label: 'Start Time', show: true },
+                { key: 'date', label: 'Date', show: false },
+                { key: 'classType', label: 'Class Type', show: true },
+                { key: 'supervisor', label: 'Instructor', show: true },
+                { key: 'duration', label: 'Duration', show: true },
+                { key: 'description', show: false },
+                { key: 'id', show: false }
+            ]
             
         };
     },
@@ -84,6 +99,7 @@
             this.fetchClassTypes();
             this.fetchInstructors();
             this.generateTimeOptions();
+            this.fetchData();
         }
         catch (e) {
             // TODO: show the user a warning
@@ -154,6 +170,56 @@
       formatTime(time) {
         return `${time.toString().padStart(2, '0')}:00`; // Format time as HH:00
       },
+
+    fetchData() {
+            CLIENT.get('/specificClass/all')
+                .then(response => {
+                    const specificClasses = response.data;                    
+                    const sortedClasses = specificClasses.sort((a, b) => {
+                        // Compare dates
+                        if (a.date < b.date) return -1;
+                        if (a.date > b.date) return 1;
+
+                        // If dates are equal, compare start times
+                        if (a.startTime < b.startTime) return -1;
+                        if (a.startTime > b.startTime) return 1;
+
+                        // If both dates and start times are equal, maintain current order
+                        return 0;
+                    });
+                    const formattedClasses = [];
+                    let currentDate = null;
+                    sortedClasses.forEach(item => {
+                        // Check if the date has changed
+                        if (item.date !== currentDate) {
+                            // Insert row with day, month, and year
+                            const dateObj = new Date(item.date);
+                            dateObj.setDate(dateObj.getDate());
+                            const formattedDate = dateObj.toLocaleDateString('en-US', { weekday: 'short', month: 'long', day: 'numeric', year: 'numeric' }).replace(',', '');;
+                            formattedClasses.push({ dateSeparator: formattedDate });
+                            currentDate = item.date;
+                        }
+                        
+
+                        // Insert the regular item
+                        formattedClasses.push({
+                            startTime: item.startTime,
+                            date: item.date,
+                            supervisor: item.instructor ? `${item.instructor.lastName}, ${item.instructor.firstName}` : '',
+                            classType: item.classType.name,
+                            duration: '60 min',
+                            description: item.classType.description,
+                            id: item.id
+                        });
+                    });
+                    // Assign the formatted classes
+                    this.newSpecificClasses = formattedClasses;
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+        },
+
   
       getClassTypeName(selectedValue) {
           const selectedOption = this.classTypeOptions.find(option => option.value === selectedValue);
@@ -168,6 +234,72 @@
           }
           return null;
       },
+
+      hasConflict() {
+        console.log("entered has conflict")
+        // Get the start and end time of the new class
+
+        const startTime = this.getStartTime(this.selectedTime); 
+        const endTime = startTime + 1;
+        let newStartTime = 0;
+        let newEndTime = 0;
+  
+        if(startTime < 10){
+            newStartTime = '0'+startTime+':00:00';
+            }else{
+                newStartTime = startTime+':00:00';
+            }
+  
+            if(endTime < 10){
+                newEndTime = '0'+endTime+':00:00';
+            }else{
+                newEndTime = endTime+':00:00';
+            }
+     
+        // Get the date of the new class
+        const date = new Date(this.newSpecificClassDate);
+        const year = date.getFullYear();
+        const month = date.getMonth()+1;
+        const day = date.getDate()+2;
+
+        let newDate = null;
+              if(month < 10 && day < 10){
+                newDate = year + '-0' + month +'-0'+ day;
+              }
+              else if(month < 10 && day >= 10){
+                newDate = year + '-0' + month +'-'+ day;
+              }
+              else if(month >= 10 && day < 10){
+                newDate = year +'-'+ month +'-0'+day ;
+              }else{
+                newDate = year + '-'+ month+'-'+day;
+              }
+
+        // Iterate over existing classes and check for conflicts
+        for (const specificClass of this.newSpecificClasses) {
+            console.log("specififc class date", specificClass.date);
+            console.log("specific class start time", specificClass.startTime);
+            console.log("specific class end time", specificClass.endTime);
+
+            // Check if the dates match
+            if (specificClass.date === newDate) {
+                console.log("go in same date")
+                // Check if the time slots overlap
+                if (
+                    (specificClass.startTime <= newStartTime && newStartTime < specificClass.endTime) ||
+                    (specificClass.startTime < newEndTime && newEndTime <= specificClass.endTime) ||
+                    (newStartTime <= specificClass.startTime && specificClass.endTime <= newEndTime)
+                ) {
+                    // Conflict found
+                    console.log("entered has conflict state")
+                    return true;
+                }
+            }
+        }
+
+        // No conflicts found
+        return false;
+    },
       clearInputs() {
             this.selectedTime = null;
             this.newSpecificClassDate = null;
@@ -179,6 +311,13 @@
         },
   
         async createSpecificClass() {
+
+             // Check for conflicts
+        if (this.hasConflict()) {
+            // Show an error message to the user
+            alert('A class already exists during this time and date. Please select another time or date.');
+            return;
+        }
             //Format the time for java.sql.Time to read
           const startTime = this.getStartTime(this.selectedTime); 
           const endTime = startTime + 1;
@@ -202,7 +341,7 @@
             const date = new Date(this.newSpecificClassDate);
               const year = date.getFullYear();
               const month = date.getMonth()+1;
-              const day = date.getDate()+1;
+              const day = date.getDate()+2;
   
               let javaDate = null;
               if(month < 10 && day < 10){
@@ -228,7 +367,6 @@
             console.log("specific class", newSpecificClass)
             try {
                 const response = await CLIENT.post('/specificClass/create', newSpecificClass);
-                this.newSpecificClasses.push(response.data);
                 this.clearInputs();
             }
             catch (e) {
@@ -239,7 +377,7 @@
             const startDate = new Date(this.startDate);
             const startYear = startDate.getFullYear();
             const startMonth = startDate.getMonth()+1;
-            const startDay = startDate.getDate()+1;
+            const startDay = startDate.getDate()+2;
             let dayOfWeek = startDate.getDay();
             if(dayOfWeek === 0){
                 dayOfWeek = 7;
@@ -261,7 +399,7 @@
             const endDate = new Date(this.endDate);
             const endYear = endDate.getFullYear();
             const endMonth = endDate.getMonth()+1;
-            const endDay = endDate.getDate()+1;
+            const endDay = endDate.getDate()+2;
   
             let javaEndDate = null;
             if(endMonth < 10 && endDay < 10){
@@ -298,9 +436,8 @@
 
 
                 const reccuring = response.data.specificClasses;
-                reccuring.forEach(specificClass => {
-                    this.newSpecificClasses.push(specificClass);
-                });
+                // reccuring.forEach(specificClass => {
+                // });
                 this.clearInputs();
             }
             catch (e) {
