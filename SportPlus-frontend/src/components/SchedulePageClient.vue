@@ -154,7 +154,7 @@ const CLIENT = axios.create({
 });
 
 export default {
-    name: 'SchedulePageOwner',
+    name: 'SchedulePageClient',
     beforeRouteEnter(to, from, next) {
         const userType = globalState.type;
         if (userType === 'Client') {
@@ -199,6 +199,7 @@ export default {
             selectedType: null,
             isAlreadyReg: null,
             classIsFull: null,
+            hasPaymentMethod: false,
             classes: [],
             instructors: [],
             types: [],
@@ -210,7 +211,6 @@ export default {
                 { key: 'duration', label: 'Duration', show: true },
                 { key: 'description', show: false },
                 { key: 'id', show: false },
-                { key: 'name', show: false },
                 { key: 'numOfRegistrations', show: true }
             ],
             fields_I: [
@@ -316,7 +316,6 @@ export default {
                             duration: '60 min',
                             description: item.classType.description,
                             id: item.id,
-                            name: item.name
                         });
                     });
 
@@ -356,7 +355,6 @@ export default {
                         name: classType.name,
                         typeId: classType.typeId,
                     }));
-
                     // Assign the retrieved classTypes to types array
                     this.types = classTypesData;
                 })
@@ -364,17 +362,25 @@ export default {
                     console.error('Error fetching classTypes:', error);
                 });
         },
-        registerForClass() {//TODO 
+        registerForClass() {
             this.DISABLE = true;
             this.isAlreadyRegisteredForClass();
             this.classIsComplete();
+            this.checkForPaymentMethod();
+            console.log("this.hasPaymentMethod",this.hasPaymentMethod);
             if (this.isAlreadyReg) {
                 this.registrationError = "You are already registered for this class!"
                 this.registrationOK = false;
             } else if (this.classIsFull) {
                 this.registrationError = "This class is full!"
                 this.registrationOK = false;
-            } else {
+            } else if(!this.hasPaymentMethod){
+                
+                this.registrationError = "You must have a payment method to register for a class"
+                this.registrationOK = false;
+            }
+            
+            else{
 
                 CLIENT.post(`/registrations/create/${JSON.parse(JSON.stringify(this.selectedClass))[0].id}/${globalState.accountEmail}`).then(response => {
                     this.registrationOK = true;
@@ -415,9 +421,26 @@ export default {
                     this.classIsFull = false;
                 }
             }).catch(error => {
-                console.error('Error FULL:', error);
+                console.error('Error classIsComplete:', error);
                 this.classIsFull = true;
             });
+        },
+        checkForPaymentMethod(){
+            CLIENT.get(`paymentMethod/getByClient/${globalState.accountId}`).then(response =>{
+                console.log("paymentresponse", response);
+                // if (response.data.length === 0) {
+                //     this.hasPaymentMethod = true;
+                //     console.log("i am here_response.data.length === 0", this.hasPaymentMethod);
+                // } else {
+                //     this.hasPaymentMethod = false;
+                //     console.log("i am here_else", this.hasPaymentMethod);
+                // }
+                this.hasPaymentMethod = true;
+                console.log("i am here_else", this.hasPaymentMethod);
+            }).catch(error => {
+                console.error("checkForPaymentMethod", error);
+                this.hasPaymentMethod = false;
+            })
         },
         handleShowSelected() {
             this.showSelected = true;

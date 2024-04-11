@@ -188,7 +188,7 @@ export default {
             fields_C: [
                 { key: 'date', label: 'Date', show: false },
                 { key: 'startTime', label: 'Start Time', show: true },
-                { key: 'classType', label: 'Class Type', show: true },
+                { key: 'name', label: 'Class Type', show: true },
                 { key: 'supervisor', label: 'Instructor', show: false },
                 { key: 'duration', label: 'Duration', show: true },
                 { key: 'description', show: false },
@@ -243,6 +243,7 @@ export default {
                 .then(response => {
                     console.log("raw response",response);
                     this.registrations = response.data.registrations;
+                    console.log("raw registrations", this.registrations);
                     this.registrations.forEach(reg =>{
     
                     const spe_class = reg.specificClass;
@@ -250,7 +251,7 @@ export default {
                         startTime: spe_class.startTime,
                         date: spe_class.date,
                         supervisor: spe_class.instructor ? `${spe_class.instructor.lastName}, ${spe_class.instructor.firstName}` : '',
-                        classType: spe_class.classType.name,
+                        name: spe_class.classType.name,
                         duration: '60 min',
                         description: spe_class.classType.description,
                         id: spe_class.id,
@@ -272,29 +273,20 @@ export default {
                     return 0;
                     });
                     console.log("sorted classes", sortedClasses);
-            const formattedClasses = [];
-            let currentDate = null;
-            sortedClasses.forEach(item => {
-                // Check if the date has changed
-                if (item.date !== currentDate) {
-                    // Insert row with day, month, and year
-                    const dateObj = new Date(item.date);
-                    dateObj.setDate(dateObj.getDate() + 1);
-                    const formattedDate = dateObj.toLocaleDateString('en-US', { weekday: 'short', month: 'long', day: 'numeric', year: 'numeric' }).replace(',', '');;
-                    formattedClasses.push({ dateSeparator: formattedDate });
-                    currentDate = item.date;
-                }
-                // Insert the regular item
-                    formattedClasses.push({
-                    startTime: item.startTime,
-                    date: item.date,
-                    supervisor: item.instructor ? `${item.instructor.lastName}, ${item.instructor.firstName}` : '',
-                    classType: item.classType.name,
-                    duration: '60 min',
-                    description: item.classType.description,
-                    id: item.id,
-                    name: item.name
-                });
+                    const formattedClasses = [];
+                    let currentDate = null;
+                    sortedClasses.forEach(item => {
+                    // Check if the date has changed
+                        if (item.date !== currentDate) {
+                            // Insert row with day, month, and year
+                            const dateObj = new Date(item.date);
+                            dateObj.setDate(dateObj.getDate() + 1);
+                            const formattedDate = dateObj.toLocaleDateString('en-US', { weekday: 'short', month: 'long', day: 'numeric', year: 'numeric' }).replace(',', '');;
+                            formattedClasses.push({ dateSeparator: formattedDate });
+                            currentDate = item.date;
+                    }
+                    // Insert the regular item
+                    formattedClasses.push(item);
                 
                 });
                     console.log("formattedClasses", formattedClasses);
@@ -305,52 +297,6 @@ export default {
                 .catch(error => {
                     console.error('Error fetching registrations:', error);
                 });
-        },
-        fetchMyClasses(){
-            this.fetchRegistrations().then(()=>{
-            const sortedClasses = this.classes.sort((a, b) => {
-                // Compare dates
-                if (a.date < b.date) return -1;
-                if (a.date > b.date) return 1;
-
-                // If dates are equal, compare start times
-                if (a.startTime < b.startTime) return -1;
-                if (a.startTime > b.startTime) return 1;
-
-                // If both dates and start times are equal, maintain current order
-                return 0;
-            });
-            console.log("sorted classes", sortedClasses);
-            const formattedClasses = [];
-            let currentDate = null;
-            sortedClasses.forEach(item => {
-                // Check if the date has changed
-                if (item.date !== currentDate) {
-                    // Insert row with day, month, and year
-                    const dateObj = new Date(item.date);
-                    dateObj.setDate(dateObj.getDate() + 1);
-                    const formattedDate = dateObj.toLocaleDateString('en-US', { weekday: 'short', month: 'long', day: 'numeric', year: 'numeric' }).replace(',', '');;
-                    formattedClasses.push({ dateSeparator: formattedDate });
-                    currentDate = item.date;
-                }
-                // Insert the regular item
-                formattedClasses.push({
-                    startTime: item.startTime,
-                    date: item.date,
-                    supervisor: item.instructor ? `${item.instructor.lastName}, ${item.instructor.firstName}` : '',
-                    classType: item.classType.name,
-                    duration: '60 min',
-                    description: item.classType.description,
-                    id: item.id,
-                    name: item.name
-                });
-                
-            });
-                console.log("formattedClasses", formattedClasses);
-                // Assign the formatted classes
-                this.clientClasses = formattedClasses;
-                console.log("clientClasses", this.clientClasses)
-            })
         },
         unregisterSpecificClass(regId){
             CLIENT.delete(`/registrations/deleteByRegistrationId/${regId}`).then(response =>{
