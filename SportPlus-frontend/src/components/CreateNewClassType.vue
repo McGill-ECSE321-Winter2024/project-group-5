@@ -144,7 +144,7 @@ let endpointPath = '';
       const path='classType/updateName/'+id;
       await AXIOS.put(path, this.newName,{
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'text/plain'
         }
       });
       
@@ -156,7 +156,7 @@ let endpointPath = '';
       const path='classType/updateDescription/'+id;
       await AXIOS.put(path, this.newDescription,{
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'text/plain'
         }
       });
     }
