@@ -103,7 +103,24 @@ const CLIENT = axios.create({
 
 export default {
     name: 'AccountPageInstructor',
-
+    beforeRouteEnter(to, from, next) {
+        const userType = globalState.type;
+        if (userType === 'Instructor') {
+            next();
+        } else if (userType === 'Client') {
+            next(vm => {
+                vm.$router.replace('/client-account');
+            });
+        } else if (userType === 'Owner') {
+            next(vm => {
+                vm.$router.replace('/owner-account');
+            });
+        } else {
+            next(vm => {
+                vm.$router.replace('/not-logged-in-account');
+            });
+        }
+    },
     data() {
         const now = new Date();
         const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
