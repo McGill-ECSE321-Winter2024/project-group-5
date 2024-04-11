@@ -422,6 +422,7 @@ export default {
           console.log(e);
         }
       }
+      window.location.reload();
     },
   },
   computed: {
