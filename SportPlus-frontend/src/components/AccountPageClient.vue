@@ -72,7 +72,7 @@
                     <b-table hover 
                         id="schedule-tb" 
                         small 
-                        :items="classes" 
+                        :items="clientClasses" 
                         :fields="filteredFields" 
                         :sticky-header="true"
                         :outlined="true" 
@@ -87,7 +87,7 @@
                             </b-table-simple>
                         </template>
                         <template v-slot:cell(unregister)="data">
-                            <b-button @click="unregisterSpecificClass(data.item.id)" variant="danger">Unregister</b-button>
+                            <b-button v-if="!isDateSeparator(data.item)" @click="unregisterSpecificClass(data.item.regId)" variant="danger">Unregister</b-button>
                         </template>
                     </b-table>
                 </div>
@@ -183,9 +183,10 @@ export default {
             oldPasswordFieldType: 'password',
             newPasswordFieldType: 'password',
             registrations: [],
-            classes:[],
+            clientClasses:[],
+            classes: [],
             fields_C: [
-                { key: 'date', label: 'Date', show: true },
+                { key: 'date', label: 'Date', show: false },
                 { key: 'startTime', label: 'Start Time', show: true },
                 { key: 'classType', label: 'Class Type', show: true },
                 { key: 'supervisor', label: 'Instructor', show: false },
@@ -256,25 +257,21 @@ export default {
                         regId: reg.regId
                     });
                     });
-                })
-                .catch(error => {
-                    console.error('Error fetching registrations:', error);
-                });
-        },
-        fetchMyClasses(){
-            this.fetchRegistrations();
-            const sortedClasses = this.classes.sort((a, b) => {
-                // Compare dates
-                if (a.date < b.date) return -1;
-                if (a.date > b.date) return 1;
+                    console.log("classes in fetchReg", this.classes);
+                    console.log("clientClasses in fetchReg", this.clientClasses);
+                    const sortedClasses = this.classes.sort((a, b) => {
+                    // Compare dates
+                    if (a.date < b.date) return -1;
+                    if (a.date > b.date) return 1;
 
-                // If dates are equal, compare start times
-                if (a.startTime < b.startTime) return -1;
-                if (a.startTime > b.startTime) return 1;
+                    // If dates are equal, compare start times
+                    if (a.startTime < b.startTime) return -1;
+                    if (a.startTime > b.startTime) return 1;
 
-                // If both dates and start times are equal, maintain current order
-                return 0;
-            });
+                    // If both dates and start times are equal, maintain current order
+                    return 0;
+                    });
+                    console.log("sorted classes", sortedClasses);
             const formattedClasses = [];
             let currentDate = null;
             sortedClasses.forEach(item => {
@@ -287,7 +284,55 @@ export default {
                     formattedClasses.push({ dateSeparator: formattedDate });
                     currentDate = item.date;
                 }
+                // Insert the regular item
+                    formattedClasses.push({
+                    startTime: item.startTime,
+                    date: item.date,
+                    supervisor: item.instructor ? `${item.instructor.lastName}, ${item.instructor.firstName}` : '',
+                    classType: item.classType.name,
+                    duration: '60 min',
+                    description: item.classType.description,
+                    id: item.id,
+                    name: item.name
+                });
+                
+                });
+                    console.log("formattedClasses", formattedClasses);
+                    // Assign the formatted classes
+                    this.clientClasses = formattedClasses;
+                    console.log("clientClasses", this.clientClasses)
+                })
+                .catch(error => {
+                    console.error('Error fetching registrations:', error);
+                });
+        },
+        fetchMyClasses(){
+            this.fetchRegistrations().then(()=>{
+            const sortedClasses = this.classes.sort((a, b) => {
+                // Compare dates
+                if (a.date < b.date) return -1;
+                if (a.date > b.date) return 1;
 
+                // If dates are equal, compare start times
+                if (a.startTime < b.startTime) return -1;
+                if (a.startTime > b.startTime) return 1;
+
+                // If both dates and start times are equal, maintain current order
+                return 0;
+            });
+            console.log("sorted classes", sortedClasses);
+            const formattedClasses = [];
+            let currentDate = null;
+            sortedClasses.forEach(item => {
+                // Check if the date has changed
+                if (item.date !== currentDate) {
+                    // Insert row with day, month, and year
+                    const dateObj = new Date(item.date);
+                    dateObj.setDate(dateObj.getDate() + 1);
+                    const formattedDate = dateObj.toLocaleDateString('en-US', { weekday: 'short', month: 'long', day: 'numeric', year: 'numeric' }).replace(',', '');;
+                    formattedClasses.push({ dateSeparator: formattedDate });
+                    currentDate = item.date;
+                }
                 // Insert the regular item
                 formattedClasses.push({
                     startTime: item.startTime,
@@ -299,11 +344,22 @@ export default {
                     id: item.id,
                     name: item.name
                 });
+                
             });
-            // Assign the formatted classes
-            this.classes = formattedClasses;
+                console.log("formattedClasses", formattedClasses);
+                // Assign the formatted classes
+                this.clientClasses = formattedClasses;
+                console.log("clientClasses", this.clientClasses)
+            })
         },
-        unregisterSpecificClass(specificClassId){
+        unregisterSpecificClass(regId){
+            CLIENT.delete(`/registrations/deleteByRegistrationId/${regId}`).then(response =>{
+                console.log("success", response);
+                this.fetchRegistrations();
+            }).catch(error => {
+                // Handle error: Log and/or display an error message
+                console.error('Error deleting class type:', error);
+            });
 
         },
         fetchPaymentMethods() {
@@ -481,7 +537,9 @@ export default {
 .tableTitle {
     text-align: center;
 }
-
+.ScheduleTable {
+    height: 300px;
+}
 .columns-container {
     display: flex;
     justify-content: space-between;
@@ -491,9 +549,14 @@ export default {
     flex-basis: 30%;
     padding: 10px;
 }
+.bold-row-separator {
+    font-weight: bold;
+    font-size: 15px;
+    text-align: left;
+}
 
 /* Ensure responsiveness for small screens */
-@media (max-width: 768px) {
+@media (max-width: 800px) {
     .columns-container {
         flex-wrap: wrap;
     }
