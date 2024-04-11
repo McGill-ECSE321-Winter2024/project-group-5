@@ -67,11 +67,29 @@
         <!-- Second column: Registration -->
         <div class="column">
             <b-container>
-                <h2 class="tableTitle">Registration</h2>
+                <h2 class="tableTitle">My Schedule</h2>
                 <div class="ScheduleTable">
-                    <b-table hover :items="registrations" :fields="registrationFields" :sticky-header="true"
-                        :outlined="true" :row-variant="rowVariant" select-mode="single" responsive="sm"
-                        ref="registrationTable" selectable @row-selected="onRowSelected"></b-table>
+                    <b-table hover 
+                        id="schedule-tb" 
+                        small 
+                        :items="classes" 
+                        :fields="filteredFields" 
+                        :sticky-header="true"
+                        :outlined="true" 
+                        select-mode="single" 
+                        responsive="sm" 
+                        ref="selectableTable" 
+                        selectable
+                        @row-selected="onClassSelected">
+                        <template v-slot:cell(startTime)="data">
+                            <b-table-simple :class="{ 'bold-row-separator': isDateSeparator(data.item) }">
+                                {{ isDateSeparator(data.item) ? data.item.dateSeparator : (data.value) }}
+                            </b-table-simple>
+                        </template>
+                        <template v-slot:cell(unregister)="data">
+                            <b-button @click="unregisterSpecificClass(data.item.id)" variant="danger">Unregister</b-button>
+                        </template>
+                    </b-table>
                 </div>
             </b-container>
         </div>
@@ -165,12 +183,17 @@ export default {
             oldPasswordFieldType: 'password',
             newPasswordFieldType: 'password',
             registrations: [],
-            registrationFields: [
-                // Define fields for registration table
-                { key: 'date', label: 'Date' },
-                { key: 'classType', label: 'Class Type' },
-                { key: 'instructor', label: 'Instructor' },
-                // Add more fields as needed
+            classes:[],
+            fields_C: [
+                { key: 'date', label: 'Date', show: true },
+                { key: 'startTime', label: 'Start Time', show: true },
+                { key: 'classType', label: 'Class Type', show: true },
+                { key: 'supervisor', label: 'Instructor', show: false },
+                { key: 'duration', label: 'Duration', show: true },
+                { key: 'description', show: false },
+                { key: 'id', show: false },
+                { key: 'unregister', label: '', class: 'text-center', show: true },
+                { key: 'regId', show: false}
             ],
             paymentMethods: [],
             paymentMethodFields: [
@@ -191,6 +214,9 @@ export default {
     computed: {
         unapprovedClassTypes() {
             return this.classTypes.filter(classType => !classType.approved);
+        },
+        filteredFields(){
+            return this.fields_C.filter(field => field.show);
         }
     },
     mounted() {
@@ -212,13 +238,73 @@ export default {
                 });
         },
         fetchRegistrations() {
-            axios.get(`/registrations/getByClient/${this.accountEmail}`)
+            CLIENT.get(`/registrations/getByClient/${globalState.accountEmail}`)
                 .then(response => {
-                    this.registrations = response.data;
+                    console.log("raw response",response);
+                    this.registrations = response.data.registrations;
+                    this.registrations.forEach(reg =>{
+    
+                    const spe_class = reg.specificClass;
+                    this.classes.push({
+                        startTime: spe_class.startTime,
+                        date: spe_class.date,
+                        supervisor: spe_class.instructor ? `${spe_class.instructor.lastName}, ${spe_class.instructor.firstName}` : '',
+                        classType: spe_class.classType.name,
+                        duration: '60 min',
+                        description: spe_class.classType.description,
+                        id: spe_class.id,
+                        regId: reg.regId
+                    });
+                    });
                 })
                 .catch(error => {
                     console.error('Error fetching registrations:', error);
                 });
+        },
+        fetchMyClasses(){
+            this.fetchRegistrations();
+            const sortedClasses = this.classes.sort((a, b) => {
+                // Compare dates
+                if (a.date < b.date) return -1;
+                if (a.date > b.date) return 1;
+
+                // If dates are equal, compare start times
+                if (a.startTime < b.startTime) return -1;
+                if (a.startTime > b.startTime) return 1;
+
+                // If both dates and start times are equal, maintain current order
+                return 0;
+            });
+            const formattedClasses = [];
+            let currentDate = null;
+            sortedClasses.forEach(item => {
+                // Check if the date has changed
+                if (item.date !== currentDate) {
+                    // Insert row with day, month, and year
+                    const dateObj = new Date(item.date);
+                    dateObj.setDate(dateObj.getDate() + 1);
+                    const formattedDate = dateObj.toLocaleDateString('en-US', { weekday: 'short', month: 'long', day: 'numeric', year: 'numeric' }).replace(',', '');;
+                    formattedClasses.push({ dateSeparator: formattedDate });
+                    currentDate = item.date;
+                }
+
+                // Insert the regular item
+                formattedClasses.push({
+                    startTime: item.startTime,
+                    date: item.date,
+                    supervisor: item.instructor ? `${item.instructor.lastName}, ${item.instructor.firstName}` : '',
+                    classType: item.classType.name,
+                    duration: '60 min',
+                    description: item.classType.description,
+                    id: item.id,
+                    name: item.name
+                });
+            });
+            // Assign the formatted classes
+            this.classes = formattedClasses;
+        },
+        unregisterSpecificClass(specificClassId){
+
         },
         fetchPaymentMethods() {
             CLIENT.get(`/paymentMethod/getByClient/${this.accountId}`)
@@ -326,7 +412,7 @@ export default {
                     console.error('Error adding payment method:', error);
                 });
         },
-        onRowSelected(item) {
+        onClassSelected(item) {
             // Handle row selection if needed
         },
         rowVariant(index) {
@@ -382,6 +468,10 @@ export default {
                 .catch(error => {
                     console.error('Error updating password:', error);
                 });
+        },
+        isDateSeparator(item) {
+            // Check if the item is a separator row
+            return item.dateSeparator !== undefined;
         }
     }
 }

@@ -68,7 +68,7 @@
         <div class="column right-column"></div>
         <b-col lg="8">
             <div class="empty-divider-table"></div>
-            <h2 class="tableTitle">Class Schedule</h2>
+            <h2 class="tableTitle">My Schedule</h2>
             <div class="ScheduleTable">
                 <b-table hover id="schedule-tb" small :items="classes" :fields="filteredFields" :sticky-header="true"
                     :outlined="true" select-mode="single" responsive="sm" ref="selectableTable" selectable
