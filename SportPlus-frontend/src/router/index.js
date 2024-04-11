@@ -5,7 +5,6 @@ import SchedulePageClient from '@/components/SchedulePageClient'
 import SchedulePageInstructor from '@/components/SchedulePageInstructor'
 import LoginPage from '@/components/LoginPage'
 import RegistrationPage from '@/components/RegistrationPage'
-import CreateNewSpecificClass from '@/components/CreateNewSpecificClass'
 import AccountPageClient from '@/components/AccountPageClient'
 import AccountPageInstructor from '@/components/AccountPageInstructor'
 import AccountPageOwner from '@/components/AccountPageOwner'
@@ -40,11 +39,6 @@ export default new Router({
       path: '/register',
       name: 'RegistrationPage',
       component: RegistrationPage
-    },
-    {
-      path: '/tmp',//CreateNewSpecificClass
-      name: 'CreateNewSpecificClass',
-      component: CreateNewSpecificClass
     },
     {
       path: '/account',
