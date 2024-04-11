@@ -271,5 +271,11 @@ public class SpecificClassService {
         // Delete all classes with that classType
         specificClassRepository.deleteByClassType(classType);
     }
+    @Transactional
+    public void deleteBySessionId(int sessionId) {
+
+        // Delete all classes with that classType
+        specificClassRepository.deleteBySessionId(sessionId);
+    }
 
 }

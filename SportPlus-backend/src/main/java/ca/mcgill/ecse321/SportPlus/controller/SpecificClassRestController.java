@@ -282,4 +282,14 @@ public class SpecificClassRestController {
         return ResponseEntity.noContent().build();
     }
 
+    @DeleteMapping(value = { "/deleteBySessionId/{sessionId}", "/deleteBySessionId/{sessionId}/" })
+    public ResponseEntity<Void> deleteSpecificClassesBySessionId(@PathVariable("sessionId") int sessionId) {
+
+        // Delete all specificClasses with a certain ClassType
+        specificClassService.deleteByClassType(sessionId);
+        return ResponseEntity.noContent().build();
+    }
+
+
+
 }
