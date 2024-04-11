@@ -142,9 +142,15 @@
 <script>
 import axios from "axios";
 import { globalState } from "@/global.js"; // Import the globalState variable
+import config from "../../config";
+
+const backendUrl = 'http://' + config.dev.backendHost + ':' + config.dev.backendPort
+const frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
 
 const CLIENT = axios.create({
-    baseURL: 'http://localhost:8080'
+    baseURL: backendUrl,
+    headers: { 'Access-Control-Allow-Origin': frontendUrl }
+
 });
 
 export default {
