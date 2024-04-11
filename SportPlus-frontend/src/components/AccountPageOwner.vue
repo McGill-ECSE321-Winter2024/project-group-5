@@ -84,6 +84,26 @@
                 </div>
             </b-container>
         </div>
+        <!-- Third column: Class Types -->
+        <div class="column">
+            <!-- Class Types -->
+            <b-container>
+                <h2 class="tableTitle">Class Types</h2>
+                <!-- Display class types and delete button -->
+                <div v-if="classTypes.length > 0">
+                    <b-card v-for="classType in classTypes" :key="classType.typeId">
+                        <p><strong>Name:</strong> {{ classType.name }}</p>
+                        <p><strong>Description:</strong> {{ classType.description }}</p>
+                        <div>
+                            <b-button @click="deleteClassType(classType.typeId)" variant="success">Delete</b-button>
+                        </div>
+                    </b-card>
+                </div>
+                <div v-else>
+                    <p>No class types found</p>
+                </div>
+            </b-container>
+        </div>
     </div>
 </template>
 
@@ -161,6 +181,12 @@ export default {
                     console.error('Error approving class type:', error);
                 });
         },
+
+        //Method to delete class type
+        deleteClassType(typeId){
+
+        },
+        
         fetchAccountDetails() {
             CLIENT.get(`/owner/get`)
                 .then(response => {
