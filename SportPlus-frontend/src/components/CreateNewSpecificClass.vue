@@ -379,10 +379,8 @@ export default {
         const startYear = startDate.getFullYear();
         const startMonth = startDate.getMonth() + 1;
         const startDay = startDate.getDate() + 2;
-        let dayOfWeek = startDate.getDay();
-        if (dayOfWeek === 0) {
-          dayOfWeek = 7;
-        }
+        let dayOfWeek = startDate.getDay() +1;
+        
         const javaStartDate = this.formatDate(startYear, startMonth, startDay);
 
         const endDate = new Date(this.endDate);
@@ -422,6 +420,7 @@ export default {
           console.log(e);
         }
       }
+      this.fetchData();
     },
   },
   computed: {
