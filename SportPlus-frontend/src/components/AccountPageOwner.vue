@@ -76,6 +76,7 @@
                         <p><strong>Description:</strong> {{ classType.description }}</p>
                         <div>
                             <b-button @click="approveClassType(classType.typeId)" variant="success">Approve</b-button>
+                            <b-button @click="deleteClassType(classType.name)" variant="success">Disapprove</b-button>
                         </div>
                     </b-card>
                 </div>
@@ -181,7 +182,7 @@ export default {
         this.fetchClassTypes();
     },
     methods: {
-        
+
         fetchClassTypes() {
             CLIENT.get('/classType/all')
                 .then(response => {
@@ -205,17 +206,18 @@ export default {
         },
 
         //Method to delete class type
-        deleteClassType(className){
+        deleteClassType(className) {
             try {
-        console.log(className);
-        const path='classType/delete/'+className;
-        CLIENT.delete(path);
-        this.fetchClassTypes();
-      } catch (error) {
-        console.error('There was an error deleting the class type:', error);
-      }
+                console.log(className);
+                const path = 'classType/delete/' + className;
+                CLIENT.delete(path);
+                this.fetchClassTypes();
+            } 
+            catch (error) {
+                console.error('There was an error deleting the class type:', error);
+            }
         },
-        
+
         fetchAccountDetails() {
             CLIENT.get(`/owner/get`)
                 .then(response => {
