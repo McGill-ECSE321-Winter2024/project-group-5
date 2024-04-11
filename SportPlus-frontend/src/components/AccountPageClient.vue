@@ -301,12 +301,11 @@ export default {
         unregisterSpecificClass(regId){
             CLIENT.delete(`/registrations/deleteByRegistrationId/${regId}`).then(response =>{
                 console.log("success", response);
-                this.fetchRegistrations();
+                window.location.reload();
             }).catch(error => {
                 // Handle error: Log and/or display an error message
                 console.error('Error deleting class type:', error);
             });
-
         },
         fetchPaymentMethods() {
             CLIENT.get(`/paymentMethod/getByClient/${this.accountId}`)
