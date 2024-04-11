@@ -34,9 +34,11 @@ public class InitializationConfig {
             
             if (!toTest.contains("Cardio")) {
                 classTypeService.instructorCreate("Cardio", "A cardio class", null);
-            } else if (!toTest.contains("Stretching")) {
+            }
+            if (!toTest.contains("Stretching")) {
                 classTypeService.instructorCreate("Stretching", "A stretching class", null);
-            } else if (!toTest.contains("Strength Training")) {
+            }
+            if (!toTest.contains("Strength Training")) {
                 classTypeService.instructorCreate("Strength Training", "A strength training class", null);
             }
         } catch (ResourceNotFoundException e) {
