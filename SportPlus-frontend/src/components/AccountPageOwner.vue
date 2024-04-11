@@ -68,7 +68,7 @@
         <div class="column">
             <!-- Class Types -->
             <b-container>
-                <h2 class="tableTitle">Class Types</h2>
+                <h2 class="tableTitle">Need Approval</h2>
                 <!-- Display class types and approve button -->
                 <div v-if="unapprovedClassTypes.length > 0">
                     <b-card v-for="classType in unapprovedClassTypes" :key="classType.typeId">
@@ -89,7 +89,7 @@
         <div class="column">
             <!-- Class Types -->
             <b-container>
-                <h2 class="tableTitle">Class Types</h2>
+                <h2 class="tableTitle">Approved</h2>
                 <!-- Display class types and delete button -->
                 <div v-if="classTypes.length > 0">
                     <b-card v-for="classType in approvedClassTypes" :key="classType.typeId">

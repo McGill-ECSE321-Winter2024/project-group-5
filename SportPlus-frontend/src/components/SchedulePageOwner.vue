@@ -12,14 +12,12 @@
                         </b-row>
                         <!-- button group-->
                         <div class="btn-group-vertical">
-                            <b-button variant="outline-primary" @click="toggleModal" class="mb-2">View Selected ||
-                                Assign Instructor</b-button>
-                            <b-button variant="outline-primary" @click="modifySelected = true" class="mb-2"> Modify
-                                Selected</b-button>
+                            <b-button variant="outline-primary" @click="toggleModal" class="mb-2">View Selected Class Menu</b-button>
+                            <!-- <b-button variant="outline-primary" @click="modifySelected = true" class="mb-2"> Modify
+                                Selected</b-button> -->
                             <b-button variant="outline-primary" @click="createNewSpecificClass = true"
                                 class="mb-2">Create New Specific Class</b-button>
-                            <b-button variant="outline-primary" @click="createNewClassType = true" class="mb-2">Create
-                                New ClassType</b-button>
+                            <b-button variant="outline-primary" @click="createNewClassType = true" class="mb-2">ClassType Menu</b-button>
                         </div>
                     </b-card>
                 </b-col>
@@ -117,11 +115,11 @@
 
         </b-container>
         <div>
-            <b-modal v-model="createNewSpecificClass" title="Create New Class" size="100%">
+            <b-modal v-model="createNewSpecificClass" title="Create New Class" size="100%" @ok="handleOk">
                 <CreateNewSpecificClass />
             </b-modal>
 
-            <b-modal v-model="showSelected" title="Class Details" size="50%">
+            <b-modal v-model="showSelected" title="Class Details" size="50%" @ok="handleOk">
                 <b-container fluid>
                     <div v-if="selectedClass">
                         <b-row>
@@ -138,6 +136,8 @@
                                     @click="viewAssignInstructorForum" class="mb-2">
                                     {{ !JSON.parse(JSON.stringify(this.selectedClass))[0].supervisor ? 'Assign an Instructor to this Class' : 'Assign a Different Instructor' }}
                                 </b-button>
+                                <!-- <b-button v-if="!displayForum" variant="outline-danger"
+                                    @click="deleteSelected">Delete Selected</b-button> -->
                             </b-col>
                             <b-col lg="10">
                                 <b-table hover id="forumTableInstructors" small :items="instructors"
@@ -147,6 +147,8 @@
                                 </b-table>
                                 <b-button v-if="assignmentSelectionForum" variant="outline-primary"
                                     @click="assignInstructor">Assign instructor to Selected Class</b-button>
+
+                                    
                                 <div v-if="teachOK" class="success-message"
                                     style="color: green; text-decoration: underline;">
                                     Your request was processed successfully!
@@ -165,8 +167,8 @@
 
                 </b-container>
             </b-modal>
-            <b-modal v-model="createNewClassType" title="Create New Class Type" size="lg">
-                <CreateNewClassType />
+            <b-modal v-model="createNewClassType" title="Create New Class Type" size="lg" @ok="handleOk">
+                <CreateNewClassType/>
             </b-modal>
         </div>
     </div>
@@ -431,6 +433,13 @@ export default {
                 console.log("error", error);
             });
         },
+        deleteSelected(){
+            CLIENT.delete(`/specificClass/deleteBySessionId/${JSON.parse(JSON.stringify(this.selectedClass))[0].id}`).then(response =>{
+
+            }).catch(error => {
+                console.log("delete error", error);
+            });
+        },
         onForumInstructorSelected(item) {
             this.assignmentSelectionForum = item;
         },
@@ -445,6 +454,9 @@ export default {
         onTypeSelected(item) {
             this.selectedType = item;
             console.log('Selected type:', item);
+        },
+        handleOk(){
+            window.location.reload();
         },
         toggleModal() {
             this.showSelected = true;
