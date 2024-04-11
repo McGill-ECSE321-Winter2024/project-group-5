@@ -249,18 +249,13 @@
             }else{
                 newStartTime = startTime+':00:00';
             }
-  
-            if(endTime < 10){
-                newEndTime = '0'+endTime+':00:00';
-            }else{
-                newEndTime = endTime+':00:00';
-            }
+            console.log("start time java : ", newStartTime)
      
         // Get the date of the new class
         const date = new Date(this.newSpecificClassDate);
         const year = date.getFullYear();
         const month = date.getMonth()+1;
-        const day = date.getDate()+2;
+        const day = date.getDate()+1;
 
         let newDate = null;
               if(month < 10 && day < 10){
@@ -275,21 +270,20 @@
                 newDate = year + '-'+ month+'-'+day;
               }
 
+              console.log("date java", newDate);
+
         // Iterate over existing classes and check for conflicts
         for (const specificClass of this.newSpecificClasses) {
             console.log("specififc class date", specificClass.date);
             console.log("specific class start time", specificClass.startTime);
-            console.log("specific class end time", specificClass.endTime);
 
             // Check if the dates match
             if (specificClass.date === newDate) {
                 console.log("go in same date")
                 // Check if the time slots overlap
-                if (
-                    (specificClass.startTime <= newStartTime && newStartTime < specificClass.endTime) ||
-                    (specificClass.startTime < newEndTime && newEndTime <= specificClass.endTime) ||
-                    (newStartTime <= specificClass.startTime && specificClass.endTime <= newEndTime)
-                ) {
+                if ( newStartTime ===  specificClass.startTime) {
+                    console.log("go in same start time")
+
                     // Conflict found
                     console.log("entered has conflict state")
                     return true;
@@ -335,8 +329,7 @@
               }else{
                   javaEndTime = endTime+':00:00';
               }
-              console.log("start time java : ", javaStartTime)
-              console.log("end time java : ", javaEndTime)
+              
           if(this.classMode == 'regular'){
             const date = new Date(this.newSpecificClassDate);
               const year = date.getFullYear();
@@ -355,7 +348,6 @@
               }else{
                   javaDate = year + '-'+ month+'-'+day;
               }
-              console.log("date java", javaDate);
   
             const newSpecificClass = {
               date: javaDate,
