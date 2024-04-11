@@ -364,85 +364,106 @@ export default {
         },
         registerForClass() {
             this.DISABLE = true;
-            this.isAlreadyRegisteredForClass();
-            this.classIsComplete();
-            this.checkForPaymentMethod();
-            console.log("this.hasPaymentMethod",this.hasPaymentMethod);
-            if (this.isAlreadyReg) {
-                this.registrationError = "You are already registered for this class!"
-                this.registrationOK = false;
-            } else if (this.classIsFull) {
-                this.registrationError = "This class is full!"
-                this.registrationOK = false;
-            } else if(!this.hasPaymentMethod){
-                
-                this.registrationError = "You must have a payment method to register for a class"
-                this.registrationOK = false;
-            }
-            
-            else{
-
-                CLIENT.post(`/registrations/create/${JSON.parse(JSON.stringify(this.selectedClass))[0].id}/${globalState.accountEmail}`).then(response => {
-                    this.registrationOK = true;
-                }).catch(error => {
-                    console.error('Error Create:', error);
-                    this.registrationError = "Process could not be completed"
-                    this.registrationOK = false;
+            this.isAlreadyRegisteredForClass()
+                .then(() => this.classIsComplete())
+                .then(() => this.checkForPaymentMethod())
+                .then(() => {
+                    console.log("this.hasPaymentMethod", this.hasPaymentMethod);
+                    if (this.isAlreadyReg) {
+                        this.registrationError = "You are already registered for this class!";
+                        this.registrationOK = false;
+                    } else if (this.classIsFull) {
+                        this.registrationError = "This class is full!";
+                        this.registrationOK = false;
+                    } else if (!this.hasPaymentMethod) {
+                        this.registrationError = "You must have a payment method to register for a class";
+                        this.registrationOK = false;
+                    } else {
+                        CLIENT.post(`/registrations/create/${JSON.parse(JSON.stringify(this.selectedClass))[0].id}/${globalState.accountEmail}`)
+                            .then(response => {
+                                this.registrationOK = true;
+                            })
+                            .catch(error => {
+                                console.error('Error Create:', error);
+                                this.registrationError = "Process could not be completed";
+                                this.registrationOK = false;
+                            });
+                    }
+                })
+                .catch(error => {
+                    console.error("Error occurred during registration:", error);
+                    // Handle error if needed
                 });
-            }
         },
+
         isAlreadyRegisteredForClass() {
-            console.log("email input to isAlre...", globalState.accountEmail);
-            CLIENT.get(`/registrations/getByClient/${globalState.accountEmail}`).then(response => {
-                const resp = response.data.registrations;
-                if (resp.length === 0) {
-                    this.isAlreadyReg = false;
-                } else {
-                    resp.forEach(registration => {
-                        if (registration.specificClass.id === JSON.parse(JSON.stringify(this.selectedClass))[0].id) {
-                            this.isAlreadyReg = true;
-                            return;
+            return new Promise((resolve, reject) => {
+                console.log("email input to isAlre...", globalState.accountEmail);
+                CLIENT.get(`/registrations/getByClient/${globalState.accountEmail}`)
+                    .then(response => {
+                        const resp = response.data.registrations;
+                        if (resp.length === 0) {
+                            this.isAlreadyReg = false;
+                        } else {
+                            resp.forEach(registration => {
+                                if (registration.specificClass.id === JSON.parse(JSON.stringify(this.selectedClass))[0].id) {
+                                    this.isAlreadyReg = true;
+                                    return;
+                                }
+                                console.log(registration);
+                            });
                         }
-                        console.log(registration);
+                        resolve(); // Resolve the promise once the logic is complete
+                    })
+                    .catch(error => {
+                        console.error('Error getByClient:', error);
+                        this.isAlreadyReg = true;
+                        reject(error); // Reject the promise if an error occurs
                     });
-                }
-            }).catch(error => {
-                console.error('Error getByClient:', error);
-                this.isAlreadyReg = true;
-                return;
             });
         },
         classIsComplete() {
-            CLIENT.get(`/registrations/getBySpecificClass/${JSON.parse(JSON.stringify(this.selectedClass))[0].id}`).then(response => {
-                if (response.data.length >= 30) {
-                    this.classIsFull = true;
-
-                } else {
-                    this.classIsFull = false;
-                }
-            }).catch(error => {
-                console.error('Error classIsComplete:', error);
-                this.classIsFull = true;
+            return new Promise((resolve, reject) => {
+                CLIENT.get(`/registrations/getBySpecificClass/${JSON.parse(JSON.stringify(this.selectedClass))[0].id}`)
+                    .then(response => {
+                        if (response.data.length >= 30) {
+                            this.classIsFull = true;
+                        } else {
+                            this.classIsFull = false;
+                        }
+                        resolve(); // Resolve the promise once the logic is complete
+                    })
+                    .catch(error => {
+                        console.error('Error classIsComplete:', error);
+                        this.classIsFull = true;
+                        reject(error); // Reject the promise if an error occurs
+                    });
             });
         },
-        async checkForPaymentMethod() {
-            try {
-                const response = await CLIENT.get(`paymentMethod/getByClient/${globalState.accountId}`);
-                console.log("paymentresponse", response);
-                if (response.data.length === 0) {
-                    this.hasPaymentMethod = true;
-                    console.log("i am here_response.data.length === 0", this.hasPaymentMethod);
-                } else {
-                    this.hasPaymentMethod = false;
-                    console.log("i am here_else", this.hasPaymentMethod);
-                }
-                this.hasPaymentMethod = true;
-                console.log("i am here_else", this.hasPaymentMethod);
-            } catch (error) {
-                console.error("checkForPaymentMethod", error);
-                this.hasPaymentMethod = false;
-            }
+        checkForPaymentMethod() {
+            return new Promise((resolve, reject) => {
+                CLIENT.get(`paymentMethod/getByClient/${globalState.accountId}`)
+                    .then(response => {
+                        console.log("paymentresponse", response);
+                        if (response.data.length === 0) {
+                            this.hasPaymentMethod = false;
+                            console.log("i am here_response.data.length === 0", this.hasPaymentMethod);
+                        } else {
+                            this.hasPaymentMethod = true;
+                            console.log("i am here_else", this.hasPaymentMethod);
+                        }
+                        this.hasPaymentMethod = true;
+                        console.log("i am here_else", this.hasPaymentMethod);
+                        resolve(); // Resolve the promise once the logic is complete
+                    })
+                    .catch(error => {
+                        console.error("checkForPaymentMethod", error);
+                        this.hasPaymentMethod = false;
+                        reject(error); // Reject the promise if an error occurs
+                    });
+            });
         },
+
         handleShowSelected() {
             this.showSelected = true;
             this.registrationError = null;

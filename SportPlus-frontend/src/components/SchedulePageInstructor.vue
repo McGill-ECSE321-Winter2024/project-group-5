@@ -12,8 +12,7 @@
                         </b-row>
                         <!-- button group-->
                         <div class="btn-group-vertical">
-                            <b-button variant="outline-primary" @click="showSelected = true" class="mb-2">View Selected
-                                || Assign </b-button>
+                            <b-button variant="outline-primary" @click="showSelected = true" class="mb-2">View Selected Class Menu</b-button>
                             <b-button variant="outline-primary" @click="createNewSpecificClass = true"
                                 class="mb-2">Create New Specific Class</b-button>
                             <b-button variant="outline-primary" @click="createNewClassType = true" class="mb-2">Create
@@ -110,11 +109,11 @@
 
         </b-container>
         <div>
-            <b-modal v-model="createNewSpecificClass" title="Create New Class">
+            <b-modal v-model="createNewSpecificClass" title="Create New Class" @ok="handleOk">
                 <CreateNewSpecificClass />
             </b-modal>
 
-            <b-modal v-model="showSelected" title="Class Details">
+            <b-modal v-model="showSelected" title="Class Details" @ok="handleOk">
 
                 <div v-if="selectedClass">
                     <p><strong>Instructor Name:</strong>
@@ -143,7 +142,7 @@
                     <p>No item selected</p>
                 </template>
             </b-modal>
-            <b-modal v-model="createNewClassType" title="Create New Class Type">
+            <b-modal v-model="createNewClassType" title="Create New Class Type" @ok="handleOk">
                 <CreateNewClassType />
             </b-modal>
         </div>
@@ -168,7 +167,7 @@ const CLIENT = axios.create({
 });
 
 export default {
-    name: 'SchedulePageOwner',
+    name: 'SchedulePageInstructor',
     beforeRouteEnter(to, from, next) {
         const userType = globalState.type;
         if (userType === 'Instructor') {
@@ -190,6 +189,9 @@ export default {
     components: {
         CreateNewSpecificClass,
         CreateNewClassType
+    },
+    handleOk(){
+            window.location.reload();
     },
     data() {
         const now = new Date();

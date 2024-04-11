@@ -229,6 +229,7 @@ export default {
                     // Handle error response
                     console.error('Error unregistering instructor from specific class:', error);
                 });
+                window.location.reload();
         },
         fetchEndpoint() {
             // Always fetch data filtered by accountId
