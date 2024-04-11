@@ -116,14 +116,14 @@ public class RegistrationService {
 
     // Method to create a new registration
     @Transactional
-    public Registration createRegistration(String sendEmail, String specificClassName, String clientEmail) {
+    public Registration createRegistration(String sendEmail, int specificClassId, String clientEmail) {
         // Check if the client email is valid
         if (clientEmail == null || HelperMethods.ClientEmailCheck(clientEmail).trim().length() != 0) {
             throw new IllegalArgumentException("Invalid email!");
         }
 
         // Find the specific class by name
-        SpecificClass specificClass = specificClassRepository.findByName(specificClassName);
+        SpecificClass specificClass = specificClassRepository.findBySessionId(specificClassId);
         // Find the client by email
         Client client = clientRepository.findByEmail(clientEmail);
 

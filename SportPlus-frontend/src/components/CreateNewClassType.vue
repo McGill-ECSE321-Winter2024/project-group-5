@@ -61,8 +61,9 @@
   import config from "../../config";
   import { globalState } from "@/global.js";
   // Setting up urls
-  const frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
+  
   const backendUrl = 'http://' + config.dev.backendHost + ':' + config.dev.backendPort
+    const frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
 
   const AXIOS = axios.create({
     baseURL: backendUrl,
