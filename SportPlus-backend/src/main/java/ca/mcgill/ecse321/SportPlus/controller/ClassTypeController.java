@@ -72,6 +72,7 @@ public class ClassTypeController {
         return new ClassTypeResponseDto(classType);
     }
 
+
     // Updates the description of a class type identified by its type ID and returns the updated class type as a DTO.
     @PutMapping(value = { "/updateDescription/{typeId}", "/updateDescription/{typeId}/" })
     public ClassTypeResponseDto updateDescription(@PathVariable("typeId") int typeId, @RequestBody String description) {
