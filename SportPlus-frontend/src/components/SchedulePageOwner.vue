@@ -236,19 +236,10 @@
 <script>
 import CreateNewSpecificClass from '@/components/CreateNewSpecificClass.vue'
 import CreateNewClassType from '@/components/CreateNewClassType.vue'
-import { globalState } from '@/global';
+import { globalState } from '@/global.js';
 import axios from "axios";
 import config from "../../config";
 
-    // const express = require('express');
-    // const cors = require('cors');
-
-    // const app = express();
-
-    // // Enable CORS for all routes
-    // app.use(cors());
-
-    // Define your routes and other middleware here
     const backendUrl = 'http://' + config.dev.backendHost + ':' + config.dev.backendPort
     const frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
 
@@ -501,6 +492,8 @@ import config from "../../config";
             toggleModal() {
                 this.showSelected = true;
                 this.displayForum = false;
+                this.assignmentSelectionForum = null;
+                this.teachOK = null;
             },
             tabIsAllAvailable(tab){
                 this.option = 'all-available';
