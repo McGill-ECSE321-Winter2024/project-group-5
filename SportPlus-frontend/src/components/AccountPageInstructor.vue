@@ -1,7 +1,7 @@
 <template>
     <div class="columns-container">
         <!-- First column: Account Details -->
-        <div class="column">
+        <div class="column left-column">
             <b-container>
                 <h2 class="tableTitle">Account Details</h2>
                 <div>
@@ -65,24 +65,25 @@
         </div>
 
         <!-- Second column: Specific Classes By Instructor -->
-        <div class="column">
-            <b-col lg="10">
-                <div class="empty-divider-table"></div>
-                <h2 class="tableTitle">Class Schedule</h2>
-                <div class="ScheduleTable">
-                    <b-table hover id="schedule-tb" small :items="classes" :fields="filteredFields"
-                        :sticky-header="true" :outlined="true" select-mode="single" responsive="sm"
-                        ref="selectableTable" selectable @row-selected="onClassSelected">
-                        <template v-slot:cell(startTime)="data">
-                            <b-table-simple :class="{ 'bold-row-separator': isDateSeparator(data.item) }">
-                                {{ isDateSeparator(data.item) ? data.item.dateSeparator : (data.value) }}
-                            </b-table-simple>
-                        </template>
-                    </b-table>
-                </div>
-            </b-col>
-        </div>
-
+        <div class="column right-column"></div>
+        <b-col lg="8">
+            <div class="empty-divider-table"></div>
+            <h2 class="tableTitle">Class Schedule</h2>
+            <div class="ScheduleTable">
+                <b-table hover id="schedule-tb" small :items="classes" :fields="filteredFields" :sticky-header="true"
+                    :outlined="true" select-mode="single" responsive="sm" ref="selectableTable" selectable
+                    @row-selected="onClassSelected">
+                    <template v-slot:cell(startTime)="data">
+                        <b-table-simple :class="{ 'bold-row-separator': isDateSeparator(data.item) }">
+                            {{ isDateSeparator(data.item) ? data.item.dateSeparator : (data.value) }}
+                        </b-table-simple>
+                    </template>
+                    <template v-slot:cell(unregister)="data">
+                        <b-button @click="unregisterSpecificClass(data.item.id)" variant="danger">Unregister</b-button>
+                    </template>
+                </b-table>
+            </div>
+        </b-col>
     </div>
 </template>
 
@@ -157,13 +158,14 @@ export default {
             instructors: [],
             types: [],
             fields_C: [
+                { key: 'date', label: 'Date', show: true },
                 { key: 'startTime', label: 'Start Time', show: true },
-                { key: 'date', label: 'Date', show: false },
                 { key: 'classType', label: 'Class Type', show: true },
                 { key: 'supervisor', label: 'Instructor', show: false },
                 { key: 'duration', label: 'Duration', show: true },
                 { key: 'description', show: false },
-                { key: 'id', show: false }
+                { key: 'id', show: false },
+                { key: 'unregister', label: '', class: 'text-center', show: true }
             ],
             fields_I: [
                 { key: 'firstName', label: 'Instructor', show: true },
@@ -197,10 +199,24 @@ export default {
         this.fetchData_ClassTypes();
     },
     methods: {
+        unregisterSpecificClass(id) {
+            // Make a PUT request to remove instructor from specific class
+            CLIENT.put(`/specificClass/${id}/remove-instructor`)
+                .then(response => {
+                    // Handle successful response
+                    console.log('Instructor unregistered from specific class:', id);
+                    // Optionally, update UI or fetch data again
+                    this.fetchData(); // Assuming this method exists to fetch updated data
+                })
+                .catch(error => {
+                    // Handle error response
+                    console.error('Error unregistering instructor from specific class:', error);
+                });
+        },
         fetchEndpoint() {
-        // Always fetch data filtered by accountId
-        return `/specificClass/instructor/${this.accountId}`;
-    },
+            // Always fetch data filtered by accountId
+            return `/specificClass/instructor/${this.accountId}`;
+        },
 
         fetchData() {
             const endpoint = this.fetchEndpoint(this.option);
@@ -227,15 +243,7 @@ export default {
                     const formattedClasses = [];
                     let currentDate = null;
                     sortedClasses.forEach(item => {
-                        // Check if the date has changed
-                        if (item.date !== currentDate) {
-                            // Insert row with day, month, and year
-                            const dateObj = new Date(item.date);
-                            dateObj.setDate(dateObj.getDate() + 1);
-                            const formattedDate = dateObj.toLocaleDateString('en-US', { weekday: 'short', month: 'long', day: 'numeric', year: 'numeric' }).replace(',', '');;
-                            formattedClasses.push({ dateSeparator: formattedDate });
-                            currentDate = item.date;
-                        }
+
 
                         // Insert the regular item
                         formattedClasses.push({
@@ -447,22 +455,27 @@ export default {
 
 .columns-container {
     display: flex;
-    justify-content: space-between;
 }
 
 .column {
-    flex-basis: 45%;
-    padding: 10px;
+    padding: 20px;
 }
 
-/* Ensure responsiveness for small screens */
+.left-column {
+    flex: 0 0 auto;
+}
+
+.right-column {
+    flex: 0 0 auto;
+}
+
 @media (max-width: 768px) {
     .columns-container {
-        flex-wrap: wrap;
+        flex-direction: column;
     }
 
     .column {
-        flex-basis: 100%;
+        flex-basis: auto;
     }
 }
 </style>
