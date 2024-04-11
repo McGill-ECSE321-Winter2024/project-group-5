@@ -11,10 +11,15 @@
                             <!-- empty row for space-->
                         </b-row>
                         <!-- button group-->
+                        <h2 class="reg-messs">Want to register for a class? Login!</h2>
+                        <b-button variant="outline-primary" @click="goToLoginPage" class="mb-2">Login</b-button>
+                    </b-card>
+                    <b-card>
                         <div class="btn-group-vertical">
-                            <b-button variant="outline-primary" @click="handleShowSelected" class="mb-2">View Selected
-                                || Register</b-button>
+                            <h2 class="reg-messs">Want to view a class description? Select a class!</h2>
+                            <b-button variant="outline-primary" @click="handleShowSelected" class="mb-2">View Selected</b-button>
                         </div>
+                        
                     </b-card>
                 </b-col>
                 <!-- big right column-->
@@ -112,19 +117,6 @@
                     <p><strong>Description:</strong> {{ JSON.parse(JSON.stringify(this.selectedClass))[0].description }}
                     </p>
                     <b-col>
-
-                    </b-col>
-                    <b-col>
-                        <b-button variant="outline-primary" @click="registerForClass" class="mb-2">Register for This
-                            Class</b-button>
-                        <div v-if="registrationOK" class="success-message"
-                            style="color: green; text-decoration: underline;">
-                            Your registration was processed successfully!
-                        </div>
-                        <div v-if="!registrationOK" class="Error-message"
-                            style="color: red; text-decoration: underline;">
-                            {{ this.registrationError }}
-                        </div>
 
                     </b-col>
                 </div>
@@ -362,91 +354,14 @@ export default {
                     console.error('Error fetching classTypes:', error);
                 });
         },
-        registerForClass() {
-            this.DISABLE = true;
-            this.isAlreadyRegisteredForClass();
-            this.classIsComplete();
-            this.checkForPaymentMethod();
-            console.log("this.hasPaymentMethod",this.hasPaymentMethod);
-            if (this.isAlreadyReg) {
-                this.registrationError = "You are already registered for this class!"
-                this.registrationOK = false;
-            } else if (this.classIsFull) {
-                this.registrationError = "This class is full!"
-                this.registrationOK = false;
-            } else if(!this.hasPaymentMethod){
-                
-                this.registrationError = "You must have a payment method to register for a class"
-                this.registrationOK = false;
-            }
-            
-            else{
-
-                CLIENT.post(`/registrations/create/${JSON.parse(JSON.stringify(this.selectedClass))[0].id}/${globalState.accountEmail}`).then(response => {
-                    this.registrationOK = true;
-                }).catch(error => {
-                    console.error('Error Create:', error);
-                    this.registrationError = "Process could not be completed"
-                    this.registrationOK = false;
-                });
-            }
-        },
-        isAlreadyRegisteredForClass() {
-            console.log("email input to isAlre...", globalState.accountEmail);
-            CLIENT.get(`/registrations/getByClient/${globalState.accountEmail}`).then(response => {
-                const resp = response.data.registrations;
-                if (resp.length === 0) {
-                    this.isAlreadyReg = false;
-                } else {
-                    resp.forEach(registration => {
-                        if (registration.specificClass.id === JSON.parse(JSON.stringify(this.selectedClass))[0].id) {
-                            this.isAlreadyReg = true;
-                            return;
-                        }
-                        console.log(registration);
-                    });
-                }
-            }).catch(error => {
-                console.error('Error getByClient:', error);
-                this.isAlreadyReg = true;
-                return;
-            });
-        },
-        classIsComplete() {
-            CLIENT.get(`/registrations/getBySpecificClass/${JSON.parse(JSON.stringify(this.selectedClass))[0].id}`).then(response => {
-                if (response.data.length >= 30) {
-                    this.classIsFull = true;
-
-                } else {
-                    this.classIsFull = false;
-                }
-            }).catch(error => {
-                console.error('Error classIsComplete:', error);
-                this.classIsFull = true;
-            });
-        },
-        async checkForPaymentMethod() {
-            try {
-                const response = await CLIENT.get(`paymentMethod/getByClient/${globalState.accountId}`);
-                console.log("paymentresponse", response);
-                if (response.data.length === 0) {
-                    this.hasPaymentMethod = true;
-                    console.log("i am here_response.data.length === 0", this.hasPaymentMethod);
-                } else {
-                    this.hasPaymentMethod = false;
-                    console.log("i am here_else", this.hasPaymentMethod);
-                }
-                this.hasPaymentMethod = true;
-                console.log("i am here_else", this.hasPaymentMethod);
-            } catch (error) {
-                console.error("checkForPaymentMethod", error);
-                this.hasPaymentMethod = false;
-            }
-        },
+       
         handleShowSelected() {
             this.showSelected = true;
             this.registrationError = null;
             this.registrationOK = null;
+        },
+        goToLoginPage(){
+            this.$router.push('/');
         },
         handleModalClose() {
             this.registrationOK = null;
@@ -526,6 +441,9 @@ export default {
     /* Adjust as needed */
     height: 60%;
     /* Adjust as needed */
+}
+.reg-messs{
+    font-size: larger;
 }
 
 .empty-divider {
