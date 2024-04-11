@@ -166,7 +166,7 @@ export default {
             newCvc: '',
             newCardHolderName: '',
             classTypes: [],
-            specificClasses: []
+            specificClasses: [],
         };
     },
     computed: {
@@ -180,6 +180,7 @@ export default {
     mounted() {
         this.fetchAccountDetails();
         this.fetchClassTypes();
+        this.fetchSpecificClasses();
     },
     methods: {
 
@@ -192,6 +193,7 @@ export default {
                     console.error('Error fetching class types:', error);
                 });
         },
+
         // Method to approve a class type
         approveClassType(typeId) {
             CLIENT.post(`/classType/approve/${typeId}`)
@@ -199,6 +201,7 @@ export default {
                     // Optionally, update the UI to reflect the approved class type
                     // For example, remove it from the list
                     this.classTypes = this.classTypes.filter(classType => classType.typeId !== typeId);
+                    window.location.reload();
                 })
                 .catch(error => {
                     console.error('Error approving class type:', error);
@@ -208,12 +211,38 @@ export default {
         //Method to delete class type
         deleteClassType(className) {
             try {
-                console.log(className);
-                const path = 'classType/delete/' + className;
-                CLIENT.delete(path);
-                this.fetchClassTypes();
-            } 
-            catch (error) {
+                // Check if there are specific classes associated with this class type
+                const hasSpecificClasses = this.specificClasses.some(specificClass => specificClass.classType.name === className);
+
+                // If there are specific classes associated with this class type
+                if (hasSpecificClasses) {
+                    // Check if any of the specific classes have a date that has already passed
+                    const hasPassedDate = this.specificClasses.some(specificClass => {
+                        return specificClass.classType.name === className && new Date(specificClass.date) < new Date();
+                    });
+
+                    // If any specific class associated with this class type has a date that has passed
+                    if (hasPassedDate) {
+                        // Delete the class type
+                        const path = 'classType/delete/' + className;
+                        CLIENT.delete(path);
+                        this.fetchClassTypes();
+                        window.location.reload();
+                    } 
+                    
+                } else {
+                    const path = 'classType/delete/' + className;
+                    CLIENT.delete(path)
+                        .then(() => {
+                            this.fetchClassTypes();
+                            window.location.reload();
+                        })
+                        .catch(error => {
+                            console.error('Error deleting class type:', error);
+                            alert("Cannot delete class type. Some specific classes associated with this class type are currently in use.");
+                        });
+                }
+            } catch (error) {
                 console.error('There was an error deleting the class type:', error);
             }
         },
