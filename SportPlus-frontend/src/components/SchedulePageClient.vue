@@ -440,19 +440,13 @@ export default {
                     });
             });
         },
+
         checkForPaymentMethod() {
             return new Promise((resolve, reject) => {
-                CLIENT.get(`paymentMethod/getByClient/${globalState.accountId}`)
+                CLIENT.get(`clients/hasPaymentMethod/${globalState.accountEmail}`)
                     .then(response => {
-                        console.log("paymentresponse", response);
-                        if (response.data.length === 0) {
-                            this.hasPaymentMethod = false;
-                            console.log("i am here_response.data.length === 0", this.hasPaymentMethod);
-                        } else {
-                            this.hasPaymentMethod = true;
-                            console.log("i am here_else", this.hasPaymentMethod);
-                        }
-                        this.hasPaymentMethod = true;
+                        console.log("paymentresponse", response.data.hasPaymentMethod);
+                        this.hasPaymentMethod = response.data.hasPaymentMethod;
                         console.log("i am here_else", this.hasPaymentMethod);
                         resolve(); // Resolve the promise once the logic is complete
                     })
