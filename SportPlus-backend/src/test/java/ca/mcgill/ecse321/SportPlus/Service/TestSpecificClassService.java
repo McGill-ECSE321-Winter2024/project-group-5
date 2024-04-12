@@ -99,8 +99,8 @@ class TestSpecificClassService {
 
         // Arrange
         // A class every Monday from 10 to 11 on April
-        Date startDate = Date.valueOf("2024-04-01"); // Let's say April 1st, 2024
-        Date endDate = Date.valueOf("2024-04-30"); // April 3oth, 2024
+        Date startDate = Date.valueOf("2027-04-01"); // Let's say April 1st, 2027
+        Date endDate = Date.valueOf("2027-04-30"); // April 3oth, 2027
         Time startTime = Time.valueOf("10:00:00");
         Time endTime = Time.valueOf("11:00:00");
         int dayOfWeek = Calendar.MONDAY; // Assuming 1 represents Monday
@@ -121,11 +121,11 @@ class TestSpecificClassService {
         // Assert
         assertNotNull(recurringClasses);
         assertFalse(recurringClasses.isEmpty());
-        // Assuming 5 Mondays in April 2024
-        assertEquals(5, recurringClasses.size());
+        // Assuming 5 Mondays in April 2027
+        assertEquals(4, recurringClasses.size());
 
         // Verify that save was called the correct number of times
-        verify(specificClassRepository, times(5)).save(any(SpecificClass.class));
+        verify(specificClassRepository, times(4)).save(any(SpecificClass.class));
     }
 
     @Test
@@ -135,14 +135,14 @@ class TestSpecificClassService {
         Owner owner = new Owner("john@onwer.com", "John", "password", "The Owner", 0);
         ClassType yoga = new ClassType("yoga", "Fun class", 0, true, owner);
 
-        SpecificClass existingClass = new SpecificClass(Date.valueOf("2024-04-10"), Time.valueOf("10:00:00"),
+        SpecificClass existingClass = new SpecificClass(Date.valueOf("2027-04-10"), Time.valueOf("10:00:00"),
                 Time.valueOf("11:00:00"), 1, yoga, null);
 
         when(specificClassRepository.findBySessionId(anyInt())).thenReturn(existingClass);
         when(specificClassRepository.save(any(SpecificClass.class))).thenAnswer(i -> i.getArguments()[0]);
         // Arrange
         int sessionId = 1; // The ID of the class to update
-        Date newDate = Date.valueOf("2024-04-15"); // The new date
+        Date newDate = Date.valueOf("2027-04-15"); // The new date
 
         // Act
         SpecificClass updatedClass = specificClassService.updateDateSpecificClass(sessionId, newDate);
@@ -163,7 +163,7 @@ class TestSpecificClassService {
         Owner owner = new Owner("john@onwer.com", "John", "password", "The Owner", 0);
         ClassType yoga = new ClassType("yoga", "Fun class", 0, true, owner);
 
-        SpecificClass existingClass = new SpecificClass(Date.valueOf("2024-04-10"), Time.valueOf("10:00:00"),
+        SpecificClass existingClass = new SpecificClass(Date.valueOf("2027-04-10"), Time.valueOf("10:00:00"),
                 Time.valueOf("11:00:00"), 1, yoga, null);
 
         when(specificClassRepository.findBySessionId(anyInt())).thenReturn(existingClass);
@@ -195,7 +195,7 @@ class TestSpecificClassService {
 
         SpecificClass existingClass = new SpecificClass();
         existingClass.setSessionId(1);
-        existingClass.setDate(Date.valueOf("2024-04-15"));
+        existingClass.setDate(Date.valueOf("2027-04-15"));
         existingClass.setStartTime(Time.valueOf("10:00:00"));
         existingClass.setEndTime(Time.valueOf("11:00:00"));
         existingClass.setClassType(classtype);
@@ -231,7 +231,7 @@ class TestSpecificClassService {
         // Setup an existing SpecificClass
         SpecificClass existingClass = new SpecificClass();
         existingClass.setSessionId(1);
-        existingClass.setDate(Date.valueOf("2024-04-15"));
+        existingClass.setDate(Date.valueOf("2027-04-15"));
         existingClass.setStartTime(Time.valueOf("10:00:00"));
         existingClass.setEndTime(Time.valueOf("11:00:00"));
 
@@ -263,7 +263,7 @@ class TestSpecificClassService {
         // Setup an existing SpecificClass with an instructor
         SpecificClass existingClass = new SpecificClass();
         existingClass.setSessionId(1);
-        existingClass.setDate(Date.valueOf("2024-04-15"));
+        existingClass.setDate(Date.valueOf("2027-04-15"));
         existingClass.setStartTime(Time.valueOf("10:00:00"));
         existingClass.setEndTime(Time.valueOf("11:00:00"));
         existingClass.setSupervisor(new Instructor()); // Assume the class initially has an instructor
@@ -313,7 +313,7 @@ class TestSpecificClassService {
     @Test
     void testGetByDate() {
         // Arrange
-        Date queryDate = Date.valueOf("2024-04-15");
+        Date queryDate = Date.valueOf("2027-04-15");
         List<SpecificClass> expectedClasses = new ArrayList<>();
         expectedClasses.add(new SpecificClass()); // Add mock SpecificClass objects as needed, potentially with more
                                                   // details
@@ -362,8 +362,8 @@ class TestSpecificClassService {
     @Test
     void testGetByDateRange() {
         // Arrange
-        Date startDate = Date.valueOf("2024-04-01");
-        Date endDate = Date.valueOf("2024-04-30");
+        Date startDate = Date.valueOf("2027-04-01");
+        Date endDate = Date.valueOf("2027-04-30");
         List<SpecificClass> expectedClasses = new ArrayList<>();
         expectedClasses.add(new SpecificClass()); // Add mock SpecificClass objects as needed
 
@@ -390,7 +390,7 @@ class TestSpecificClassService {
         Instructor supervisor = new Instructor("instrructor@email.com", "John", "password", "TheSupervisor", 0);
         ClassType classType = new ClassType("yoga", "Fun class", 0, true, owner);
 
-        SpecificClass futureClassWithSpace = new SpecificClass(Date.valueOf("2025-05-18"), Time.valueOf("10:00:00"),
+        SpecificClass futureClassWithSpace = new SpecificClass(Date.valueOf("2028-05-18"), Time.valueOf("10:00:00"),
                 Time.valueOf("11:00:00"), 0, classType, null);
         futureClassWithSpace.setSupervisor(supervisor);
 
@@ -420,7 +420,7 @@ class TestSpecificClassService {
     @Test
     void testGeByDateAndStartTime() {
         // Arrange
-        Date queryDate = Date.valueOf("2024-04-15");
+        Date queryDate = Date.valueOf("2027-04-15");
         Time queryStartTime = Time.valueOf("10:00:00");
         SpecificClass expectedClass = new SpecificClass(); // Set properties as needed
         expectedClass.setDate(queryDate);

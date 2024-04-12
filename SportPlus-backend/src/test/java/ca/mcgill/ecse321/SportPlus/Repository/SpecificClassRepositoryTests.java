@@ -126,9 +126,9 @@ public class SpecificClassRepositoryTests {
     @Transactional
     public void testFindBydate() {
         // Define the dates, such that the first two have same dates but diffrent hours
-        LocalDateTime localDateTime = LocalDateTime.of(2024, 3, 6, 10, 0);
-        LocalDateTime localDateTime2 = LocalDateTime.of(2024, 3, 6, 11, 0);
-        LocalDateTime localDateTime3 = LocalDateTime.of(2024, 3, 8, 10, 0);
+        LocalDateTime localDateTime = LocalDateTime.of(2027, 3, 6, 10, 0);
+        LocalDateTime localDateTime2 = LocalDateTime.of(2027, 3, 6, 11, 0);
+        LocalDateTime localDateTime3 = LocalDateTime.of(2027, 3, 8, 10, 0);
         Date date1 = Date.valueOf(localDateTime.toLocalDate());
         Date date2 = Date.valueOf(localDateTime2.toLocalDate());
         Date date3 = Date.valueOf(localDateTime3.toLocalDate());
@@ -158,9 +158,9 @@ public class SpecificClassRepositoryTests {
     @Transactional
     public void testFindByClassType() {
         // Define the dates, such that the first two have same dates but diffrent hours
-        LocalDateTime localDateTime = LocalDateTime.of(2024, 3, 6, 10, 0);
-        LocalDateTime localDateTime2 = LocalDateTime.of(2024, 3, 6, 11, 0);
-        LocalDateTime localDateTime3 = LocalDateTime.of(2024, 3, 8, 10, 0);
+        LocalDateTime localDateTime = LocalDateTime.of(2027, 3, 6, 10, 0);
+        LocalDateTime localDateTime2 = LocalDateTime.of(2027, 3, 6, 11, 0);
+        LocalDateTime localDateTime3 = LocalDateTime.of(2027, 3, 8, 10, 0);
         Date date1 = Date.valueOf(localDateTime.toLocalDate());
         Date date2 = Date.valueOf(localDateTime2.toLocalDate());
         Date date3 = Date.valueOf(localDateTime3.toLocalDate());
@@ -198,14 +198,14 @@ public class SpecificClassRepositoryTests {
     public void testFindBySupervisor() {
         // creates 8 local date objects and sets them to starting and ending times of
         // specific classes
-        LocalDateTime localDateTime1 = LocalDateTime.of(2024, 3, 6, 10, 0);
-        LocalDateTime localDateTime11 = LocalDateTime.of(2024, 3, 6, 11, 0);
-        LocalDateTime localDateTime2 = LocalDateTime.of(2024, 3, 7, 11, 0);
-        LocalDateTime localDateTime22 = LocalDateTime.of(2024, 3, 7, 12, 0);
-        LocalDateTime localDateTime3 = LocalDateTime.of(2024, 3, 8, 10, 0);
-        LocalDateTime localDateTime33 = LocalDateTime.of(2024, 3, 8, 11, 0);
-        LocalDateTime localDateTime4 = LocalDateTime.of(2024, 3, 9, 11, 0);
-        LocalDateTime localDateTime44 = LocalDateTime.of(2024, 3, 9, 12, 0);
+        LocalDateTime localDateTime1 = LocalDateTime.of(2027, 3, 6, 10, 0);
+        LocalDateTime localDateTime11 = LocalDateTime.of(2027, 3, 6, 11, 0);
+        LocalDateTime localDateTime2 = LocalDateTime.of(2027, 3, 7, 11, 0);
+        LocalDateTime localDateTime22 = LocalDateTime.of(2027, 3, 7, 12, 0);
+        LocalDateTime localDateTime3 = LocalDateTime.of(2027, 3, 8, 10, 0);
+        LocalDateTime localDateTime33 = LocalDateTime.of(2027, 3, 8, 11, 0);
+        LocalDateTime localDateTime4 = LocalDateTime.of(2027, 3, 9, 11, 0);
+        LocalDateTime localDateTime44 = LocalDateTime.of(2027, 3, 9, 12, 0);
 
         Date date1start = Date.valueOf(localDateTime1.toLocalDate());
         Date date2start = Date.valueOf(localDateTime2.toLocalDate());
@@ -263,14 +263,14 @@ public class SpecificClassRepositoryTests {
     @Test
     @Transactional
     public void findByDateAndStartTime() {
-        LocalDateTime localDateTime1 = LocalDateTime.of(2024, 3, 6, 10, 0);
-        LocalDateTime localDateTime11 = LocalDateTime.of(2024, 3, 6, 11, 0);
-        LocalDateTime localDateTime2 = LocalDateTime.of(2024, 3, 7, 11, 0);
-        LocalDateTime localDateTime22 = LocalDateTime.of(2024, 3, 7, 12, 0);
-        LocalDateTime localDateTime3 = LocalDateTime.of(2024, 3, 8, 10, 0);
-        LocalDateTime localDateTime33 = LocalDateTime.of(2024, 3, 8, 11, 0);
-        LocalDateTime localDateTime4 = LocalDateTime.of(2024, 3, 9, 11, 0);
-        LocalDateTime localDateTime44 = LocalDateTime.of(2024, 3, 9, 12, 0);
+        LocalDateTime localDateTime1 = LocalDateTime.of(2027, 3, 6, 10, 0);
+        LocalDateTime localDateTime11 = LocalDateTime.of(2027, 3, 6, 11, 0);
+        LocalDateTime localDateTime2 = LocalDateTime.of(2027, 3, 7, 11, 0);
+        LocalDateTime localDateTime22 = LocalDateTime.of(2027, 3, 7, 12, 0);
+        LocalDateTime localDateTime3 = LocalDateTime.of(2027, 3, 8, 10, 0);
+        LocalDateTime localDateTime33 = LocalDateTime.of(2027, 3, 8, 11, 0);
+        LocalDateTime localDateTime4 = LocalDateTime.of(2027, 3, 9, 11, 0);
+        LocalDateTime localDateTime44 = LocalDateTime.of(2027, 3, 9, 12, 0);
 
         Date date1start = Date.valueOf(localDateTime1.toLocalDate());
         Date date2start = Date.valueOf(localDateTime2.toLocalDate());
@@ -330,14 +330,14 @@ public class SpecificClassRepositoryTests {
     @Test
     @Transactional
     public void findBySupervisorIsNotNull() {
-        LocalDateTime localDateTime1 = LocalDateTime.of(2024, 3, 6, 10, 0);
-        LocalDateTime localDateTime11 = LocalDateTime.of(2024, 3, 6, 11, 0);
-        LocalDateTime localDateTime2 = LocalDateTime.of(2024, 3, 7, 11, 0);
-        LocalDateTime localDateTime22 = LocalDateTime.of(2024, 3, 7, 12, 0);
-        LocalDateTime localDateTime3 = LocalDateTime.of(2024, 3, 8, 10, 0);
-        LocalDateTime localDateTime33 = LocalDateTime.of(2024, 3, 8, 11, 0);
-        LocalDateTime localDateTime4 = LocalDateTime.of(2024, 3, 9, 11, 0);
-        LocalDateTime localDateTime44 = LocalDateTime.of(2024, 3, 9, 12, 0);
+        LocalDateTime localDateTime1 = LocalDateTime.of(2027, 3, 6, 10, 0);
+        LocalDateTime localDateTime11 = LocalDateTime.of(2027, 3, 6, 11, 0);
+        LocalDateTime localDateTime2 = LocalDateTime.of(2027, 3, 7, 11, 0);
+        LocalDateTime localDateTime22 = LocalDateTime.of(2027, 3, 7, 12, 0);
+        LocalDateTime localDateTime3 = LocalDateTime.of(2027, 3, 8, 10, 0);
+        LocalDateTime localDateTime33 = LocalDateTime.of(2027, 3, 8, 11, 0);
+        LocalDateTime localDateTime4 = LocalDateTime.of(2027, 3, 9, 11, 0);
+        LocalDateTime localDateTime44 = LocalDateTime.of(2027, 3, 9, 12, 0);
 
         Date date1start = Date.valueOf(localDateTime1.toLocalDate());
         Date date2start = Date.valueOf(localDateTime2.toLocalDate());
@@ -390,14 +390,14 @@ public class SpecificClassRepositoryTests {
     @Test
     @Transactional
     public void findAll() {
-        LocalDateTime localDateTime1 = LocalDateTime.of(2024, 3, 6, 10, 0);
-        LocalDateTime localDateTime11 = LocalDateTime.of(2024, 3, 6, 11, 0);
-        LocalDateTime localDateTime2 = LocalDateTime.of(2024, 3, 7, 11, 0);
-        LocalDateTime localDateTime22 = LocalDateTime.of(2024, 3, 7, 12, 0);
-        LocalDateTime localDateTime3 = LocalDateTime.of(2024, 3, 8, 10, 0);
-        LocalDateTime localDateTime33 = LocalDateTime.of(2024, 3, 8, 11, 0);
-        LocalDateTime localDateTime4 = LocalDateTime.of(2024, 3, 9, 11, 0);
-        LocalDateTime localDateTime44 = LocalDateTime.of(2024, 3, 9, 12, 0);
+        LocalDateTime localDateTime1 = LocalDateTime.of(2027, 3, 6, 10, 0);
+        LocalDateTime localDateTime11 = LocalDateTime.of(2027, 3, 6, 11, 0);
+        LocalDateTime localDateTime2 = LocalDateTime.of(2027, 3, 7, 11, 0);
+        LocalDateTime localDateTime22 = LocalDateTime.of(2027, 3, 7, 12, 0);
+        LocalDateTime localDateTime3 = LocalDateTime.of(2027, 3, 8, 10, 0);
+        LocalDateTime localDateTime33 = LocalDateTime.of(2027, 3, 8, 11, 0);
+        LocalDateTime localDateTime4 = LocalDateTime.of(2027, 3, 9, 11, 0);
+        LocalDateTime localDateTime44 = LocalDateTime.of(2027, 3, 9, 12, 0);
 
         Date date1start = Date.valueOf(localDateTime1.toLocalDate());
         Date date2start = Date.valueOf(localDateTime2.toLocalDate());
@@ -451,9 +451,9 @@ public class SpecificClassRepositoryTests {
     @Test
     @Transactional
     public void deleteByClassType() {
-        LocalDateTime localDateTime = LocalDateTime.of(2024, 3, 6, 10, 0);
-        LocalDateTime localDateTime2 = LocalDateTime.of(2024, 3, 6, 11, 0);
-        LocalDateTime localDateTime3 = LocalDateTime.of(2024, 3, 8, 10, 0);
+        LocalDateTime localDateTime = LocalDateTime.of(2027, 3, 6, 10, 0);
+        LocalDateTime localDateTime2 = LocalDateTime.of(2027, 3, 6, 11, 0);
+        LocalDateTime localDateTime3 = LocalDateTime.of(2027, 3, 8, 10, 0);
         Date date1 = Date.valueOf(localDateTime.toLocalDate());
         Date date2 = Date.valueOf(localDateTime2.toLocalDate());
         Date date3 = Date.valueOf(localDateTime3.toLocalDate());
@@ -489,14 +489,14 @@ public class SpecificClassRepositoryTests {
     @Test
     @Transactional
     public void deleteBySupervisor() {
-        LocalDateTime localDateTime1 = LocalDateTime.of(2024, 3, 6, 10, 0);
-        LocalDateTime localDateTime11 = LocalDateTime.of(2024, 3, 6, 11, 0);
-        LocalDateTime localDateTime2 = LocalDateTime.of(2024, 3, 7, 11, 0);
-        LocalDateTime localDateTime22 = LocalDateTime.of(2024, 3, 7, 12, 0);
-        LocalDateTime localDateTime3 = LocalDateTime.of(2024, 3, 8, 10, 0);
-        LocalDateTime localDateTime33 = LocalDateTime.of(2024, 3, 8, 11, 0);
-        LocalDateTime localDateTime4 = LocalDateTime.of(2024, 3, 9, 11, 0);
-        LocalDateTime localDateTime44 = LocalDateTime.of(2024, 3, 9, 12, 0);
+        LocalDateTime localDateTime1 = LocalDateTime.of(2027, 3, 6, 10, 0);
+        LocalDateTime localDateTime11 = LocalDateTime.of(2027, 3, 6, 11, 0);
+        LocalDateTime localDateTime2 = LocalDateTime.of(2027, 3, 7, 11, 0);
+        LocalDateTime localDateTime22 = LocalDateTime.of(2027, 3, 7, 12, 0);
+        LocalDateTime localDateTime3 = LocalDateTime.of(2027, 3, 8, 10, 0);
+        LocalDateTime localDateTime33 = LocalDateTime.of(2027, 3, 8, 11, 0);
+        LocalDateTime localDateTime4 = LocalDateTime.of(2027, 3, 9, 11, 0);
+        LocalDateTime localDateTime44 = LocalDateTime.of(2027, 3, 9, 12, 0);
 
         Date date1start = Date.valueOf(localDateTime1.toLocalDate());
         Date date2start = Date.valueOf(localDateTime2.toLocalDate());
@@ -555,14 +555,14 @@ public class SpecificClassRepositoryTests {
     @Test
     @Transactional
     public void deleteByDate() {
-        LocalDateTime localDateTime1 = LocalDateTime.of(2024, 3, 6, 10, 0);
-        LocalDateTime localDateTime11 = LocalDateTime.of(2024, 3, 6, 11, 0);
-        LocalDateTime localDateTime2 = LocalDateTime.of(2024, 3, 7, 11, 0);
-        LocalDateTime localDateTime22 = LocalDateTime.of(2024, 3, 7, 12, 0);
-        LocalDateTime localDateTime3 = LocalDateTime.of(2024, 3, 8, 10, 0);
-        LocalDateTime localDateTime33 = LocalDateTime.of(2024, 3, 8, 11, 0);
-        LocalDateTime localDateTime4 = LocalDateTime.of(2024, 3, 9, 11, 0);
-        LocalDateTime localDateTime44 = LocalDateTime.of(2024, 3, 9, 12, 0);
+        LocalDateTime localDateTime1 = LocalDateTime.of(2027, 3, 6, 10, 0);
+        LocalDateTime localDateTime11 = LocalDateTime.of(2027, 3, 6, 11, 0);
+        LocalDateTime localDateTime2 = LocalDateTime.of(2027, 3, 7, 11, 0);
+        LocalDateTime localDateTime22 = LocalDateTime.of(2027, 3, 7, 12, 0);
+        LocalDateTime localDateTime3 = LocalDateTime.of(2027, 3, 8, 10, 0);
+        LocalDateTime localDateTime33 = LocalDateTime.of(2027, 3, 8, 11, 0);
+        LocalDateTime localDateTime4 = LocalDateTime.of(2027, 3, 9, 11, 0);
+        LocalDateTime localDateTime44 = LocalDateTime.of(2027, 3, 9, 12, 0);
 
         Date date1start = Date.valueOf(localDateTime1.toLocalDate());
         Date date3start = Date.valueOf(localDateTime3.toLocalDate());
@@ -649,7 +649,7 @@ public class SpecificClassRepositoryTests {
         // Example test data creation
         SpecificClass unavailableClass = new SpecificClass();
         unavailableClass.setClassType(classType);
-        unavailableClass.setDate(Date.valueOf("2024-02-18")); // In the past
+        unavailableClass.setDate(Date.valueOf("2027-02-18")); // In the past
         unavailableClass.setStartTime(Time.valueOf("10:00:00")); // Start time before current time
         unavailableClass.setSupervisor(supervisor); // With supervisor
 
