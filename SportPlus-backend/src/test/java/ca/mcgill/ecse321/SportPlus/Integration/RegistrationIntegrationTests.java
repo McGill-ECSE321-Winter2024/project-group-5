@@ -25,7 +25,6 @@ import ca.mcgill.ecse321.SportPlus.dao.PaymentMethodRepository;
 import ca.mcgill.ecse321.SportPlus.dao.RegistrationRepository;
 import ca.mcgill.ecse321.SportPlus.dao.SpecificClassRepository;
 import ca.mcgill.ecse321.SportPlus.dto.RegistrationListDto;
-import ca.mcgill.ecse321.SportPlus.dto.RegistrationRequestDto;
 import ca.mcgill.ecse321.SportPlus.dto.RegistrationResponseDto;
 import ca.mcgill.ecse321.SportPlus.model.ClassType;
 import ca.mcgill.ecse321.SportPlus.model.Client;

@@ -11,11 +11,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import ca.mcgill.ecse321.SportPlus.dto.RegistrationListDto;
-import ca.mcgill.ecse321.SportPlus.dto.RegistrationRequestDto;
 import ca.mcgill.ecse321.SportPlus.dto.RegistrationResponseDto;
 import ca.mcgill.ecse321.SportPlus.model.Registration;
 import ca.mcgill.ecse321.SportPlus.service.RegistrationService;
