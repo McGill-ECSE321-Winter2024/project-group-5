@@ -4,11 +4,23 @@ import javax.mail.*;
 import javax.mail.internet.*;
 import java.util.Properties;
 
+/**
+ * This class provides methods to send emails using JavaMail API.
+ */
 public class Email {
 
     private static String emailFrom = "sportplus.noreplyemail@gmail.com";
     private static String appPass = "zetc hdrk wkcq fnrn";
 
+    /**
+     * Sends an email.
+     * 
+     * @param send    Indicates whether to send the email ("send" to send the email,
+     *                any other value to skip)
+     * @param to      The recipient's email address
+     * @param subject The subject of the email
+     * @param text    The content of the email
+     */
     public static void sendEmail(String send, String to, String subject, String text) {
         if (send == "send") {
             Properties properties = System.getProperties();

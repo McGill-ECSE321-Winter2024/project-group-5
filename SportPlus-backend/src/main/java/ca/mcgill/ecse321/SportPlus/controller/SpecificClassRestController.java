@@ -114,6 +114,7 @@ public class SpecificClassRestController {
         return new SpecificClassResponseDto(updatedClass);
     }
 
+    // assignes an instructor to a specific class
     @PutMapping(value = { "/{id}/assign-instructor", "/{id}/assign-instructor/" })
     @ResponseStatus(HttpStatus.OK)
     public SpecificClassResponseDto assignInstructorSpecificClass(@PathVariable("id") int id,
@@ -125,6 +126,7 @@ public class SpecificClassRestController {
         return new SpecificClassResponseDto(updatedClass);
     }
 
+    // unassigns an instructor from a specific class
     @PutMapping(value = { "/{id}/remove-instructor", "/{id}/remove-instructor/" })
     @ResponseStatus(HttpStatus.OK)
     public SpecificClassResponseDto removeInstructorSpecificClass(@PathVariable("id") int id) {
@@ -134,6 +136,7 @@ public class SpecificClassRestController {
         return new SpecificClassResponseDto(updatedClass);
     }
 
+    // gets all classes instructor is assigned to in a list
     @GetMapping(value = { "/instructor/{instructorId}", "/instructor/{instructorId}/" })
     @ResponseStatus(HttpStatus.OK)
     public List<SpecificClassResponseDto> getSpecificClassByInstructor(@PathVariable("instructorId") int instructorId) {
@@ -289,7 +292,5 @@ public class SpecificClassRestController {
         specificClassService.deleteByClassType(sessionId);
         return ResponseEntity.noContent().build();
     }
-
-
 
 }

@@ -22,6 +22,7 @@ public class InitializationConfig {
 
     @jakarta.annotation.PostConstruct
     public void initializeOwner() {
+        // initalizes owner if owner doesn't exist in database
         if (ownerService.getOwner() == null) {
             ownerService.createOwner();
         }
@@ -31,7 +32,8 @@ public class InitializationConfig {
             for (ClassType ct : classTypeService.getAllClassTypes()) {
                 toTest.add(ct.getName());
             }
-            
+
+            // checks if classtypes exist and adds them by default
             if (!toTest.contains("Cardio")) {
                 classTypeService.instructorCreate("Cardio", "A cardio class", null);
             }
@@ -41,12 +43,14 @@ public class InitializationConfig {
             if (!toTest.contains("Strength Training")) {
                 classTypeService.instructorCreate("Strength Training", "A strength training class", null);
             }
+
         } catch (ResourceNotFoundException e) {
+            // if no classtypes exist, adds all three by default
             classTypeService.instructorCreate("Cardio", "A cardio class", null);
             classTypeService.instructorCreate("Stretching", "A stretching class", null);
             classTypeService.instructorCreate("Strength Training", "A strength training class", null);
         }
-        
+
     }
 
 }
