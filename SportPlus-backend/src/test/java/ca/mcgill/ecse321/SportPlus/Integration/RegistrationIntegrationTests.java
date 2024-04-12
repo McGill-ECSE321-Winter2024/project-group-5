@@ -25,7 +25,6 @@ import ca.mcgill.ecse321.SportPlus.dao.PaymentMethodRepository;
 import ca.mcgill.ecse321.SportPlus.dao.RegistrationRepository;
 import ca.mcgill.ecse321.SportPlus.dao.SpecificClassRepository;
 import ca.mcgill.ecse321.SportPlus.dto.RegistrationListDto;
-import ca.mcgill.ecse321.SportPlus.dto.RegistrationRequestDto;
 import ca.mcgill.ecse321.SportPlus.dto.RegistrationResponseDto;
 import ca.mcgill.ecse321.SportPlus.model.ClassType;
 import ca.mcgill.ecse321.SportPlus.model.Client;
@@ -84,7 +83,7 @@ public class RegistrationIntegrationTests {
     private static final int CLIENT_ACCOUNTID = 2;
 
     private static final int SPECIFICCLASS_ID = 3;
-    private static final Date SPECIFICCLASS_DATE = Date.valueOf("2024-04-16");
+    private static final Date SPECIFICCLASS_DATE = Date.valueOf("2027-04-16");
     private static final Time SPECIFICCLASS_STARTTIME = Time.valueOf("11:00:00");
     private static final Time SPECIFICCLASS_ENDTIME = Time.valueOf("12:00:00");
 

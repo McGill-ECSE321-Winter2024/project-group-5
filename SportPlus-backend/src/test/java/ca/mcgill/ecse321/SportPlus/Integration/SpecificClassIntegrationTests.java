@@ -86,7 +86,7 @@ class SpecificClassIntegrationTests {
         // Defin some Global variables
         private static int CLASS_TYPE = 1;
         private static int INSTRUCTOR_ID = 1;
-        private static final Date DATE = Date.valueOf("2024-04-16");
+        private static final Date DATE = Date.valueOf("2027-04-16");
         private static final Time START_TIME = Time.valueOf("11:00:00");
         private static final Time END_TIME = Time.valueOf("12:00:00");
 
@@ -139,8 +139,8 @@ class SpecificClassIntegrationTests {
         @Test
         void testCreateRecurringSpecificClasses() {
                 // Prepare the request payload
-                Date startDate = Date.valueOf("2024-04-01");
-                Date endDate = Date.valueOf("2024-04-30");
+                Date startDate = Date.valueOf("2027-04-01");
+                Date endDate = Date.valueOf("2027-04-30");
                 RecurringSpecificClassRequestDto requestDto = new RecurringSpecificClassRequestDto();
                 requestDto.setDate(startDate);
                 requestDto.setEndDate(endDate);
@@ -164,7 +164,7 @@ class SpecificClassIntegrationTests {
                 List<SpecificClassResponseDto> responseDtos = responseBody.getSpecificClasses();
                 assertNotNull(responseDtos);
                 // 5 Mondays in April
-                assertEquals(5, responseDtos.size());
+                assertEquals(4, responseDtos.size());
 
                 // Validate the response
                 for (SpecificClassResponseDto responseClass : responseDtos) {
@@ -184,7 +184,7 @@ class SpecificClassIntegrationTests {
                 specificClassRepository.save(specifcClass);
                 SpecificClass foundClass = specificClassRepository.findByDateAndStartTime(DATE, START_TIME);
 
-                Date newDate = Date.valueOf("2024-04-30");
+                Date newDate = Date.valueOf("2027-04-30");
                 // Prepare the request payload with the new date
                 SpecificClassRequestsDto requestDto = new SpecificClassRequestsDto();
                 requestDto.setDate(newDate);
@@ -332,7 +332,7 @@ class SpecificClassIntegrationTests {
         @Test
         void testGetSpecificClassByInstructor() {
                 // Create 2 SpecificCLasses
-                Date DATE2 = Date.valueOf("2024-04-18");
+                Date DATE2 = Date.valueOf("2027-04-18");
                 ClassType classType = classTypeRepository.findByTypeId(CLASS_TYPE);
                 SpecificClass specifcClass = new SpecificClass(DATE, START_TIME, END_TIME, 0, classType, null);
                 SpecificClass specifcClass2 = new SpecificClass(DATE2, START_TIME, END_TIME, 0, classType, null);
@@ -426,13 +426,13 @@ class SpecificClassIntegrationTests {
                 // Create some available classes
                 ClassType classType = classTypeRepository.findByTypeId(CLASS_TYPE);
                 Instructor supervisor = instructorRepository.findByAccountId(INSTRUCTOR_ID);
-                SpecificClass availableClass = new SpecificClass(Date.valueOf("2024-12-13"), Time.valueOf("14:00:00"),
+                SpecificClass availableClass = new SpecificClass(Date.valueOf("2027-12-13"), Time.valueOf("14:00:00"),
                                 Time.valueOf("15:00:00"), 0, classType, null); // In the future
-                SpecificClass availableClass2 = new SpecificClass(Date.valueOf("2024-12-13"), Time.valueOf("21:00:00"),
+                SpecificClass availableClass2 = new SpecificClass(Date.valueOf("2027-12-13"), Time.valueOf("21:00:00"),
                                 Time.valueOf("22:00:00"), 0, classType, null);// Same date, just different time whould
                                                                               // still be
                                                                               // available
-                SpecificClass unavailableClass = new SpecificClass(Date.valueOf("2024-12-13"), Time.valueOf("14:00:00"),
+                SpecificClass unavailableClass = new SpecificClass(Date.valueOf("2027-12-13"), Time.valueOf("14:00:00"),
                                 Time.valueOf("15:00:00"), 0, classType, null);// In the future, but without an
                                                                               // instructor
                 availableClass.setSupervisor(supervisor);
@@ -557,8 +557,8 @@ class SpecificClassIntegrationTests {
         @Test
         void testCreateRecurringSpecificClasses2() {
                 // Prepare the request payload
-                Date startDate = Date.valueOf("2024-04-01");
-                Date endDate = Date.valueOf("2024-04-30");
+                Date startDate = Date.valueOf("2027-04-01");
+                Date endDate = Date.valueOf("2027-04-30");
                 RecurringSpecificClassRequestDto requestDto = new RecurringSpecificClassRequestDto();
                 requestDto.setDate(startDate);
                 requestDto.setEndDate(endDate);
@@ -582,7 +582,7 @@ class SpecificClassIntegrationTests {
                 List<SpecificClassResponseDto> responseDtos = responseBody.getSpecificClasses();
                 assertNotNull(responseDtos);
                 // 5MondaysinApril
-                assertEquals(5, responseDtos.size());
+                assertEquals(4, responseDtos.size());
                 for (SpecificClassResponseDto responseClass : responseDtos) {
                         assertEquals(responseClass.getStartTime(), START_TIME);
                         assertEquals(responseClass.getEndTime(), END_TIME);
@@ -600,7 +600,7 @@ class SpecificClassIntegrationTests {
                 specificClassRepository.save(specifcClass);
                 SpecificClass foundClass = specificClassRepository.findByDateAndStartTime(DATE, START_TIME);
 
-                Date newDate = Date.valueOf("2024-04-30");
+                Date newDate = Date.valueOf("2027-04-30");
                 // Prepare the request payload with the new date
                 SpecificClassRequestsDto requestDto = new SpecificClassRequestsDto();
                 requestDto.setDate(newDate);
@@ -748,7 +748,7 @@ class SpecificClassIntegrationTests {
         @Test
         void testGetSpecificClassByInstructor2() {
                 // Create 2 SpecificCLasses
-                Date DATE2 = Date.valueOf("2024-04-18");
+                Date DATE2 = Date.valueOf("2027-04-18");
                 ClassType classType = classTypeRepository.findByTypeId(CLASS_TYPE);
                 SpecificClass specifcClass = new SpecificClass(DATE, START_TIME, END_TIME, 0, classType, null);
                 SpecificClass specifcClass2 = new SpecificClass(DATE2, START_TIME, END_TIME, 0, classType, null);
@@ -844,13 +844,13 @@ class SpecificClassIntegrationTests {
                 // Create 2 available classes
                 ClassType classType = classTypeRepository.findByTypeId(CLASS_TYPE);
                 Instructor supervisor = instructorRepository.findByAccountId(INSTRUCTOR_ID);
-                SpecificClass availableClass = new SpecificClass(Date.valueOf("2024-12-11"), Time.valueOf("14:00:00"),
+                SpecificClass availableClass = new SpecificClass(Date.valueOf("2027-12-11"), Time.valueOf("14:00:00"),
                                 Time.valueOf("15:00:00"), 0, classType, null); // In the future
-                SpecificClass availableClass2 = new SpecificClass(Date.valueOf("2024-12-11"), Time.valueOf("21:00:00"),
+                SpecificClass availableClass2 = new SpecificClass(Date.valueOf("2027-12-11"), Time.valueOf("21:00:00"),
                                 Time.valueOf("22:00:00"), 0, classType, null);// Same date, just different time whould
                                                                               // still be
                                                                               // available
-                SpecificClass unavailableClass = new SpecificClass(Date.valueOf("2024-12-12"), Time.valueOf("14:00:00"),
+                SpecificClass unavailableClass = new SpecificClass(Date.valueOf("2027-12-12"), Time.valueOf("14:00:00"),
                                 Time.valueOf("15:00:00"), 0, classType, null);// In the future, but without an
                                                                               // instructor
                 availableClass.setSupervisor(supervisor);

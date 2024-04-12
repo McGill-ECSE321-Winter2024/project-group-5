@@ -84,7 +84,7 @@ public class EmailTests {
     private static final int CLIENT_ACCOUNTID = 2;
 
     private static final int SPECIFICCLASS_ID = 3;
-    private static final Date SPECIFICCLASS_DATE = Date.valueOf("2024-04-16");
+    private static final Date SPECIFICCLASS_DATE = Date.valueOf("2027-04-16");
     private static final Time SPECIFICCLASS_STARTTIME = Time.valueOf("11:00:00");
     private static final Time SPECIFICCLASS_ENDTIME = Time.valueOf("12:00:00");
 
