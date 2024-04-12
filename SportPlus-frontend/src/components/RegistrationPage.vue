@@ -120,7 +120,9 @@
           </b-form>
 
           <div class="mt-3">
-            <b-link to="/">Already have an account? Log in instead</b-link>
+            <b-link to="/Login">Already have an account? Log in instead</b-link>
+            <div class="empty-divider"></div>
+            <b-link to="/">Not sure yet? View the Schedule as a visitor</b-link>
           </div>
         </b-card>
       </b-col>
