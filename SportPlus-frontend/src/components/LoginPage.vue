@@ -48,6 +48,8 @@
             
             <div class="mt-3">
               <b-link to="/register">New here? Register an account</b-link>
+              <div class="empty-divider"></div>
+              <router-link to="/SchedulePage">View the schedule as a visitor</router-link>
             </div>
           </b-card>
         </b-col>
@@ -180,6 +182,7 @@
       }
 
         console.log('Login form submitted', this.loginForm, this.userType);
+
       }
     }
   };
@@ -236,6 +239,9 @@
     display: flex;
     justify-content: center;
     margin-bottom: 2rem;
+    }
+    .empty-divider{
+      height: 9px;
     }
 
   </style>

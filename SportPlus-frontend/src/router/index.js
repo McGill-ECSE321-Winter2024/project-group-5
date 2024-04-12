@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import SchedulePageOwner from '@/components/SchedulePageOwner'
+import SchedulePage from '@/components/SchedulePage'
 import SchedulePageClient from '@/components/SchedulePageClient'
 import SchedulePageInstructor from '@/components/SchedulePageInstructor'
 import LoginPage from '@/components/LoginPage'
@@ -16,14 +17,23 @@ Vue.use(Router)
 export default new Router({
   routes: [
     {
-      path: '/',
+      path: '/Login',
       name: 'LoginPage',
       component: LoginPage
+    },
+    {
+    path: '/',
+    redirect: '/SchedulePage'
     },
     {
       path: '/SchedulePageOwner',
       name: 'SchedulePageOwner',
       component: SchedulePageOwner
+    },
+    {
+      path: '/SchedulePage',
+      name: 'SchedulePage',
+      component: SchedulePage
     },
     {
       path: '/SchedulePageClient',

@@ -300,7 +300,7 @@
         }
         // Construct the full URL with the base and endpoint path
         const fullUrlCreate = backendBaseUrl + endpointPath;
-        const fullUrlLogin = backendBaseUrl + '/login'
+        const fullUrlLogin = backendBaseUrl + '/Login'
 
         try {
           //Creates an account with 

@@ -161,7 +161,7 @@ export default {
             });
         } else {
             next(vm => {
-                vm.$router.replace('/');
+                vm.$router.replace('/Login');
             });
         }
     },
@@ -361,7 +361,7 @@ export default {
             this.registrationOK = null;
         },
         goToLoginPage(){
-            this.$router.push('/');
+            this.$router.push('/Login');
         },
         handleModalClose() {
             this.registrationOK = null;

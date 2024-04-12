@@ -206,7 +206,7 @@ export default {
             });
         } else {
             next(vm => {
-                vm.$router.replace('/');
+                vm.$router.replace('/Login');
             });
         }
     },

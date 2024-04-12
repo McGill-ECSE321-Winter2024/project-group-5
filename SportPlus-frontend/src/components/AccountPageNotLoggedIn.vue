@@ -2,7 +2,8 @@
     <div>
         <p>You are not logged in.</p>
         <!-- Optionally, you can provide a button to navigate to the login page -->
-        <router-link to="/">Go to Login Page</router-link>
+        <router-link to="/Login">Go to Login Page</router-link>
+        <router-link to="/SchedulePage">View the schedule as a visitor</router-link>
     </div>
 </template>
 

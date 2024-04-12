@@ -169,7 +169,7 @@ export default {
             });
         } else {
             next(vm => {
-                vm.$router.replace('/');
+                vm.$router.replace('/Login');
             });
         }
     },
@@ -463,7 +463,9 @@ export default {
                     });
             });
         },
-
+        handleOk(){
+            window.location.reload();
+        },
         handleShowSelected() {
             this.showSelected = true;
             this.registrationError = null;

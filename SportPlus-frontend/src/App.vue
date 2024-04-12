@@ -52,12 +52,12 @@ export default {
       }else if(globalState.type === "Client"){
         return '/SchedulePageClient'
       }else{
-        return '/'; //if no one logged in, go back to loginPage
+        return '/SchedulePage'; //if no one logged in, go back to loginPage
       }
     },
     // Does not display the nav bar in register and login poge
     isAuthRoute() {
-      return this.$route.path === '/' || this.$route.path === '/register';
+      return this.$route.path === '/Login' || this.$route.path === '/register' || this.$route.path === '/SchedulePage';
     },
     userType() {
       return globalState.type;
