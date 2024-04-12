@@ -23,7 +23,6 @@
 </template>
 
 <script>
-
 import axios from "axios";
 import config from "../config";
 import { globalState } from '@/global.js';
