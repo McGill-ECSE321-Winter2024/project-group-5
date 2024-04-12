@@ -300,7 +300,7 @@
         }
         // Construct the full URL with the base and endpoint path
         const fullUrlCreate = backendBaseUrl + endpointPath;
-        const fullUrlLogin = backendBaseUrl + '/Login'
+        const fullUrlLogin = backendBaseUrl + '/login'
 
         try {
           //Creates an account with 
@@ -345,16 +345,16 @@
 
           // Handle the response, such as redirecting the user to the SchedulePage page  
                   // Define your paths based on the isLoggedIn variable
-        if (this.userType === "Owner") {
-          this.$router.push('/SchedulePageOwner'); 
-        }else if(this.userType === "Instructor") {
-          this.$router.push('/SchedulePageInstructor');
-        }else if(this.userType === "Client"){
-          this.$router.push('/SchedulePageClient');
-        }else{
-          this.$router.push('/register'); //if no one logged in, go back to registerPage
-        }
-        
+        // if (this.userType === "Owner") {
+        //   this.$router.push('/SchedulePageOwner'); 
+        // }else if(this.userType === "Instructor") {
+        //   this.$router.push('/SchedulePageInstructor');
+        // }else if(this.userType === "Client"){
+        //   this.$router.push('/SchedulePageClient');
+        // }else{
+        //   this.$router.push('/register'); //if no one logged in, go back to registerPage
+        // }
+        this.$router.push('/Login');
         console.log('Registration form submitted', this.registerForm);
         } catch (error) {
           // Handle errors, such as displaying a message to the user

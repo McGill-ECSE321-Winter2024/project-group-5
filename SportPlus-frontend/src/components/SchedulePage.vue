@@ -146,25 +146,25 @@ const CLIENT = axios.create({
 });
 
 export default {
-    name: 'SchedulePageClient',
-    beforeRouteEnter(to, from, next) {
-        const userType = globalState.type;
-        if (userType === 'Client') {
-            next();
-        } else if (userType === 'Instructor') {
-            next(vm => {
-                vm.$router.replace('/SchedulePageInstructor');
-            });
-        } else if (userType === 'Owner') {
-            next(vm => {
-                vm.$router.replace('/SchedulePageOwner');
-            });
-        } else {
-            next(vm => {
-                vm.$router.replace('/Login');
-            });
-        }
-    },
+    name: 'SchedulePage',
+    // beforeRouteEnter(to, from, next) {
+    //     const userType = globalState.type;
+    //     if (userType === 'Client') {
+    //         next();
+    //     } else if (userType === 'Instructor') {
+    //         next(vm => {
+    //             vm.$router.replace('/SchedulePageInstructor');
+    //         });
+    //     } else if (userType === 'Owner') {
+    //         next(vm => {
+    //             vm.$router.replace('/SchedulePageOwner');
+    //         });
+    //     } else {
+    //         next(vm => {
+    //             vm.$router.replace('/Login');
+    //         });
+    //     }
+    // },
     components: {
         CreateNewSpecificClass,
         CreateNewClassType
