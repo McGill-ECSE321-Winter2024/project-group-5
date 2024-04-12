@@ -99,9 +99,6 @@ const CLIENT = axios.create({
   headers: { "Access-Control-Allow-Origin": frontendUrl },
 });
 
-//instead of push in newspecifc classes, get all specific classes like fetch
-//check if overlapping specific classes
-
 export default {
   name: "CreateNewSpecificClass",
   data() {
@@ -137,7 +134,6 @@ export default {
       this.generateTimeOptions();
       this.fetchData();
     } catch (e) {
-      // TODO: show the user a warning
       console.log(e);
     }
   },
@@ -371,7 +367,6 @@ export default {
           );
           this.clearInputs();
         } catch (e) {
-          // TODO: show the user a warning
           console.log(e);
         }
       } else {
@@ -379,8 +374,8 @@ export default {
         const startYear = startDate.getFullYear();
         const startMonth = startDate.getMonth() + 1;
         const startDay = startDate.getDate() + 2;
-        let dayOfWeek = startDate.getDay() +1;
-        
+        let dayOfWeek = startDate.getDay() + 1;
+
         const javaStartDate = this.formatDate(startYear, startMonth, startDay);
 
         const endDate = new Date(this.endDate);
@@ -412,11 +407,9 @@ export default {
           console.log("response", response.data.specificClasses);
 
           const reccuring = response.data.specificClasses;
-          // reccuring.forEach(specificClass => {
-          // });
+
           this.clearInputs();
         } catch (e) {
-          // TODO: show the user a warning
           console.log(e);
         }
       }
