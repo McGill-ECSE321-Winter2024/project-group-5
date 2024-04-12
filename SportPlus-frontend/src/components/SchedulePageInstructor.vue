@@ -10,7 +10,7 @@
                         <b-row class="h-100 align-items-center">
                             <!-- empty row for space-->
                         </b-row>
-                        <!-- button group-->
+                        <!-- button group, they trigger the modals showSelected, createNewSpecifciclass & createNewClassType -->
                         <div class="btn-group-vertical">
                             <b-button variant="outline-primary" @click="showSelected = true" class="mb-2">View Selected Class Menu</b-button>
                             <b-button variant="outline-primary" @click="createNewSpecificClass = true"
@@ -24,6 +24,7 @@
                 <b-col lg="10">
                     <div class="empty-divider-table"></div>
                     <h2 class="tableTitle">Class Schedule</h2>
+                    <!-- Schedule Table -->
                     <div class="ScheduleTable">
                         <b-table hover id="schedule-tb" small :items="classes" :fields="filteredFields"
                             :sticky-header="true" :outlined="true" select-mode="single" responsive="sm"
@@ -35,14 +36,17 @@
                             </template>
                         </b-table>
                     </div>
-                    <!-- sub-row-->
+                    <!-- sub-row, beneath scheudle table, everyhting to handle sorting of the table-->
                     <b-row class="justify-content-center">
+                        <!-- Tabs menu -->
                         <b-tabs v-model="selectedTab" pills card>
                             <b-tab id="no-filter" title="No Filter" @click="tabIsNoFilter"></b-tab>
                             <b-tab id="all-available" title="Open for Registration" @click="tabIsAllAvailable"></b-tab>
+                            <!-- Search by date tab -->
                             <b-tab id="filter-by-dates" title="Filter By Date Range" @click="tabIsByDate">
                                 <b-card style="width:100%; height: 200px">
                                     <b-row class="2">
+                                        <!-- Date picker for start date-->
                                         <b-col>
                                             <label for="datepicker-start">Start Date</label>
                                             <b-form-datepicker id="datepicker-start" today-button reset-button
@@ -53,6 +57,7 @@
                                                 date.
                                             </div>
                                         </b-col>
+                                        <!-- Date picker for enddate-->
                                         <b-col>
                                             <label for="datepicker-end">End Date</label>
                                             <b-form-datepicker id="datepicker-end" today-button reset-button
@@ -64,20 +69,22 @@
                                             </div>
                                         </b-col>
                                     </b-row>
-
+                                    <!-- Search button to trigger filtering -->
                                     <div class="empty-divider-table"></div>
                                     <b-button variant="outline-primary" @click="fetchData" class="mb-2"
                                         v-if="endDate && startDate">Search</b-button>
                                 </b-card>
                             </b-tab>
-
+                            <!-- search by instructor tab -->
                             <b-tab id="filter-by-instructors" title="Filter By Instructor" @click="tabIsInstructor">
                                 <b-card style="width: 100%;
                                     height: 200px">
+                                    <!-- selectable table of instructors -->
                                     <b-table hover small :items="instructors" :fields="filteredInstructors"
                                         :outlined="true" select-mode="single" responsive="sm" ref="selectableTable"
                                         selectable @row-selected="onInstructorSelected">
                                     </b-table>
+                                    <!-- button to trigger filtering -->
                                     <b-button variant="outline-primary" @click="fetchData" class="mb-2"
                                         v-if="selectedInstructor">Search</b-button>
                                     <div v-if="displayError_I" class="error-message"
@@ -86,13 +93,16 @@
                                     </div>
                                 </b-card>
                             </b-tab>
+                            <!-- filter by classType tab -->
                             <b-tab id="filter-by-classType" title="Filter By ClassType" @click="tabIsClassType">
                                 <b-card style="width: 100%;
                                         height: 200px">
+                                        <!-- Selectable table with classtypes -->
                                     <b-table hover small :items="types" :fields="filteredClassTypes" :outlined="true"
                                         select-mode="single" responsive="sm" ref="selectableTable" selectable
                                         @row-selected="onTypeSelected">
                                     </b-table>
+                                    <!-- Button to trigger filtering -->
                                     <b-button variant="outline-primary" @click="fetchData" class="mb-2"
                                         v-if="selectedType">Search
                                     </b-button>
@@ -109,13 +119,16 @@
 
         </b-container>
         <div>
+            <!-- Brings createNewSpecificClass component into a "pop up" -->
             <b-modal v-model="createNewSpecificClass" title="Create New Class" @ok="handleOk">
                 <CreateNewSpecificClass />
             </b-modal>
 
+            <!-- Brings show selected menu into a "pop-up" -->
             <b-modal v-model="showSelected" title="Class Details" @ok="handleOk">
 
                 <div v-if="selectedClass">
+                    <!-- Description of selected class -->
                     <p><strong>Instructor Name:</strong>
                         {{ JSON.parse(JSON.stringify(this.selectedClass))[0].supervisor }}</p>
                     <p><strong>Class Type:</strong> {{ JSON.parse(JSON.stringify(this.selectedClass))[0].classType }}</p>
@@ -124,6 +137,7 @@
                     <b-col>
 
                     </b-col>
+                    <!-- Assignment menu, buttons so Instructor can assign himself to selected class -->
                     <b-col>
                         <b-button v-if="!JSON.parse(JSON.stringify(this.selectedClass))[0].supervisor"
                             variant="outline-primary" @click="assignMyself" class="mb-2">Register to Teach this
@@ -142,6 +156,7 @@
                     <p>No item selected</p>
                 </template>
             </b-modal>
+             <!-- Brings createNewClassType component into a "pop up" -->
             <b-modal v-model="createNewClassType" title="Create New Class Type" @ok="handleOk">
                 <CreateNewClassType />
             </b-modal>
@@ -153,7 +168,7 @@
 <script>
 import CreateNewSpecificClass from '@/components/CreateNewSpecificClass.vue'
 import CreateNewClassType from '@/components/CreateNewClassType.vue'
-import { globalState } from '@/global';
+import { globalState } from '@/global';  // Import the globalState variable
 import axios from "axios";
 import config from "../../config";
 
@@ -165,7 +180,7 @@ const CLIENT = axios.create({
     headers: { 'Access-Control-Allow-Origin': frontendUrl }
 
 });
-
+// router that manages view based on user logged-in
 export default {
     name: 'SchedulePageInstructor',
     beforeRouteEnter(to, from, next) {
@@ -186,10 +201,12 @@ export default {
             });
         }
     },
+    //Imported components for modals
     components: {
         CreateNewSpecificClass,
         CreateNewClassType
     },
+    // when closing a modal, refresh page (information in table is put up to date)
     handleOk(){
             window.location.reload();
     },
@@ -198,25 +215,31 @@ export default {
         const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
         return {
-            min: today,
+            //error messages for filtering
             displayError_I: false,
             displayError_T: false,
+            //error vriables inside "show selected" modal
             teachError: null,
             teachOK: null,
+            //date select variables
+            min: today,
             startDate: null,
             endDate: null,
-            option: 'no-filter',
-            searchDate: false,
+            //holds active tab, default is no filter
+            option: 'no-filter', 
+            // booleans handling modal operations
             createNewSpecificClass: false,
             createNewClassType: false,
-            modifySelected: false,
             showSelected: false,
+            //variables holding selected items from tables
             selectedClass: null,
             selectedInstructor: null,
             selectedType: null,
+            // lists for data retrieval for tables
             classes: [],
             instructors: [],
             types: [],
+            //fields for retrieved data for tables
             fields_C: [
                 { key: 'startTime', label: 'Start Time', show: true },
                 { key: 'date', label: 'Date', show: false },
@@ -255,6 +278,7 @@ export default {
     },
 
     methods: {
+        //will create proper endpoint for fetchData depending on tab selected (option)
         fetchEndpoint(option) {
             let endpoint;
             switch (option) {
@@ -287,17 +311,19 @@ export default {
             console.log('Constructed endpoint :', endpoint);
             return endpoint;
         },
-
+        //populates ScheduleTable 
         fetchData() {
             const endpoint = this.fetchEndpoint(this.option);
             CLIENT.get(endpoint)
                 .then(response => {
                     console.log('Response:', response.data);
+                    //filters classes to removed passed classes
                     const filteredClasses = response.data.filter(item => {
                         const classDate = new Date(item.date);
                         const today = new Date();
                         return classDate >= today;
                     });
+                    //sort received classes by --> date, then --> start time
                     const sortedClasses = filteredClasses.sort((a, b) => {
                         // Compare dates
                         if (a.date < b.date) return -1;
@@ -310,6 +336,7 @@ export default {
                         // If both dates and start times are equal, maintain current order
                         return 0;
                     });
+                    //format to include date seperator option 
                     const formattedClasses = [];
                     let currentDate = null;
                     sortedClasses.forEach(item => {
@@ -342,8 +369,8 @@ export default {
                     console.error('Error fetching data:', error);
                 });
         },
+        //populates intructors table for filter by instructor
         fetchData_Instructors() {
-            // Make an HTTP GET request to fetch instructors
             CLIENT.get('/instructors/all')
                 .then(response => {
                     const resp = response.data.instructors;
@@ -358,9 +385,8 @@ export default {
                 .catch(error => {
                     console.error('Error fetching instructors:', error);
                 });
-        },
+        },//populates classtypes table for filter by classtype
         fetchData_ClassTypes() {
-            // Make an HTTP GET request to fetch classTypes
             CLIENT.get('/classType/all')
                 .then(response => {
                     const resp = response.data.classTypes;
@@ -378,7 +404,7 @@ export default {
                 .catch(error => {
                     console.error('Error fetching classTypes:', error);
                 });
-        },
+        },//assigns logged in instructor to selected classType. triggered by button in modal
         assignMyself() {
             console.log("yeehaw", JSON.parse(JSON.stringify((globalState.accountId))));
             const specificClassRequestBody = {
@@ -397,19 +423,23 @@ export default {
                 console.log("error", error);
             });
 
-        },
+        }, 
+        //updates selectedClass upon selection of new class
         onClassSelected(item) {
             this.selectedClass = item;
             console.log('Selected class:', item);
         },
+        //updates instructor upon selection of new instructor
         onInstructorSelected(item) {
             this.selectedInstructor = item;
             console.log('Selected instructor:', item);
         },
+        //updates classType upon selection of new type
         onTypeSelected(item) {
             this.selectedType = item;
             console.log('Selected type:', item);
         },
+        //the following tab___ handle updating the "option" variable to the selected tab
         tabIsAllAvailable(tab) {
             this.option = 'all-available';
             this.fetchData();
@@ -430,9 +460,7 @@ export default {
             this.option = 'filter-by-dates';
             console.log('tab', option);
         },
-        rowVariant(index) {
-            return this.selectedClass === index ? 'info' : null;
-        },
+        //handle dates and date sepearot for Schedule Table 
         formatDate(dateString) {
             const date = new Date(dateString);
             const options = { weekday: 'short', month: 'long', day: 'numeric', year: 'numeric' };
@@ -469,23 +497,17 @@ export default {
 
 .custom-modal .modal-dialog {
     max-width: 1000px;
-    /* Adjust as needed */
     width: 80%;
-    /* Adjust as needed */
     max-height: 1000px;
-    /* Adjust as needed */
     height: 60%;
-    /* Adjust as needed */
 }
 
 .empty-divider {
     height: 65px;
-    /* Adjust the height as needed */
 }
 
 .empty-divider-table {
     height: 20px;
-    /* Adjust the height as needed */
 }
 
 #schedule-tb {
