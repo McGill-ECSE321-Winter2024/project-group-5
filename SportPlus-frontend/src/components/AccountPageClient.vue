@@ -69,25 +69,17 @@
             <b-container>
                 <h2 class="tableTitle">My Schedule</h2>
                 <div class="ScheduleTable">
-                    <b-table hover 
-                        id="schedule-tb" 
-                        small 
-                        :items="clientClasses" 
-                        :fields="filteredFields" 
-                        :sticky-header="true"
-                        :outlined="true" 
-                        select-mode="single" 
-                        responsive="sm" 
-                        ref="selectableTable" 
-                        selectable
-                        @row-selected="onClassSelected">
+                    <b-table hover id="schedule-tb" small :items="clientClasses" :fields="filteredFields"
+                        :sticky-header="true" :outlined="true" select-mode="single" responsive="sm"
+                        ref="selectableTable" selectable @row-selected="onClassSelected">
                         <template v-slot:cell(startTime)="data">
                             <b-table-simple :class="{ 'bold-row-separator': isDateSeparator(data.item) }">
                                 {{ isDateSeparator(data.item) ? data.item.dateSeparator : (data.value) }}
                             </b-table-simple>
                         </template>
                         <template v-slot:cell(unregister)="data">
-                            <b-button class="unreg-button" v-if="!isDateSeparator(data.item)" @click="unregisterSpecificClass(data.item.regId)" variant="danger">Unregister</b-button>
+                            <b-button class="unreg-button" v-if="!isDateSeparator(data.item)"
+                                @click="unregisterSpecificClass(data.item.regId)" variant="danger">Unregister</b-button>
                         </template>
                     </b-table>
                 </div>
@@ -144,6 +136,7 @@ import axios from "axios";
 import { globalState } from "@/global.js"; // Import the globalState variable
 import config from "../../config";
 
+// sets up urls for axios
 const backendUrl = 'http://' + config.dev.backendHost + ':' + config.dev.backendPort
 const frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
 
@@ -155,6 +148,8 @@ const CLIENT = axios.create({
 
 export default {
     name: 'AccountPageClient',
+
+    // enforces correct page to load based on account type signed in
     beforeRouteEnter(to, from, next) {
         const userType = globalState.type;
         if (userType === 'Client') {
@@ -175,6 +170,7 @@ export default {
     },
     data() {
         return {
+            // variables to store info for frontend
             firstName: '',
             lastName: '',
             email: '',
@@ -189,9 +185,10 @@ export default {
             oldPasswordFieldType: 'password',
             newPasswordFieldType: 'password',
             registrations: [],
-            clientClasses:[],
+            clientClasses: [],
             classes: [],
             fields_C: [
+                // fields for schedule of client
                 { key: 'date', label: 'Date', show: false },
                 { key: 'startTime', label: 'Start Time', show: true },
                 { key: 'name', label: 'Class Type', show: true },
@@ -200,11 +197,11 @@ export default {
                 { key: 'description', show: false },
                 { key: 'id', show: false },
                 { key: 'unregister', label: '', class: 'text-center', show: true },
-                { key: 'regId', show: false}
+                { key: 'regId', show: false }
             ],
             paymentMethods: [],
             paymentMethodFields: [
-                // Define fields for payment methods table
+                // fields for payment methods table
                 { key: 'cardNumber', label: 'Card Number' }
             ],
             selectedItem: null,
@@ -219,20 +216,23 @@ export default {
         };
     },
     computed: {
+        // update when data is changed
         unapprovedClassTypes() {
             return this.classTypes.filter(classType => !classType.approved);
         },
-        filteredFields(){
+        filteredFields() {
             return this.fields_C.filter(field => field.show);
         }
     },
     mounted() {
+        // load upon init of page
         this.fetchAccountDetails();
         this.fetchRegistrations();
         this.fetchPaymentMethods();
     },
     methods: {
         fetchAccountDetails() {
+            // fetches client data to load on page
             CLIENT.get(`/clients/getById/${this.accountId}`)
                 .then(response => {
                     const { firstName, lastName, email } = response.data;
@@ -245,44 +245,45 @@ export default {
                 });
         },
         fetchRegistrations() {
+            // fetches all registrations of the client
             CLIENT.get(`/registrations/getByClient/${this.accountEmail}`)
                 .then(response => {
-                    console.log("raw response",response);
+                    console.log("raw response", response);
                     this.registrations = response.data.registrations;
                     console.log("raw registrations", this.registrations);
-                    this.registrations.forEach(reg =>{
-    
-                    const spe_class = reg.specificClass;
-                    this.classes.push({
-                        startTime: spe_class.startTime,
-                        date: spe_class.date,
-                        supervisor: spe_class.instructor ? `${spe_class.instructor.lastName}, ${spe_class.instructor.firstName}` : '',
-                        name: spe_class.classType.name,
-                        duration: '60 min',
-                        description: spe_class.classType.description,
-                        id: spe_class.id,
-                        regId: reg.regId
-                    });
+                    this.registrations.forEach(reg => {
+
+                        const spe_class = reg.specificClass;
+                        this.classes.push({
+                            startTime: spe_class.startTime,
+                            date: spe_class.date,
+                            supervisor: spe_class.instructor ? `${spe_class.instructor.lastName}, ${spe_class.instructor.firstName}` : '',
+                            name: spe_class.classType.name,
+                            duration: '60 min',
+                            description: spe_class.classType.description,
+                            id: spe_class.id,
+                            regId: reg.regId
+                        });
                     });
                     console.log("classes in fetchReg", this.classes);
                     console.log("clientClasses in fetchReg", this.clientClasses);
                     const sortedClasses = this.classes.sort((a, b) => {
-                    // Compare dates
-                    if (a.date < b.date) return -1;
-                    if (a.date > b.date) return 1;
+                        // Compare dates
+                        if (a.date < b.date) return -1;
+                        if (a.date > b.date) return 1;
 
-                    // If dates are equal, compare start times
-                    if (a.startTime < b.startTime) return -1;
-                    if (a.startTime > b.startTime) return 1;
+                        // If dates are equal, compare start times
+                        if (a.startTime < b.startTime) return -1;
+                        if (a.startTime > b.startTime) return 1;
 
-                    // If both dates and start times are equal, maintain current order
-                    return 0;
+                        // If both dates and start times are equal, maintain current order
+                        return 0;
                     });
                     console.log("sorted classes", sortedClasses);
                     const formattedClasses = [];
                     let currentDate = null;
                     sortedClasses.forEach(item => {
-                    // Check if the date has changed
+                        // Check if the date has changed
                         if (item.date !== currentDate) {
                             // Insert row with day, month, and year
                             const dateObj = new Date(item.date);
@@ -290,11 +291,11 @@ export default {
                             const formattedDate = dateObj.toLocaleDateString('en-US', { weekday: 'short', month: 'long', day: 'numeric', year: 'numeric' }).replace(',', '');;
                             formattedClasses.push({ dateSeparator: formattedDate });
                             currentDate = item.date;
-                    }
-                    // Insert the regular item
-                    formattedClasses.push(item);
-                
-                });
+                        }
+                        // Insert the regular item
+                        formattedClasses.push(item);
+
+                    });
                     console.log("formattedClasses", formattedClasses);
                     // Assign the formatted classes
                     this.clientClasses = formattedClasses;
@@ -304,8 +305,9 @@ export default {
                     console.error('Error fetching registrations:', error);
                 });
         },
-        unregisterSpecificClass(regId){
-            CLIENT.delete(`/registrations/deleteByRegistrationId/${regId}`).then(response =>{
+        unregisterSpecificClass(regId) {
+            // method to unregister from specifc class using DELETE REST request
+            CLIENT.delete(`/registrations/deleteByRegistrationId/${regId}`).then(response => {
                 console.log("success", response);
                 window.location.reload();
             }).catch(error => {
@@ -314,6 +316,7 @@ export default {
             });
         },
         fetchPaymentMethods() {
+            // method to continously display client's payment methods
             CLIENT.get(`/paymentMethod/getByClient/${this.accountId}`)
 
                 .then(response => {
@@ -324,6 +327,7 @@ export default {
                 });
         },
         deletePaymentMethod(cardNumber) {
+            // method to delete a specific payment method of the client
             CLIENT.delete(`/paymentMethod/deleteByCardNumber/${cardNumber}`)
                 .then(() => {
                     // Remove the deleted payment method from the list
@@ -498,6 +502,7 @@ export default {
     flex-basis: 30%;
     padding: 10px;
 }
+
 .bold-row-separator {
     font-weight: bold;
     font-size: 15px;

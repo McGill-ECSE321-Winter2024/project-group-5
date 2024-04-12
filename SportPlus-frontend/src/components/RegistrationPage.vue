@@ -1,12 +1,7 @@
 <template>
   <b-container fluid class="vh-100">
     <b-row class="h-100 align-items-center">
-      <b-col
-        cols="12"
-        md="7"
-        lg="8"
-        class="register-background d-none d-md-block"
-      ></b-col>
+      <b-col cols="12" md="7" lg="8" class="register-background d-none d-md-block"></b-col>
 
       <b-col cols="12" md="5" lg="4" class="my-auto">
         <b-card class="mx-auto" style="max-width: 400px">
@@ -14,109 +9,52 @@
           <p class="register-subtitle">Make your workouts fun and easy !</p>
           <b-form @submit.prevent="onRegisterSubmit" class="register-form">
             <b-button-group class="btn-group">
-              <b-button
-                variant="outline-primary"
-                class="user-type-btn"
-                :pressed="userType === 'Instructor'"
-                @click="setUserType('Instructor')"
-                >Instructor</b-button
-              >
-              <b-button
-                variant="outline-primary"
-                class="user-type-btn"
-                :pressed="userType === 'Owner'"
-                @click="setUserType('Owner')"
-                >Owner</b-button
-              >
-              <b-button
-                variant="outline-primary"
-                class="user-type-btn"
-                :pressed="userType === 'Client'"
-                @click="setUserType('Client')"
-                >Client</b-button
-              >
+              <b-button variant="outline-primary" class="user-type-btn" :pressed="userType === 'Instructor'"
+                @click="setUserType('Instructor')">Instructor</b-button>
+              <b-button variant="outline-primary" class="user-type-btn" :pressed="userType === 'Owner'"
+                @click="setUserType('Owner')">Owner</b-button>
+              <b-button variant="outline-primary" class="user-type-btn" :pressed="userType === 'Client'"
+                @click="setUserType('Client')">Client</b-button>
             </b-button-group>
 
             <b-form-group label="First Name:" label-for="input-first-name">
-              <b-form-input
-                id="input-first-name"
-                v-model="registerForm.firstName"
-                required
-                placeholder="Enter your first name"
-              ></b-form-input>
+              <b-form-input id="input-first-name" v-model="registerForm.firstName" required
+                placeholder="Enter your first name"></b-form-input>
             </b-form-group>
 
             <b-form-group label="Last name:" label-for="input-last-name">
-              <b-form-input
-                id="input-last-name"
-                v-model="registerForm.lastName"
-                required
-                placeholder="Enter your last name"
-              ></b-form-input>
+              <b-form-input id="input-last-name" v-model="registerForm.lastName" required
+                placeholder="Enter your last name"></b-form-input>
             </b-form-group>
 
             <b-form-group label="Email address:" label-for="input-email">
-              <b-form-input
-                id="input-email"
-                type="email"
-                v-model="registerForm.email"
-                :disabled="emailDisabled"
-                required
-                placeholder="Enter email"
-                @input="validateEmail"
-                :state="emailState"
-                aria-describedby="input-email-live-feedback"
-              ></b-form-input>
+              <b-form-input id="input-email" type="email" v-model="registerForm.email" :disabled="emailDisabled"
+                required placeholder="Enter email" @input="validateEmail" :state="emailState"
+                aria-describedby="input-email-live-feedback"></b-form-input>
               <b-form-invalid-feedback id="input-email-live-feedback">
                 {{ emailFeedback }}
               </b-form-invalid-feedback>
             </b-form-group>
 
             <b-form-group label="Password:" label-for="input-password">
-              <b-form-input
-                id="input-password"
-                type="password"
-                v-model="registerForm.password"
-                required
-                placeholder="Enter password"
-                @input="validatePassword"
-                :state="passwordState"
-                aria-describedby="input-password-live-feedback"
-              ></b-form-input>
+              <b-form-input id="input-password" type="password" v-model="registerForm.password" required
+                placeholder="Enter password" @input="validatePassword" :state="passwordState"
+                aria-describedby="input-password-live-feedback"></b-form-input>
               <b-form-invalid-feedback id="input-password-live-feedback">
                 {{ passwordFeedback }}
               </b-form-invalid-feedback>
             </b-form-group>
 
-            <b-form-group
-              label="Confirm Password:"
-              label-for="input-password-confirm"
-              :state="confirmPasswordState"
-            >
-              <b-form-input
-                id="input-password-confirm"
-                type="password"
-                v-model="registerForm.confirmPassword"
-                required
-                placeholder="Confirm password"
-                @input="validateConfirmPassword"
-                :state="confirmPasswordState"
-                aria-describedby="input-confirm-password-live-feedback"
-              ></b-form-input>
-              <b-form-invalid-feedback
-                id="input-confirm-password-live-feedback"
-              >
+            <b-form-group label="Confirm Password:" label-for="input-password-confirm" :state="confirmPasswordState">
+              <b-form-input id="input-password-confirm" type="password" v-model="registerForm.confirmPassword" required
+                placeholder="Confirm password" @input="validateConfirmPassword" :state="confirmPasswordState"
+                aria-describedby="input-confirm-password-live-feedback"></b-form-input>
+              <b-form-invalid-feedback id="input-confirm-password-live-feedback">
                 {{ confirmPasswordFeedback }}
               </b-form-invalid-feedback>
             </b-form-group>
 
-            <b-button
-              type="submit"
-              variant="primary"
-              block
-              class="register-button"
-              >Sign Up</b-button
-            >
+            <b-button type="submit" variant="primary" block class="register-button">Sign Up</b-button>
           </b-form>
 
           <div class="mt-3">
@@ -321,8 +259,8 @@ export default {
       ) {
         alert(
           this.emailFeedback ||
-            this.passwordFeedback ||
-            this.confirmPasswordFeedback
+          this.passwordFeedback ||
+          this.confirmPasswordFeedback
         );
         return;
       }

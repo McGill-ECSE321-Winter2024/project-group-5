@@ -12,7 +12,8 @@
                         </b-row>
                         <!-- button group, they trigger the modals showSelected, createNewSpecifciclass & createNewClassType -->
                         <div class="btn-group-vertical">
-                            <b-button variant="outline-primary" @click="showSelected = true" class="mb-2">View Selected Class Menu</b-button>
+                            <b-button variant="outline-primary" @click="showSelected = true" class="mb-2">View Selected
+                                Class Menu</b-button>
                             <b-button variant="outline-primary" @click="createNewSpecificClass = true"
                                 class="mb-2">Create New Specific Class</b-button>
                             <b-button variant="outline-primary" @click="createNewClassType = true" class="mb-2">Create
@@ -97,7 +98,7 @@
                             <b-tab id="filter-by-classType" title="Filter By ClassType" @click="tabIsClassType">
                                 <b-card style="width: 100%;
                                         height: 200px">
-                                        <!-- Selectable table with classtypes -->
+                                    <!-- Selectable table with classtypes -->
                                     <b-table hover small :items="types" :fields="filteredClassTypes" :outlined="true"
                                         select-mode="single" responsive="sm" ref="selectableTable" selectable
                                         @row-selected="onTypeSelected">
@@ -131,7 +132,8 @@
                     <!-- Description of selected class -->
                     <p><strong>Instructor Name:</strong>
                         {{ JSON.parse(JSON.stringify(this.selectedClass))[0].supervisor }}</p>
-                    <p><strong>Class Type:</strong> {{ JSON.parse(JSON.stringify(this.selectedClass))[0].classType }}</p>
+                    <p><strong>Class Type:</strong> {{ JSON.parse(JSON.stringify(this.selectedClass))[0].classType }}
+                    </p>
                     <p><strong>Description:</strong> {{ JSON.parse(JSON.stringify(this.selectedClass))[0].description }}
                     </p>
                     <b-col>
@@ -156,7 +158,7 @@
                     <p>No item selected</p>
                 </template>
             </b-modal>
-             <!-- Brings createNewClassType component into a "pop up" -->
+            <!-- Brings createNewClassType component into a "pop up" -->
             <b-modal v-model="createNewClassType" title="Create New Class Type" @ok="handleOk">
                 <CreateNewClassType />
             </b-modal>
@@ -207,8 +209,8 @@ export default {
         CreateNewClassType
     },
     // when closing a modal, refresh page (information in table is put up to date)
-    handleOk(){
-            window.location.reload();
+    handleOk() {
+        window.location.reload();
     },
     data() {
         const now = new Date();
@@ -226,7 +228,7 @@ export default {
             startDate: null,
             endDate: null,
             //holds active tab, default is no filter
-            option: 'no-filter', 
+            option: 'no-filter',
             // booleans handling modal operations
             createNewSpecificClass: false,
             createNewClassType: false,
@@ -423,7 +425,7 @@ export default {
                 console.log("error", error);
             });
 
-        }, 
+        },
         //updates selectedClass upon selection of new class
         onClassSelected(item) {
             this.selectedClass = item;

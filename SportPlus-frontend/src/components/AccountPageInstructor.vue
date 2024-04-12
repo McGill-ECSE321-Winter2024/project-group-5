@@ -92,6 +92,7 @@ import axios from "axios";
 import { globalState } from "@/global.js"; // Import the globalState variable
 import config from "../../config";
 
+// sets up urls for axios
 const backendUrl = 'http://' + config.dev.backendHost + ':' + config.dev.backendPort
 const frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
 
@@ -103,6 +104,8 @@ const CLIENT = axios.create({
 
 export default {
     name: 'AccountPageInstructor',
+
+    // before loading page, enforces page for correct account type
     beforeRouteEnter(to, from, next) {
         const userType = globalState.type;
         if (userType === 'Instructor') {
@@ -126,6 +129,7 @@ export default {
         const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
         return {
+            // variables to store data for vue page
             firstName: '',
             lastName: '',
             email: '',
@@ -136,8 +140,8 @@ export default {
             newLastName: '',
             oldPassword: '',
             newPassword: '',
-            password: '', // Add password variable
-            hidePassword: true, // Add hidePassword variable
+            password: '',
+            hidePassword: true,
             oldPasswordFieldType: 'password',
             newPasswordFieldType: 'password',
             registrations: [],
@@ -175,6 +179,7 @@ export default {
             instructors: [],
             types: [],
             fields_C: [
+                // fields for schedule page
                 { key: 'date', label: 'Date', show: true },
                 { key: 'startTime', label: 'Start Time', show: true },
                 { key: 'classType', label: 'Class Type', show: true },
@@ -185,16 +190,19 @@ export default {
                 { key: 'unregister', label: '', class: 'text-center', show: true }
             ],
             fields_I: [
+                // fields for list of instructors fo schedule
                 { key: 'firstName', label: 'Instructor', show: true },
                 { key: 'accountId', label: 'Id', show: false }
             ],
             fields_T: [
+                // fileds for classtypes of the specific classes
                 { key: 'name', label: 'Class Type', show: true },
                 { key: 'typeId', label: 'Id', show: false }
             ]
         };
     },
     computed: {
+        // update when data changes
         unapprovedClassTypes() {
             return this.classTypes.filter(classType => !classType.approved);
         },
@@ -209,6 +217,7 @@ export default {
         }
     },
     mounted() {
+        // execute upon mounting of page
         this.fetchAccountDetails();
         this.fetchClassesByInstructor();
         this.fetchData();
@@ -229,7 +238,7 @@ export default {
                     // Handle error response
                     console.error('Error unregistering instructor from specific class:', error);
                 });
-                window.location.reload();
+            window.location.reload();
         },
         fetchEndpoint() {
             // Always fetch data filtered by accountId
@@ -237,6 +246,7 @@ export default {
         },
 
         fetchData() {
+            // sets up endpoint to fetch classes
             const endpoint = this.fetchEndpoint(this.option);
             CLIENT.get(endpoint)
                 .then(response => {
@@ -320,6 +330,7 @@ export default {
                 });
         },
         assignMyself() {
+            // method for isntructor to assign themselves to new class
             console.log("yeehaw", JSON.parse(JSON.stringify((globalState.accountId))));
             const specificClassRequestBody = {
                 instructorId: globalState.accountId
@@ -394,6 +405,7 @@ export default {
                 });
         },
         fetchAccountDetails() {
+            // fetch all details of instructor to display on page
             CLIENT.get(`/instructors/getById/${this.accountId}`)
                 .then(response => {
                     const { firstName, lastName, email } = response.data;

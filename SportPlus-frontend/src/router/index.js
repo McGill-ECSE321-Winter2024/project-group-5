@@ -22,8 +22,8 @@ export default new Router({
       component: LoginPage
     },
     {
-    path: '/',
-    redirect: '/SchedulePage'
+      path: '/',
+      redirect: '/SchedulePage'
     },
     {
       path: '/SchedulePageOwner',
@@ -53,10 +53,11 @@ export default new Router({
     {
       path: '/account',
       meta: { requiresAuth: true },
-      component: AccountPageNotLoggedIn, // Default to not logged in version
+      component: AccountPageNotLoggedIn, // Default to not logged in page
       beforeEnter: (to, from, next) => {
         const userType = globalState.type;
 
+        // navigates to proper account page based on user type for security
         if (userType === 'Client') {
           next('/client-account');
         } else if (userType === 'Instructor') {

@@ -4,60 +4,27 @@
       <div class="radio-container">
         <input type="radio" id="regular" value="regular" v-model="classMode" />
         <label for="regular">Regular Class</label>
-        <input
-          type="radio"
-          id="recurring"
-          value="recurring"
-          v-model="classMode"
-        />
+        <input type="radio" id="recurring" value="recurring" v-model="classMode" />
         <label for="recurring">Recurring Class</label>
       </div>
       <!-- Input fields for regular class -->
       <div v-if="classMode === 'regular'">
         <label for="newSpecificClassDate">Date:</label>
-        <input
-          type="date"
-          id="newSpecificClassDate"
-          placeholder="Date"
-          v-model="newSpecificClassDate"
-        />
+        <input type="date" id="newSpecificClassDate" placeholder="Date" v-model="newSpecificClassDate" />
       </div>
       <!-- Input fields for recurring class -->
       <div v-else-if="classMode === 'recurring'">
         <label for="startDate">Start Date:</label>
-        <input
-          type="date"
-          id="startDate"
-          placeholder="Start Date"
-          v-model="startDate"
-        />
+        <input type="date" id="startDate" placeholder="Start Date" v-model="startDate" />
         <label for="endDate">End Date:</label>
-        <input
-          type="date"
-          id="endDate"
-          placeholder="End Date"
-          v-model="endDate"
-        />
+        <input type="date" id="endDate" placeholder="End Date" v-model="endDate" />
       </div>
-      <b-form-select
-        v-model="selectedClassType"
-        :options="classTypeOptions"
-        placeholder="Select a class type"
-      ></b-form-select>
-      <b-form-select
-        v-model="selectedInstructor"
-        :options="instructorOptions"
-        placeholder="Select an instructor"
-      ></b-form-select>
-      <b-form-select
-        v-model="selectedTime"
-        :options="timeOptions"
-        placeholder="Select a time slot"
-      ></b-form-select>
-      <button
-        @click="createSpecificClass()"
-        v-bind:disabled="isCreateBtnDisabled"
-      >
+      <b-form-select v-model="selectedClassType" :options="classTypeOptions"
+        placeholder="Select a class type"></b-form-select>
+      <b-form-select v-model="selectedInstructor" :options="instructorOptions"
+        placeholder="Select an instructor"></b-form-select>
+      <b-form-select v-model="selectedTime" :options="timeOptions" placeholder="Select a time slot"></b-form-select>
+      <button @click="createSpecificClass()" v-bind:disabled="isCreateBtnDisabled">
         Create Event
       </button>
       <button class="danger-btn" @click="clearInputs()">Clear</button>
@@ -89,6 +56,7 @@ import axios from "axios";
 import config from "../../config";
 import { globalState } from "@/global.js";
 
+// sets up urls for axios
 const frontendUrl = "http://" + config.dev.host + ":" + config.dev.port;
 const backendUrl =
   "http://" + config.dev.backendHost + ":" + config.dev.backendPort;
@@ -103,6 +71,7 @@ export default {
   name: "CreateNewSpecificClass",
   data() {
     return {
+      // sets up variables to control vue page
       newSpecificClasses: [],
       classMode: "regular",
       newSpecificClassDate: null,
@@ -117,6 +86,7 @@ export default {
       instructorOptions: [{ text: "Select an instructor", value: null }],
       timeOptions: [{ text: "Select a time slot", value: null }],
       fields_C: [
+        // table to list attributes of newly created specific classes
         { key: "startTime", label: "Start Time", show: true },
         { key: "date", label: "Date", show: false },
         { key: "classType", label: "Class Type", show: true },
@@ -128,6 +98,7 @@ export default {
     };
   },
   mounted() {
+    // load upon init/mounting of page
     try {
       this.fetchClassTypes();
       this.fetchInstructors();

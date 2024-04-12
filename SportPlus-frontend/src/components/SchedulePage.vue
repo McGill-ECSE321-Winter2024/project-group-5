@@ -12,24 +12,14 @@
             </b-row>
             <!-- button group-->
             <h2 class="reg-messs">Want to register for a class? Login!</h2>
-            <b-button
-              variant="outline-primary"
-              @click="goToLoginPage"
-              class="mb-2"
-              >Login</b-button
-            >
+            <b-button variant="outline-primary" @click="goToLoginPage" class="mb-2">Login</b-button>
           </b-card>
           <b-card>
             <div class="btn-group-vertical">
               <h2 class="reg-messs">
                 Want to view a class description? Select a class!
               </h2>
-              <b-button
-                variant="outline-primary"
-                @click="handleShowSelected"
-                class="mb-2"
-                >View Selected</b-button
-              >
+              <b-button variant="outline-primary" @click="handleShowSelected" class="mb-2">View Selected</b-button>
             </div>
           </b-card>
         </b-col>
@@ -38,24 +28,11 @@
           <div class="empty-divider-table"></div>
           <h2 class="tableTitle">Class Schedule</h2>
           <div class="ScheduleTable">
-            <b-table
-              hover
-              id="schedule-tb"
-              small
-              :items="classes"
-              :fields="filteredFields"
-              :sticky-header="true"
-              :outlined="true"
-              select-mode="single"
-              responsive="sm"
-              ref="selectableTable"
-              selectable
-              @row-selected="onClassSelected"
-            >
+            <b-table hover id="schedule-tb" small :items="classes" :fields="filteredFields" :sticky-header="true"
+              :outlined="true" select-mode="single" responsive="sm" ref="selectableTable" selectable
+              @row-selected="onClassSelected">
               <template v-slot:cell(startTime)="data">
-                <b-table-simple
-                  :class="{ 'bold-row-separator': isDateSeparator(data.item) }"
-                >
+                <b-table-simple :class="{ 'bold-row-separator': isDateSeparator(data.item) }">
                   {{
                     isDateSeparator(data.item)
                       ? data.item.dateSeparator
@@ -68,137 +45,58 @@
           <!-- sub-row-->
           <b-row class="justify-content-center">
             <b-tabs v-model="selectedTab" pills card>
-              <b-tab
-                id="all-available"
-                title="Open for Registration"
-                @click="tabIsAllAvailable"
-              ></b-tab>
-              <b-tab
-                id="filter-by-dates"
-                title="Filter By Date Range"
-                @click="tabIsByDate"
-              >
+              <b-tab id="all-available" title="Open for Registration" @click="tabIsAllAvailable"></b-tab>
+              <b-tab id="filter-by-dates" title="Filter By Date Range" @click="tabIsByDate">
                 <b-card style="width: 100%; height: 180px">
                   <b-row class="2">
                     <b-col>
                       <label for="datepicker-start">Start Date</label>
-                      <b-form-datepicker
-                        id="datepicker-start"
-                        today-button
-                        reset-button
-                        close-button
-                        :min="min"
-                        v-model="startDate"
-                        locale="en"
-                        placeholder="Pick start date"
-                      ></b-form-datepicker>
-                      <div
-                        v-if="!startDate === 'filter-by-dates'"
-                        class="error-message"
-                        style="color: red; text-decoration: underline"
-                      >
+                      <b-form-datepicker id="datepicker-start" today-button reset-button close-button :min="min"
+                        v-model="startDate" locale="en" placeholder="Pick start date"></b-form-datepicker>
+                      <div v-if="!startDate === 'filter-by-dates'" class="error-message"
+                        style="color: red; text-decoration: underline">
                         Please select a start date.
                       </div>
                     </b-col>
                     <b-col>
                       <label for="datepicker-end">End Date</label>
-                      <b-form-datepicker
-                        id="datepicker-end"
-                        today-button
-                        reset-button
-                        close-button
-                        :min="startDate ? startDate : min"
-                        v-model="endDate"
-                        locale="en"
-                        placeholder="Pick end date"
-                      ></b-form-datepicker>
-                      <div
-                        v-if="!endDate === 'filter-by-dates'"
-                        class="error-message"
-                        style="color: red; text-decoration: underline"
-                      >
+                      <b-form-datepicker id="datepicker-end" today-button reset-button close-button
+                        :min="startDate ? startDate : min" v-model="endDate" locale="en"
+                        placeholder="Pick end date"></b-form-datepicker>
+                      <div v-if="!endDate === 'filter-by-dates'" class="error-message"
+                        style="color: red; text-decoration: underline">
                         Please select an endDate.
                       </div>
                     </b-col>
                   </b-row>
 
                   <div class="empty-divider-table"></div>
-                  <b-button
-                    variant="outline-primary"
-                    @click="fetchData"
-                    class="mb-2"
-                    v-if="endDate && startDate"
-                    >Filter</b-button
-                  >
+                  <b-button variant="outline-primary" @click="fetchData" class="mb-2"
+                    v-if="endDate && startDate">Filter</b-button>
                 </b-card>
               </b-tab>
 
-              <b-tab
-                id="filter-by-instructors"
-                title="Filter By Instructor"
-                @click="tabIsInstructor"
-              >
+              <b-tab id="filter-by-instructors" title="Filter By Instructor" @click="tabIsInstructor">
                 <b-card style="width: 100%; height: 100%">
-                  <b-table
-                    hover
-                    small
-                    :items="instructors"
-                    :fields="filteredInstructors"
-                    :outlined="true"
-                    select-mode="single"
-                    responsive="sm"
-                    ref="selectableTable"
-                    selectable
-                    @row-selected="onInstructorSelected"
-                  >
+                  <b-table hover small :items="instructors" :fields="filteredInstructors" :outlined="true"
+                    select-mode="single" responsive="sm" ref="selectableTable" selectable
+                    @row-selected="onInstructorSelected">
                   </b-table>
-                  <b-button
-                    variant="outline-primary"
-                    @click="fetchData"
-                    class="mb-2"
-                    v-if="selectedInstructor"
-                    >Filter</b-button
-                  >
-                  <div
-                    v-if="displayError_I"
-                    class="error-message"
-                    style="color: red; text-decoration: underline"
-                  >
+                  <b-button variant="outline-primary" @click="fetchData" class="mb-2"
+                    v-if="selectedInstructor">Filter</b-button>
+                  <div v-if="displayError_I" class="error-message" style="color: red; text-decoration: underline">
                     Please select an Instructor.
                   </div>
                 </b-card>
               </b-tab>
-              <b-tab
-                id="filter-by-classType"
-                title="Filter By ClassType"
-                @click="tabIsClassType"
-              >
+              <b-tab id="filter-by-classType" title="Filter By ClassType" @click="tabIsClassType">
                 <b-card style="width: 100%; height: 100%">
-                  <b-table
-                    hover
-                    small
-                    :items="types"
-                    :fields="filteredClassTypes"
-                    :outlined="true"
-                    select-mode="single"
-                    responsive="sm"
-                    ref="selectableTable"
-                    selectable
-                    @row-selected="onTypeSelected"
-                  >
+                  <b-table hover small :items="types" :fields="filteredClassTypes" :outlined="true" select-mode="single"
+                    responsive="sm" ref="selectableTable" selectable @row-selected="onTypeSelected">
                   </b-table>
-                  <b-button
-                    variant="outline-primary"
-                    @click="fetchData"
-                    class="mb-2"
-                    v-if="selectedType"
-                    >Filter</b-button
-                  >
-                  <div
-                    v-if="displayError_T"
-                    class="error-message"
-                    style="color: red; text-decoration: underline"
-                  >
+                  <b-button variant="outline-primary" @click="fetchData" class="mb-2"
+                    v-if="selectedType">Filter</b-button>
+                  <div v-if="displayError_T" class="error-message" style="color: red; text-decoration: underline">
                     Please select a ClassType.
                   </div>
                 </b-card>
@@ -209,11 +107,7 @@
       </b-row>
     </b-container>
     <div>
-      <b-modal
-        v-model="showSelected"
-        title="Class Details"
-        @close="handleModalClose"
-      >
+      <b-modal v-model="showSelected" title="Class Details" @close="handleModalClose">
         <div v-if="selectedClass">
           <p>
             <strong>Instructor Name:</strong>
@@ -244,6 +138,7 @@ import { globalState } from "@/global.js";
 import axios from "axios";
 import config from "../../config";
 
+// sets up urls for axios
 const backendUrl =
   "http://" + config.dev.backendHost + ":" + config.dev.backendPort;
 const frontendUrl = "http://" + config.dev.host + ":" + config.dev.port;
@@ -257,6 +152,7 @@ export default {
   name: "SchedulePage",
 
   components: {
+    // components that this page will use
     CreateNewSpecificClass,
     CreateNewClassType,
   },
@@ -265,6 +161,7 @@ export default {
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
     return {
+      // variables to hold page info for vue
       registrationOK: true,
       registrationError: null,
       closeRegPanel: null,
@@ -287,6 +184,7 @@ export default {
       instructors: [],
       types: [],
       fields_C: [
+        // field for schedule table
         { key: "startTime", label: "Start Time", show: true },
         { key: "date", label: "Date", show: false },
         { key: "classType", label: "Class Type", show: true },
@@ -297,10 +195,12 @@ export default {
         { key: "numOfRegistrations", show: false },
       ],
       fields_I: [
+        // field for instructors for classes
         { key: "firstName", label: "Instructor", show: true },
         { key: "accountId", label: "Id", show: false },
       ],
       fields_T: [
+        // fields for classtypes
         { key: "name", label: "Class Type", show: true },
         { key: "typeId", label: "Id", show: false },
       ],
@@ -308,6 +208,7 @@ export default {
   },
 
   computed: {
+    // properties update on change
     filteredFields() {
       return this.fields_C.filter((field) => field.show);
     },
@@ -319,6 +220,7 @@ export default {
     },
   },
   mounted() {
+    // called upon init/mounting of the page
     this.fetchData();
     this.fetchData_Instructors();
     this.fetchData_ClassTypes();
@@ -326,12 +228,15 @@ export default {
 
   methods: {
     fetchEndpoint(option) {
+      // sets up endpoint for axios to fetch classes
       let endpoint;
       switch (option) {
+        // fetches all available classes
         case "all-available":
           endpoint = `/specificClass/available`;
           break;
 
+        // filters classes by date ranges specified by frontend
         case "filter-by-dates":
           const newEnd = new Date(this.endDate);
           newEnd.setDate(newEnd.getDate() + 1);
@@ -341,6 +246,7 @@ export default {
           endpoint = `/specificClass/by-date-range?startDate=${this.startDate}&endDate=${endFormatted}`;
           break;
 
+        // filters classes by selected instructor
         case "filter-by-instructors":
           const instructorId = JSON.parse(
             JSON.stringify(this.selectedInstructor)
@@ -348,16 +254,20 @@ export default {
           endpoint = `/specificClass/instructor/${instructorId[0].accountId}`;
           break;
 
+        // filters classes by selected class type
         case "filter-by-classType":
           const intId = JSON.parse(JSON.stringify(this.selectedType));
           endpoint = `/specificClass/class-type/${intId[0].typeId}`;
           break;
       }
+
+      // logs the endpoint and returns it to requested function to be called
       console.log("Constructed endpoint :", endpoint);
       return endpoint;
     },
 
     fetchData() {
+      // fetches data based on specified endpoint option
       const endpoint = this.fetchEndpoint(this.option);
       CLIENT.get(endpoint)
         .then((response) => {
@@ -550,6 +460,7 @@ export default {
   height: 60%;
   /* Adjust as needed */
 }
+
 .reg-messs {
   font-size: larger;
 }

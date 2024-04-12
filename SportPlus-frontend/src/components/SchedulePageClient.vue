@@ -108,7 +108,8 @@
                 <div v-if="selectedClass">
                     <p><strong>Instructor Name:</strong>
                         {{ JSON.parse(JSON.stringify(this.selectedClass))[0].supervisor }}</p>
-                    <p><strong>Class Type:</strong> {{ JSON.parse(JSON.stringify(this.selectedClass))[0].classType }}</p>
+                    <p><strong>Class Type:</strong> {{ JSON.parse(JSON.stringify(this.selectedClass))[0].classType }}
+                    </p>
                     <p><strong>Description:</strong> {{ JSON.parse(JSON.stringify(this.selectedClass))[0].description }}
                     </p>
                     <b-col>
@@ -144,6 +145,7 @@ import { globalState } from "@/global.js";
 import axios from "axios";
 import config from "../../config";
 
+// sets up urls for axios
 const backendUrl = 'http://' + config.dev.backendHost + ':' + config.dev.backendPort
 const frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
 
@@ -155,8 +157,13 @@ const CLIENT = axios.create({
 
 export default {
     name: 'SchedulePageClient',
+
+    // runs before the page is loaded
     beforeRouteEnter(to, from, next) {
         const userType = globalState.type;
+
+        // checks if correct user is accessing page
+        // if permission not allowed, page will load to the proper page based on user type
         if (userType === 'Client') {
             next();
         } else if (userType === 'Instructor') {
@@ -168,12 +175,14 @@ export default {
                 vm.$router.replace('/SchedulePageOwner');
             });
         } else {
+            // if user type not selected, routes back to login page
             next(vm => {
                 vm.$router.replace('/Login');
             });
         }
     },
     components: {
+        // imported components to be used on page
         CreateNewSpecificClass,
         CreateNewClassType
     },
@@ -182,6 +191,7 @@ export default {
         const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
         return {
+            // variables to hold page info for vue
             registrationOK: true,
             registrationError: null,
             closeRegPanel: null,
@@ -204,6 +214,7 @@ export default {
             instructors: [],
             types: [],
             fields_C: [
+            // field for schedule table
                 { key: 'startTime', label: 'Start Time', show: true },
                 { key: 'date', label: 'Date', show: false },
                 { key: 'classType', label: 'Class Type', show: true },
@@ -214,10 +225,12 @@ export default {
                 { key: 'numOfRegistrations', show: false }
             ],
             fields_I: [
+            // field for instructors for classes
                 { key: 'firstName', label: 'Instructor', show: true },
                 { key: 'accountId', label: 'Id', show: false }
             ],
             fields_T: [
+            // fields for classtypes
                 { key: 'name', label: 'Class Type', show: true },
                 { key: 'typeId', label: 'Id', show: false }
             ]
@@ -225,6 +238,7 @@ export default {
     },
 
     computed: {
+        // properties update upon change
         filteredFields() {
             return this.fields_C.filter(field => field.show);
         },
@@ -236,6 +250,7 @@ export default {
         }
     },
     mounted() {
+    // called upon init/mounting of the page
         this.fetchData();
         this.fetchData_Instructors();
         this.fetchData_ClassTypes();
@@ -243,14 +258,17 @@ export default {
 
     methods: {
         fetchEndpoint(option) {
+        // sets up endpoint for axios to fetch classes
             let endpoint;
             switch (option) {
 
                 case "all-available":
+                    // fetches all available classes
                     endpoint = `/specificClass/available`;
                     break;
 
                 case "filter-by-dates":
+                    // filters classes by date ranges specified by frontend
                     const newEnd = new Date(this.endDate);
                     newEnd.setDate(newEnd.getDate() + 1);
                     const endFormatted = this.endDate ? newEnd.toISOString().substring(0, 10) : '';
@@ -258,20 +276,25 @@ export default {
                     break;
 
                 case "filter-by-instructors":
+                    // filters classes by selected instructor
                     const instructorId = JSON.parse(JSON.stringify(this.selectedInstructor));
                     endpoint = `/specificClass/instructor/${instructorId[0].accountId}`;
                     break;
 
                 case "filter-by-classType":
+                    // filters classes by selected class type
                     const intId = JSON.parse(JSON.stringify(this.selectedType));
                     endpoint = `/specificClass/class-type/${intId[0].typeId}`;
                     break;
             }
+
+            // logs the endpoint and returns it to requested function to be called
             console.log('Constructed endpoint :', endpoint);
             return endpoint;
         },
 
         fetchData() {
+            // fetches data based on specified endpoint option
             const endpoint = this.fetchEndpoint(this.option);
             CLIENT.get(endpoint)
                 .then(response => {
@@ -363,27 +386,38 @@ export default {
                 });
         },
         registerForClass() {
+            // attemps to register for selected class
             this.DISABLE = true;
             this.isAlreadyRegisteredForClass()
                 .then(() => this.classIsComplete())
                 .then(() => this.checkForPaymentMethod())
                 .then(() => {
                     console.log("this.hasPaymentMethod", this.hasPaymentMethod);
+
+                    // if already registered to class, show error message and don't register
                     if (this.isAlreadyReg) {
                         this.registrationError = "You are already registered for this class!";
                         this.registrationOK = false;
+
+                    // if class is full, don't register and show error message
                     } else if (this.classIsFull) {
                         this.registrationError = "This class is full!";
                         this.registrationOK = false;
+
+                    // if client has not payment method, ask to add payment method
                     } else if (!this.hasPaymentMethod) {
                         this.registrationError = "You must have a payment method to register for a class";
                         this.registrationOK = false;
+
                     } else {
+                        
+                        // if no errors, POST request to create registration to class
                         CLIENT.post(`/registrations/create/${JSON.parse(JSON.stringify(this.selectedClass))[0].id}/${globalState.accountEmail}`)
                             .then(response => {
                                 this.registrationOK = true;
                             })
                             .catch(error => {
+                                // error if registration does not work from backend
                                 console.error('Error Create:', error);
                                 this.registrationError = "Process could not be completed";
                                 this.registrationOK = false;
@@ -397,16 +431,19 @@ export default {
         },
 
         isAlreadyRegisteredForClass() {
+            // checks if client is already registered for class
             return new Promise((resolve, reject) => {
                 console.log("email input to isAlre...", globalState.accountEmail);
                 CLIENT.get(`/registrations/getByClient/${globalState.accountEmail}`)
                     .then(response => {
                         const resp = response.data.registrations;
                         if (resp.length === 0) {
+                            // if no registrations, return false
                             this.isAlreadyReg = false;
                         } else {
                             resp.forEach(registration => {
                                 if (registration.specificClass.id === JSON.parse(JSON.stringify(this.selectedClass))[0].id) {
+                                    // if registration exists for this class, return true
                                     this.isAlreadyReg = true;
                                     return;
                                 }
@@ -423,6 +460,7 @@ export default {
             });
         },
         classIsComplete() {
+            // checks if class is already full
             return new Promise((resolve, reject) => {
                 CLIENT.get(`/registrations/getBySpecificClass/${JSON.parse(JSON.stringify(this.selectedClass))[0].id}`)
                     .then(response => {
@@ -442,7 +480,9 @@ export default {
         },
 
         checkForPaymentMethod() {
+            // checks if client has a payment method
             return new Promise((resolve, reject) => {
+                // sends GET request to get payment methods
                 CLIENT.get(`clients/hasPaymentMethod/${globalState.accountEmail}`)
                     .then(response => {
                         console.log("paymentresponse", response.data.hasPaymentMethod);
@@ -457,7 +497,7 @@ export default {
                     });
             });
         },
-        handleOk(){
+        handleOk() {
             window.location.reload();
         },
         handleShowSelected() {

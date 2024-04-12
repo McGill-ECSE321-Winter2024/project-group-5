@@ -113,6 +113,7 @@ import axios from "axios";
 import { globalState } from "@/global.js"; // Import the globalState variable
 import config from "../../config";
 
+// sets up urls for axios
 const backendUrl = 'http://' + config.dev.backendHost + ':' + config.dev.backendPort
 const frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
 
@@ -124,8 +125,12 @@ const CLIENT = axios.create({
 
 export default {
     name: 'AccountPageOwner',
+
+    // runs before loading the page
     beforeRouteEnter(to, from, next) {
         const userType = globalState.type;
+
+        // if wrong page is loaded, loads and enforces correct account page
         if (userType === 'Owner') {
             next();
         } else if (userType === 'Client') {
@@ -144,6 +149,7 @@ export default {
     },
     data() {
         return {
+            // variables to store data for vue page
             firstName: '',
             lastName: '',
             email: '',
@@ -154,8 +160,8 @@ export default {
             newLastName: '',
             oldPassword: '',
             newPassword: '',
-            password: '', // Add password variable
-            hidePassword: true, // Add hidePassword variable
+            password: '',
+            hidePassword: true,
             oldPasswordFieldType: 'password',
             newPasswordFieldType: 'password',
             registrations: [],
@@ -176,6 +182,7 @@ export default {
         };
     },
     computed: {
+        // automatically change upon data changes
         unapprovedClassTypes() {
             return this.classTypes.filter(classType => !classType.approved);
         },
@@ -184,12 +191,13 @@ export default {
         },
     },
     mounted() {
+        // load upon page mounting
         this.fetchAccountDetails();
         this.fetchClassTypes();
         this.fetchSpecificClasses();
     },
     methods: {
-
+        // fetches all classes to load onto the schedule page
         fetchClassTypes() {
             CLIENT.get('/classType/all')
                 .then(response => {
@@ -234,8 +242,8 @@ export default {
                         CLIENT.delete(path);
                         this.fetchClassTypes();
                         window.location.reload();
-                    } 
-                    
+                    }
+
                 } else {
                     const path = 'classType/delete/' + className;
                     CLIENT.delete(path)
@@ -254,6 +262,7 @@ export default {
         },
 
         fetchAccountDetails() {
+            // gets details of owner's account using GET request
             CLIENT.get(`/owner/get`)
                 .then(response => {
                     const { firstName, lastName, email } = response.data;

@@ -24,34 +24,33 @@
 
 <script>
 
-  import axios from "axios";
-  import config from "../config";
-  import { globalState } from '@/global.js';
+import axios from "axios";
+import config from "../config";
+import { globalState } from '@/global.js';
 
-  const frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
-  const backendUrl = 'http://' + config.dev.backendHost + ':' + config.dev.backendPort
+const frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
+const backendUrl = 'http://' + config.dev.backendHost + ':' + config.dev.backendPort
 
-  const schedulePath = null;
+const schedulePath = null;
 
-  const AXIOS = axios.create({
-    baseURL: backendUrl,
-    headers: { 'Access-Control-Allow-Origin': frontendUrl }
-  })
+const AXIOS = axios.create({
+  baseURL: backendUrl,
+  headers: { 'Access-Control-Allow-Origin': frontendUrl }
+})
 
 export default {
   name: 'app',
-  computed:{
-    
+  computed: {
     // Computed property to determine the schedule path based on the isLoggedIn variable
     schedulePath() {
       // Define your paths based on the isLoggedIn variable
       if (globalState.type === "Owner") {
-        return '/SchedulePageOwner'; 
-      }else if(globalState.type === "Instructor") {
-        return '/SchedulePageInstructor'; 
-      }else if(globalState.type === "Client"){
+        return '/SchedulePageOwner';
+      } else if (globalState.type === "Instructor") {
+        return '/SchedulePageInstructor';
+      } else if (globalState.type === "Client") {
         return '/SchedulePageClient'
-      }else{
+      } else {
         return '/SchedulePage'; //if no one logged in, go back to loginPage
       }
     },
@@ -71,32 +70,32 @@ export default {
   },
   methods: {
     async logout() {
-      try {     
-      
-      // Get the current login Id
-      const endpointPath = `/login/getByAccount/${this.userEmail}/${this.userType.toUpperCase()}`;
+      try {
 
-      const fullUrlloginId = `http://${config.dev.backendHost}:${config.dev.backendPort}${endpointPath}`;
-      const login = await AXIOS.get(fullUrlloginId);
+        // Get the current login Id
+        const endpointPath = `/login/getByAccount/${this.userEmail}/${this.userType.toUpperCase()}`;
 
-      //Logout from the session
-      const endPointPathLogout = `/logout/${login.data.loginId}`;
-      const fullUrlLogout = `http://${config.dev.backendHost}:${config.dev.backendPort}${endPointPathLogout}`;
+        const fullUrlloginId = `http://${config.dev.backendHost}:${config.dev.backendPort}${endpointPath}`;
+        const login = await AXIOS.get(fullUrlloginId);
 
-      await AXIOS.delete(fullUrlLogout);
+        // Logout from the session
+        const endPointPathLogout = `/logout/${login.data.loginId}`;
+        const fullUrlLogout = `http://${config.dev.backendHost}:${config.dev.backendPort}${endPointPathLogout}`;
 
-      //Go Back to login Page
-      this.$router.push('/');
+        await AXIOS.delete(fullUrlLogout);
 
-      globalState.accountEmail = null;
-      globalState.accountEmail = null;
-      globalState.type = null;
+        // Go Back to login Page
+        this.$router.push('/');
+
+        globalState.accountEmail = null;
+        globalState.accountEmail = null;
+        globalState.type = null;
 
       } catch (error) {
         globalState.accountEmail = null;
-      globalState.accountEmail = null;
-      globalState.type = null;
-      
+        globalState.accountEmail = null;
+        globalState.type = null;
+
         console.log("There was an error")
         console.log(error)
       }

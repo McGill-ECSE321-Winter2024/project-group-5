@@ -12,12 +12,12 @@
                         </b-row>
                         <!-- button group-->
                         <div class="btn-group-vertical">
-                            <b-button variant="outline-primary" @click="toggleModal" class="mb-2">View Selected Class Menu</b-button>
-                            <!-- <b-button variant="outline-primary" @click="modifySelected = true" class="mb-2"> Modify
-                                Selected</b-button> -->
+                            <b-button variant="outline-primary" @click="toggleModal" class="mb-2">View Selected Class
+                                Menu</b-button>
                             <b-button variant="outline-primary" @click="createNewSpecificClass = true"
                                 class="mb-2">Create New Specific Class</b-button>
-                            <b-button variant="outline-primary" @click="createNewClassType = true" class="mb-2">ClassType Menu</b-button>
+                            <b-button variant="outline-primary" @click="createNewClassType = true"
+                                class="mb-2">ClassType Menu</b-button>
                         </div>
                     </b-card>
                 </b-col>
@@ -136,8 +136,6 @@
                                     @click="viewAssignInstructorForum" class="mb-2">
                                     {{ !JSON.parse(JSON.stringify(this.selectedClass))[0].supervisor ? 'Assign an Instructor to this Class' : 'Assign a Different Instructor' }}
                                 </b-button>
-                                <!-- <b-button v-if="!displayForum" variant="outline-danger"
-                                    @click="deleteSelected">Delete Selected</b-button> -->
                             </b-col>
                             <b-col lg="10">
                                 <b-table hover id="forumTableInstructors" small :items="instructors"
@@ -148,7 +146,7 @@
                                 <b-button v-if="assignmentSelectionForum" variant="outline-primary"
                                     @click="assignInstructor">Assign instructor to Selected Class</b-button>
 
-                                    
+
                                 <div v-if="teachOK" class="success-message"
                                     style="color: green; text-decoration: underline;">
                                     Your request was processed successfully!
@@ -168,7 +166,7 @@
                 </b-container>
             </b-modal>
             <b-modal v-model="createNewClassType" title="Class Type Menu" size="lg" @ok="handleOk">
-                <CreateNewClassType/>
+                <CreateNewClassType />
             </b-modal>
         </div>
     </div>
@@ -181,6 +179,7 @@ import { globalState } from '@/global.js';
 import axios from "axios";
 import config from "../../config";
 
+// sets up urls for axios
 const backendUrl = 'http://' + config.dev.backendHost + ':' + config.dev.backendPort
 const frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
 
@@ -192,8 +191,13 @@ const CLIENT = axios.create({
 
 export default {
     name: 'SchedulePageOwner',
+
+    // runs before the page is loaded
     beforeRouteEnter(to, from, next) {
         const userType = globalState.type;
+
+        // checks if correct user is accessing page
+        // if permission not allowed, page will load to the proper page based on user type
         if (userType === 'Owner') {
             next();
         } else if (userType === 'Client') {
@@ -205,12 +209,14 @@ export default {
                 vm.$router.replace('/SchedulePageInstructor');
             });
         } else {
+            // if user type not selected, routes back to login page
             next(vm => {
                 vm.$router.replace('/Login');
             });
         }
     },
     components: {
+        // imported components to be used on page
         CreateNewSpecificClass,
         CreateNewClassType
     },
@@ -219,6 +225,7 @@ export default {
         const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
         return {
+            // variables to hold page info for vue
             displayForum: false,
             assignmentSelectionForum: null,
             listInstructAssignment: [
@@ -245,6 +252,7 @@ export default {
             instructors: [],
             types: [],
             fields_C: [
+                // field for schedule table
                 { key: 'startTime', label: 'Start Time', show: true },
                 { key: 'date', label: 'Date', show: false },
                 { key: 'classType', label: 'Class Type', show: true },
@@ -254,10 +262,12 @@ export default {
                 { key: 'id', show: false }
             ],
             fields_I: [
+                // field for instructors for classes
                 { key: 'firstName', label: 'Instructor', show: true },
                 { key: 'accountId', label: 'Id', show: false }
             ],
             fields_T: [
+                // fields for classtypes
                 { key: 'name', label: 'Class Type', show: true },
                 { key: 'typeId', label: 'Id', show: false }
             ]
@@ -265,6 +275,7 @@ export default {
     },
 
     computed: {
+        // properties update upon change
         filteredFields() {
             return this.fields_C.filter(field => field.show);
         },
@@ -276,6 +287,7 @@ export default {
         }
     },
     mounted() {
+        // called upon init/mounting of the page
         this.fetchData();
         this.fetchData_Instructors();
         this.fetchData_ClassTypes();
@@ -283,14 +295,17 @@ export default {
 
     methods: {
         fetchEndpoint(option) {
+            // sets up endpoint for axios to fetch classes
             let endpoint;
             switch (option) {
 
                 case "all-available":
+                    // fetches all available classes
                     endpoint = `/specificClass/available`;
                     break;
 
                 case "filter-by-dates":
+                    // filters classes by date ranges specified by frontend
                     const newEnd = new Date(this.endDate);
                     newEnd.setDate(newEnd.getDate() + 1);
                     const endFormatted = this.endDate ? newEnd.toISOString().substring(0, 10) : '';
@@ -298,28 +313,35 @@ export default {
                     break;
 
                 case "filter-by-instructors":
+                    // filters classes by selected instructor
                     const instructorId = JSON.parse(JSON.stringify(this.selectedInstructor));
                     endpoint = `/specificClass/instructor/${instructorId[0].accountId}`;
                     break;
 
                 case "filter-by-classType":
+                    // filters classes by selected class type
                     const intId = JSON.parse(JSON.stringify(this.selectedType));
                     endpoint = `/specificClass/class-type/${intId[0].typeId}`;
                     break;
 
                 case "no-filter":
+                    // requests all classes with no filter
                     endpoint = `/specificClass/all`;
                     break;
             }
+
+            // logs the endpoint and returns it to requested function to be called
             console.log('Constructed endpoint :', endpoint);
             return endpoint;
         },
 
         fetchData() {
+            // fetches data based on specified endpoint option
             const endpoint = this.fetchEndpoint(this.option);
             CLIENT.get(endpoint)
                 .then(response => {
                     console.log('Response:', response.data);
+                    // Filter out classes with dates earlier than today
                     let filteredClasses = null;
                     if (this.status === 'not_accepted') {
                         filteredClasses = response.data.filter(item => {
@@ -412,29 +434,33 @@ export default {
                 });
         },
         viewAssignInstructorForum() {
-
+            // opens the instructor assigning form
             this.displayForum = true;
             this.fetchData_Instructors();
             console.log("instrucot forum info", this.instructors);
         },
         assignInstructor() {
+            // assigns an instructor to a specific class
             console.log("this.assignmentSelectionForum", this.assignmentSelectionForum);
             const specificClassRequestBody = {
                 instructorId: JSON.parse(JSON.stringify(this.assignmentSelectionForum))[0].accountId
             }
             const id = JSON.parse(JSON.stringify(this.selectedClass))[0].id;
             console.log("url", `/${id}/assign-instructor`);
+            // sends a PUT request to assign an isntructor to specific class
             CLIENT.put(`/specificClass/${id}/assign-instructor`, specificClassRequestBody).then(response => {
                 this.teachOK = true;
 
             }).catch(error => {
+                // if error raised that instructor is not assigned in backend
                 this.teachError = "Could not Assign Instructor to class";
                 this.teachOK = false;
                 console.log("error", error);
             });
         },
-        deleteSelected(){
-            CLIENT.delete(`/specificClass/deleteBySessionId/${JSON.parse(JSON.stringify(this.selectedClass))[0].id}`).then(response =>{
+        deleteSelected() {
+            // deletes the specific class
+            CLIENT.delete(`/specificClass/deleteBySessionId/${JSON.parse(JSON.stringify(this.selectedClass))[0].id}`).then(response => {
 
             }).catch(error => {
                 console.log("delete error", error);
@@ -455,7 +481,7 @@ export default {
             this.selectedType = item;
             console.log('Selected type:', item);
         },
-        handleOk(){
+        handleOk() {
             window.location.reload();
         },
         toggleModal() {
