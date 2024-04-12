@@ -115,7 +115,7 @@
 
         </b-container>
         <div>
-            <b-modal v-model="createNewSpecificClass" title="Create New Class" size="100%" @ok="handleOk">
+            <b-modal v-model="createNewSpecificClass" title="Create New Class" size="lg" @ok="handleOk">
                 <CreateNewSpecificClass />
             </b-modal>
 
@@ -167,7 +167,7 @@
 
                 </b-container>
             </b-modal>
-            <b-modal v-model="createNewClassType" title="Create New Class Type" size="lg" @ok="handleOk">
+            <b-modal v-model="createNewClassType" title="Class Type Menu" size="lg" @ok="handleOk">
                 <CreateNewClassType/>
             </b-modal>
         </div>
